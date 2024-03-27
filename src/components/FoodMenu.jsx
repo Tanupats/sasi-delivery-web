@@ -1,13 +1,13 @@
 import axios from "axios";
 import React, { useState, useEffect, useContext } from "react";
 import { Row, Col, Card, Image, Button, Modal } from "react-bootstrap";
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import { useParams } from 'react-router-dom';
 import Badge from 'react-bootstrap/Badge';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { AuthData } from "../ContextData";
-import Stack from 'react-bootstrap/Stack';
-const FoodMenu = () => {
 
+const FoodMenu = () => {
+    const { userid,username } = useParams();
     const { addTocart } = useContext(AuthData)
     const [menuType, setMenuType] = useState([]);
     const [foods, setFoods] = useState([]);
@@ -37,6 +37,7 @@ const FoodMenu = () => {
     }
 
     useEffect(() => {
+        console.log(userid,username)
         getMenuType();
         getFoodMenu();
     }, [])

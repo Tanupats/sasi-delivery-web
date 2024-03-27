@@ -5,9 +5,11 @@ import Navbar from 'react-bootstrap/Navbar';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
 import { Row, Col, Card, Image, Button, Modal, Form, Alert } from "react-bootstrap";
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import { AuthData } from "../ContextData";
+import FoodMenu from './FoodMenu';
 const NavbarMenu = () => {
-
+   
     const { toTal, cart, sumPrice, removeCart } = useContext(AuthData);
     const [show, setShow] = useState(false);
 
@@ -19,7 +21,8 @@ const NavbarMenu = () => {
 
     }, [])
     return (
-        <>
+    <Router >
+        
             <Navbar bg="light" data-bs-theme="light">
                 <Container fluid>
                     <Navbar.Brand href="#home">SASI Delivery</Navbar.Brand>
@@ -29,6 +32,7 @@ const NavbarMenu = () => {
                     </Nav>
                 </Container>
             </Navbar>
+          
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
@@ -111,7 +115,13 @@ const NavbarMenu = () => {
                 }
 
             </Modal>
-        </>
+            <Routes>
+          <Route path="/" Component={FoodMenu}></Route>
+          <Route path="/:userid/:username" Component={FoodMenu}></Route>
+       
+        </Routes>
+            </Router>
+        
     );
 }
 
