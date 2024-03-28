@@ -7,7 +7,11 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { AuthData } from "../ContextData";
 
 const FoodMenu = () => {
+
     const { userid,username } = useParams();
+    localStorage.setItem("name",username)
+    localStorage.setItem("messangerId",userid)
+
     const { addTocart } = useContext(AuthData)
     const [menuType, setMenuType] = useState([]);
     const [foods, setFoods] = useState([]);
@@ -58,10 +62,10 @@ const FoodMenu = () => {
                                     return (
                                        
                                     <Badge 
-                                    style={{marginRight:'12px'}}
+                                    style={{marginRight:'12px',fontSize:'18px'}}
                                     onClick={()=>getMenuBytypeId(item.id)}
                                     pill bg="primary">
-                                    {item.name}  
+                                     {item.name}  
                                     </Badge>
                                  
                                     )

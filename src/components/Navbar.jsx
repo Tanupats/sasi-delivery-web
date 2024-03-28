@@ -9,8 +9,8 @@ import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import { AuthData } from "../ContextData";
 import FoodMenu from './FoodMenu';
 const NavbarMenu = () => {
-   
-    const { toTal, cart, sumPrice, removeCart } = useContext(AuthData);
+
+    const { toTal, cart, sumPrice, removeCart, saveOrder } = useContext(AuthData);
     const [show, setShow] = useState(false);
 
 
@@ -21,8 +21,8 @@ const NavbarMenu = () => {
 
     }, [])
     return (
-    <Router >
-        
+        <Router >
+
             <Navbar bg="light" data-bs-theme="light">
                 <Container fluid>
                     <Navbar.Brand href="#home">SASI Delivery</Navbar.Brand>
@@ -32,7 +32,7 @@ const NavbarMenu = () => {
                     </Nav>
                 </Container>
             </Navbar>
-          
+
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
@@ -46,7 +46,7 @@ const NavbarMenu = () => {
 
 
                                     <Col md={12} xs={12}>
-                                        <Card style={{ height: '130px', marginBottom: '10px',padding:'10px' }}>
+                                        <Card style={{ height: '130px', marginBottom: '10px', padding: '10px' }}>
                                             <Card.Body className='p-0'>
                                                 <Row>
                                                     <Col md={5}
@@ -83,14 +83,12 @@ const NavbarMenu = () => {
                                     </Col>
                                 </>)
                             })
-
                         }
                         {
                             cart.length > 0 ? (
-
                                 <>
-                                    <span>    รวมทั้งหมด {sumPrice} บาท</span>
-                                    <span>    จำนวน {toTal} รายการ</span>
+                                    <span>รวมทั้งหมด {sumPrice} บาท</span>
+                                    <span>จำนวน {toTal} รายการ</span>
                                 </>
                             ) : (
                                 <Alert variant='danger' className='pd-4'>
@@ -98,13 +96,12 @@ const NavbarMenu = () => {
 
                                 </Alert>)
                         }
-
                     </Row>
                 </Modal.Body>
                 {
                     cart.length > 0 && (<>
                         <Modal.Footer>
-                            <Button variant="success" onClick={handleClose}>
+                            <Button variant="success" onClick={() => saveOrder()}>
                                 ยืนยันสั่งออเดอร์
                             </Button>
                             <Button variant="danger" onClick={handleClose}>
@@ -113,15 +110,12 @@ const NavbarMenu = () => {
                         </Modal.Footer>
                     </>)
                 }
-
             </Modal>
             <Routes>
-          <Route path="/" Component={FoodMenu}></Route>
-          <Route path="/:userid/:username" Component={FoodMenu}></Route>
-       
-        </Routes>
-            </Router>
-        
+                <Route path="/" Component={FoodMenu}></Route>
+                <Route path="/:userid/:username" Component={FoodMenu}></Route>
+            </Routes>
+        </Router>
     );
 }
 

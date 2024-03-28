@@ -1,9 +1,12 @@
 import { createContext, useState, useEffect } from "react";
 export const AuthData = createContext();
+import axios from "axios";
 function Context({ children }) {
     const [cart, setCart] = useState([])
     const [toTal, setTotal] = useState(0);
     const [sumPrice, setSumPrice] = useState(0);
+    const name = localStorage.getItem("name")
+    const messangerId = localStorage.getItem("messangerId")
 
     const addTocart = (data) => {
         console.log(data)
@@ -25,23 +28,45 @@ function Context({ children }) {
         console.log(id)
         let newCart = cart.filter(item => item.id !== id);
         setCart(newCart);
-       
+
+    }
+
+
+    const saveOrder = async () => {
+
+        const body = {
+            bill_ID: "SA01",
+            amount: sumPrice,
+            ordertype: "สั่งกลับบ้าน",
+            Date_times:  new Date(),
+            statusOrder: "รับออเดอร์แล้ว",
+            customerName: name,
+            queueNumber: "3",
+            messengerId: messangerId
+        }
+        await axios.post(`${import.meta.env.VITE_API_URL}/app/saveOrder`, body)
+            .then(res => {
+                if (res.status === 200) {
+                    alert("บันทึกคำสั่งซื้อสำเร็จ")
+                }
+            })
+
     }
 
     useEffect(() => {
         if (cart.length > 0) {
 
-           
+
             let total = 0;
             cart.map(item => {
                 total += (item?.quntity * item?.price);
 
-            }) 
+            })
             setTotal(cart?.length);
             setSumPrice(total)
             console.log(cart)
 
-        }else{
+        } else {
             setTotal(0);
             setSumPrice(0)
         }
@@ -55,7 +80,8 @@ function Context({ children }) {
                 addTocart,
                 cart,
                 sumPrice,
-                removeCart
+                removeCart,
+                saveOrder
             }}>
             {children}
         </AuthData.Provider>
