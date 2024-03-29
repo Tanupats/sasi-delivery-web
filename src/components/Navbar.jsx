@@ -17,6 +17,10 @@ const NavbarMenu = () => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+    const onSave = ()=>{
+        saveOrder()
+        handleClose()
+    }
     useEffect(() => {
 
     }, [])
@@ -101,7 +105,7 @@ const NavbarMenu = () => {
                 {
                     cart.length > 0 && (<>
                         <Modal.Footer>
-                            <Button variant="success" onClick={() => saveOrder()}>
+                            <Button variant="success" onClick={() => onSave()}>
                                 ยืนยันสั่งออเดอร์
                             </Button>
                             <Button variant="danger" onClick={handleClose}>

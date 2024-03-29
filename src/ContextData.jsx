@@ -15,7 +15,8 @@ function Context({ children }) {
             name: data.name,
             price: data.price,
             quntity: 1,
-            photo: data.photo
+            photo: data.photo,
+            note: "ไม่ผักครับ"
         }
         if (cart.length === 0) {
             setCart([itemCart]);
@@ -34,16 +35,19 @@ function Context({ children }) {
 
     const saveOrder = async () => {
 
+        let Bid = "SA02"
+
         const body = {
-            bill_ID: "SA01",
+            bill_ID: Bid,
             amount: sumPrice,
             ordertype: "สั่งกลับบ้าน",
-            Date_times:  new Date(),
+            Date_times: new Date(),
             statusOrder: "รับออเดอร์แล้ว",
             customerName: name,
             queueNumber: "3",
             messengerId: messangerId
         }
+
         await axios.post(`${import.meta.env.VITE_API_URL}/app/saveOrder`, body)
             .then(res => {
                 if (res.status === 200) {
@@ -51,6 +55,18 @@ function Context({ children }) {
                 }
             })
 
+        cart.map(({ name, price, quntity, note }) => {
+            let bodyDetails = {
+                bill_ID: Bid,
+                foodname: name,
+                price: price,
+                quantity: quntity,
+                note: note
+            }
+            axios.post(`${import.meta.env.VITE_API_URL}/app/saveOrderDetail`, bodyDetails)
+        })
+        setCart([])
+        
     }
 
     useEffect(() => {
