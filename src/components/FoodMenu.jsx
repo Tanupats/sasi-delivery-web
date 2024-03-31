@@ -9,6 +9,7 @@ import { AuthData } from "../ContextData";
 const FoodMenu = () => {
 
     const { userid,username } = useParams();
+
     localStorage.setItem("name",username)
     localStorage.setItem("messangerId",userid)
 

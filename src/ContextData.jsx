@@ -1,12 +1,14 @@
 import { createContext, useState, useEffect } from "react";
 export const AuthData = createContext();
 import axios from "axios";
+import { nanoid } from 'nanoid'
 function Context({ children }) {
     const [cart, setCart] = useState([])
     const [toTal, setTotal] = useState(0);
     const [sumPrice, setSumPrice] = useState(0);
     const name = localStorage.getItem("name")
     const messangerId = localStorage.getItem("messangerId")
+    let Bid = "sa" + nanoid(10);
 
     const addTocart = (data) => {
         console.log(data)
@@ -35,7 +37,7 @@ function Context({ children }) {
 
     const saveOrder = async () => {
 
-        let Bid = "SA02"
+        
 
         const body = {
             bill_ID: Bid,
@@ -66,7 +68,7 @@ function Context({ children }) {
             axios.post(`${import.meta.env.VITE_API_URL}/app/saveOrderDetail`, bodyDetails)
         })
         setCart([])
-        
+
     }
 
     useEffect(() => {
@@ -86,7 +88,7 @@ function Context({ children }) {
             setTotal(0);
             setSumPrice(0)
         }
-
+console.log(Bid)
     }, [cart])
 
     return (

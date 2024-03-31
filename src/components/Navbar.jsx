@@ -5,9 +5,12 @@ import Navbar from 'react-bootstrap/Navbar';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
 import { Row, Col, Card, Image, Button, Modal, Form, Alert } from "react-bootstrap";
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import { AuthData } from "../ContextData";
 import FoodMenu from './FoodMenu';
+import Myorder from './Myorder';
+import Orders from './orders';
 const NavbarMenu = () => {
 
     const { toTal, cart, sumPrice, removeCart, saveOrder } = useContext(AuthData);
@@ -17,7 +20,7 @@ const NavbarMenu = () => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    const onSave = ()=>{
+    const onSave = () => {
         saveOrder()
         handleClose()
     }
@@ -27,12 +30,13 @@ const NavbarMenu = () => {
     return (
         <Router >
 
-            <Navbar bg="light" data-bs-theme="light">
+            <Navbar bg="light" data-bs-theme="light" className='when-print'>
                 <Container fluid>
                     <Navbar.Brand href="#home">SASI Delivery</Navbar.Brand>
                     <Nav className="me-auto">
-
+                        <Nav.Link  ><AccountBoxIcon /> <Link to={'/'}>  เมนูอาหาร</Link> </Nav.Link>
                         <Nav.Link onClick={handleShow}><LocalMallIcon /> {toTal}</Nav.Link>
+                        <Nav.Link  ><AccountBoxIcon /> <Link to={'/Myorder'}>  คำสั่งซื้อ</Link> </Nav.Link>
                     </Nav>
                 </Container>
             </Navbar>
@@ -115,9 +119,12 @@ const NavbarMenu = () => {
                     </>)
                 }
             </Modal>
-            <Routes>
+            <Routes basename="sasi-delivery-app">
+
                 <Route path="/" Component={FoodMenu}></Route>
+                <Route path="/orders" Component={Orders}></Route>
                 <Route path="/:userid/:username" Component={FoodMenu}></Route>
+                <Route path="/Myorder" Component={Myorder}></Route>
             </Routes>
         </Router>
     );
