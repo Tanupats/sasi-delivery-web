@@ -67,7 +67,7 @@ const Orders = () => {
                                                             <Button onClick={()=>updateStatus("กำลังทำอาหาร")}>กำลังทำ</Button>
                                                             </Col>
                                                             <Col>
-                                                            <Button >แก้ไข</Button>
+                                                            <Button >พร้อมส่ง</Button>
                                                             </Col>
                                                          </Row>
                                                     </Card.Body>

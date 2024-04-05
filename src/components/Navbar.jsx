@@ -13,7 +13,7 @@ import Myorder from './Myorder';
 import Orders from './orders';
 const NavbarMenu = () => {
 
-    const { toTal, cart, sumPrice, removeCart, saveOrder } = useContext(AuthData);
+    const { toTal, cart, sumPrice, removeCart, saveOrder,updateNote } = useContext(AuthData);
     const [show, setShow] = useState(false);
 
 
@@ -68,7 +68,12 @@ const NavbarMenu = () => {
                                                         <Row>
                                                             <Form>
 
-                                                                <Form.Control type="text" placeholder='หมายเหตุเพิ่มเติม' />
+                                                                <Form.Control 
+                                                                type="text"
+                                                                 placeholder='หมายเหตุเพิ่มเติม' 
+                                                                 onChange={(e)=>updateNote(item.id,e.target.value)}
+                                                                 defaultValue={item.note}
+                                                                 />
                                                             </Form>
                                                         </Row>
                                                     </Col>

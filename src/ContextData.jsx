@@ -33,6 +33,21 @@ function Context({ children }) {
         setCart(newCart);
 
     }
+    const updateNote = (id,note) => {
+
+        let newCart = cart.map(item => {
+
+            if(item.id===id){
+
+                return {...item,note:note}
+            }
+            return item;
+        });
+
+
+        setCart(newCart);
+
+    }
 
 
     const saveOrder = async () => {
@@ -99,7 +114,8 @@ console.log(Bid)
                 cart,
                 sumPrice,
                 removeCart,
-                saveOrder
+                saveOrder,
+                updateNote
             }}>
             {children}
         </AuthData.Provider>
