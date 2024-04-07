@@ -86,12 +86,13 @@ const FoodMenu = () => {
                                                     <Col md={4}
                                                         xs={4}
                                                     >
-                                                        <Image style={{ width: "100%", height: '150px', objectFit: 'cover' }} src={item.photo} />
+                                                        <Image style={{ width: "100%", height: '150px', objectFit: 'cover' }}
+                                                         src={`${import.meta.env.VITE_API_URL}/files/${item.img}`} />
                                                     </Col>
                                                     <Col md={4} xs={4}>
 
-                                                        <h5>{item.name}</h5>
-                                                        <h5>{item.price}฿</h5>
+                                                        <h5>{item.foodname}</h5>
+                                                        <h5>{item.Price}฿</h5>
 
                                                     </Col>
                                                     <Col md={4} xs={4} className="text-center">

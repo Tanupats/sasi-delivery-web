@@ -13,7 +13,7 @@ import Myorder from './Myorder';
 import Orders from './orders';
 const NavbarMenu = () => {
 
-    const { toTal, cart, sumPrice, removeCart, saveOrder,updateNote } = useContext(AuthData);
+    const { toTal, cart, sumPrice, removeCart, saveOrder, updateNote } = useContext(AuthData);
     const [show, setShow] = useState(false);
 
 
@@ -60,7 +60,8 @@ const NavbarMenu = () => {
                                                     <Col md={5}
                                                         xs={5}
                                                     >
-                                                        <Image style={{ width: "100%", height: '100px', objectFit: 'cover' }} src={item?.photo} />
+                                                        <Image style={{ width: "100%", height: '100px', objectFit: 'cover' }} 
+                                                        src={`${import.meta.env.VITE_API_URL}/files/${item.photo}`}  />
                                                     </Col>
                                                     <Col md={5} xs={5}>
                                                         <h6>{item?.name}</h6>
@@ -68,12 +69,12 @@ const NavbarMenu = () => {
                                                         <Row>
                                                             <Form>
 
-                                                                <Form.Control 
-                                                                type="text"
-                                                                 placeholder='หมายเหตุเพิ่มเติม' 
-                                                                 onChange={(e)=>updateNote(item.id,e.target.value)}
-                                                                 defaultValue={item.note}
-                                                                 />
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    placeholder='หมายเหตุเพิ่มเติม'
+                                                                    onChange={(e) => updateNote(item.id, e.target.value)}
+                                                                    defaultValue={item.note}
+                                                                />
                                                             </Form>
                                                         </Row>
                                                     </Col>

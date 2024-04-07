@@ -14,11 +14,11 @@ function Context({ children }) {
         console.log(data)
         let itemCart = {
             id: cart.length + 1,
-            name: data.name,
-            price: data.price,
+            name: data.foodname,
+            price: data.Price,
             quntity: 1,
-            photo: data.photo,
-            note: "ไม่ผักครับ"
+            photo: data.img,
+            note: ""
         }
         if (cart.length === 0) {
             setCart([itemCart]);
