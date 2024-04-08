@@ -37,6 +37,7 @@ const NavbarMenu = () => {
                         <Nav.Link  ><AccountBoxIcon /> <Link to={'/'}>  เมนูอาหาร</Link> </Nav.Link>
                         <Nav.Link onClick={handleShow}><LocalMallIcon /> {toTal}</Nav.Link>
                         <Nav.Link  ><AccountBoxIcon /> <Link to={'/Myorder'}>  คำสั่งซื้อ</Link> </Nav.Link>
+                        <Nav.Link  ><AccountBoxIcon /> <Link to={'/orders'}>  ออเดอร์</Link> </Nav.Link>
                     </Nav>
                 </Container>
             </Navbar>

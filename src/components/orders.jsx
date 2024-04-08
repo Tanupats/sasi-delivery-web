@@ -16,7 +16,7 @@ const Orders = () => {
             })
     }
 
-    const OnPrint =()=>{
+    const OnPrint = () => {
         window.print();
     }
     useEffect(() => {
@@ -26,11 +26,8 @@ const Orders = () => {
         <Row>
             <Col md={12}>
 
-
-
                 <Card>
                     <Card.Body>
-
 
                         <Card.Title className="text-center title">ออเดอร์สั่งอาหาร</Card.Title>
                         <Form>
@@ -43,38 +40,41 @@ const Orders = () => {
                                 <ButtonGroup aria-label="Basic example">
                                     <Button variant="primary">รับออเดอร์</Button>
                                     <Button variant="primary">กำลังทำ</Button>
+                                    <Button variant="primary">กำลังส่ง</Button>
                                     <Button variant="primary">ส่งสำเร็จ</Button>
                                 </ButtonGroup>
                             </Row>
 
-                                {
-                                    report.map(item=>{
-                                        return (<>
-                                                <Card>
-                                                    <Card.Body>
-                                                        <p>รหัสคำสั่งซื้อ  {item.bill_ID} เวลา{item.timeOrder}</p>
-                                                        
-                                                        <p>ลูกค้า {item.customerName}</p>
-                                                       
-                                                         <Details bill_ID={item.bill_ID}/>
-                                                         <br />
-                                                         <p>รวมทั้งหมด {item.amount} บาท</p>
-                                                         <Row>
-                                                            <Col>
-                                                            <Button onClick={()=>OnPrint()}>พิมพ์</Button>
-                                                            </Col>
-                                                            <Col>
-                                                            <Button onClick={()=>updateStatus("กำลังทำอาหาร")}>กำลังทำ</Button>
-                                                            </Col>
-                                                            <Col>
-                                                            <Button >พร้อมส่ง</Button>
-                                                            </Col>
-                                                         </Row>
-                                                    </Card.Body>
-                                                </Card>
-                                        </>)
-                                    })
-                                }
+                            {
+                                report.map(item => {
+                                    return (<>
+                                        <Card>
+                                            <Card.Body>
+                                                <p>รหัสคำสั่งซื้อ  {item.bill_ID} เวลา{item.timeOrder}</p>
+
+                                                <p>ลูกค้า {item.customerName}</p>
+
+                                                <Details bill_ID={item.bill_ID} />
+                                                <br />
+
+                                                <Row>
+                                                    <Col md={4}>
+                                                        <Button     className="w-100"    onClick={() => OnPrint()}>พิมพ์</Button>
+                                                    </Col>
+                                                    <Col md={4}>
+                                                        <Button
+                                                            variant="danger w-100"
+                                                            onClick={() => updateStatus("กำลังทำอาหาร")}>กำลังทำ</Button>
+                                                    </Col>
+                                                    <Col md={4}>
+                                                        <Button variant="success w-100" >พร้อมส่ง</Button>
+                                                    </Col>
+                                                </Row>
+                                            </Card.Body>
+                                        </Card>
+                                    </>)
+                                })
+                            }
 
                         </Form>
                     </Card.Body>
