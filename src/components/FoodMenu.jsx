@@ -14,9 +14,9 @@ const FoodMenu = () => {
     localStorage.setItem("messangerId",userid)
 
     const { addTocart } = useContext(AuthData)
-    const [menuType, setMenuType] = useState([]);
+  
     const [foods, setFoods] = useState([]);
-
+    const [menuType, setMenuType] = useState([]);
     const getMenuType = async () => {
 
         await axios.get(`${import.meta.env.VITE_API_URL}/app/getMenuType`)
