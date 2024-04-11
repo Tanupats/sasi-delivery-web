@@ -43,10 +43,12 @@ const Orders = () => {
         <Row>
             <Col md={12}>
 
-                <Card>
-                    <Card.Body>
+                <Card style={{border:'none',marginTop:'12px'}}  >
+                  
 
-                        <Card.Title className="text-center title">ออเดอร์สั่งอาหาร</Card.Title>
+                        <Card.Title className="text-center title" as={'h5'}> 
+                        SASI Restuarant หนองคาย <br />
+                        รายการสั่งอาหาาร</Card.Title>
                         <Form>
                             {/* <Form.Label>
                                 ค้นหาด้วยวันที่
@@ -67,13 +69,14 @@ const Orders = () => {
                                     return (<>
                                         <Card>
                                             <Card.Body>
-                                                <p>รหัสคำสั่งซื้อ  {item.bill_ID} เวลา{item.timeOrder}</p>
-                                                <Alert> สถานะ : {item.statusOrder} </Alert>
+                                                <p>รหัสคำสั่งซื้อ  {item.bill_ID} เวลา{item.timeOrder}<br /> 
+                                                ลูกค้า {item.customerName}</p>
+                                                <Alert className="when-print"> สถานะ : {item.statusOrder} </Alert>
 
-                                                <p>ลูกค้า {item.customerName}</p>
+                                                
 
                                                 <Details bill_ID={item.bill_ID} />
-                                                <br />
+                                              
 
                                                 <Row>
                                                     <Col md={4}>
@@ -96,7 +99,7 @@ const Orders = () => {
                             }
 
                         </Form>
-                    </Card.Body>
+                 
 
                 </Card>
             </Col> </Row>

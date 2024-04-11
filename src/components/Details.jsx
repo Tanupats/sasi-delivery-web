@@ -147,16 +147,16 @@ const Details = (props) => {
 
 
     return (<>
-  <Row>
-    <Col md={6}>
-       <Button    className="when-print"  variant="success" onClick={() => handleShow('', 'newMenu')}> เพิ่มเมนูใหม่</Button>
-    </Col>
+        <Row>
+            <Col md={6}>
+                <Button className="when-print" variant="success" onClick={() => handleShow('', 'newMenu')}> เพิ่มเมนูใหม่</Button>
+            </Col>
 
-    <p>รายการอาหาร</p>
-              
-            </Row>
-           
-        <ListGroup >
+
+
+        </Row>
+
+        <ListGroup className="mt-2">
 
             {
                 detail.map(item => {
@@ -164,7 +164,7 @@ const Details = (props) => {
                     return (<>
                         <Row>
                             <Col md={8}>
-                                <ListGroup.Item style={{border:'none'}}>{item.foodname} {item.note}  จำนวน {item.quantity} ราคา {item.price}</ListGroup.Item>
+                                <ListGroup.Item style={{ border: 'none', margin: '0px', padding: '0px',fontSize:'18px' }}>{item.foodname} {item.note}   {item.quantity}  {item.price}</ListGroup.Item>
                             </Col>
                             <Col md={4}>
 
@@ -177,9 +177,9 @@ const Details = (props) => {
                 })
             }
 
-            <br />
-            <p>รวมทั้งหมด {totalNew} บาท</p>
-          
+
+            <p style={{ fontSize:'18px' }}>รวมทั้งหมด {totalNew} บาท</p>
+
         </ListGroup>
 
         <Modal show={show} onHide={handleClose}>
@@ -291,7 +291,7 @@ const Details = (props) => {
                                         <Form.Label>ราคา</Form.Label>
                                         <Form.Control type="text"
                                             defaultValue={dataMenus.price}
-                                            onChange={(e) => setDataMenus({...dataMenus,price:Number(e.target.value)})}
+                                            onChange={(e) => setDataMenus({ ...dataMenus, price: Number(e.target.value) })}
                                             placeholder='ราคา'
                                         />
 

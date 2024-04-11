@@ -2,7 +2,7 @@
     color: rgb(46, 46, 46);
 }
 @media print {
-
+ 
   @page {
     width: 80mm;
     margin: 0 auto; 
