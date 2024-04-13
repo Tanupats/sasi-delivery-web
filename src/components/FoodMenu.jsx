@@ -63,9 +63,11 @@ const FoodMenu = () => {
                                     return (
 
                                         <Badge
-                                            style={{ marginRight: '12px', fontSize: '18px' }}
+                                            style={{ marginRight: '12px',
+                                            fontSize: '18px',
+                                            backgroundColor:'#FD720D',marginBottom:'12px' }}
                                             onClick={() => getMenuBytypeId(item.id)}
-                                            pill bg="primary">
+                                            pill bg="">
                                             {item.name}
                                         </Badge>
 
@@ -98,7 +100,9 @@ const FoodMenu = () => {
                                                     <Col md={4} xs={4} className="text-center">
                                                         <Button
                                                             onClick={() => addTocart(item)}
-                                                            variant="success">
+
+                                                            style={{backgroundColor:'#FD720D',border:'none'}}
+                                                           >
                                                             <AddCircleIcon />
                                                         </Button>
                                                     </Col>
