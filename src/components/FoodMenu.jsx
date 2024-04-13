@@ -8,13 +8,13 @@ import { AuthData } from "../ContextData";
 
 const FoodMenu = () => {
 
-    const { userid,username } = useParams();
+    const { userid, username } = useParams();
 
-    localStorage.setItem("name",username)
-    localStorage.setItem("messangerId",userid)
+    sessionStorage.setItem("name", username)
+    sessionStorage.setItem("messangerId", userid)
 
     const { addTocart } = useContext(AuthData)
-  
+
     const [foods, setFoods] = useState([]);
     const [menuType, setMenuType] = useState([]);
     const getMenuType = async () => {
@@ -42,7 +42,7 @@ const FoodMenu = () => {
     }
 
     useEffect(() => {
-        console.log(userid,username)
+        console.log(userid, username)
         getMenuType();
         getFoodMenu();
     }, [])
@@ -55,25 +55,25 @@ const FoodMenu = () => {
 
                     <Row>
 
-                        <Col md={12} className="mb-4">   
-                        
+                        <Col md={12} className="mb-4">
+
                             {
                                 menuType.map(item => {
 
                                     return (
-                                       
-                                    <Badge 
-                                    style={{marginRight:'12px',fontSize:'18px'}}
-                                    onClick={()=>getMenuBytypeId(item.id)}
-                                    pill bg="primary">
-                                     {item.name}  
-                                    </Badge>
-                                 
+
+                                        <Badge
+                                            style={{ marginRight: '12px', fontSize: '18px' }}
+                                            onClick={() => getMenuBytypeId(item.id)}
+                                            pill bg="primary">
+                                            {item.name}
+                                        </Badge>
+
                                     )
                                 })
                             }
 
-</Col>
+                        </Col>
                         {
                             foods.map(item => {
                                 return (<>
@@ -87,7 +87,7 @@ const FoodMenu = () => {
                                                         xs={4}
                                                     >
                                                         <Image style={{ width: "100%", height: '150px', objectFit: 'cover' }}
-                                                         src={`${import.meta.env.VITE_API_URL}/files/${item.img}`} />
+                                                            src={`${import.meta.env.VITE_API_URL}/files/${item.img}`} />
                                                     </Col>
                                                     <Col md={4} xs={4}>
 

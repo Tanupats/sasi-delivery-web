@@ -6,8 +6,8 @@ function Context({ children }) {
     const [cart, setCart] = useState([])
     const [toTal, setTotal] = useState(0);
     const [sumPrice, setSumPrice] = useState(0);
-    const name = localStorage.getItem("name")
-    const messangerId = localStorage.getItem("messangerId")
+    const name = sessionStorage.getItem("name")
+    const messangerId = sessionStorage.getItem("messangerId")
     let Bid = "sa" + nanoid(10);
 
     const addTocart = (data) => {
