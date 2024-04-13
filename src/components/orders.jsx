@@ -7,10 +7,11 @@ import Details from "./Details";
 const Orders = () => {
 
     const [report, setReport] = useState([]);
-    const [date, setDate] = useState("2024-03-29");
+    const [date, setDate] = useState("2024-04-9");
+    const [statusOrder,setStatusOrder] = useState("รับออเดอร์แล้ว");
     const getMenuReport = async () => {
 
-        await axios.get(`${import.meta.env.VITE_API_URL}/app/report?Date_times=${date}`)
+        await axios.get(`${import.meta.env.VITE_API_URL}/app/report?Date_times=${date}&statusOrder=${statusOrder}`)
             .then(res => {
                 setReport(res.data);
             })
@@ -46,7 +47,7 @@ const Orders = () => {
                 <Card style={{border:'none',marginTop:'12px'}}  >
                   
 
-                        <Card.Title className="text-center title" as={'h5'}> 
+                        <Card.Title className="text-center title" as={'h6'}> 
                         SASI Restuarant หนองคาย <br />
                         รายการสั่งอาหาาร</Card.Title>
                         <Form>
@@ -59,7 +60,6 @@ const Orders = () => {
                                 <ButtonGroup aria-label="Basic example">
                                     <Button variant="primary">รับออเดอร์</Button>
                                     <Button variant="primary">กำลังทำ</Button>
-                                    <Button variant="primary">กำลังส่ง</Button>
                                     <Button variant="primary">ส่งสำเร็จ</Button>
                                 </ButtonGroup>
                             </Row>
@@ -70,12 +70,12 @@ const Orders = () => {
                                         <Card>
                                             <Card.Body>
                                                 <p>รหัสคำสั่งซื้อ  {item.bill_ID} เวลา{item.timeOrder}<br /> 
-                                                ลูกค้า {item.customerName}</p>
+                                                 ลูกค้า {item.customerName}</p>
                                                 <Alert className="when-print"> สถานะ : {item.statusOrder} </Alert>
 
                                                 
 
-                                                <Details bill_ID={item.bill_ID} />
+                                                <Details bill_ID={item.bill_ID} status={item.statusOrder}/>
                                               
 
                                                 <Row>
