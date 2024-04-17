@@ -172,8 +172,7 @@ const Details = (props) => {
                             <Col md={8}>
                                 <ListGroup.Item style={{ border: 'none', margin: '0px', padding: '0px', fontSize: '18px' }}>{item.foodname} {item.note}   {item.quantity}  {item.price}</ListGroup.Item>
                             </Col>
-                            {
-                                statusOrder === "รับออเดอร์แล้ว" && (
+                           
 
                                     <Col md={4}>
 
@@ -181,13 +180,12 @@ const Details = (props) => {
                                             variant="warning"
                                             onClick={() =>
                                                 handleShow(item, 'updateMenu')}>แก้ไข</Button>
-                                        { }
+                                        {' ' }
                                         <Button className="when-print mb-2" variant="danger"
                                             onClick={() => deleteById(item.id)}>ลบ</Button>
                                     </Col>
 
-                                )
-                            }
+                             
                         </Row>
 
                     </>)

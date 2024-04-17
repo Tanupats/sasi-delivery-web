@@ -3,12 +3,13 @@ import { Row, Col, Card, Image, Button, Modal, Form, Alert } from "react-bootstr
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import axios from "axios";
 import Details from "./Details";
+import moment from "moment/moment";
 
 const Orders = () => {
 
     const [report, setReport] = useState([]);
-    const [date, setDate] = useState("2024-04-9");
-    const [statusOrder,setStatusOrder] = useState("รับออเดอร์แล้ว");
+    const [date, setDate] = useState(moment(new Date()).format('YYYY-MM-DD'));
+    const [statusOrder, setStatusOrder] = useState("รับออเดอร์แล้ว");
     const getMenuReport = async () => {
 
         await axios.get(`${import.meta.env.VITE_API_URL}/app/report?Date_times=${date}&statusOrder=${statusOrder}`)
@@ -40,69 +41,81 @@ const Orders = () => {
     useEffect(() => {
         getMenuReport();
     }, [])
+    useEffect(() => {
+        getMenuReport();
+    }, [statusOrder])
+
     return (<>
         <Row>
             <Col md={12}>
 
-                <Card style={{border:'none',marginTop:'12px'}}  >
-                  
+                <Card style={{ border: 'none', marginTop: '12px' }}  >
 
-                        <Card.Title className="text-center title" as={'h6'}> 
+
+                    <Card.Title className="text-center title" as={'h6'}>
                         SASI Restuarant หนองคาย <br />
                         รายการสั่งอาหาาร</Card.Title>
-                        <Form>
-                            {/* <Form.Label>
+                    <Form>
+                        {/* <Form.Label>
                                 ค้นหาด้วยวันที่
                             </Form.Label>
                             <Form.Control type="date"/> */}
-                            <Row className="when-print">
+                        <Row className="when-print">
 
-                                <ButtonGroup aria-label="Basic example">
-                                    <Button variant="primary">รับออเดอร์</Button>
-                                    <Button variant="primary">กำลังทำ</Button>
-                                    <Button variant="primary">ส่งสำเร็จ</Button>
-                                </ButtonGroup>
-                            </Row>
+                            <ButtonGroup aria-label="Basic example">
+                                <Button variant="primary" onClick={() => setStatusOrder("รับออเดอร์แล้ว")}>รับออเดอร์</Button>
+                                <Button variant="primary" onClick={() => setStatusOrder("กำลังทำอาหาร")}>กำลังทำ</Button>
+                                <Button variant="primary" onClick={() => setStatusOrder("ส่งสำเร็จ")}>ส่งสำเร็จ</Button>
+                            </ButtonGroup>
+                        </Row>
 
-                            {
-                                report.map(item => {
-                                    return (<>
-                                        <Card>
-                                            <Card.Body>
-                                                <p>รหัสคำสั่งซื้อ  {item.bill_ID} เวลา{item.timeOrder}<br /> 
-                                                 ลูกค้า {item.customerName}</p>
-                                                <Alert className="when-print"> สถานะ : {item.statusOrder} </Alert>
+                        {
+                            report.map(item => {
+                                return (<>
+                                    <Card>
+                                        <Card.Body>
+                                            <p>รหัสคำสั่งซื้อ  {item.bill_ID} เวลา{item.timeOrder}<br />
+                                                ลูกค้า {item.customerName}</p>
+                                            <Alert className="when-print"> สถานะ : {item.statusOrder} </Alert>
 
-                                                
 
-                                                <Details bill_ID={item.bill_ID} status={item.statusOrder}/>
-                                              
 
-                                                <Row>
-                                                    <Col md={4}>
-                                                        <Button className="w-100 when-print" onClick={() => OnPrint()}>พิมพ์</Button>
-                                                    </Col>
-                                                    <Col md={4}>
-                                                        <Button
-                                                            className="when-print"
-                                                            variant="danger w-100"
-                                                            onClick={() => UpdateStatus( item.bill_ID,"กำลังทำอาหาร")}>กำลังทำ</Button>
-                                                    </Col>
-                                                    <Col md={4}>
-                                                        <Button className="when-print"    onClick={() => UpdateStatus(item.bill_ID,"ออเดอร์พร้อมส่ง")} variant="success w-100" >พร้อมส่ง</Button>
-                                                    </Col>
-                                                </Row>
-                                            </Card.Body>
-                                        </Card>
-                                    </>)
-                                })
-                            }
+                                            <Details bill_ID={item.bill_ID} status={item.statusOrder} />
 
-                        </Form>
-                 
+
+                                            <Row>
+                                                <Col md={4}>
+                                                    <Button className="w-100 when-print" onClick={() => OnPrint()}>พิมพ์</Button>
+                                                </Col>
+                                                <Col md={4}>
+                                                    <Button
+                                                        className="when-print"
+                                                        variant="danger w-100"
+                                                        onClick={() => UpdateStatus(item.bill_ID, "กำลังทำอาหาร")}>กำลังทำ</Button>
+                                                </Col>
+                                                <Col md={4}>
+                                                    <Button className="when-print" onClick={() => UpdateStatus(item.bill_ID, "ออเดอร์พร้อมส่ง")} variant="success w-100" >พร้อมส่ง</Button>
+                                                </Col>
+                                            </Row>
+                                        </Card.Body>
+                                    </Card>
+                                </>)
+                            })
+                        }
+
+                    </Form>
+                    {
+                        report.length === 0 && (
+                             <Alert className="mt-4 text-center">  ยังไม่มีรายการ {statusOrder}</Alert>
+
+                        )
+                    }        
+                   
 
                 </Card>
-            </Col> </Row>
+            </Col>
+
+        </Row>
     </>)
 }
 export default Orders;

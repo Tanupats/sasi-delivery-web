@@ -31,29 +31,20 @@ function Context({ children }) {
         console.log(id)
         let newCart = cart.filter(item => item.id !== id);
         setCart(newCart);
-
     }
-    const updateNote = (id,note) => {
 
+    const updateNote = (id, note) => {
         let newCart = cart.map(item => {
-
-            if(item.id===id){
-
-                return {...item,note:note}
+            if (item.id === id) {
+                return { ...item, note: note }
             }
             return item;
         });
-
-
         setCart(newCart);
-
     }
 
 
     const saveOrder = async () => {
-
-        
-
         const body = {
             bill_ID: Bid,
             amount: sumPrice,
@@ -88,8 +79,6 @@ function Context({ children }) {
 
     useEffect(() => {
         if (cart.length > 0) {
-
-
             let total = 0;
             cart.map(item => {
                 total += (item?.quntity * item?.price);
@@ -103,7 +92,7 @@ function Context({ children }) {
             setTotal(0);
             setSumPrice(0)
         }
-console.log(Bid)
+        console.log(Bid)
     }, [cart])
 
     return (
