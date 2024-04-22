@@ -146,18 +146,18 @@ const Details = (props) => {
 
 
     return (<>
-
+  
         <Row>
-            {
+            
 
-                statusOrder === "รับออเดอร์แล้ว" && (
-
+             
+                          
                     <Col md={6}>
                         <Button className="when-print" variant="success" onClick={() => handleShow('', 'newMenu')}> เพิ่มเมนูใหม่</Button>
                     </Col>
 
-                )
-            }
+                
+            
 
 
         </Row>

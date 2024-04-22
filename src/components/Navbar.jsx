@@ -30,14 +30,17 @@ const NavbarMenu = () => {
     return (
         <Router >
 
-            <Navbar bg="light" data-bs-theme="light" className='when-print'>
+            <Navbar bg="light" data-bs-theme="light" className='when-print' sticky='top'>
                 <Container fluid>
-                    <Navbar.Brand href="#home">SASI Delivery</Navbar.Brand>
+                    {/* <Navbar.Brand href="#home">SASI Delivery</Navbar.Brand> */}
                     <Nav className="me-auto">
                         <Nav.Link  ><AccountBoxIcon /> <Link to={'/'}>  เมนูอาหาร</Link> </Nav.Link>
                         <Nav.Link onClick={handleShow}><LocalMallIcon /> {toTal}</Nav.Link>
-                        <Nav.Link  ><AccountBoxIcon /> <Link to={'/Myorder'}>  คำสั่งซื้อ</Link> </Nav.Link>
-                        <Nav.Link  ><AccountBoxIcon /> <Link to={'/orders'}>  ออเดอร์</Link> </Nav.Link>
+                        <Nav.Link  ><AccountBoxIcon /> <Link to={'/Myorder'}>  คำสั่งซื้อ</Link> </Nav.Link> 
+
+                        {    sessionStorage.getItem("name") === "" && (
+                            <Nav.Link  ><AccountBoxIcon /> <Link to={'/orders'}>  ออเดอร์</Link> </Nav.Link>
+                        ) } 
                     </Nav>
                 </Container>
             </Navbar>

@@ -64,8 +64,8 @@ const Orders = () => {
 
                             <ButtonGroup aria-label="Basic example">
                                 <Button variant="primary" onClick={() => setStatusOrder("รับออเดอร์แล้ว")}>รับออเดอร์</Button>
-                                <Button variant="primary" onClick={() => setStatusOrder("กำลังทำอาหาร")}>กำลังทำ</Button>
-                                <Button variant="primary" onClick={() => setStatusOrder("ส่งสำเร็จ")}>ส่งสำเร็จ</Button>
+                                <Button variant="danger" onClick={() => setStatusOrder("กำลังทำอาหาร")}>กำลังทำ</Button>
+                                <Button variant="success" onClick={() => setStatusOrder("ออเดอร์พร้อมส่ง")}>รอส่ง</Button>
                             </ButtonGroup>
                         </Row>
 

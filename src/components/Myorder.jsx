@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Card, Image, Button, Modal } from "react-bootstrap";
+import { Row, Col, Card, Image, Button, Modal, Alert } from "react-bootstrap";
 import axios from "axios";
 import Details from "./Details";
 import moment from "moment";
@@ -48,6 +48,11 @@ const Myorder = () => {
                         </>)
                     })
                 }
+
+                {myOrder.length===0  && (
+
+                    <Alert variant="danger text-center">ยังไม่มีคำสั่งซื้อ</Alert>
+                ) }
             </Card.Body>
         </Card>
     </>)
