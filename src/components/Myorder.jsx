@@ -4,6 +4,7 @@ import axios from "axios";
 import Details from "./Details";
 import moment from "moment";
 const Myorder = () => {
+
     let messengerId = sessionStorage.getItem("messangerId");
     const [myOrder, setMyorder] = useState([]);
     const [date,setDate] = useState(moment(new Date()).format('YYYY-MM-DD'))
@@ -39,7 +40,7 @@ const Myorder = () => {
                                     <p>การรับสินค้า {item.ordertype}</p>
 
                                     <Card.Title> รายการอาหาร</Card.Title>
-                                    <Details bill_ID={item.bill_ID} />
+                                    <Details bill_ID={item.bill_ID} status={item.statusOrder}/>
                                     <p>สถานะ {item.statusOrder}</p>
                                     <b>รวมทั้งหมด {item.amount} บาท</b>
                                 </Card.Body>

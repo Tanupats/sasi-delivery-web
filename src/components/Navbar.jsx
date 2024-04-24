@@ -11,11 +11,11 @@ import { AuthData } from "../ContextData";
 import FoodMenu from './FoodMenu';
 import Myorder from './Myorder';
 import Orders from './orders';
+
 const NavbarMenu = () => {
 
-    const { toTal, cart, sumPrice, removeCart, saveOrder, updateNote } = useContext(AuthData);
+    const { toTal, cart, sumPrice, removeCart, saveOrder, updateNote, name, messangerId } = useContext(AuthData);
     const [show, setShow] = useState(false);
-
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -26,21 +26,23 @@ const NavbarMenu = () => {
     }
     useEffect(() => {
 
-    }, [])
+    }, [
+        
+    ])
     return (
-        <Router >
+        <Router>
 
             <Navbar bg="light" data-bs-theme="light" className='when-print' sticky='top'>
                 <Container fluid>
                     {/* <Navbar.Brand href="#home">SASI Delivery</Navbar.Brand> */}
                     <Nav className="me-auto">
-                        <Nav.Link  ><AccountBoxIcon /> <Link to={'/'}>  เมนูอาหาร</Link> </Nav.Link>
+                        <Nav.Link  ><AccountBoxIcon /> <Link to={`/${messangerId}/${name}`}>  เมนูอาหาร {name}</Link> </Nav.Link>
                         <Nav.Link onClick={handleShow}><LocalMallIcon /> {toTal}</Nav.Link>
-                        <Nav.Link  ><AccountBoxIcon /> <Link to={'/Myorder'}>  คำสั่งซื้อ</Link> </Nav.Link> 
+                        <Nav.Link  ><AccountBoxIcon /> <Link to={'/Myorder'}>  คำสั่งซื้อ </Link> </Nav.Link>
 
-                        {    sessionStorage.getItem("name") === "" && (
+                        {sessionStorage.getItem("name") === "" && (
                             <Nav.Link  ><AccountBoxIcon /> <Link to={'/orders'}>  ออเดอร์</Link> </Nav.Link>
-                        ) } 
+                        )}
                     </Nav>
                 </Container>
             </Navbar>
@@ -64,8 +66,8 @@ const NavbarMenu = () => {
                                                     <Col md={5}
                                                         xs={5}
                                                     >
-                                                        <Image style={{ width: "100%", height: '100px', objectFit: 'cover' }} 
-                                                        src={`${import.meta.env.VITE_API_URL}/files/${item.photo}`}  />
+                                                        <Image style={{ width: "100%", height: '100px', objectFit: 'cover' }}
+                                                            src={`${import.meta.env.VITE_API_URL}/files/${item.photo}`} />
                                                     </Col>
                                                     <Col md={5} xs={5}>
                                                         <h6>{item?.name}</h6>

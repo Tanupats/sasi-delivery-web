@@ -25,8 +25,8 @@ const FoodMenu = () => {
             })
     }
 
-    const getMenuBytypeId = async (id) => {
 
+    const getMenuBytypeId = async (id) => {
         await axios.get(`${import.meta.env.VITE_API_URL}/app/foodMenuByTypeId?typeId=${id}`)
             .then(res => {
                 setFoods(res.data);
@@ -34,7 +34,6 @@ const FoodMenu = () => {
     }
 
     const getFoodMenu = async () => {
-
         await axios.get(import.meta.env.VITE_API_URL + '/app/foodMenu')
             .then(res => {
                 setFoods(res.data);
@@ -42,7 +41,6 @@ const FoodMenu = () => {
     }
 
     useEffect(() => {
-        console.log(userid, username)
         getMenuType();
         getFoodMenu();
     }, [])
@@ -63,9 +61,11 @@ const FoodMenu = () => {
                                     return (
 
                                         <Badge
-                                            style={{ marginRight: '12px',
-                                            fontSize: '18px',
-                                            backgroundColor:'#FD720D',marginBottom:'12px' }}
+                                            style={{
+                                                marginRight: '12px',
+                                                fontSize: '18px',
+                                                backgroundColor: '#FD720D', marginBottom: '12px'
+                                            }}
                                             onClick={() => getMenuBytypeId(item.id)}
                                             pill bg="">
                                             {item.name}
@@ -81,12 +81,12 @@ const FoodMenu = () => {
                                 return (<>
 
 
-                                    <Col md={6} xs={12}>
+                                    <Col md={6} xs={12} key={item.id}>
                                         <Card style={{ height: '180px', marginBottom: '12px' }}>
                                             <Card.Body>
                                                 <Row>
-                                                    <Col md={4}
-                                                        xs={4}
+                                                    <Col md={5}
+                                                        xs={5}
                                                     >
                                                         <Image style={{ width: "100%", height: '150px', objectFit: 'cover' }}
                                                             src={`${import.meta.env.VITE_API_URL}/files/${item.img}`} />
@@ -97,12 +97,12 @@ const FoodMenu = () => {
                                                         <h5>{item.Price}฿</h5>
 
                                                     </Col>
-                                                    <Col md={4} xs={4} className="text-center">
+                                                    <Col md={3} xs={3} className="text-center">
                                                         <Button
                                                             onClick={() => addTocart(item)}
 
-                                                            style={{backgroundColor:'#FD720D',border:'none'}}
-                                                           >
+                                                            style={{ backgroundColor: '#FD720D', border: 'none' }}
+                                                        >
                                                             <AddCircleIcon />
                                                         </Button>
                                                     </Col>

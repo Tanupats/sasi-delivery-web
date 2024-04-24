@@ -3,7 +3,7 @@ import { Row, Col, Card, Image, Button, Modal, ListGroup, Form } from "react-boo
 import axios from "axios";
 import Select from 'react-select'
 const Details = (props) => {
-    let { bill_ID, statusOrder } = props;
+    let { bill_ID, status } = props;
     const [detail, setDetail] = useState([]);
     const [show, setShow] = useState(false);
     const [dataMenus, setDataMenus] = useState("");
@@ -146,18 +146,19 @@ const Details = (props) => {
 
 
     return (<>
-  
+
         <Row>
-            
 
-             
-                          
-                    <Col md={6}>
-                        <Button className="when-print" variant="success" onClick={() => handleShow('', 'newMenu')}> เพิ่มเมนูใหม่</Button>
-                    </Col>
 
-                
-            
+
+
+            <Col md={6}>
+                {/* <h1>{status}</h1> */}
+                <Button className="when-print" variant="success" onClick={() => handleShow('', 'newMenu')}> เพิ่มเมนูใหม่</Button>
+            </Col>
+
+
+
 
 
         </Row>
@@ -172,20 +173,20 @@ const Details = (props) => {
                             <Col md={8}>
                                 <ListGroup.Item style={{ border: 'none', margin: '0px', padding: '0px', fontSize: '18px' }}>{item.foodname} {item.note}   {item.quantity}  {item.price}</ListGroup.Item>
                             </Col>
-                           
 
-                                    <Col md={4}>
 
-                                        <Button className="when-print mb-2"
-                                            variant="warning"
-                                            onClick={() =>
-                                                handleShow(item, 'updateMenu')}>แก้ไข</Button>
-                                        {' ' }
-                                        <Button className="when-print mb-2" variant="danger"
-                                            onClick={() => deleteById(item.id)}>ลบ</Button>
-                                    </Col>
+                            <Col md={4}>
 
-                             
+                                <Button className="when-print mb-2"
+                                    variant="warning"
+                                    onClick={() =>
+                                        handleShow(item, 'updateMenu')}>แก้ไข</Button>
+                                {' '}
+                                <Button className="when-print mb-2" variant="danger"
+                                    onClick={() => deleteById(item.id)}>ลบ</Button>
+                            </Col>
+
+
                         </Row>
 
                     </>)

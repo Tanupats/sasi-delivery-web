@@ -1,13 +1,16 @@
 import { createContext, useState, useEffect } from "react";
+import moment from "moment";
 export const AuthData = createContext();
 import axios from "axios";
 import { nanoid } from 'nanoid'
+
 function Context({ children }) {
     const [cart, setCart] = useState([])
     const [toTal, setTotal] = useState(0);
     const [sumPrice, setSumPrice] = useState(0);
-    const name = sessionStorage.getItem("name")
-    const messangerId = sessionStorage.getItem("messangerId")
+
+    const [name,setName] = useState("") 
+    const [messangerId,setMessangerId] = useState("")  
     let Bid = "sa" + nanoid(10);
 
     const addTocart = (data) => {
@@ -49,7 +52,7 @@ function Context({ children }) {
             bill_ID: Bid,
             amount: sumPrice,
             ordertype: "สั่งกลับบ้าน",
-            Date_times: new Date(),
+            Date_times: moment(new Date()).format('YYYY-MM-DD'),
             statusOrder: "รับออเดอร์แล้ว",
             customerName: name,
             queueNumber: "3",
@@ -95,7 +98,14 @@ function Context({ children }) {
         console.log(Bid)
     }, [cart])
 
-    return (
+    useEffect(()=>{
+        
+        setName(sessionStorage.getItem("name"))  
+        setMessangerId(sessionStorage.getItem("messangerId"))
+    },[])
+
+    return (<>
+       
         <AuthData.Provider
             value={{
                 toTal,
@@ -104,10 +114,13 @@ function Context({ children }) {
                 sumPrice,
                 removeCart,
                 saveOrder,
-                updateNote
+                updateNote,
+                name,
+                messangerId
             }}>
             {children}
         </AuthData.Provider>
+        </>
     );
 
 
