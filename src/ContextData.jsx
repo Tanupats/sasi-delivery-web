@@ -2,6 +2,7 @@ import { createContext, useState, useEffect } from "react";
 import moment from "moment";
 export const AuthData = createContext();
 import axios from "axios";
+import Swal from 'sweetalert2'
 import { nanoid } from 'nanoid'
 
 function Context({ children }) {
@@ -28,6 +29,13 @@ function Context({ children }) {
         } else {
             setCart([...cart, itemCart]);
         }
+        
+        Swal.fire({
+            title: 'เพิ่มลงตะกร้า',
+            text: 'เพิ่มรายการลงตะกร้าเรียบร้อย',
+            icon: 'success',
+           
+          })
     }
 
     const removeCart = (id) => {
@@ -62,7 +70,13 @@ function Context({ children }) {
         await axios.post(`${import.meta.env.VITE_API_URL}/app/saveOrder`, body)
             .then(res => {
                 if (res.status === 200) {
-                    alert("บันทึกคำสั่งซื้อสำเร็จ")
+                   
+                    Swal.fire({
+                        title: 'สั่งอาหารสำเร็จ',
+                        text: 'คำสั่งซื้อของคุณส่งไปยังร้านค้าแล้ว',
+                        icon: 'success',
+                        confirmButtonText: 'ยืนยัน'
+                      })
                 }
             })
 

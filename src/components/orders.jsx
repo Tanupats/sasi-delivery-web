@@ -19,7 +19,7 @@ const Orders = () => {
     }
 
     const UpdateStatus = async (Bill_id, status) => {
-
+        setStatusOrder(status)
         let body = {
             statusOrder: status,
 
@@ -34,13 +34,14 @@ const Orders = () => {
 
         handleClose()
         //update total new after update foodmenu 
+
     }
     const OnPrint = () => {
         window.print();
     }
-    useEffect(() => {
-        getMenuReport();
-    }, [])
+
+
+
     useEffect(() => {
         getMenuReport();
     }, [statusOrder])
@@ -77,25 +78,28 @@ const Orders = () => {
                                             <p>รหัสคำสั่งซื้อ  {item.bill_ID} เวลา{item.timeOrder}<br />
                                                 ลูกค้า {item.customerName}</p>
                                             <Alert className="when-print"> สถานะ : {item.statusOrder} </Alert>
-
-
-
                                             <Details bill_ID={item.bill_ID} status={item.statusOrder} />
-
-
                                             <Row>
-                                                <Col md={4}>
-                                                    <Button className="w-100 when-print" onClick={() => OnPrint()}>พิมพ์</Button>
+                                                <Col md={2}>
+                                                    <Button className="w-100 when-print" onClick={() => OnPrint()}>พิมพ์ใบเสร็จ</Button>
                                                 </Col>
+                                                {
+                                                    item.statusOrder === "รับออเดอร์แล้ว" && (
                                                 <Col md={4}>
                                                     <Button
                                                         className="when-print"
                                                         variant="danger w-100"
                                                         onClick={() => UpdateStatus(item.bill_ID, "กำลังทำอาหาร")}>กำลังทำ</Button>
                                                 </Col>
-                                                <Col md={4}>
-                                                    <Button className="when-print" onClick={() => UpdateStatus(item.bill_ID, "ออเดอร์พร้อมส่ง")} variant="success w-100" >พร้อมส่ง</Button>
-                                                </Col>
+                                                    ) 
+                                            }
+                                                {
+                                                    item.statusOrder === "กำลังทำอาหาร" && (
+                                                        <Col md={4}>
+                                                            <Button className="when-print" onClick={() => UpdateStatus(item.bill_ID, "ออเดอร์พร้อมส่ง")} variant="success w-100" >พร้อมส่ง</Button>
+                                                        </Col>
+                                                    )
+                                                }
                                             </Row>
                                         </Card.Body>
                                     </Card>
@@ -106,11 +110,11 @@ const Orders = () => {
                     </Form>
                     {
                         report.length === 0 && (
-                             <Alert className="mt-4 text-center">  ยังไม่มีรายการ {statusOrder}</Alert>
+                            <Alert className="mt-4 text-center">  ยังไม่มีรายการ {statusOrder}</Alert>
 
                         )
-                    }        
-                   
+                    }
+
 
                 </Card>
             </Col>

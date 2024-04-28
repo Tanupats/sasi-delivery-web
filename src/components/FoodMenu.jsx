@@ -56,11 +56,13 @@ const FoodMenu = () => {
                         <Col md={12} className="mb-4">
 
                             {
-                                menuType.map(item => {
+                           menuType.length >0 &&  menuType?.map((item,index) => {
 
                                     return (
+                                        
 
                                         <Badge
+                                           key={index}
                                             style={{
                                                 marginRight: '12px',
                                                 fontSize: '18px',
@@ -77,11 +79,11 @@ const FoodMenu = () => {
 
                         </Col>
                         {
-                            foods.map(item => {
+                            foods?.map((item,index) => {
                                 return (<>
 
 
-                                    <Col md={6} xs={12} key={item.id}>
+                                    <Col md={6} xs={12} key={index}>
                                         <Card style={{ height: '180px', marginBottom: '12px' }}>
                                             <Card.Body>
                                                 <Row>

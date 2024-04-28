@@ -151,11 +151,15 @@ const Details = (props) => {
 
 
 
+            {
+                status !== "ออเดอร์พร้อมส่ง" && (
+                    <Col md={6}>
+                        {/* <h1>{status}</h1> */}
+                        <Button className="when-print" variant="success" onClick={() => handleShow('', 'newMenu')}> เพิ่มเมนูใหม่</Button>
+                    </Col>
+                )
+            }
 
-            <Col md={6}>
-                {/* <h1>{status}</h1> */}
-                <Button className="when-print" variant="success" onClick={() => handleShow('', 'newMenu')}> เพิ่มเมนูใหม่</Button>
-            </Col>
 
 
 
@@ -174,18 +178,19 @@ const Details = (props) => {
                                 <ListGroup.Item style={{ border: 'none', margin: '0px', padding: '0px', fontSize: '18px' }}>{item.foodname} {item.note}   {item.quantity}  {item.price}</ListGroup.Item>
                             </Col>
 
+                            {
+                                status !== "ออเดอร์พร้อมส่ง" && (
+                                    <Col md={4}>
 
-                            <Col md={4}>
-
-                                <Button className="when-print mb-2"
-                                    variant="warning"
-                                    onClick={() =>
-                                        handleShow(item, 'updateMenu')}>แก้ไข</Button>
-                                {' '}
-                                <Button className="when-print mb-2" variant="danger"
-                                    onClick={() => deleteById(item.id)}>ลบ</Button>
-                            </Col>
-
+                                        <Button className="when-print mb-2"
+                                            variant="warning"
+                                            onClick={() =>
+                                                handleShow(item, 'updateMenu')}>แก้ไข</Button>
+                                        {' '}
+                                        <Button className="when-print mb-2" variant="danger"
+                                            onClick={() => deleteById(item.id)}>ลบ</Button>
+                                    </Col>
+                                )}
 
                         </Row>
 
