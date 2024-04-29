@@ -11,6 +11,7 @@ import { AuthData } from "../ContextData";
 import FoodMenu from './FoodMenu';
 import Myorder from './Myorder';
 import Orders from './orders';
+import GetQueu from './GetQueu';
 
 const NavbarMenu = () => {
 
@@ -39,6 +40,7 @@ const NavbarMenu = () => {
                         <Nav.Link  ><AccountBoxIcon /> <Link to={`/${messangerId}/${name}`}>  เมนูอาหาร {name}</Link> </Nav.Link>
                         <Nav.Link onClick={handleShow}><LocalMallIcon /> {toTal}</Nav.Link>
                         <Nav.Link  ><AccountBoxIcon /> <Link to={'/Myorder'}>  คำสั่งซื้อ </Link> </Nav.Link>
+                        <Nav.Link  ><AccountBoxIcon /> <Link to={'/queueNumber'}>  ดูคิวทั้งหมด </Link> </Nav.Link>
 
                         {sessionStorage.getItem("name") === "" && (
                             <Nav.Link  ><AccountBoxIcon /> <Link to={'/orders'}>  ออเดอร์</Link> </Nav.Link>
@@ -137,6 +139,7 @@ const NavbarMenu = () => {
                 <Route path="/orders" Component={Orders}></Route>
                 <Route path="/:userid/:username" Component={FoodMenu}></Route>
                 <Route path="/Myorder" Component={Myorder}></Route>
+                <Route path="/queueNumber" Component={GetQueu}></Route>
             </Routes>
         </Router>
     );
