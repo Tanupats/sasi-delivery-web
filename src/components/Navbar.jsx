@@ -12,7 +12,8 @@ import FoodMenu from './FoodMenu';
 import Myorder from './Myorder';
 import Orders from './orders';
 import GetQueu from './GetQueu';
-
+import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
+import AddToQueueIcon from '@mui/icons-material/AddToQueue';
 const NavbarMenu = () => {
 
     const { toTal, cart, sumPrice, removeCart, saveOrder, updateNote, name, messangerId } = useContext(AuthData);
@@ -37,10 +38,10 @@ const NavbarMenu = () => {
                 <Container fluid>
                     {/* <Navbar.Brand href="#home">SASI Delivery</Navbar.Brand> */}
                     <Nav className="me-auto">
-                        <Nav.Link  ><AccountBoxIcon /> <Link to={`/${messangerId}/${name}`}>  เมนูอาหาร {name}</Link> </Nav.Link>
-                        <Nav.Link onClick={handleShow}><LocalMallIcon /> {toTal}</Nav.Link>
-                        <Nav.Link  ><AccountBoxIcon /> <Link to={'/Myorder'}>  คำสั่งซื้อ </Link> </Nav.Link>
-                        <Nav.Link  ><AccountBoxIcon /> <Link to={'/queueNumber'}>  ดูคิวทั้งหมด </Link> </Nav.Link>
+                        <Nav.Link  ><RestaurantMenuIcon /> <Link  style={{textDecoration:'none'}}  to={`/${messangerId}/${name}`}>  เมนูอาหาร</Link> </Nav.Link>
+                        <Nav.Link onClick={handleShow}><LocalMallIcon />   {toTal}</Nav.Link>
+                        <Nav.Link  ><AccountBoxIcon /> <Link  style={{textDecoration:'none'}}  to={'/Myorder'}>  คำสั่งซื้อ </Link> </Nav.Link>
+                        <Nav.Link  ><AddToQueueIcon /> <Link  style={{textDecoration:'none'}}   to={'/queueNumber'}>  คิวทั้งหมด </Link> </Nav.Link>
 
                         {sessionStorage.getItem("name") === "" && (
                             <Nav.Link  ><AccountBoxIcon /> <Link to={'/orders'}>  ออเดอร์</Link> </Nav.Link>
@@ -133,8 +134,7 @@ const NavbarMenu = () => {
                     </>)
                 }
             </Modal>
-            <Routes basename="sasi-delivery-app">
-
+            <Routes basename="/var/www/html/sasi-delivery-web/dist">
                 <Route path="/" Component={FoodMenu}></Route>
                 <Route path="/orders" Component={Orders}></Route>
                 <Route path="/:userid/:username" Component={FoodMenu}></Route>
@@ -143,6 +143,7 @@ const NavbarMenu = () => {
             </Routes>
         </Router>
     );
+    
 }
 
 export default NavbarMenu;
