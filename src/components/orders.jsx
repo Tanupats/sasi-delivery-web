@@ -33,7 +33,6 @@ const Orders = () => {
             })
 
         handleClose()
-        //update total new after update foodmenu 
 
     }
     const OnPrint = () => {
@@ -43,8 +42,10 @@ const Orders = () => {
 
 
     useEffect(() => {
+        sessionStorage.setItem("role", "admin")
         getMenuReport();
-    }, [statusOrder])
+    }, [report])
+
 
     return (<>
         <Row>
@@ -62,7 +63,6 @@ const Orders = () => {
                             </Form.Label>
                             <Form.Control type="date"/> */}
                         <Row className="when-print">
-
                             <ButtonGroup aria-label="Basic example">
                                 <Button variant="primary" onClick={() => setStatusOrder("รับออเดอร์แล้ว")}>รับออเดอร์</Button>
                                 <Button variant="danger" onClick={() => setStatusOrder("กำลังทำอาหาร")}>กำลังทำ</Button>
@@ -85,14 +85,14 @@ const Orders = () => {
                                                 </Col>
                                                 {
                                                     item.statusOrder === "รับออเดอร์แล้ว" && (
-                                                <Col md={4}>
-                                                    <Button
-                                                        className="when-print"
-                                                        variant="danger w-100"
-                                                        onClick={() => UpdateStatus(item.bill_ID, "กำลังทำอาหาร")}>กำลังทำ</Button>
-                                                </Col>
-                                                    ) 
-                                            }
+                                                        <Col md={4}>
+                                                            <Button
+                                                                className="when-print"
+                                                                variant="danger w-100"
+                                                                onClick={() => UpdateStatus(item.bill_ID, "กำลังทำอาหาร")}>กำลังทำ</Button>
+                                                        </Col>
+                                                    )
+                                                }
                                                 {
                                                     item.statusOrder === "กำลังทำอาหาร" && (
                                                         <Col md={4}>

@@ -12,6 +12,7 @@ const FoodMenu = () => {
 
     sessionStorage.setItem("name", username)
     sessionStorage.setItem("messangerId", userid)
+    sessionStorage.setItem("role","user");
 
     const { addTocart } = useContext(AuthData)
 

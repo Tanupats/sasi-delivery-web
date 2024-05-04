@@ -12,6 +12,8 @@ const Details = (props) => {
 
     const [optionsFood, setOptionFood] = useState([])
 
+    const [role,setRole] = useState(sessionStorage.getItem("role"))
+
     //MENU LIST 
     const [foodname, setFoodName] = useState("")
     const [price, setPrice] = useState(0);
@@ -152,7 +154,8 @@ const Details = (props) => {
 
 
             {
-                status !== "ออเดอร์พร้อมส่ง" && (
+                status !== "ออเดอร์พร้อมส่ง" &&  role !== "user" && (
+
                     <Col md={6}>
                         {/* <h1>{status}</h1> */}
                         <Button className="when-print" variant="success" onClick={() => handleShow('', 'newMenu')}> เพิ่มเมนูใหม่</Button>
@@ -179,7 +182,7 @@ const Details = (props) => {
                             </Col>
 
                             {
-                                status !== "ออเดอร์พร้อมส่ง" && (
+                                status !== "ออเดอร์พร้อมส่ง" &&   role !== "user" && (
                                     <Col md={4}>
 
                                         <Button className="when-print mb-2"
@@ -198,7 +201,7 @@ const Details = (props) => {
                 })
             }
 
-
+           
             <p style={{ fontSize: '18px' }}>รวมทั้งหมด {totalNew} บาท</p>
 
         </ListGroup>

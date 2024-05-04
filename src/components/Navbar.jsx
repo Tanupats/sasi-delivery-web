@@ -14,6 +14,7 @@ import Orders from './orders';
 import GetQueu from './GetQueu';
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import AddToQueueIcon from '@mui/icons-material/AddToQueue';
+import Services from './Services';
 const NavbarMenu = () => {
 
     const { toTal, cart, sumPrice, removeCart, saveOrder, updateNote, name, messangerId } = useContext(AuthData);
@@ -140,6 +141,7 @@ const NavbarMenu = () => {
                 <Route path="/:userid/:username" Component={FoodMenu}></Route>
                 <Route path="/Myorder" Component={Myorder}></Route>
                 <Route path="/queueNumber" Component={GetQueu}></Route>
+                <Route path="/services" Component={Services}></Route>
             </Routes>
         </Router>
     );
