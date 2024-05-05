@@ -17,7 +17,7 @@ import AddToQueueIcon from '@mui/icons-material/AddToQueue';
 import Services from './Services';
 const NavbarMenu = () => {
 
-    const { toTal, cart, sumPrice, removeCart, saveOrder, updateNote, name, messangerId } = useContext(AuthData);
+    const { toTal, cart, sumPrice, removeCart, saveOrder, updateNote, name, messangerId,queue } = useContext(AuthData);
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
@@ -30,7 +30,7 @@ const NavbarMenu = () => {
     useEffect(() => {
 
     }, [
-        
+
     ])
     return (
         <Router>
@@ -38,13 +38,13 @@ const NavbarMenu = () => {
             <Navbar bg="light" data-bs-theme="light" className='when-print' sticky='top'>
                 <Container fluid>
                     {/* <Navbar.Brand href="#home">SASI Delivery</Navbar.Brand> */}
-                    <Nav className="me-auto">
-                        <Nav.Link  ><RestaurantMenuIcon /> <Link  style={{textDecoration:'none'}}  to={`/${messangerId}/${name}`}>  เมนูอาหาร</Link> </Nav.Link>
+                    <Nav className="me-auto text-center">
+                        <Nav.Link  ><Link style={{ textDecoration: 'none',color:'#000' }} to={`/${messangerId}/${name}`}> <RestaurantMenuIcon />  เมนู</Link> </Nav.Link>
                         <Nav.Link onClick={handleShow}><LocalMallIcon />   {toTal}</Nav.Link>
-                        <Nav.Link  ><AccountBoxIcon /> <Link  style={{textDecoration:'none'}}  to={'/Myorder'}>  คำสั่งซื้อ </Link> </Nav.Link>
-                        <Nav.Link  ><AddToQueueIcon /> <Link  style={{textDecoration:'none'}}   to={'/queueNumber'}>  คิวทั้งหมด </Link> </Nav.Link>
+                        <Nav.Link  ><Link style={{ textDecoration: 'none',color:'#000' }} to={'/Myorder'}> <AccountBoxIcon />  คำสั่งซื้อ </Link> </Nav.Link>
+                        <Nav.Link  ><Link style={{ textDecoration: 'none',color:'#000' }} to={'/queueNumber'}> <AddToQueueIcon />  คิวตอนนี้ {queue} </Link> </Nav.Link>
 
-                        {sessionStorage.getItem("name") === "" && (
+                        {sessionStorage.getItem("role") === "admin" && (
                             <Nav.Link  ><AccountBoxIcon /> <Link to={'/orders'}>  ออเดอร์</Link> </Nav.Link>
                         )}
                     </Nav>
@@ -145,7 +145,7 @@ const NavbarMenu = () => {
             </Routes>
         </Router>
     );
-    
+
 }
 
 export default NavbarMenu;

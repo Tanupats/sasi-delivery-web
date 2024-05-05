@@ -93,7 +93,18 @@ function Context({ children }) {
         setCart([])
 
     }
+    const [queue, setQueu] = useState([]);
 
+    const getQueu = async () => {
+
+        await axios.get(`${import.meta.env.VITE_API_URL}/app/getQueues`)
+            .then(res => {
+
+                if (res.status === 200) {
+                    setQueu(res.data[0].count_order)
+                }
+            })
+    }
     useEffect(() => {
         if (cart.length > 0) {
             let total = 0;
@@ -116,6 +127,7 @@ function Context({ children }) {
         
         setName(sessionStorage.getItem("name"))  
         setMessangerId(sessionStorage.getItem("messangerId"))
+        getQueu()
     },[])
 
     return (<>
@@ -130,7 +142,9 @@ function Context({ children }) {
                 saveOrder,
                 updateNote,
                 name,
-                messangerId
+                messangerId,
+                queue
+
             }}>
             {children}
         </AuthData.Provider>

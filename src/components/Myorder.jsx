@@ -10,17 +10,21 @@ const Myorder = () => {
     let messengerId = sessionStorage.getItem("messangerId");
     const [myOrder, setMyorder] = useState([]);
     const [date, setDate] = useState(moment(new Date()).format('YYYY-MM-DD'))
-    const getMyorder = async () => {
+    const getMyorder =  () => {
 
-        await axios.get(`${import.meta.env.VITE_API_URL}/app/getMyorder?messengerId=${messengerId}&Date_times=${date}`)
+         axios.get(`${import.meta.env.VITE_API_URL}/app/getMyorder?messengerId=${messengerId}&Date_times=${date}`)
             .then(res => {
                 setMyorder(res.data);
             })
     }
-
+ 
     useEffect(() => {
-        getMyorder();
+      
+        const interval = setInterval(() => {
+            getMyorder();
+        }, 5000); // ดึงข้อมูลจาก API ทุกๆ 5 วินาที
 
+        return () => clearInterval(interval); 
     }, [])
     return (<>
         <Card>
@@ -30,56 +34,57 @@ const Myorder = () => {
                     คำสั่งซื้อของฉัน
                 </Card.Title>
                 <Tabs
-                    defaultActiveKey="profile"
+                    defaultActiveKey="home"
                     id="uncontrolled-tab-example"
                     className="mb-3"
                 >
-                    <Tab eventKey="home" title="Home">
+                    <Tab eventKey="home" title="ใหม่">
                         {
                             myOrder.map(item => {
+                                if (item.statusOrder !== "ออเดอร์พร้อมส่ง") {
 
-                                return (<>
-                                    <Card className="mb-4">
-                                        <Card.Body>
-                                            <p>รหัสออเดอร์ {item.bill_ID}  วันที่
-                                                {moment(item.Date_times).format('YYYY-MM-DD')}
-                                            </p>
+                                    return (
 
-                                            <p>การรับสินค้า {item.ordertype}</p>
+                                        <>
+                                            <Card className="mb-4">
+                                                <Card.Body>
+                                                    <p>รหัสออเดอร์ {item.bill_ID}  วันที่สั่งซื้อ { }
+                                                        {moment(item.Date_times).format('YYYY-MM-DD')}
+                                                    </p>
+                                                    <Card.Title> รายการอาหาร</Card.Title>
+                                                    <Details bill_ID={item.bill_ID} status={item.statusOrder} />
+                                                    <h5>สถานะ {item.statusOrder}</h5>
+                                                    <h5>การรับสินค้า - {item.ordertype}</h5>
+                                                </Card.Body>
 
-                                            <Card.Title> รายการอาหาร</Card.Title>
-                                            <Details bill_ID={item.bill_ID} status={item.statusOrder} />
-                                            <p>สถานะ {item.statusOrder}</p>
+                                            </Card>
+                                        </>)
+                                }
 
-                                        </Card.Body>
-
-                                    </Card>
-                                </>)
                             })
                         }
                     </Tab>
-                    <Tab eventKey="profile" title="Profile">
+                    <Tab eventKey="profile" title="การจัดส่ง">
                         {
                             myOrder.map(item => {
+                                if (item.statusOrder === "ออเดอร์พร้อมส่ง") {
+                                    return (<>
+                                        <Card className="mb-4">
+                                            <Card.Body>
+                                                <p>รหัสออเดอร์ {item.bill_ID}  วันที่สั่งซื้อ { }
+                                                    {moment(item.Date_times).format('YYYY-MM-DD')}
+                                                </p>
+                                                <Card.Title> รายการอาหาร</Card.Title>
+                                                <Details bill_ID={item.bill_ID} status={item.statusOrder} />
+                                                <h5>สถานะ {item.statusOrder}</h5>
+                                                <h5>การรับสินค้า - {item.ordertype}</h5>
+                                            </Card.Body>
 
-                                return (<>
-                                    <Card className="mb-4">
-                                        <Card.Body>
-                                            <p>รหัสออเดอร์ {item.bill_ID}  วันที่
-                                                {moment(item.Date_times).format('YYYY-MM-DD')}
-                                            </p>
-
-                                            <p>การรับสินค้า {item.ordertype}</p>
-
-                                            <Card.Title> รายการอาหาร</Card.Title>
-                                            <Details bill_ID={item.bill_ID} status={item.statusOrder} />
-                                            <p>สถานะ {item.statusOrder}</p>
-
-                                        </Card.Body>
-
-                                    </Card>
-                                </>)
+                                        </Card>
+                                    </>)
+                                }
                             })
+
                         }
                     </Tab>
 
