@@ -1,13 +1,13 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import { Row, Col, Table, Card, Image, Form } from 'react-bootstrap';
+import { Row, Col, Table, Card, Image, Form, Container } from 'react-bootstrap';
 import FoodComponent from './foodComponent';
 import Pagination from 'react-bootstrap/Pagination';
 import CancelIcon from '@mui/icons-material/Cancel';
 import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
-
+import { AuthData } from "../ContextData";
 import axios from 'axios';
 let active = 2;
 let items = [];
@@ -20,8 +20,9 @@ for (let number = 1; number <= 5; number++) {
   );
 }
 
-const  Pos = ()=> {
+const Pos = () => {
 
+  const { addTocart } = useContext(AuthData)
   const [menu, setMenu] = useState([]);
   const [menuType, setMenuType] = useState([]);
   const printSlip = () => {
@@ -43,55 +44,62 @@ const  Pos = ()=> {
   const getMenuType = async () => {
 
     await axios.get(`${import.meta.env.VITE_API_URL}/GetmenuType.php`)
-        .then(res => {
-            setMenuType(res.data);
-        })
-}
+      .then(res => {
+        setMenuType(res.data);
+      })
+  }
 
 
-const getMenuBytypeId = async (id) => {
+  const getMenuBytypeId = async (id) => {
     await axios.get(`${import.meta.env.VITE_API_URL}/getMenuId.php?TypeID=${id}`)
-        .then(res => {
-            setMenu(res.data);
-        })
-}
+      .then(res => {
+        setMenu(res.data);
+      })
+  }
 
   useEffect(() => {
     getMenuType()
-    getMenu();
+    getMenu()
   }, [])
 
   return (
-   
-   
-      <div >
-       
-        <Row className='mt-3'>
 
-          <Col md={7} className='whenprint'>
+
+    <div >
+      <Container fluid>
+
+
+
+        <Row className='mt-3'>
+          <Col md={3} className='whenprint' >
+            <div className='menu-type'>
+              <Row>
+
+
+                {
+                  menuType.map((item, index) => {
+
+                    return (<Col md={12}>
+                      <Button
+                        className='w-100 mb-2'
+                        key={index}
+                        onClick={() => getMenuBytypeId(item.TypeID)}
+                        style={{ backgroundColor: '#FD720D', border: 'none' }}
+                      >   {item.T_name}</Button>
+                    </Col>)
+                  })
+                }
+
+
+
+              </Row>
+
+            </div>
+          </Col>
+          <Col md={5}  className='whenprint'>
             <div >
 
-              <div className='menu-type'>
-                <Row>
-                  <ButtonGroup > 
 
-                    {
-                        menuType.map((item,index)=>{
-
-                            return (<>
-                             <Button 
-                               onClick={() => getMenuBytypeId(item.TypeID)}
-                             style={{ backgroundColor: '#FD720D', border: 'none' }} 
-                              >   {item.T_name}</Button>
-                            </>)
-                        })
-                    }
-                   
-                   
-                  </ButtonGroup>
-                </Row>
-
-              </div>
               <div className='menu' >
 
                 <Row>
@@ -99,8 +107,8 @@ const getMenuBytypeId = async (id) => {
                   {
                     menu.map(item => {
                       return (
-                        <Col md={4}>
-                          <FoodComponent  data={item}/>
+                        <Col md={6}>
+                          <FoodComponent data={item} />
                         </Col>
                       )
                     })
@@ -116,7 +124,7 @@ const getMenuBytypeId = async (id) => {
 
             </div>
           </Col>
-          <Col md={5}>
+          <Col md={4}>
             <div>
               <div className='text-center pt-0'>
                 <h5>รายการอาหาร</h5>
@@ -126,32 +134,19 @@ const getMenuBytypeId = async (id) => {
                 <div >
                   <Col md={12}>
 
-                    <Table>
+                    <Table border={1}>
 
                       <tbody>
-                        <tr>
-                          <td>ข้าวผัดหมู</td>
-                          <td>50</td>
-                          <td>1</td>
-                          <td>
-                            <Button variant='light'><CancelIcon /></Button></td>
-                        </tr>
-                        <tr>
-                          <td>สปาเก็ตตี้หมูสับ</td>
-                          <td>Jacob</td>
-                          <td>Thornton</td>
-                          <td>
-                            <Button variant='light'><CancelIcon /></Button></td>
-                        </tr>
+
                         <tr>
                           <td>ข้าวไก่ทอดกระเทียม</td>
-                          <td colSpan={2}>Larry the Bird</td>
+                          <td colSpan={2}>1</td>
                           <td>
-                            <Button variant='light'><CancelIcon /></Button></td>
+                            <Button variant='light'  className='whenprint'><CancelIcon /></Button></td>
                         </tr>
                         <tr>
                           <td>รวมทั้งหมด</td>
-                          <td colSpan={3}>100 บาท</td>
+                          <td colSpan={4}>50 บาท</td>
 
                         </tr>
                         <tr>
@@ -169,12 +164,9 @@ const getMenuBytypeId = async (id) => {
               </Row>
 
 
-              <div className='mt-2' >
+              <div>
                 <Form>
-                  <Row> <Form.Label>เลือกวิธีรับอาหาร </Form.Label>
-
-                  </Row>
-
+                 
                   <ButtonGroup >
                     <Button className='btn btn-primary' style={{ border: 'none' }} >เสิร์ฟในร้าน</Button>
                     <Button className='btn btn-success' style={{ border: 'none' }} >จัดส่ง</Button>
@@ -183,32 +175,29 @@ const getMenuBytypeId = async (id) => {
 
                   <Row className='mt-2'>
                     <Col>
-                      <Form.Label>ชื่อ</Form.Label>
-                      <Form.Control type="text" placeholder='ชื่อลูกค้า' />
+                      <Form.Label>ข้อมูลติดต่อ</Form.Label>
+                      <Form.Control type="text" placeholder='ที่อยู่ หรือ เบอร์โทร' />
                     </Col>
-                    <Col>
-                      <Form.Label>เบอร์</Form.Label>
-                      <Form.Control type="text" placeholder='เบอร์โทร' />
-                    </Col>
+
                   </Row>
 
 
                 </Form>
                 <Row className='mt-2 when-print'>
-                  <Col>
+                  <Col md={6}>
                     <Button
                       onClick={() => printSlip()}
                       variant='primary w-100'>
                       <LocalPrintshopIcon />  พิมพ์
                     </Button>
                   </Col>
-                  <Col>
+                  <Col md={6}>
                     <Button variant='success w-100'>
                       บันทึก
                     </Button>
                   </Col>
                   <Col>
-                    <Button variant='danger w-100'>
+                    <Button variant='danger w-100 mt-3'>
                       ยกเลิก
                     </Button>
                   </Col>
@@ -220,9 +209,9 @@ const getMenuBytypeId = async (id) => {
           </Col>
         </Row>
 
-
-      </div>
-    );
+      </Container>
+    </div>
+  );
 }
 
-export default Pos;
+export default Pos; 

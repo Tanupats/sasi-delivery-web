@@ -12,7 +12,7 @@ const Orders = () => {
     const [statusOrder, setStatusOrder] = useState("รับออเดอร์แล้ว");
     const getMenuReport = async () => {
 
-        await axios.get(`${import.meta.env.VITE_API_URL}/app/report?Date_times=${date}&statusOrder=${statusOrder}`)
+        await axios.get(`${import.meta.env.VITE_API_URL}/report.php?Date_times=${date}&statusOrder=${statusOrder}`)
             .then(res => {
                 setReport(res.data);
             })

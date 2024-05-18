@@ -34,7 +34,7 @@ const Details = (props) => {
 
     const getMenuType = async () => {
 
-        await axios.get(`${import.meta.env.VITE_API_URL}/getMenuType.php`)
+        await axios.get(`${import.meta.env.VITE_API_URL}/GetMenuType.php`)
             .then(res => {
                 setMenuType(res.data);
             })
@@ -54,7 +54,7 @@ const Details = (props) => {
     }
 
     const getDetail = async () => {
-        await axios.get(`${import.meta.env.VITE_API_URL}/record_sale.php?bill_ID=${bill_ID}`)
+        await axios.get(`${import.meta.env.VITE_API_URL}/record_sale.php?billId=${bill_ID}`)
             .then(res => {
                 setDetail(res.data);
             })

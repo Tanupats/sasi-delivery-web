@@ -65,7 +65,7 @@ function Context({ children }) {
             messengerId: messangerId
         }
 
-        await axios.post(`${import.meta.env.VITE_API_URL}/orderFood.php`, body)
+        fetch(`${import.meta.env.VITE_API_URL}/orderFood.php`, { method: 'POST', body: JSON.stringify(body) })
             .then(res => {
                 if (res.status === 200) {
 
@@ -86,7 +86,7 @@ function Context({ children }) {
                 quantity: quntity,
                 note: note
             }
-            axios.post(`${import.meta.env.VITE_API_URL}/record_sale.php`, bodyDetails)
+            fetch(`${import.meta.env.VITE_API_URL}/record_sale.php`, { method: 'POST', body: JSON.stringify(bodyDetails) })
         })
         setCart([])
 

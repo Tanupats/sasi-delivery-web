@@ -14,7 +14,6 @@ import Orders from './orders';
 import GetQueu from './GetQueu';
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import AddToQueueIcon from '@mui/icons-material/AddToQueue';
-import Services from './Services';
 import Pos from './Pos';
 const NavbarMenu = () => {
 

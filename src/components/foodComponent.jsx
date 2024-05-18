@@ -11,19 +11,19 @@ export default function FoodComponent({data}) {
 
         <Card style={{ padding: '0', marginBottom: '12px' }} key={code}>
 
-            <Card.Body style={{ padding: '10px' }}>
+            <Card.Body style={{ padding: '0px' }}>
                 <Row>
 
                     <Col md={12}>
-                        <Image style={{ width: '100%', height: '100px', objectFit: 'cover' }}
+                        <Image style={{ width:'100%', height: '100px', objectFit: 'cover' }}
                             src={"https://www.sasirestuarant.com/img/"+img}/>
                     </Col>
                     <Col md={12} >
                         <div className="text-center mt-2">
 
 
-                            <h6>{foodname}</h6>
-                            <h6>฿{Price} </h6>
+                            <h6>{foodname} <br /> ฿{Price} </h6>
+                            
                         </div>
                     </Col>
                 </Row>
