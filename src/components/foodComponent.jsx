@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Card, Row, Col, Image, Button } from "react-bootstrap"
 
 export default function FoodComponent({data}) {
+    
     const {foodname,Price,code,img} = data;
     useEffect(() => {
 

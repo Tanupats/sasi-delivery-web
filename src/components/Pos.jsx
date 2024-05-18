@@ -22,9 +22,13 @@ for (let number = 1; number <= 5; number++) {
 
 const Pos = () => {
 
-  const { addTocart } = useContext(AuthData)
+  const { addTocart, cart, sumPrice, toTal, removeCart } = useContext(AuthData)
   const [menu, setMenu] = useState([]);
   const [menuType, setMenuType] = useState([]);
+  const [note, setNote] = useState([]);
+
+
+
   const printSlip = () => {
     window.print()
   }
@@ -96,7 +100,7 @@ const Pos = () => {
 
             </div>
           </Col>
-          <Col md={5}  className='whenprint'>
+          <Col md={5} className='whenprint'>
             <div >
 
 
@@ -107,7 +111,7 @@ const Pos = () => {
                   {
                     menu.map(item => {
                       return (
-                        <Col md={6}>
+                        <Col md={6} onClick={() => addTocart(item)}>
                           <FoodComponent data={item} />
                         </Col>
                       )
@@ -137,21 +141,35 @@ const Pos = () => {
                     <Table border={1}>
 
                       <tbody>
+                        {
+
+                          cart.map(item => {
+
+                            return (
+
+                              <tr>
+                                <td>{item.name}</td>
+                                <td colSpan={2}>{item.quntity}</td>
+                                <td colSpan={2}>{item.price}</td>
+                                <td>
+                                  <Button 
+                                  onClick={() => removeCart(item.id)} 
+                                    variant='light' className='whenprint'>
+                                    <CancelIcon  style={{color:'red'}}  /></Button></td>
+                              </tr>
+                            )
+                          })
+                        }
+
 
                         <tr>
-                          <td>ข้าวไก่ทอดกระเทียม</td>
-                          <td colSpan={2}>1</td>
-                          <td>
-                            <Button variant='light'  className='whenprint'><CancelIcon /></Button></td>
-                        </tr>
-                        <tr>
                           <td>รวมทั้งหมด</td>
-                          <td colSpan={4}>50 บาท</td>
+                          <td colSpan={4}>{sumPrice} บาท</td>
 
                         </tr>
                         <tr>
                           <td>จำนวน</td>
-                          <td colSpan={3}>2 รายการ</td>
+                          <td colSpan={3}>{toTal} รายการ</td>
 
                         </tr>
                       </tbody>
@@ -166,7 +184,7 @@ const Pos = () => {
 
               <div>
                 <Form>
-                 
+
                   <ButtonGroup >
                     <Button className='btn btn-primary' style={{ border: 'none' }} >เสิร์ฟในร้าน</Button>
                     <Button className='btn btn-success' style={{ border: 'none' }} >จัดส่ง</Button>
@@ -175,8 +193,8 @@ const Pos = () => {
 
                   <Row className='mt-2'>
                     <Col>
-                      <Form.Label>ข้อมูลติดต่อ</Form.Label>
-                      <Form.Control type="text" placeholder='ที่อยู่ หรือ เบอร์โทร' />
+                      
+                      <Form.Control type="text" placeholder='ข้อมูลติดต่อ' />
                     </Col>
 
                   </Row>

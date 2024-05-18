@@ -27,14 +27,7 @@ function Context({ children }) {
             setCart([itemCart]);
         } else {
             setCart([...cart, itemCart]);
-        }
-
-        Swal.fire({
-            title: 'เพิ่มลงตะกร้า',
-            text: 'เพิ่มรายการลงตะกร้าเรียบร้อย',
-            icon: 'success',
-
-        })
+        }   
     }
 
     const removeCart = (id) => {

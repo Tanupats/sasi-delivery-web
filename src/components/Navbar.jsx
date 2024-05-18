@@ -44,9 +44,11 @@ const NavbarMenu = () => {
                         <Nav.Link  ><Link style={{ textDecoration: 'none',color:'#000' }} to={'/Myorder'}> <AccountBoxIcon />  คำสั่งซื้อ </Link> </Nav.Link>
                         <Nav.Link  ><Link style={{ textDecoration: 'none',color:'#000' }} to={'/queueNumber'}> <AddToQueueIcon />  คิวตอนนี้ {queue} </Link> </Nav.Link>
 
-                        {sessionStorage.getItem("role") === "admin" && (
+                        {sessionStorage.getItem("role") === "admin" && ( 
+                            <>
                             <Nav.Link  ><AccountBoxIcon /> <Link to={'/orders'}>  ออเดอร์</Link> </Nav.Link>
-                        )}
+                            <Nav.Link  ><AccountBoxIcon /> <Link to={'/pos'}>  ขายอาหาร</Link> </Nav.Link>
+                            </>  )}
                     </Nav>
                 </Container>
             </Navbar>
