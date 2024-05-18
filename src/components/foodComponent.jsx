@@ -1,0 +1,35 @@
+import React, { useEffect } from "react";
+import { Card, Row, Col, Image, Button } from "react-bootstrap"
+
+export default function FoodComponent({data}) {
+    const {foodname,Price,code,img} = data;
+    useEffect(() => {
+
+    }, []
+    )
+    return <>
+
+        <Card style={{ padding: '0', marginBottom: '12px' }} key={code}>
+
+            <Card.Body style={{ padding: '10px' }}>
+                <Row>
+
+                    <Col md={12}>
+                        <Image style={{ width: '100%', height: '100px', objectFit: 'cover' }}
+                            src={"https://www.sasirestuarant.com/img/"+img}/>
+                    </Col>
+                    <Col md={12} >
+                        <div className="text-center mt-2">
+
+
+                            <h6>{foodname}</h6>
+                            <h6>฿{Price} </h6>
+                        </div>
+                    </Col>
+                </Row>
+
+
+            </Card.Body>
+        </Card>
+    </>
+}

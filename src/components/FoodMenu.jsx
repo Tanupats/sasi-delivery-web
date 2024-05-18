@@ -12,7 +12,7 @@ const FoodMenu = () => {
 
     sessionStorage.setItem("name", username)
     sessionStorage.setItem("messangerId", userid)
-    sessionStorage.setItem("role","user");
+    sessionStorage.setItem("role", "user");
 
     const { addTocart } = useContext(AuthData)
 
@@ -20,7 +20,7 @@ const FoodMenu = () => {
     const [menuType, setMenuType] = useState([]);
     const getMenuType = async () => {
 
-        await axios.get(`${import.meta.env.VITE_API_URL}/app/getMenuType`)
+        await axios.get(`${import.meta.env.VITE_API_URL}/GetmenuType.php`)
             .then(res => {
                 setMenuType(res.data);
             })
@@ -28,14 +28,14 @@ const FoodMenu = () => {
 
 
     const getMenuBytypeId = async (id) => {
-        await axios.get(`${import.meta.env.VITE_API_URL}/app/foodMenuByTypeId?typeId=${id}`)
+        await axios.get(`${import.meta.env.VITE_API_URL}/getMenuId.php?TypeID=${id}`)
             .then(res => {
                 setFoods(res.data);
             })
     }
 
-    const getFoodMenu = async () => {
-        await axios.get(import.meta.env.VITE_API_URL + '/app/foodMenu')
+    const getFoodMenu = () => {
+        axios.get(import.meta.env.VITE_API_URL + '/')
             .then(res => {
                 setFoods(res.data);
             })
@@ -57,21 +57,21 @@ const FoodMenu = () => {
                         <Col md={12} className="mb-4">
 
                             {
-                           menuType.length >0 &&  menuType?.map((item,index) => {
+                                menuType.length > 0 && menuType?.map((item, index) => {
 
                                     return (
-                                        
+
 
                                         <Badge
-                                           key={index}
+                                            key={index}
                                             style={{
                                                 marginRight: '12px',
                                                 fontSize: '18px',
                                                 backgroundColor: '#FD720D', marginBottom: '12px'
                                             }}
-                                            onClick={() => getMenuBytypeId(item.id)}
+                                            onClick={() => getMenuBytypeId(item.TypeID)}
                                             pill bg="">
-                                            {item.name}
+                                            {item.T_name}
                                         </Badge>
 
                                     )
@@ -80,7 +80,7 @@ const FoodMenu = () => {
 
                         </Col>
                         {
-                            foods?.map((item,index) => {
+                            foods?.map((item, index) => {
                                 return (<>
 
 
@@ -88,19 +88,21 @@ const FoodMenu = () => {
                                         <Card style={{ height: '180px', marginBottom: '12px' }}>
                                             <Card.Body>
                                                 <Row>
-                                                    <Col md={5}
-                                                        xs={5}
+                                                    <Col md={4}
+                                                        xs={4}
                                                     >
                                                         <Image style={{ width: "100%", height: '150px', objectFit: 'cover' }}
-                                                            src={`${import.meta.env.VITE_API_URL}/files/${item.img}`} />
+                                                            src={`https://www.sasirestuarant.com/img/${item.img}`} />
                                                     </Col>
                                                     <Col md={4} xs={4}>
 
                                                         <h5>{item.foodname}</h5>
                                                         <h5>{item.Price}฿</h5>
+                                                        
+                                        
 
                                                     </Col>
-                                                    <Col md={3} xs={3} className="text-center">
+                                                    <Col md={4} xs={4} className="text-center">
                                                         <Button
                                                             onClick={() => addTocart(item)}
 

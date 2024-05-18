@@ -1,0 +1,12 @@
+@media print {
+
+    @page {
+      width: 80mm;
+      margin: 0 auto; 
+    }
+    .whenprint{
+      display: none;
+    }
+      
+    }
+    

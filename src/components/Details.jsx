@@ -34,7 +34,7 @@ const Details = (props) => {
 
     const getMenuType = async () => {
 
-        await axios.get(`${import.meta.env.VITE_API_URL}/app/getMenuType`)
+        await axios.get(`${import.meta.env.VITE_API_URL}/getMenuType.php`)
             .then(res => {
                 setMenuType(res.data);
             })
@@ -43,7 +43,7 @@ const Details = (props) => {
 
     const getMenuBytypeId = async (id) => {
         console.log(id.value)
-        await axios.get(`${import.meta.env.VITE_API_URL}/app/foodMenuByTypeId?typeId=${id.value}`)
+        await axios.get(`${import.meta.env.VITE_API_URL}/getMenuId.php?TypeID=${id.value}`)
             .then(res => {
 
                 let newOption = res.data.map(item => {
@@ -54,7 +54,7 @@ const Details = (props) => {
     }
 
     const getDetail = async () => {
-        await axios.get(`${import.meta.env.VITE_API_URL}/app/orderDetailId?bill_ID=${bill_ID}`)
+        await axios.get(`${import.meta.env.VITE_API_URL}/record_sale.php?bill_ID=${bill_ID}`)
             .then(res => {
                 setDetail(res.data);
             })

@@ -9,17 +9,17 @@ const Myorder = () => {
 
     let messengerId = sessionStorage.getItem("messangerId");
     const [myOrder, setMyorder] = useState([]);
-    const [date, setDate] = useState(moment(new Date()).format('YYYY-MM-DD'))
     const getMyorder =  () => {
 
-         axios.get(`${import.meta.env.VITE_API_URL}/app/getMyorder?messengerId=${messengerId}&Date_times=${date}`)
+         axios.get(`${import.meta.env.VITE_API_URL}/GetMyorder.php?messengerid=${messengerId}`)
             .then(res => {
+                
                 setMyorder(res.data);
             })
     }
  
     useEffect(() => {
-      
+        getMyorder();
         const interval = setInterval(() => {
             getMyorder();
         }, 5000); // ดึงข้อมูลจาก API ทุกๆ 5 วินาที

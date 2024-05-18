@@ -15,6 +15,7 @@ import GetQueu from './GetQueu';
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import AddToQueueIcon from '@mui/icons-material/AddToQueue';
 import Services from './Services';
+import Pos from './Pos';
 const NavbarMenu = () => {
 
     const { toTal, cart, sumPrice, removeCart, saveOrder, updateNote, name, messangerId,queue } = useContext(AuthData);
@@ -135,13 +136,13 @@ const NavbarMenu = () => {
                     </>)
                 }
             </Modal>
-            <Routes basename="/var/www/html/sasi-delivery-web/dist">
+            <Routes basename="public_html/">
                 <Route path="/" Component={FoodMenu}></Route>
                 <Route path="/orders" Component={Orders}></Route>
                 <Route path="/:userid/:username" Component={FoodMenu}></Route>
                 <Route path="/Myorder" Component={Myorder}></Route>
                 <Route path="/queueNumber" Component={GetQueu}></Route>
-                <Route path="/services" Component={Services}></Route>
+                <Route path="/pos" Component={Pos}></Route>
             </Routes>
         </Router>
     );

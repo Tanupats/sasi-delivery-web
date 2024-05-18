@@ -1,5 +1,4 @@
 import { createContext, useState, useEffect } from "react";
-import moment from "moment";
 export const AuthData = createContext();
 import axios from "axios";
 import Swal from 'sweetalert2'
@@ -10,8 +9,8 @@ function Context({ children }) {
     const [toTal, setTotal] = useState(0);
     const [sumPrice, setSumPrice] = useState(0);
 
-    const [name,setName] = useState("") 
-    const [messangerId,setMessangerId] = useState("")  
+    const [name, setName] = useState("")
+    const [messangerId, setMessangerId] = useState("")
     let Bid = "sa" + nanoid(10);
 
     const addTocart = (data) => {
@@ -29,13 +28,13 @@ function Context({ children }) {
         } else {
             setCart([...cart, itemCart]);
         }
-        
+
         Swal.fire({
             title: 'เพิ่มลงตะกร้า',
             text: 'เพิ่มรายการลงตะกร้าเรียบร้อย',
             icon: 'success',
-           
-          })
+
+        })
     }
 
     const removeCart = (id) => {
@@ -60,23 +59,22 @@ function Context({ children }) {
             bill_ID: Bid,
             amount: sumPrice,
             ordertype: "สั่งกลับบ้าน",
-            Date_times: moment(new Date()).format('YYYY-MM-DD'),
             statusOrder: "รับออเดอร์แล้ว",
             customerName: name,
-            queueNumber: "3",
+            queueNumber: "5",
             messengerId: messangerId
         }
 
-        await axios.post(`${import.meta.env.VITE_API_URL}/app/saveOrder`, body)
+        await axios.post(`${import.meta.env.VITE_API_URL}/orderFood.php`, body)
             .then(res => {
                 if (res.status === 200) {
-                   
+
                     Swal.fire({
                         title: 'สั่งอาหารสำเร็จ',
                         text: 'คำสั่งซื้อของคุณส่งไปยังร้านค้าแล้ว',
                         icon: 'success',
                         confirmButtonText: 'ยืนยัน'
-                      })
+                    })
                 }
             })
 
@@ -88,7 +86,7 @@ function Context({ children }) {
                 quantity: quntity,
                 note: note
             }
-            axios.post(`${import.meta.env.VITE_API_URL}/app/saveOrderDetail`, bodyDetails)
+            axios.post(`${import.meta.env.VITE_API_URL}/record_sale.php`, bodyDetails)
         })
         setCart([])
 
@@ -97,7 +95,7 @@ function Context({ children }) {
 
     const getQueu = async () => {
 
-        await axios.get(`${import.meta.env.VITE_API_URL}/app/getQueues`)
+        await axios.get(`${import.meta.env.VITE_API_URL}/getQueue.php`)
             .then(res => {
 
                 if (res.status === 200) {
@@ -105,6 +103,7 @@ function Context({ children }) {
                 }
             })
     }
+
     useEffect(() => {
         if (cart.length > 0) {
             let total = 0;
@@ -123,15 +122,15 @@ function Context({ children }) {
         console.log(Bid)
     }, [cart])
 
-    useEffect(()=>{
-        
-        setName(sessionStorage.getItem("name"))  
+    useEffect(() => {
+
+        setName(sessionStorage.getItem("name"))
         setMessangerId(sessionStorage.getItem("messangerId"))
         getQueu()
-    },[])
+    }, [])
 
     return (<>
-       
+
         <AuthData.Provider
             value={{
                 toTal,
@@ -148,7 +147,7 @@ function Context({ children }) {
             }}>
             {children}
         </AuthData.Provider>
-        </>
+    </>
     );
 
 
