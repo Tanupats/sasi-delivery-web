@@ -11,6 +11,8 @@ function Context({ children }) {
 
     const [name, setName] = useState("")
     const [messangerId, setMessangerId] = useState("")
+
+    
     let Bid = "sa" + nanoid(10);
 
     const addTocart = (data) => {
@@ -27,7 +29,7 @@ function Context({ children }) {
             setCart([itemCart]);
         } else {
             setCart([...cart, itemCart]);
-        }   
+        }
     }
 
     const removeCart = (id) => {
@@ -46,6 +48,7 @@ function Context({ children }) {
         setCart(newCart);
     }
 
+    const resetCart = () => setCart([]);
 
     const saveOrder = async () => {
         const body = {
@@ -90,7 +93,6 @@ function Context({ children }) {
 
         await axios.get(`${import.meta.env.VITE_API_URL}/getQueue.php`)
             .then(res => {
-
                 if (res.status === 200) {
                     setQueu(res.data[0].count_order)
                 }
@@ -135,7 +137,8 @@ function Context({ children }) {
                 updateNote,
                 name,
                 messangerId,
-                queue
+                queue,
+                resetCart
 
             }}>
             {children}

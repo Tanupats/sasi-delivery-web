@@ -22,12 +22,16 @@ for (let number = 1; number <= 5; number++) {
 
 const Pos = () => {
 
-  const { addTocart, cart, sumPrice, toTal, removeCart } = useContext(AuthData)
+  const { addTocart, cart, sumPrice, toTal, removeCart, saveOrder } = useContext(AuthData)
   const [menu, setMenu] = useState([]);
   const [menuType, setMenuType] = useState([]);
   const [note, setNote] = useState([]);
 
 
+
+  const saveTocart = (data)=>{
+        
+  }
 
   const printSlip = () => {
     window.print()
@@ -152,10 +156,10 @@ const Pos = () => {
                                 <td colSpan={2}>{item.quntity}</td>
                                 <td colSpan={2}>{item.price}</td>
                                 <td>
-                                  <Button 
-                                  onClick={() => removeCart(item.id)} 
+                                  <Button
+                                    onClick={() => removeCart(item.id)}
                                     variant='light' className='whenprint'>
-                                    <CancelIcon  style={{color:'red'}}  /></Button></td>
+                                    <CancelIcon style={{ color: 'red' }} /></Button></td>
                               </tr>
                             )
                           })
@@ -187,13 +191,13 @@ const Pos = () => {
 
                   <ButtonGroup >
                     <Button className='btn btn-primary' style={{ border: 'none' }} >เสิร์ฟในร้าน</Button>
-                    <Button className='btn btn-success' style={{ border: 'none' }} >จัดส่ง</Button>
-                    <Button className='btn btn-danger' style={{ border: 'none' }} >รับเอง</Button>
+                    <Button className='btn btn-success' style={{ border: 'none' }} >สั่งกลับบ้าน</Button>
+                    <Button className='btn btn-danger' style={{ border: 'none' }} > รับเอง</Button>
                   </ButtonGroup>
 
                   <Row className='mt-2'>
                     <Col>
-                      
+
                       <Form.Control type="text" placeholder='ข้อมูลติดต่อ' />
                     </Col>
 
@@ -204,18 +208,16 @@ const Pos = () => {
                 <Row className='mt-2 when-print'>
                   <Col md={6}>
                     <Button
-                      onClick={() => printSlip()}
+                      onClick={() => { printSlip(), saveOrder() }}
                       variant='primary w-100'>
                       <LocalPrintshopIcon />  พิมพ์
                     </Button>
                   </Col>
-                  <Col md={6}>
-                    <Button variant='success w-100'>
-                      บันทึก
-                    </Button>
-                  </Col>
+
                   <Col>
-                    <Button variant='danger w-100 mt-3'>
+                    <Button 
+                    
+                    variant='danger w-100 mt-3'>
                       ยกเลิก
                     </Button>
                   </Col>
