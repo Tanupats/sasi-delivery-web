@@ -17,7 +17,17 @@ import AddToQueueIcon from '@mui/icons-material/AddToQueue';
 import Pos from './Pos';
 const NavbarMenu = () => {
 
-    const { toTal, cart, sumPrice, removeCart, saveOrder, updateNote, name, messangerId,queue } = useContext(AuthData);
+    const { toTal,
+         cart,
+          sumPrice,
+           removeCart, 
+           saveOrder, 
+           updateNote,
+            name,
+             messangerId,
+             queue } = 
+    useContext(AuthData);
+    
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);

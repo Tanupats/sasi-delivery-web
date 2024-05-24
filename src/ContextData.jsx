@@ -8,17 +8,16 @@ function Context({ children }) {
     const [cart, setCart] = useState([])
     const [toTal, setTotal] = useState(0);
     const [sumPrice, setSumPrice] = useState(0);
+    const [name, setName] = useState("คุณ");
+    const [messangerId, setMessangerId] = useState("");
+    const [orderType, setOrderType] = useState("สั่งกลับบ้าน");
 
-    const [name, setName] = useState("")
-    const [messangerId, setMessangerId] = useState("")
-
-    
     let Bid = "sa" + nanoid(10);
 
     const addTocart = (data) => {
         console.log(data)
         let itemCart = {
-            id: cart.length + 1,
+            id: data.id,
             name: data.foodname,
             price: data.Price,
             quntity: 1,
@@ -48,13 +47,33 @@ function Context({ children }) {
         setCart(newCart);
     }
 
+    const updatePrice = (id, price) => {
+        let newCart = cart.map(item => {
+            if (item.id === id) {
+                return { ...item, price: price }
+            }
+            return item;
+        });
+        setCart(newCart);
+    }
+
+    const updateQuantity = (id, qt) => {
+        let newCart = cart.map(item => {
+            if (item.id === id) {
+                return { ...item, quntity: qt }
+            }
+            return item;
+        });
+        setCart(newCart);
+    }
+
     const resetCart = () => setCart([]);
 
     const saveOrder = async () => {
         const body = {
             bill_ID: Bid,
             amount: sumPrice,
-            ordertype: "สั่งกลับบ้าน",
+            ordertype: orderType,
             statusOrder: "รับออเดอร์แล้ว",
             customerName: name,
             queueNumber: "5",
@@ -138,7 +157,13 @@ function Context({ children }) {
                 name,
                 messangerId,
                 queue,
-                resetCart
+                resetCart,
+                setOrderType,
+                orderType,
+                name,
+                setName,
+                updatePrice,
+                updateQuantity
 
             }}>
             {children}
