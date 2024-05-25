@@ -15,6 +15,7 @@ import GetQueu from './GetQueu';
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import AddToQueueIcon from '@mui/icons-material/AddToQueue';
 import Pos from './Pos';
+import Report from './report';
 const NavbarMenu = () => {
 
     const { toTal,
@@ -147,13 +148,14 @@ const NavbarMenu = () => {
                     </>)
                 }
             </Modal>
-            <Routes basename="public_html/">
+            <Routes basename="post-test/">
                 <Route path="/" Component={FoodMenu}></Route>
                 <Route path="/orders" Component={Orders}></Route>
                 <Route path="/:userid/:username" Component={FoodMenu}></Route>
                 <Route path="/Myorder" Component={Myorder}></Route>
                 <Route path="/queueNumber" Component={GetQueu}></Route>
                 <Route path="/pos" Component={Pos}></Route>
+                <Route path="/report" Component={Report}></Route>
             </Routes>
         </Router>
     );
