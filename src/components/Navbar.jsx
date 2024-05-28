@@ -55,11 +55,12 @@ const NavbarMenu = () => {
                         <Nav.Link  ><Link style={{ textDecoration: 'none',color:'#000' }} to={'/Myorder'}> <AccountBoxIcon />  คำสั่งซื้อ </Link> </Nav.Link>
                         <Nav.Link  ><Link style={{ textDecoration: 'none',color:'#000' }} to={'/queueNumber'}> <AddToQueueIcon />  คิวตอนนี้ {queue} </Link> </Nav.Link>
 
-                        {sessionStorage.getItem("role") === "admin" && ( 
-                            <>
+                        
+                            
                             <Nav.Link  ><AccountBoxIcon /> <Link to={'/orders'}>  ออเดอร์</Link> </Nav.Link>
                             <Nav.Link  ><AccountBoxIcon /> <Link to={'/pos'}>  ขายอาหาร</Link> </Nav.Link>
-                            </>  )}
+                            <Nav.Link  ><AccountBoxIcon /> <Link to={'/report'}> ยอดขาย</Link> </Nav.Link>
+                           
                     </Nav>
                 </Container>
             </Navbar>
@@ -148,7 +149,7 @@ const NavbarMenu = () => {
                     </>)
                 }
             </Modal>
-            <Routes basename="post-test/">
+            <Routes>
                 <Route path="/" Component={FoodMenu}></Route>
                 <Route path="/orders" Component={Orders}></Route>
                 <Route path="/:userid/:username" Component={FoodMenu}></Route>

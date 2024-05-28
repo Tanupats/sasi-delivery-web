@@ -8,57 +8,62 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import axios from "axios";
-import { Card, Row, Col } from "react-bootstrap"
+import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
+import RoomServiceIcon from '@mui/icons-material/RoomService';
+import Detail from "./DetailReport";
+import { Card, Row, Col, Button } from "react-bootstrap"
 const Report = () => {
     const [totalToday, setTotalToday] = useState(0)
     const [totalMounth, settotalMounth] = useState(0)
     const [data, setData] = useState([])
+    const [counter, setCounter] = useState([]);
     const getOrderFood = async () => {
-
-        await fetch('https://www.sasirestuarant.com/api/orderFood.php').then((res) => res.json())
-            .then((res) => {
-                setData(res)
-                let total = 0;
-                res.map(item => {
-                    total += (Number(item.amount))
+        let sumToday = 0;
+        await axios.get(`${import.meta.env.VITE_API_URL}/orderFood.php`)
+            .then(res => {
+                setData(res.data)
+                res?.data?.map(item => {
+                    sumToday += (Number(item?.amount))
                 })
-                setTotalToday(total)
-                console.log(total)
+                setTotalToday(sumToday)
             })
-
     }
-
 
     const getOrderFoodMounth = async () => {
-
-        await axios.get('https://sasirestuarant.com/api/orderFoodMounth.php')
-            .then((res) => {
-
-                let totalm = 0;
-                res.map(item => {
-                    totalm += (Number(item.amount))
-                })
-                settotalMounth(totalm)
-                console.log(totalm)
+        await axios.get('https://api.sasirestuarant.com/orderFood.php?Dateinput=mounth')
+            .then(res => {
+                settotalMounth(res.data[0].total)
             })
+    }
 
+    const geCountorder = async () => {
+        await axios.get('https://api.sasirestuarant.com/orderFood.php?countOrder')
+            .then(res => {
+                setCounter(res.data)
+            })
+    }
+
+    const deleteBill = async (id) => {
+         axios.delete('https://api.sasirestuarant.com/orderFood.php?billId='+id)
+    
     }
 
 
     useEffect(() => {
-
-        getOrderFoodMounth()
-
-    }, [])
-    useEffect(() => {
-
-
         getOrderFood()
+        geCountorder()
+        getOrderFoodMounth()
     }, [])
 
     useEffect(() => {
 
-    }, [totalToday])
+
+    }, [totalMounth])
+
+    useEffect(() => {
+
+    }, [data])
+
     return (<>
         <Card>
             <Card.Body>
@@ -66,14 +71,29 @@ const Report = () => {
                     <Col md={6}>
                         <Card>
                             <Card.Body>
-                                <Card.Title className="text-center"> ยอดขายวันนี้   {new Intl.NumberFormat().format(totalToday)} บาท</Card.Title>
+                                <Card.Title className="text-center" style={{ color: 'green' }}> ยอดขายวันนี้   {new Intl.NumberFormat().format(totalToday)} บาท</Card.Title>
+                                {counter.length > 0 && counter?.map(item => {
+
+                                    return (<>
+                                        <Card className="mt-2">
+                                            <Card.Body>
+                                                <div className="text-center"> {item?.ordertype === 'สั่งกลับบ้าน' && <DeliveryDiningIcon style={{ fontSize: '30px' }} />}
+                                                </div>
+                                                <div className="text-center"> {item?.ordertype === 'เสิร์ฟในร้าน' && <RoomServiceIcon style={{ fontSize: '30px' }} />}
+                                                </div>
+                                                <h5 className="text-center">    {item?.ordertype} {item?.total_bill} </h5>
+
+
+                                            </Card.Body>
+                                        </Card> </>)
+                                })}
                             </Card.Body>
                         </Card>
                     </Col>
                     <Col md={6}>
                         <Card>
                             <Card.Body>
-                                <Card.Title className="text-center"> ยอดขายเดือนนี้  {totalMounth}</Card.Title>
+                                <Card.Title className="text-center" style={{ color: 'blue' }} > ยอดขายเดือนนี้  {new Intl.NumberFormat().format(totalMounth)} บาท</Card.Title>
                             </Card.Body>
                         </Card>
                     </Col>
@@ -88,6 +108,8 @@ const Report = () => {
                                         <TableCell align="right">ชื่อลูกค้า</TableCell>
                                         <TableCell align="right">เวลา</TableCell>
                                         <TableCell align="right">รายการ</TableCell>
+                                        <TableCell align="right">จัดการ</TableCell>
+
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -103,7 +125,12 @@ const Report = () => {
                                             <TableCell align="right">{row.amount}</TableCell>
                                             <TableCell align="right">{row.customerName}</TableCell>
                                             <TableCell align="right">{row.timeOrder}</TableCell>
-                                            <TableCell align="right"> <p>ข้าวผัดไก่</p><p>ยำไก่ทอด</p></TableCell>
+                                            <TableCell align="right">
+                                                <Detail id={row.bill_ID} />
+                                            </TableCell>
+                                            <TableCell align="right">
+                                                <Button variant="danger" onClick={()=>deleteBill(row.bill_ID)}> delete  </Button>
+                                            </TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>

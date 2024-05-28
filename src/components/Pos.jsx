@@ -37,7 +37,10 @@ const Pos = () => {
     setName,
     name,
     updatePrice,
-    updateQuantity
+    updateQuantity,
+    setMenuPichet,
+    setMenuNormal,
+    updateFoodName
 
   } =
     useContext(AuthData)
@@ -51,18 +54,18 @@ const Pos = () => {
 
 
   const [defaultMenu, setDefaultMenu] = useState({})
-  const [newId,setNewId] = useState("")
+  const [newId, setNewId] = useState("")
 
   const printSlip = () => {
     window.print()
   }
-   
+
 
   const onSelectMenu = (obj) => {
     let ID = nanoid(10)
     setNewId(ID)
     //add to cart 
-    addTocart({...obj,id:ID})
+    addTocart({ ...obj, id: ID })
     console.log('obj', obj)
     //set data to defaultMenu
     setDefaultMenu(obj)
@@ -72,7 +75,7 @@ const Pos = () => {
 
   const getMenu = async () => {
 
-    await axios.get('https://www.sasirestuarant.com/api/index.php').then(
+    await axios.get(import.meta.env.VITE_API_URL + '/').then(
       res => {
         if (res.status === 200) {
           setMenu(res.data);
@@ -169,6 +172,7 @@ const Pos = () => {
           <Col md={4}>
             <div>
               <div className='text-center pt-0'>
+                <h6>SASI Restaurant หนองคาย</h6>
                 <h5>รายการอาหาร</h5>
               </div>
 
@@ -186,7 +190,7 @@ const Pos = () => {
                             return (
 
                               <tr>
-                                <td>{item.name} <br></br> * {item.note}</td>
+                                <td>{item.name} <br></br> {item.note}</td>
                                 <td colSpan={2}>{item.quntity}</td>
                                 <td colSpan={2}>{item.price}</td>
                                 <td>
@@ -241,8 +245,8 @@ const Pos = () => {
                       <Form.Control
                         type="text"
                         placeholder='ข้อมูลติดต่อ'
-                        defaultValue={'name'}
-                        value={name} onChange={(e) => setName(e.target.value)} />
+                       
+                       onChange={(e) => setName(e.target.value)} />
                     </Col>
                   </Row>
 
@@ -291,7 +295,7 @@ const Pos = () => {
 
 
             <Col md={12} xs={12}>
-              <Card style={{ height: '130px', marginBottom: '10px', padding: '10px' }}>
+              <Card style={{ height: 'auto', marginBottom: '10px', padding: '10px' }}>
                 <Card.Body className='p-0'>
                   <Row>
                     <Col md={5}
@@ -301,10 +305,20 @@ const Pos = () => {
                         src={`${import.meta.env.VITE_BASE_URL}/img/${defaultMenu?.img}`} />
                     </Col>
                     <Col md={7} xs={7}>
-                      <h6>{defaultMenu?.foodname}</h6>
-                      <h6>{defaultMenu?.Price}฿</h6>
+                      
                       <Row>
+        
+                
                         <Form>
+                          <Form.Label> รายการ (*แก้ไขได้)</Form.Label>
+                          <Form.Control
+                            type="text"
+                            defaultValue={defaultMenu?.foodname}
+                            placeholder='เมนู'
+                            onChange={(e) => updateFoodName(newId, e.target.value)}
+
+                          />
+                           <Form.Label> หมายเหตุ </Form.Label>
                           <Form.Control
                             type="text"
                             placeholder='หมายเหตุ'
@@ -329,12 +343,12 @@ const Pos = () => {
 
             <Col md={12}>
 
-              <ButtonGroup className='when-print'>
+              <ButtonGroup className='when-print mb-2'>
                 <Button className='btn btn-primary'
-                  onClick={() => setOrderType("เสิร์ฟในร้าน")}
-                  style={{ border: 'none' }} >พิเศษ</Button>
+                  onClick={() => setMenuPichet(newId)}
+                  style={{ border: 'none' }} > { }พิเศษ {  }</Button>
                 <Button className='btn btn-success'
-                  onClick={() => setOrderType("สั่งกลับบ้าน")}
+                  onClick={() => setMenuNormal(newId, defaultMenu)}
                   style={{ border: 'none' }} >ธรรมดา</Button>
 
               </ButtonGroup>
@@ -345,17 +359,24 @@ const Pos = () => {
               cart?.map(item => {
                 if (item.id === newId) {
                   return (
+
                     <>
                       <Col md={6}>
                         <Form.Group>
                           <Form.Label> จำนวน </Form.Label>
-                          <Form.Control type='number' defaultValue={item.quntity} onChange={(e) => updateQuantity(newId, e.target.value)} />
+                          <Form.Control
+                            type='number'
+                            defaultValue={item.quntity}
+                            onChange={(e) => updateQuantity(newId, e.target.value)} />
                         </Form.Group>
                       </Col>
                       <Col md={6}>
                         <Form.Group>
-                          <Form.Label> ราคา  {item.price}</Form.Label>
-                          <Form.Control type='text' onChange={(e) => updatePrice(newId, e.target.value)} />
+                          <Form.Label> ราคา </Form.Label>
+                          <Form.Control
+                           value={item.price}
+                            type='number'
+                            onChange={(e) => updatePrice(newId, e.target.value)} />
                         </Form.Group>
 
                       </Col>

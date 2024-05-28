@@ -67,6 +67,16 @@ function Context({ children }) {
         setCart(newCart);
     }
 
+    const updateFoodName = (id, newname) => {
+        let newCart = cart.map(item => {
+            if (item.id === id) {
+                return { ...item, name: newname }
+            }
+            return item;
+        });
+        setCart(newCart);
+    }
+
     const resetCart = () => setCart([]);
 
     const saveOrder = async () => {
@@ -104,7 +114,7 @@ function Context({ children }) {
             fetch(`${import.meta.env.VITE_API_URL}/record_sale.php`, { method: 'POST', body: JSON.stringify(bodyDetails) })
         })
         setCart([])
-
+        setName("")
     }
     const [queue, setQueu] = useState([]);
 
@@ -116,6 +126,34 @@ function Context({ children }) {
                     setQueu(res.data[0].count_order)
                 }
             })
+    }
+
+    const setMenuPichet = (id) => {
+
+        let newCart = cart.map(item => {
+            console.log(typeof (item.price))
+            let newPrice = parseInt(item.price) + 10;
+            if (item.id === id) {
+                return { ...item, price: newPrice, name: item.name + "พิเศษ" }
+            }
+            return item;
+        });
+        setCart(newCart);
+
+
+    }
+
+    const setMenuNormal = (id, defaultData) => {
+
+        let newCart = cart.map(item => {
+            if (item.id === id) {
+                return { ...item, price: defaultData.Price, name: defaultData.foodname }
+            }
+            return item;
+        });
+        setCart(newCart);
+
+
     }
 
     useEffect(() => {
@@ -163,7 +201,10 @@ function Context({ children }) {
                 name,
                 setName,
                 updatePrice,
-                updateQuantity
+                updateQuantity,
+                setMenuPichet,
+                setMenuNormal,
+                updateFoodName
 
             }}>
             {children}
