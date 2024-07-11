@@ -9,22 +9,29 @@ const Myorder = () => {
 
     let messengerId = sessionStorage.getItem("messangerId");
     const [myOrder, setMyorder] = useState([]);
-    const getMyorder =  () => {
+    const getMyorder = () => {
 
-         axios.get(`${import.meta.env.VITE_API_URL}/GetMyorder.php?messengerid=${messengerId}`)
+        axios.get(`${import.meta.env.VITE_API_URL}/GetMyorder.php?messengerid=${messengerId}`)
             .then(res => {
-                
-                setMyorder(res.data);
+                if (res.data != null) {
+                    setMyorder(res.data);
+                }
+
             })
     }
- 
+
     useEffect(() => {
         getMyorder();
+    }, [])
+
+
+    useEffect(() => {
+
         const interval = setInterval(() => {
             getMyorder();
         }, 5000); // ดึงข้อมูลจาก API ทุกๆ 5 วินาที
 
-        return () => clearInterval(interval); 
+        return () => clearInterval(interval);
     }, [])
     return (<>
         <Card>
@@ -40,8 +47,8 @@ const Myorder = () => {
                 >
                     <Tab eventKey="home" title="ใหม่">
                         {
-                            myOrder.map(item => {
-                                if (item.statusOrder !== "ออเดอร์พร้อมส่ง") {
+                            myOrder?.map(item => {
+                                if (item.statusOrder === "รับออเดอร์แล้ว") {
 
                                     return (
 
@@ -67,12 +74,12 @@ const Myorder = () => {
                     <Tab eventKey="profile" title="การจัดส่ง">
                         {
                             myOrder.map(item => {
-                                if (item.statusOrder === "ออเดอร์พร้อมส่ง") {
+                                if (item.statusOrder !== "รับออเดอร์แล้ว") {
                                     return (<>
                                         <Card className="mb-4">
                                             <Card.Body>
                                                 <p>รหัสออเดอร์ {item.bill_ID}  วันที่สั่งซื้อ { }
-                                                    {moment(item.Date_times).format('YYYY-MM-DD')}
+                                                    {moment(item.Date_times).format('YYYY-MM-DD')} 
                                                 </p>
                                                 <Card.Title> รายการอาหาร</Card.Title>
                                                 <Details bill_ID={item.bill_ID} status={item.statusOrder} />

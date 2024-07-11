@@ -15,12 +15,12 @@ export default function FoodComponent({data}) {
             <Card.Body style={{ padding: '0px' }}>
                 <Row>
 
-                    <Col md={12}>
+                    <Col md={5}>
                         <Image style={{ width:'100%', height: '100px', objectFit: 'cover' }}
                             src={"https://www.sasirestuarant.com/img/"+img}/>
                     </Col>
-                    <Col md={12} >
-                        <div className="text-center mt-2">
+                    <Col md={7} >
+                        <div className="text-left p-2">
 
 
                             <h6>{foodname} <br /> ฿{Price} </h6>

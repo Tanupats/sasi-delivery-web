@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import Badge from 'react-bootstrap/Badge';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { AuthData } from "../ContextData";
-
+import { nanoid } from 'nanoid'
 const FoodMenu = () => {
 
     const { userid, username } = useParams();
@@ -15,11 +15,15 @@ const FoodMenu = () => {
     sessionStorage.setItem("role", "user");
 
     const { addTocart } = useContext(AuthData)
-
     const [foods, setFoods] = useState([]);
     const [menuType, setMenuType] = useState([]);
-    const getMenuType = async () => {
 
+    const onSelectMenu = (obj) => {
+        let ID = nanoid(10)
+        addTocart({ ...obj, id: ID })
+    }
+
+    const getMenuType = async () => {
         await axios.get(`${import.meta.env.VITE_API_URL}/GetmenuType.php`)
             .then(res => {
                 setMenuType(res.data);
@@ -35,9 +39,13 @@ const FoodMenu = () => {
     }
 
     const getFoodMenu = () => {
-        axios.get(import.meta.env.VITE_API_URL + '/')
-            .then(res => {
-                setFoods(res.data);
+        fetch(import.meta.env.VITE_BAKUP_URL+'/foodmenu')
+            .then((res) => res.json())
+            .then((data) => {
+                if (data) {
+                    setFoods(data);
+                }
+
             })
     }
 
@@ -46,7 +54,6 @@ const FoodMenu = () => {
         getFoodMenu();
     }, [])
     return (
-
         <>
             <Card>
                 <Card.Title className="text-center mt-3">  รายการอาหาร</Card.Title>
@@ -98,14 +105,13 @@ const FoodMenu = () => {
 
                                                         <h5>{item.foodname}</h5>
                                                         <h5>{item.Price}฿</h5>
-                                                        
-                                        
+
+
 
                                                     </Col>
                                                     <Col md={4} xs={4} className="text-center">
                                                         <Button
-                                                            onClick={() => addTocart(item)}
-
+                                                            onClick={() => onSelectMenu(item)}
                                                             style={{ backgroundColor: '#FD720D', border: 'none' }}
                                                         >
                                                             <AddCircleIcon />

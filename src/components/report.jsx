@@ -12,11 +12,13 @@ import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import RoomServiceIcon from '@mui/icons-material/RoomService';
 import Detail from "./DetailReport";
 import { Card, Row, Col, Button } from "react-bootstrap"
+import Swal from 'sweetalert2';
 const Report = () => {
     const [totalToday, setTotalToday] = useState(0)
     const [totalMounth, settotalMounth] = useState(0)
     const [data, setData] = useState([])
     const [counter, setCounter] = useState([]);
+    const [outcome, setOutcome] = useState(0);
     const getOrderFood = async () => {
         let sumToday = 0;
         await axios.get(`${import.meta.env.VITE_API_URL}/orderFood.php`)
@@ -30,9 +32,19 @@ const Report = () => {
     }
 
     const getOrderFoodMounth = async () => {
-        await axios.get('https://api.sasirestuarant.com/orderFood.php?Dateinput=mounth')
+        await axios.get(`${import.meta.env.VITE_API_URL}/orderFood.php?Dateinput=mounth`)
             .then(res => {
                 settotalMounth(res.data[0].total)
+            })
+    }
+
+    const RemoveDetailsId = async (id) => {
+        await axios.delete(`${import.meta.env.VITE_API_URL}/removesaleByid.php?id=${id}`)
+            .then(res => {
+                if (res.status === 200) {
+                    getOrderFood()
+                }
+
             })
     }
 
@@ -43,9 +55,45 @@ const Report = () => {
             })
     }
 
+    const geOutcome = async () => {
+        await axios.get('https://delivery.sasirestuarant.com/account/outcome')
+            .then(res => {
+                setOutcome(res.data._sum.total)
+            })
+    }
+
     const deleteBill = async (id) => {
-         axios.delete('https://api.sasirestuarant.com/orderFood.php?billId='+id)
-    
+        Swal.fire({
+            title: 'คุณต้องการยกเลิกออเดอร์หรือไม่ ?',
+            text: "กดยืนยันเพื่อยกเลิก",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'ยืนยันรายการ',
+            cancelButtonText:'ยกเลิก'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.delete(import.meta.env.VITE_API_URL+'/orderFood.php?billId=' + id)
+                    .then(res => {
+                        if (res.status === 200) {
+                            Swal.fire(
+                                'ยกเลิกออเดอร์!',
+                                'ระบบได้ยกเลิกออเดอร์สำเร็จ',
+                                'success'
+                            );
+                            getOrderFood();
+                        }
+                    }).catch(error => {
+                        Swal.fire(
+                            'Error!',
+                            'An error occurred while deleting the bill.',
+                            'error'
+                        );
+                    });
+            }
+        });
+
     }
 
 
@@ -53,6 +101,7 @@ const Report = () => {
         getOrderFood()
         geCountorder()
         getOrderFoodMounth()
+        geOutcome()
     }, [])
 
     useEffect(() => {
@@ -72,6 +121,7 @@ const Report = () => {
                         <Card>
                             <Card.Body>
                                 <Card.Title className="text-center" style={{ color: 'green' }}> ยอดขายวันนี้   {new Intl.NumberFormat().format(totalToday)} บาท</Card.Title>
+                                <Card.Title className="text-center" style={{ color: 'red' }}> รายจ่ายวันนี้   {new Intl.NumberFormat().format(outcome)} บาท</Card.Title>
                                 {counter.length > 0 && counter?.map(item => {
 
                                     return (<>
@@ -126,10 +176,10 @@ const Report = () => {
                                             <TableCell align="right">{row.customerName}</TableCell>
                                             <TableCell align="right">{row.timeOrder}</TableCell>
                                             <TableCell align="right">
-                                                <Detail id={row.bill_ID} />
+                                                <Detail id={row.bill_ID} onDelete={RemoveDetailsId} />
                                             </TableCell>
                                             <TableCell align="right">
-                                                <Button variant="danger" onClick={()=>deleteBill(row.bill_ID)}> delete  </Button>
+                                                <Button variant="danger" onClick={() => deleteBill(row.bill_ID)}> ลบทั้งหมด  </Button>
                                             </TableCell>
                                         </TableRow>
                                     ))}

@@ -8,14 +8,23 @@ function Context({ children }) {
     const [cart, setCart] = useState([])
     const [toTal, setTotal] = useState(0);
     const [sumPrice, setSumPrice] = useState(0);
-    const [name, setName] = useState("คุณ");
+    const [name, setName] = useState("");
     const [messangerId, setMessangerId] = useState("");
     const [orderType, setOrderType] = useState("สั่งกลับบ้าน");
+    const [role, setRole] = useState("");
+    const [queue, setQueu] = useState([]);
+    const [queueNumber, setQueueNumber] = useState(0);
 
     let Bid = "sa" + nanoid(10);
 
+    const getQueueNumber = async () => {
+        await axios.get(`${import.meta.env.VITE_API_URL}/queue/index.php`)
+            .then(res => {
+                setQueueNumber(res.data.queue);
+            })
+    }
+
     const addTocart = (data) => {
-        console.log(data)
         let itemCart = {
             id: data.id,
             name: data.foodname,
@@ -32,7 +41,6 @@ function Context({ children }) {
     }
 
     const removeCart = (id) => {
-        console.log(id)
         let newCart = cart.filter(item => item.id !== id);
         setCart(newCart);
     }
@@ -65,6 +73,7 @@ function Context({ children }) {
             return item;
         });
         setCart(newCart);
+        sumAmount();
     }
 
     const updateFoodName = (id, newname) => {
@@ -80,13 +89,14 @@ function Context({ children }) {
     const resetCart = () => setCart([]);
 
     const saveOrder = async () => {
+
         const body = {
             bill_ID: Bid,
             amount: sumPrice,
             ordertype: orderType,
             statusOrder: "รับออเดอร์แล้ว",
             customerName: name,
-            queueNumber: "5",
+            queueNumber: queueNumber,
             messengerId: messangerId
         }
 
@@ -115,11 +125,12 @@ function Context({ children }) {
         })
         setCart([])
         setName("")
+        getQueueNumber()
     }
-    const [queue, setQueu] = useState([]);
+
+
 
     const getQueu = async () => {
-
         await axios.get(`${import.meta.env.VITE_API_URL}/getQueue.php`)
             .then(res => {
                 if (res.status === 200) {
@@ -129,7 +140,6 @@ function Context({ children }) {
     }
 
     const setMenuPichet = (id) => {
-
         let newCart = cart.map(item => {
             console.log(typeof (item.price))
             let newPrice = parseInt(item.price) + 10;
@@ -139,8 +149,6 @@ function Context({ children }) {
             return item;
         });
         setCart(newCart);
-
-
     }
 
     const setMenuNormal = (id, defaultData) => {
@@ -153,32 +161,45 @@ function Context({ children }) {
         });
         setCart(newCart);
 
-
     }
 
-    useEffect(() => {
+
+    const sumAmount = ()=>{
         if (cart.length > 0) {
             let total = 0;
             cart.map(item => {
                 total += (item?.quntity * item?.price);
 
             })
-            setTotal(cart?.length);
+            let item = cart?.length;
+            setTotal(item);
             setSumPrice(total)
-            console.log(cart)
 
         } else {
             setTotal(0);
             setSumPrice(0)
         }
-        console.log(Bid)
+    }
+
+    useEffect(() => {
+      sumAmount()
     }, [cart])
 
     useEffect(() => {
-
         setName(sessionStorage.getItem("name"))
         setMessangerId(sessionStorage.getItem("messangerId"))
-        getQueu()
+        setRole(sessionStorage.getItem("role"))
+        getQueu() // for delivert queue 
+        getQueueNumber()// for bill q1 q2 q3 
+    }, [])
+
+    useEffect(() => {
+
+        const interval = setInterval(() => {
+            getQueu();
+        }, 5000); // ดึงข้อมูลจาก API ทุกๆ 5 วินาที
+
+        return () => clearInterval(interval);
     }, [])
 
     return (<>
@@ -190,6 +211,7 @@ function Context({ children }) {
                 cart,
                 sumPrice,
                 removeCart,
+                sumAmount,
                 saveOrder,
                 updateNote,
                 name,
@@ -198,14 +220,15 @@ function Context({ children }) {
                 resetCart,
                 setOrderType,
                 orderType,
-                name,
                 setName,
                 updatePrice,
                 updateQuantity,
                 setMenuPichet,
                 setMenuNormal,
-                updateFoodName
-
+                updateFoodName,
+                role,
+                queueNumber,
+                getQueueNumber
             }}>
             {children}
         </AuthData.Provider>

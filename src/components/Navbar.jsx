@@ -16,21 +16,29 @@ import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import AddToQueueIcon from '@mui/icons-material/AddToQueue';
 import Pos from './Pos';
 import Report from './report';
+import Login from './Login';
+import Admin from './admin';
+import ListAltIcon from '@mui/icons-material/ListAlt';
+import CurrencyBitcoinIcon from '@mui/icons-material/CurrencyBitcoin';
+import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
+import LogoutIcon from '@mui/icons-material/Logout';
+import StoreIcon from '@mui/icons-material/Store';
 const NavbarMenu = () => {
 
     const { toTal,
-         cart,
-          sumPrice,
-           removeCart, 
-           saveOrder, 
-           updateNote,
-            name,
-             messangerId,
-             queue } = 
-    useContext(AuthData);
-    
-    const [show, setShow] = useState(false);
+        cart,
+        sumPrice,
+        removeCart,
+        saveOrder,
+        updateNote,
+        name,
+        messangerId,
+        queue,
+        role
+    } =
+        useContext(AuthData);
 
+    const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
@@ -38,33 +46,82 @@ const NavbarMenu = () => {
         saveOrder()
         handleClose()
     }
+
+    const logout = () => {
+        sessionStorage.clear()
+        window.location.href = '/';
+    }
+
     useEffect(() => {
 
-    }, [
-
-    ])
+    }, [role])
     return (
         <Router>
-
-            <Navbar bg="light" data-bs-theme="light" className='when-print' sticky='top'>
-                <Container fluid>
-                    {/* <Navbar.Brand href="#home">SASI Delivery</Navbar.Brand> */}
-                    <Nav className="me-auto text-center">
-                        <Nav.Link  ><Link style={{ textDecoration: 'none',color:'#000' }} to={`/${messangerId}/${name}`}> <RestaurantMenuIcon />  เมนู</Link> </Nav.Link>
-                        <Nav.Link onClick={handleShow}><LocalMallIcon />   {toTal}</Nav.Link>
-                        <Nav.Link  ><Link style={{ textDecoration: 'none',color:'#000' }} to={'/Myorder'}> <AccountBoxIcon />  คำสั่งซื้อ </Link> </Nav.Link>
-                        <Nav.Link  ><Link style={{ textDecoration: 'none',color:'#000' }} to={'/queueNumber'}> <AddToQueueIcon />  คิวตอนนี้ {queue} </Link> </Nav.Link>
-
-                        
-                            
-                            <Nav.Link  ><AccountBoxIcon /> <Link to={'/orders'}>  ออเดอร์</Link> </Nav.Link>
-                            <Nav.Link  ><AccountBoxIcon /> <Link to={'/pos'}>  ขายอาหาร</Link> </Nav.Link>
-                            <Nav.Link  ><AccountBoxIcon /> <Link to={'/report'}> ยอดขาย</Link> </Nav.Link>
-                           
-                    </Nav>
-                </Container>
-            </Navbar>
-
+ <Navbar bg="light" data-bs-theme="light" className='when-print' sticky='top' expand="lg">
+    <Container fluid>
+      {
+        role === 'admin' && (<Navbar.Brand href="#home">SASI POS</Navbar.Brand>)
+      }
+      <Navbar.Toggle aria-controls="basic-navbar-nav" />
+      <Navbar.Collapse id="basic-navbar-nav">
+        <Nav className="me-auto text-center">
+          {role === 'user' && (
+            <>
+              <Nav.Link>
+                <Link style={{ textDecoration: 'none', color: '#000' }} to={`/foodMenu/${messangerId}/${name}`}>
+                  <RestaurantMenuIcon /> เมนู
+                </Link>
+              </Nav.Link>
+              <Nav.Link onClick={handleShow}>
+                <LocalMallIcon /> {toTal}
+              </Nav.Link>
+              <Nav.Link>
+                <Link style={{ textDecoration: 'none', color: '#000' }} to={'/Myorder'}>
+                  <AccountBoxIcon /> คำสั่งซื้อ
+                </Link>
+              </Nav.Link>
+              <Nav.Link>
+                <Link style={{ textDecoration: 'none', color: '#000' }} to={'/queueNumber'}>
+                  <AddToQueueIcon /> คิวตอนนี้ {queue}
+                </Link>
+              </Nav.Link>
+            </>
+          )}
+          {role === 'admin' && (
+            <>
+              <Nav.Link>
+                <Link to={'/pos'} style={{ textDecoration: 'none', color: '#000' }}>
+                  <ListAltIcon /> ขายอาหาร
+                </Link>
+              </Nav.Link>
+              <Nav.Link>
+                <Link to={'/report'} style={{ textDecoration: 'none', color: '#000' }}>
+                  <CurrencyBitcoinIcon /> ยอดขาย
+                </Link>
+              </Nav.Link>
+              <Nav.Link>
+                <Link to={'/orders'} style={{ textDecoration: 'none', color: '#000' }}>
+                  <DeliveryDiningIcon /> ออเดอร์
+                </Link>
+              </Nav.Link>
+              <Nav.Link>
+                <Link to={'/admin'} style={{ textDecoration: 'none', color: '#000' }}>
+                  <StoreIcon /> ร้านค้า
+                </Link>
+              </Nav.Link>
+            </>
+          )}
+        </Nav>
+        {role === 'admin' && (
+          <Nav className="ml-auto">
+            <Nav.Link onClick={logout}>
+              <LogoutIcon /> ออกจากระบบ
+            </Nav.Link>
+          </Nav>
+        )}
+      </Navbar.Collapse>
+    </Container>
+  </Navbar>
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
@@ -85,7 +142,7 @@ const NavbarMenu = () => {
                                                         xs={5}
                                                     >
                                                         <Image style={{ width: "100%", height: '100px', objectFit: 'cover' }}
-                                                            src={`${import.meta.env.VITE_API_URL}/files/${item.photo}`} />
+                                                            src={`${import.meta.env.VITE_BASE_URL}/img/${item.photo}`} />
                                                     </Col>
                                                     <Col md={5} xs={5}>
                                                         <h6>{item?.name}</h6>
@@ -138,6 +195,8 @@ const NavbarMenu = () => {
                 </Modal.Body>
                 {
                     cart.length > 0 && (<>
+
+
                         <Modal.Footer>
                             <Button variant="success" onClick={() => onSave()}>
                                 ยืนยันสั่งออเดอร์
@@ -150,13 +209,16 @@ const NavbarMenu = () => {
                 }
             </Modal>
             <Routes>
-                <Route path="/" Component={FoodMenu}></Route>
+                <Route path="/" Component={Login}></Route>
+
                 <Route path="/orders" Component={Orders}></Route>
-                <Route path="/:userid/:username" Component={FoodMenu}></Route>
+                <Route path="/foodMenu/:userid/:username" Component={FoodMenu}></Route>
                 <Route path="/Myorder" Component={Myorder}></Route>
                 <Route path="/queueNumber" Component={GetQueu}></Route>
                 <Route path="/pos" Component={Pos}></Route>
                 <Route path="/report" Component={Report}></Route>
+                <Route path="/admin" Component={Admin}></Route>
+
             </Routes>
         </Router>
     );

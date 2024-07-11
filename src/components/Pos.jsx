@@ -10,6 +10,7 @@ import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
 import { AuthData } from "../ContextData";
 import { nanoid } from 'nanoid'
 import axios from 'axios';
+import SaveIcon from '@mui/icons-material/Save';
 let active = 2;
 let items = [];
 
@@ -27,11 +28,9 @@ const Pos = () => {
     addTocart,
     cart,
     sumPrice,
-    toTal,
     removeCart,
     saveOrder,
     updateNote,
-    resetCart,
     orderType,
     setOrderType,
     setName,
@@ -40,8 +39,9 @@ const Pos = () => {
     updateQuantity,
     setMenuPichet,
     setMenuNormal,
-    updateFoodName
-
+    updateFoodName,
+    queueNumber,
+    getQueueNumber,
   } =
     useContext(AuthData)
 
@@ -62,24 +62,20 @@ const Pos = () => {
 
 
   const onSelectMenu = (obj) => {
+    getQueueNumber()
     let ID = nanoid(10)
     setNewId(ID)
-    //add to cart 
     addTocart({ ...obj, id: ID })
-    console.log('obj', obj)
-    //set data to defaultMenu
     setDefaultMenu(obj)
-    //set modal open 
     handleShow()
   }
 
   const getMenu = async () => {
 
-    await axios.get(import.meta.env.VITE_API_URL + '/').then(
+    await axios.get(import.meta.env.VITE_BAKUP_URL + '/foodmenu').then(
       res => {
         if (res.status === 200) {
           setMenu(res.data);
-          console.log(res.data)
         }
       }
     )
@@ -93,6 +89,7 @@ const Pos = () => {
   }
 
 
+
   const getMenuBytypeId = async (id) => {
     await axios.get(`${import.meta.env.VITE_API_URL}/getMenuId.php?TypeID=${id}`)
       .then(res => {
@@ -101,11 +98,15 @@ const Pos = () => {
   }
 
   useEffect(() => {
+    sessionStorage.setItem('role', 'admin')
     getMenuType()
     getMenu()
   }, [])
 
 
+  useEffect(() => {
+
+  }, [queueNumber])
 
   return (
 
@@ -173,14 +174,15 @@ const Pos = () => {
             <div>
               <div className='text-center pt-0'>
                 <h6>SASI Restaurant หนองคาย</h6>
-                <h5>รายการอาหาร</h5>
+                <h6>รายการอาหาร</h6>
+                <h6> ลำดับคิว {queueNumber}</h6>
               </div>
 
               <Row>
                 <div >
                   <Col md={12}>
 
-                    <Table border={1}>
+                    <Table border={1} >
 
                       <tbody>
                         {
@@ -205,15 +207,15 @@ const Pos = () => {
 
 
                         <tr>
-                          <td>รวมทั้งหมด</td>
-                          <td colSpan={4}>{sumPrice} บาท</td>
+                          <td>ราคารวม {sumPrice} บาท</td>
+                          <td> </td>
 
                         </tr>
-                        <tr>
+                        {/* <tr>
                           <td>จำนวน</td>
                           <td colSpan={3}>{toTal} รายการ</td>
 
-                        </tr>
+                        </tr> */}
                       </tbody>
                     </Table>
 
@@ -229,32 +231,33 @@ const Pos = () => {
 
                   <ButtonGroup className='when-print'>
                     <Button className='btn btn-primary'
-                      onClick={() => setOrderType("เสิร์ฟในร้าน")}
+                      onClick={() => { setOrderType("เสิร์ฟในร้าน"), setName("ทานที่ร้าน") }}
                       style={{ border: 'none' }} >เสิร์ฟในร้าน</Button>
                     <Button className='btn btn-success'
                       onClick={() => setOrderType("สั่งกลับบ้าน")}
                       style={{ border: 'none' }} >สั่งกลับบ้าน</Button>
                     <Button className='btn btn-danger'
-                      onClick={() => setOrderType("รับเอง")}
+                      onClick={() => { setOrderType("รับเอง"), setName("รับเองหน้าร้าน") }}
                       style={{ border: 'none' }} >รับเอง</Button>
                   </ButtonGroup>
 
-                  <Row className='mt-2'>
+                  <Row className='mt-2 order-type'>
                     <Col>
                       <h5>การรับอาหาร - {orderType}</h5>
                       <Form.Control
                         type="text"
                         placeholder='ข้อมูลติดต่อ'
-                       
-                       onChange={(e) => setName(e.target.value)} />
+
+                        onChange={(e) => setName(e.target.value)} value={name} />
                     </Col>
                   </Row>
 
                 </Form>
-                <Row className='mt-2 when-print'>
+                <Row className='mt-3 when-print'>
 
                   <Col md={6}>
                     <Button
+                      style={{ height: '50px' }}
                       onClick={() => { printSlip() }}
                       variant='primary w-100'>
                       <LocalPrintshopIcon />  พิมพ์
@@ -262,20 +265,15 @@ const Pos = () => {
                   </Col>
                   <Col md={6}>
                     <Button
+                      style={{ height: '50px' }}
                       onClick={() => { saveOrder() }}
                       variant='success w-100'>
-                      <LocalPrintshopIcon />  บันทึก
+                      <SaveIcon />  บันทึก
                     </Button>
                   </Col>
 
 
-                  <Col>
-                    <Button
-                      onClick={() => resetCart()}
-                      variant='danger w-100 mt-3'>
-                      ยกเลิก
-                    </Button>
-                  </Col>
+
                 </Row>
 
               </div>
@@ -298,19 +296,12 @@ const Pos = () => {
               <Card style={{ height: 'auto', marginBottom: '10px', padding: '10px' }}>
                 <Card.Body className='p-0'>
                   <Row>
-                    <Col md={5}
-                      xs={5}
-                    >
-                      <Image style={{ width: "100%", height: '100px', objectFit: 'cover' }}
-                        src={`${import.meta.env.VITE_BASE_URL}/img/${defaultMenu?.img}`} />
-                    </Col>
-                    <Col md={7} xs={7}>
-                      
+
+                    <Col md={12}>
+
                       <Row>
-        
-                
                         <Form>
-                          <Form.Label> รายการ (*แก้ไขได้)</Form.Label>
+                          <Form.Label> รายการ</Form.Label>
                           <Form.Control
                             type="text"
                             defaultValue={defaultMenu?.foodname}
@@ -318,18 +309,21 @@ const Pos = () => {
                             onChange={(e) => updateFoodName(newId, e.target.value)}
 
                           />
-                           <Form.Label> หมายเหตุ </Form.Label>
-                          <Form.Control
-                            type="text"
-                            placeholder='หมายเหตุ'
-                            onChange={(e) => updateNote(newId, e.target.value)}
 
-                          />
                         </Form>
+
                       </Row>
                     </Col>
 
+                    <Col md={12}>
+                      <Form.Label> หมายเหตุ </Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder='หมายเหตุ'
+                        onChange={(e) => updateNote(newId, e.target.value)}
 
+                      />
+                    </Col>
 
                   </Row>
 
@@ -346,7 +340,7 @@ const Pos = () => {
               <ButtonGroup className='when-print mb-2'>
                 <Button className='btn btn-primary'
                   onClick={() => setMenuPichet(newId)}
-                  style={{ border: 'none' }} > { }พิเศษ {  }</Button>
+                  style={{ border: 'none' }} > { }พิเศษ { }</Button>
                 <Button className='btn btn-success'
                   onClick={() => setMenuNormal(newId, defaultMenu)}
                   style={{ border: 'none' }} >ธรรมดา</Button>
@@ -364,17 +358,30 @@ const Pos = () => {
                       <Col md={6}>
                         <Form.Group>
                           <Form.Label> จำนวน </Form.Label>
-                          <Form.Control
-                            type='number'
-                            defaultValue={item.quntity}
-                            onChange={(e) => updateQuantity(newId, e.target.value)} />
+                          <Row>
+
+                            <Col md={2}>
+                              <Button onClick={() => { updateQuantity(newId, (item.quntity + 1)) }}>+</Button>
+                            </Col>
+                            <Col md={8}>
+                              <Form.Control
+                                className='w-100'
+                                type='number'
+                                value={item.quntity}
+                                onChange={(e) => { updateQuantity(newId, e.target.value) }} />
+                            </Col>
+                            <Col md={2}>
+                              <Button onClick={() => { updateQuantity(newId, (item.quntity - 1)) }}>-</Button>
+                            </Col>
+                          </Row>
+
                         </Form.Group>
                       </Col>
                       <Col md={6}>
                         <Form.Group>
                           <Form.Label> ราคา </Form.Label>
                           <Form.Control
-                           value={item.price}
+                            value={item.price}
                             type='number'
                             onChange={(e) => updatePrice(newId, e.target.value)} />
                         </Form.Group>
@@ -392,12 +399,24 @@ const Pos = () => {
         {
           cart.length > 0 && (<>
             <Modal.Footer>
-              <Button variant="success" onClick={() => handleClose()}>
-                ยืนยัน
-              </Button>
-              <Button variant="danger" onClick={handleClose}>
-                ยกเลิก
-              </Button>
+              <Container>
+
+
+                <Row>
+
+                  <Col md={6}>
+                    <Button variant="success w-100" onClick={() => handleClose()}>
+                      ยืนยัน
+                    </Button>
+                  </Col>
+                  <Col md={6}>
+                    <Button variant="danger w-100" onClick={handleClose}>
+                      ยกเลิก
+                    </Button>
+                  </Col>
+                </Row>
+              </Container>
+
             </Modal.Footer>
           </>)
         }

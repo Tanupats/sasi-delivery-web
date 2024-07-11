@@ -12,7 +12,7 @@ const Details = (props) => {
 
     const [optionsFood, setOptionFood] = useState([])
 
-    const [role,setRole] = useState(sessionStorage.getItem("role"))
+    const [role, setRole] = useState(sessionStorage.getItem("role"))
 
     //MENU LIST 
     const [foodname, setFoodName] = useState("")
@@ -33,12 +33,10 @@ const Details = (props) => {
     }
 
     const getMenuType = async () => {
-
-        await axios.get(`${import.meta.env.VITE_API_URL}/GetMenuType.php`)
+        await axios.get(`${import.meta.env.VITE_API_URL}/GetmenuType.php`)
             .then(res => {
                 setMenuType(res.data);
             })
-
     }
 
     const getMenuBytypeId = async (id) => {
@@ -61,13 +59,13 @@ const Details = (props) => {
     }
 
     const deleteById = async (id) => {
-        await axios.delete(`${import.meta.env.VITE_API_URL}/app/DeleteDetailById/${id}`)
+        await axios.delete(`${import.meta.env.VITE_API_URL}/removesaleByid?id=${id}`)
             .then(res => {
                 if (res.status === 200) {
-                    alert("ลบเรียบร้อย")
+                    getDetail()
                 }
             })
-        await getDetail()
+
         handleClose()
     }
 
@@ -79,7 +77,7 @@ const Details = (props) => {
             quantity: quantity ? quantity : dataMenus.quantity,
             note: note ? note : dataMenus.note
         }
-        await axios.put(`${import.meta.env.VITE_API_URL}/app/UpdateDetailById/${id}`, body)
+        await axios.put(`${import.meta.env.VITE_API_URL}/record_sale.php?id=${id}`, body)
             .then(res => {
                 if (res.status === 200) {
                     getDetail()
@@ -97,10 +95,10 @@ const Details = (props) => {
             , quantity: quantity
             , note: note
         };
-        await axios.post(`${import.meta.env.VITE_API_URL}/app/saveOrderDetail`, body)
+        await axios.post(`${import.meta.env.VITE_API_URL}/record_sale.php`, body)
             .then(res => {
                 if (res.status === 200) {
-                    alert("บันทึกเมนูสำเร็จ")
+
                     handleClose()
                 }
             })
@@ -115,37 +113,27 @@ const Details = (props) => {
 
     useEffect(() => {
         let newOption = menuType.map(item => {
-            return { label: item.name, value: item.id }
+            return { label: item.T_name, value: item.TypeID }
         })
         setOption(newOption);
     }, [menuType])
 
-
-    // useEffect(()=>{
-
-    // axios.put(`${import.meta.env.VITE_API_URL}/app/updateAmount/${bill_ID}`, { amount: totalNew })
-
-    // },[totalNew])
-
+ 
     useEffect(() => {
         let total = 0;
         detail.map(item => {
             total += (item.quantity * item.price)
         })
-
         setTotalNew(total)
-
-
-
     }, [detail])
 
     useEffect(() => {
-
-
         console.log(dataMenus)
-
     }, [dataMenus])
 
+   useEffect(()=>{
+     console.log(bill_ID)
+    },[bill_ID])
 
     return (<>
 
@@ -154,7 +142,7 @@ const Details = (props) => {
 
 
             {
-                status !== "ออเดอร์พร้อมส่ง" &&  role !== "user" && (
+                status !== "ออเดอร์พร้อมส่ง"  || status === 'ส่งแล้ว' && role !== "user" && (
 
                     <Col md={6}>
                         {/* <h1>{status}</h1> */}
@@ -182,7 +170,7 @@ const Details = (props) => {
                             </Col>
 
                             {
-                                status !== "ออเดอร์พร้อมส่ง" &&   role !== "user" && (
+                                status !== "ออเดอร์พร้อมส่ง" || status === 'ส่งแล้ว' && role !== "user" && (
                                     <Col md={4}>
 
                                         <Button className="when-print mb-2"
@@ -201,7 +189,7 @@ const Details = (props) => {
                 })
             }
 
-           
+
             <p style={{ fontSize: '18px' }}>รวมทั้งหมด {totalNew} บาท</p>
 
         </ListGroup>
@@ -287,11 +275,17 @@ const Details = (props) => {
                                 <Col md={12} xs={12}>
                                     <Form.Group>
                                         <Form.Label>เลือกประเภท</Form.Label>
-                                        <Select options={options} onChange={(e) => getMenuBytypeId(e)} />
+                                        <Select 
+                                        placeholder="เลือกประเภท"
+                                        options={options} 
+                                        onChange={(e) => getMenuBytypeId(e)} />
                                     </Form.Group>
                                     <Form.Group>
                                         <Form.Label>เลือกเมนู</Form.Label>
-                                        <Select options={optionsFood} onChange={(e) => setDataMenus(e)} />
+                                        <Select 
+                                        placeholder="เลือกเมนู"
+                                        options={optionsFood} 
+                                        onChange={(e) => setDataMenus(e)} />
                                     </Form.Group>
                                     <Form.Group>
 
