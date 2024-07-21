@@ -1,22 +1,31 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Card, Row, Col, Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { AuthData } from "../ContextData";
 const Login = () => {
     const router = useNavigate()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const { setAuth, setStaffName } = useContext(AuthData);
 
-    const login = async () => {
+    const login = async (e) => {
+        e.preventDefault();
         const body = { email: email, password: password };
-        await axios.post(import.meta.env.VITE_API_URL + '/login.php', body)
+        await axios.post(import.meta.env.VITE_BAKUP_URL + '/auth/signin', body)
             .then(res => {
                 if (res) {
+                    if (res.status === 200) {
+                        const { name, department, token } = res.data;
+                        sessionStorage.setItem("name", name)
+                        sessionStorage.setItem("role", department)
+                        sessionStorage.setItem("token", token)
+                        sessionStorage.setItem("auth", 'authenticated')
+                        setAuth('authenticated')
+                        setStaffName(name)
+                        router('/pos')
+                    }
 
-                    const { name, department } = res.data;
-                    sessionStorage.setItem("name", name)
-                    sessionStorage.setItem("role", department)
-                    router('/pos')
 
                 }
             })
@@ -24,16 +33,18 @@ const Login = () => {
 
     return (
         <>
-            <Row>
+            <Row className="mt-4">
                 <Col md={4}>
 
                 </Col>
                 <Col md={4}>
                     <Card className="mt-4">
                         <Card.Body>
-                            <Card.Title className="text-center"> Login </Card.Title>
+                            <Card.Title className="text-center">
+                                SASI POS <br />
+                                Login </Card.Title>
 
-                            <Form >
+                            <Form onSubmit={login}>
                                 <Form.Group>
                                     <Form.Label>
                                         email
@@ -46,7 +57,7 @@ const Login = () => {
                                         onChange={(e) => setEmail(e.target.value)}
                                     />
                                 </Form.Group>
-                                <Form.Group>
+                                <Form.Group className="mt-2">
                                     <Form.Label>
                                         password
                                     </Form.Label>
@@ -61,11 +72,19 @@ const Login = () => {
                                 </Form.Group>
 
                                 <Button
-                                    onClick={() => login()}
-
-                                    variant="primary"
+                                    type="submit"
+                                    variant="success"
                                     className="w-100 mt-4"
-                                >Login</Button>
+                                >เข้าสู่ระบบ</Button>
+                                <div className="text-center mt-4">
+                                    <p> หรือ </p>
+                                </div>
+
+                                <Button
+                                    onClick={() => router('/register')}
+                                    variant="primary"
+                                    className="w-100 mt-2"
+                                >ลงทะเบียนผู้ใช้</Button>
 
                             </Form>
                         </Card.Body>

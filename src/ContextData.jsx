@@ -14,7 +14,9 @@ function Context({ children }) {
     const [role, setRole] = useState("");
     const [queue, setQueu] = useState([]);
     const [queueNumber, setQueueNumber] = useState(0);
-
+    const authCheck  = sessionStorage.getItem("auth");
+    const [auth, setAuth] = useState(authCheck || 'not_authenticated');
+    const [staffName, setStaffName] = useState("");
     let Bid = "sa" + nanoid(10);
 
     const getQueueNumber = async () => {
@@ -164,7 +166,7 @@ function Context({ children }) {
     }
 
 
-    const sumAmount = ()=>{
+    const sumAmount = () => {
         if (cart.length > 0) {
             let total = 0;
             cart.map(item => {
@@ -182,25 +184,25 @@ function Context({ children }) {
     }
 
     useEffect(() => {
-      sumAmount()
+        sumAmount()
     }, [cart])
 
     useEffect(() => {
-        setName(sessionStorage.getItem("name"))
+        setAuth(authCheck)    
         setMessangerId(sessionStorage.getItem("messangerId"))
         setRole(sessionStorage.getItem("role"))
         getQueu() // for delivert queue 
         getQueueNumber()// for bill q1 q2 q3 
     }, [])
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        const interval = setInterval(() => {
-            getQueu();
-        }, 5000); // ดึงข้อมูลจาก API ทุกๆ 5 วินาที
+    //     const interval = setInterval(() => {
+    //         getQueu();
+    //     }, 5000); // ดึงข้อมูลจาก API ทุกๆ 5 วินาที
 
-        return () => clearInterval(interval);
-    }, [])
+    //     return () => clearInterval(interval);
+    // }, [])
 
     return (<>
 
@@ -228,7 +230,10 @@ function Context({ children }) {
                 updateFoodName,
                 role,
                 queueNumber,
-                getQueueNumber
+                getQueueNumber,
+                auth, setAuth,
+                staffName, 
+                setStaffName
             }}>
             {children}
         </AuthData.Provider>
