@@ -13,6 +13,7 @@ import axios from 'axios';
 import SaveIcon from '@mui/icons-material/Save';
 let active = 2;
 let items = [];
+import moment from 'moment';
 import { useNavigate } from "react-router-dom";
 for (let number = 1; number <= 5; number++) {
   items.push(
@@ -22,8 +23,7 @@ for (let number = 1; number <= 5; number++) {
   );
 }
 
-const Time = new Date().toLocaleTimeString()
-const date = new Date().toLocaleDateString()
+
 const Pos = () => {
   const router = useNavigate()
   const {
@@ -54,7 +54,8 @@ const Pos = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-
+  const [date, setDate] = useState();
+  const [time, setTime] = useState();
   const [defaultMenu, setDefaultMenu] = useState({})
   const [newId, setNewId] = useState("")
 
@@ -62,8 +63,8 @@ const Pos = () => {
     window.print()
   }
 
-
   const onSelectMenu = (obj) => {
+
     getQueueNumber()
     let ID = nanoid(10)
     setNewId(ID)
@@ -73,7 +74,6 @@ const Pos = () => {
   }
 
   const getMenu = async () => {
-
     await axios.get(import.meta.env.VITE_BAKUP_URL + '/foodmenu').then(
       res => {
         if (res.status === 200) {
@@ -103,7 +103,18 @@ const Pos = () => {
   }, [])
 
   useEffect(() => {
+    const Time = new Date().getHours()+':'+new Date().getMinutes()+" น.";
+    const DateToday = new Date().toLocaleDateString()
+
+    setTime(Time);
+    setDate(DateToday)
+
   }, [queueNumber])
+
+
+
+
+
 
   return (
 
@@ -168,10 +179,10 @@ const Pos = () => {
             <div>
               <div className='text-center'>
 
-                SASI Restaurant หนองคาย<br></br>
-                ใบเสร็จรับเงิน
+                <h6> SASI Restaurant หนองคาย</h6>
+                <h6>  ใบเสร็จรับเงิน</h6>
                 <h6> ลำดับคิว {queueNumber} </h6>
-                วันที่ {date} {Time}
+                วันที่ {date} {time }
                 <h6>รายการอาหาร</h6>
               </div>
 
@@ -212,15 +223,22 @@ const Pos = () => {
 
 
                         <tr>
-                          <td style={{ padding: 0, margin: 0 }}>ราคารวม {sumPrice} บาท</td>
-                          <td style={{ padding: 0, margin: 0 }}> </td>
+                          <td >ราคารวม {sumPrice} บาท</td>
+                          <td ></td>
 
                         </tr>
-                        {/* <tr>
-                          <td>จำนวน</td>
-                          <td colSpan={3}>{toTal} รายการ</td>
 
-                        </tr> */}
+                        <tr>
+                          <td  colSpan={4}>การรับอาหาร-{orderType}</td>
+                        
+
+                        </tr>
+                        <tr>
+                          <td > {name}</td>
+                          <td ></td>
+
+                        </tr>
+
                       </tbody>
                     </Table>
 
@@ -245,14 +263,8 @@ const Pos = () => {
                       onClick={() => { setOrderType("รับเอง"), setName("รับเองหน้าร้าน") }}
                       style={{ border: 'none' }} >รับเอง</Button>
                   </ButtonGroup>
-                  <div className="mt-2">
-                    <h6>การรับอาหาร - {orderType}</h6>
-                  </div>
-
-
-                  <div >
-                    <h6>ข้อมูลติดต่อ - {name}</h6>
-                  </div>
+      
+      
                   <Row className='order-type when-print'>
                     <Col>
 
@@ -264,7 +276,7 @@ const Pos = () => {
                   </Row>
 
                 </Form>
-                <Row className='mt-2 when-print'>
+                <Row className='mt-4 when-print'>
 
                   <Col md={6}>
                     <Button

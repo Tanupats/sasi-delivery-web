@@ -206,8 +206,6 @@ const NavbarMenu = () => {
         </Modal.Body>
         {
           cart.length > 0 && (<>
-
-
             <Modal.Footer>
               <Button variant="success" onClick={() => onSave()}>
                 ยืนยันสั่งออเดอร์
@@ -228,8 +226,7 @@ const NavbarMenu = () => {
         <Route path="/pos" Component={Pos}></Route>
         <Route path="/report" Component={Report}></Route>
         <Route path="/admin" Component={Admin}></Route>
-        <Route path="/register" Component={Register}></Route>
-        
+        <Route path="/register" Component={Register}></Route>        
       </Routes>
     </Router>
   );

@@ -19,6 +19,7 @@ const Report = () => {
     const [data, setData] = useState([])
     const [counter, setCounter] = useState([]);
     const [outcome, setOutcome] = useState(0);
+   
     const getOrderFood = async () => {
         let sumToday = 0;
         await axios.get(`${import.meta.env.VITE_API_URL}/orderFood.php`)
@@ -113,6 +114,7 @@ const Report = () => {
 
     }, [data])
 
+
     return (<>
         <Card>
             <Card.Body>
@@ -120,8 +122,11 @@ const Report = () => {
                     <Col md={6}>
                         <Card>
                             <Card.Body>
-                                <Card.Title className="text-center" style={{ color: 'green' }}> ยอดขายวันนี้   {new Intl.NumberFormat().format(totalToday)} บาท</Card.Title>
                                 <Card.Title className="text-center" style={{ color: 'red' }}> รายจ่ายวันนี้   {new Intl.NumberFormat().format(outcome)} บาท</Card.Title>
+                                <Card.Title className="text-center" style={{ color: 'green' }}> ยอดขายวันนี้   {new Intl.NumberFormat().format(totalToday)} บาท 
+
+                                  
+                                </Card.Title>
                                 {counter.length > 0 && counter?.map(item => {
 
                                     return (<>
@@ -176,10 +181,14 @@ const Report = () => {
                                             <TableCell align="right">{row.customerName}</TableCell>
                                             <TableCell align="right">{row.timeOrder}</TableCell>
                                             <TableCell align="right">
-                                                <Detail id={row.bill_ID} onDelete={RemoveDetailsId} />
+                                                <Detail 
+                                               
+                                                id={row.bill_ID} 
+                                              
+                                                />
                                             </TableCell>
                                             <TableCell align="right">
-                                                <Button variant="danger" onClick={() => deleteBill(row.bill_ID)}> ลบทั้งหมด  </Button>
+                                                <Button variant="danger" onClick={() => deleteBill(row.bill_ID)}> ยกเลิก  </Button>
                                             </TableCell>
                                         </TableRow>
                                     ))}
