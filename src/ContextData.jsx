@@ -14,7 +14,7 @@ function Context({ children }) {
     const [role, setRole] = useState("");
     const [queue, setQueu] = useState([]);
     const [queueNumber, setQueueNumber] = useState(0);
-    const authCheck  = sessionStorage.getItem("auth");
+    const authCheck = sessionStorage.getItem("auth");
     const [auth, setAuth] = useState(authCheck || 'not_authenticated');
     const [staffName, setStaffName] = useState("");
     let Bid = "sa" + nanoid(10);
@@ -92,44 +92,56 @@ function Context({ children }) {
 
     const saveOrder = async () => {
 
-        const body = {
-            bill_ID: Bid,
-            amount: sumPrice,
-            ordertype: orderType,
-            statusOrder: "รับออเดอร์แล้ว",
-            customerName: name,
-            queueNumber: queueNumber,
-            messengerId: messangerId
-        }
+        if (sumPrice > 0) {
 
-        fetch(`${import.meta.env.VITE_API_URL}/orderFood.php`, { method: 'POST', body: JSON.stringify(body) })
-            .then(res => {
-                if (res.status === 200) {
 
-                    Swal.fire({
-                        title: 'สั่งอาหารสำเร็จ',
-                        text: 'คำสั่งซื้อของคุณส่งไปยังร้านค้าแล้ว',
-                        icon: 'success',
-                        confirmButtonText: 'ยืนยัน'
-                    })
-                }
-            })
 
-        cart.map(({ name, price, quntity, note }) => {
-            let bodyDetails = {
+
+            const body = {
                 bill_ID: Bid,
-                foodname: name,
-                price: price,
-                quantity: quntity,
-                note: note
+                amount: sumPrice,
+                ordertype: orderType,
+                statusOrder: "รับออเดอร์แล้ว",
+                customerName: name,
+                queueNumber: queueNumber,
+                messengerId: messangerId
             }
-            fetch(`${import.meta.env.VITE_API_URL}/record_sale.php`, { method: 'POST', body: JSON.stringify(bodyDetails) })
-        })
-        setCart([])
-        setName("")
-        getQueueNumber()
-    }
 
+            fetch(`${import.meta.env.VITE_API_URL}/orderFood.php`, { method: 'POST', body: JSON.stringify(body) })
+                .then(res => {
+                    if (res.status === 200) {
+
+                        Swal.fire({
+                            title: 'สั่งอาหารสำเร็จ',
+                            text: 'คำสั่งซื้อของคุณส่งไปยังร้านค้าแล้ว',
+                            icon: 'success',
+                            confirmButtonText: 'ยืนยัน'
+                        })
+                    }
+                })
+
+            cart.map(({ name, price, quntity, note }) => {
+                let bodyDetails = {
+                    bill_ID: Bid,
+                    foodname: name,
+                    price: price,
+                    quantity: quntity,
+                    note: note
+                }
+                fetch(`${import.meta.env.VITE_API_URL}/record_sale.php`, { method: 'POST', body: JSON.stringify(bodyDetails) })
+            })
+            setCart([])
+            setName("")
+            getQueueNumber()
+        } else {
+            Swal.fire({
+                title: 'ไม่มีรายการอาหาร',
+                text: 'กรุณาเลือกรายการอาหาร',
+                icon: 'error',
+                confirmButtonText: 'ยืนยัน'
+            })
+        }
+    }
 
 
     const getQueu = async () => {
@@ -188,7 +200,7 @@ function Context({ children }) {
     }, [cart])
 
     useEffect(() => {
-        setAuth(authCheck)    
+        setAuth(authCheck)
         setMessangerId(sessionStorage.getItem("messangerId"))
         setRole(sessionStorage.getItem("role"))
         getQueu() // for delivert queue 
@@ -232,7 +244,7 @@ function Context({ children }) {
                 queueNumber,
                 getQueueNumber,
                 auth, setAuth,
-                staffName, 
+                staffName,
                 setStaffName
             }}>
             {children}

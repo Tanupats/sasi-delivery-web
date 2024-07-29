@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext,useEffect } from "react";
 import { Card, Row, Col, Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { AuthData } from "../ContextData";
@@ -31,6 +31,13 @@ const Login = () => {
             })
     }
 
+    useEffect(()=>{
+
+                if(sessionStorage.getItem("auth")==="authenticated"){
+
+                    router('/pos')
+                }
+    },[])
     return (
         <>
             <Row className="mt-4">
