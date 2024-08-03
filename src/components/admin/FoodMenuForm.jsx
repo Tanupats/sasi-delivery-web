@@ -2,29 +2,47 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Row, Col, Card, Image, Button, Modal, Form } from "react-bootstrap";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-
 const FoodMenuForm = () => {
     const [show, setShow] = useState(false);
-    const [foodName, setFoodName] = useState("");
-    const [price, setPrice] = useState(0);
+    const [foodname, setFoodName] = useState("");
+    const [price, setPrice] = useState(50);
     const [img, setImg] = useState("");
     const [code, setCode] = useState("");
+    const [status, setStatus] = useState("1");
+    const [menuType, setMenuType] = useState([]);
+    const [menuTypeId, setMenuTypeId] = useState("");
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    const getMenuType = async () => {
+        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/menutype`)
+            .then(res => {
+                setMenuType(res.data);
+            })
+    }
 
     const saveData = async () => {
-        const body = { foodname: data.foodname };
+        const formData = new FormData();
+        formData.append('file', img);
+        let filename = '';
+        await axios.post(`${import.meta.env.VITE_BAKUP_URL}/upload`, formData)
+            .then(res => {
+                if (res.status === 200) {
+                    filename = res.data.filename;
+                }
+            })
 
+        const body = { foodname: foodname,TypeID:menuTypeId,Price: price, img: filename, code: code, status: status };
         await axios.post(`${import.meta.env.VITE_BAKUP_URL}/foodmenu`, body)
             .then(res => {
                 if (res.status === 200) {
-                    alert('update menu success');
+                    alert('created menu success');
                 }
             })
         handleClose()
-        getFoodMenu()
+
     }
+
     const [imgPreview, setImgPreview] = useState(null);
 
     const handleImageChange = (e) => {
@@ -40,13 +58,18 @@ const FoodMenuForm = () => {
             setImgPreview(null);
         }
     };
+
+    useEffect(() => {
+
+        getMenuType()
+    }, [])
     return (<>
 
         <Row className="mb-4">
             <Col>
-            <Button onClick={()=>handleShow()}> 
-                <AddCircleIcon /> เพิ่มเมนู </Button>
-             </Col>
+                <Button onClick={() => handleShow()}>
+                    <AddCircleIcon /> เพิ่มเมนู </Button>
+            </Col>
 
         </Row>
         <Modal size="lg" show={show} onHide={handleClose}>
@@ -69,7 +92,7 @@ const FoodMenuForm = () => {
                                             <Form.Group>
                                                 <Form.Label>รูปภาพ </Form.Label>
 
-                                                <Image src={ imgPreview} style={{width:'100%',height:'180px',objectFit:'cover'}}/>
+                                                <Image src={imgPreview} style={{ width: '100%', height: '180px', objectFit: 'cover' }} />
                                                 <Form.Control
                                                     type="file"
                                                     onChange={handleImageChange}
@@ -82,29 +105,47 @@ const FoodMenuForm = () => {
                                                 <Form.Control
                                                     type="text"
                                                     onChange={(e) => setFoodName(e.target.value)}
-                                                    value={foodName} />
+                                                    value={foodname} />
                                             </Form.Group>
                                             <Form.Group>
                                                 <Form.Label>ราคา </Form.Label>
 
-                                                <Form.Control type="text" 
-                                               onChange={(e) => setPrice(e.target.value)}
-                                               value={price} 
+                                                <Form.Control type="text"
+                                                    onChange={(e) => setPrice(e.target.value)}
+                                                    value={price}
+                                                    placeholder="ราคา"
                                                 />
                                             </Form.Group>
                                             <Form.Group>
                                                 <Form.Label>รหัสเมนู </Form.Label>
 
-                                                <Form.Control type="text" 
-                                               onChange={(e) => setCode(e.target.value)}
-                                               value={code} 
+                                                <Form.Control type="text"
+                                                placeholder="รหัสเมนู"
+                                                    onChange={(e) => setCode(e.target.value)}
+                                                    value={code}
                                                 />
                                             </Form.Group>
                                             <Form.Group>
+                                                <Form.Label>ประเภท </Form.Label>
+                                                <Form.Select
+                                                    onChange={(e) => setMenuTypeId(e.target.value)}
+                                                    aria-label="Default select example">
+                                                    {menuType.map((item) => {
+                                                        return (<option value={item.id}>{item.name}</option>)
+                                                    })}
+                                                </Form.Select>
+                                            </Form.Group>
+                                            <Form.Group>
                                                 <Form.Label>สถานะ </Form.Label>
+                                                <Form.Select
+                                                    onChange={(e) => setStatus(e.target.value)}
+                                                    aria-label="Default select example">
 
-                                               
-                                                 
+                                                    <option value="1">พร้อมขาย</option>
+                                                    <option value="0">ของหมด</option>
+                                                </Form.Select>
+
+
                                             </Form.Group>
                                         </Col>
 
