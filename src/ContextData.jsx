@@ -200,9 +200,10 @@ function Context({ children }) {
     }, [cart])
 
     useEffect(() => {
-        setAuth(authCheck)
-        setMessangerId(sessionStorage.getItem("messangerId"))
-        setRole(sessionStorage.getItem("role"))
+        setStaffName(sessionStorage.getItem('name'));
+        setAuth(authCheck);
+        setMessangerId(sessionStorage.getItem("messangerId"));
+        setRole(sessionStorage.getItem("role"));
         getQueu() // for delivert queue 
         getQueueNumber()// for bill q1 q2 q3 
     }, [])

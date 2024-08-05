@@ -117,7 +117,7 @@ const FoodMenuAdmin = () => {
                                                         xs={4}
                                                     >
                                                         <Image style={{ width: "100%", height: '100px', objectFit: 'cover' }}
-                                                            src={`https://www.sasirestuarant.com/img/${item.img}`} />
+                                                            src={`${import.meta.env.VITE_BAKUP_URL}/images/${item.img}`} />
                                                     </Col>
                                                     <Col md={4} xs={4}>
 

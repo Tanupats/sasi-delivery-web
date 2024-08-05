@@ -76,7 +76,7 @@ const NavbarMenu = () => {
                     <>
                       <Nav.Link>
                         <Link style={{ textDecoration: 'none', color: '#000' }} to={`/foodMenu/${messangerId}/${name}`}>
-                          <RestaurantMenuIcon /> เมนู
+                          <RestaurantMenuIcon /> เมนูอาหาร
                         </Link>
                       </Nav.Link>
                       <Nav.Link onClick={handleShow}>
@@ -113,7 +113,7 @@ const NavbarMenu = () => {
                       </Nav.Link>
                       <Nav.Link>
                         <Link to={'/admin'} style={{ textDecoration: 'none', color: '#000' }}>
-                          <StoreIcon /> ร้านค้า
+                          <StoreIcon /> จัดการร้านค้า
                         </Link>
                       </Nav.Link>
                     </>

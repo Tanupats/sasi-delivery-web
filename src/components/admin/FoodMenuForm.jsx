@@ -11,6 +11,7 @@ const FoodMenuForm = () => {
     const [status, setStatus] = useState("1");
     const [menuType, setMenuType] = useState([]);
     const [menuTypeId, setMenuTypeId] = useState("");
+    const [filename, setFilename] = useState("");
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -24,27 +25,38 @@ const FoodMenuForm = () => {
     const saveData = async () => {
         const formData = new FormData();
         formData.append('file', img);
-        let filename = '';
         await axios.post(`${import.meta.env.VITE_BAKUP_URL}/upload`, formData)
             .then(res => {
                 if (res.status === 200) {
-                    filename = res.data.filename;
-                }
-            })
-
-        const body = { foodname: foodname,TypeID:menuTypeId,Price: price, img: filename, code: code, status: status };
-        await axios.post(`${import.meta.env.VITE_BAKUP_URL}/foodmenu`, body)
-            .then(res => {
-                if (res.status === 200) {
-                    alert('created menu success');
+                    console.log(res.data.filename)
+                    setFilename(res.data.filename);
                 }
             })
         handleClose()
+    }
+
+    const postMenu = async () => {
+        if (filename !== '') {
+            const body = {
+                foodname: foodname,
+                TypeID: parseInt(menuTypeId),
+                Price: parseInt(price),
+                img: filename, code: code,
+                status: parseInt(status)
+            };
+            await axios.post(`${import.meta.env.VITE_BAKUP_URL}/foodmenu`, body)
+                .then(res => {
+                    if (res.status === 200) {
+                        alert('created menu success');
+                        setFilename("")
+                    }
+                })
+
+        }
 
     }
 
     const [imgPreview, setImgPreview] = useState(null);
-
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         setImg(file);
@@ -60,9 +72,13 @@ const FoodMenuForm = () => {
     };
 
     useEffect(() => {
-
         getMenuType()
     }, [])
+
+    useEffect(() => {
+
+        postMenu()
+    }, [filename])
     return (<>
 
         <Row className="mb-4">
@@ -99,15 +115,16 @@ const FoodMenuForm = () => {
                                                 />
                                             </Form.Group>
                                         </Col>
-                                        <Col md={5} xs={5}>
-                                            <Form.Group>
+                                        <Col md={7} xs={7}>
+                                            <Form.Group className="mb-2">
                                                 <Form.Label>เมนู </Form.Label>
                                                 <Form.Control
                                                     type="text"
+                                                    placeholder="เมนู"
                                                     onChange={(e) => setFoodName(e.target.value)}
                                                     value={foodname} />
                                             </Form.Group>
-                                            <Form.Group>
+                                            <Form.Group className="mb-2">
                                                 <Form.Label>ราคา </Form.Label>
 
                                                 <Form.Control type="text"
@@ -116,16 +133,16 @@ const FoodMenuForm = () => {
                                                     placeholder="ราคา"
                                                 />
                                             </Form.Group>
-                                            <Form.Group>
+                                            <Form.Group className="mb-2">
                                                 <Form.Label>รหัสเมนู </Form.Label>
 
                                                 <Form.Control type="text"
-                                                placeholder="รหัสเมนู"
+                                                    placeholder="รหัสเมนู"
                                                     onChange={(e) => setCode(e.target.value)}
                                                     value={code}
                                                 />
                                             </Form.Group>
-                                            <Form.Group>
+                                            <Form.Group className="mb-2">
                                                 <Form.Label>ประเภท </Form.Label>
                                                 <Form.Select
                                                     onChange={(e) => setMenuTypeId(e.target.value)}
@@ -135,17 +152,14 @@ const FoodMenuForm = () => {
                                                     })}
                                                 </Form.Select>
                                             </Form.Group>
-                                            <Form.Group>
+                                            <Form.Group className="mb-2">
                                                 <Form.Label>สถานะ </Form.Label>
                                                 <Form.Select
                                                     onChange={(e) => setStatus(e.target.value)}
                                                     aria-label="Default select example">
-
                                                     <option value="1">พร้อมขาย</option>
                                                     <option value="0">ของหมด</option>
                                                 </Form.Select>
-
-
                                             </Form.Group>
                                         </Col>
 

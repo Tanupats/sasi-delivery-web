@@ -15,7 +15,7 @@ const Admin = () => {
     const [listname, setListName] = useState("");
     const [quantity, setQuantity] = useState("");
     const [Price, setPrice] = useState("");
-    const [openMenu, setOpenMenu] = useState("");
+    const [openMenu, setOpenMenu] = useState("เมนูอาหาร");
     const [data, setData] = useState([]);
 
     const getData = async () => {
