@@ -22,7 +22,7 @@ const FoodMenuForm = () => {
             })
     }
 
-    const saveData = async () => {
+    const uploadFile = async () => {
         const formData = new FormData();
         formData.append('file', img);
         await axios.post(`${import.meta.env.VITE_BAKUP_URL}/upload`, formData)
@@ -36,6 +36,7 @@ const FoodMenuForm = () => {
     }
 
     const postMenu = async () => {
+         await  uploadFile()
         if (filename !== '') {
             const body = {
                 foodname: foodname,
@@ -51,9 +52,7 @@ const FoodMenuForm = () => {
                         setFilename("")
                     }
                 })
-
         }
-
     }
 
     const [imgPreview, setImgPreview] = useState(null);

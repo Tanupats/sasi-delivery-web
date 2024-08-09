@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useState, useEffect, useContext } from "react";
 import { Row, Col, Card, Image, Button } from "react-bootstrap";
 import Badge from 'react-bootstrap/Badge';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 const FoodMenu = () => {
     const [foods, setFoods] = useState([]);
     const [menuType, setMenuType] = useState([]);
