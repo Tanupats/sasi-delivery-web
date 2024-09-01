@@ -19,10 +19,10 @@ const Report = () => {
     const [data, setData] = useState([])
     const [counter, setCounter] = useState([]);
     const [outcome, setOutcome] = useState(0);
-   
+
     const getOrderFood = async () => {
         let sumToday = 0;
-        await axios.get(`${import.meta.env.VITE_API_URL}/orderFood.php`)
+        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/bills`)
             .then(res => {
                 setData(res.data)
                 res?.data?.map(item => {
@@ -32,36 +32,33 @@ const Report = () => {
             })
     }
 
-    const getOrderFoodMounth = async () => {
-        await axios.get(`${import.meta.env.VITE_API_URL}/orderFood.php?Dateinput=mounth`)
-            .then(res => {
-                settotalMounth(res.data[0].total)
-            })
-    }
+    // const getOrderFoodMounth = async () => {
+    //     await axios.get(`${import.meta.env.VITE_API_URL}/orderFood.php?Dateinput=mounth`)
+    //         .then(res => {
+    //             settotalMounth(res.data[0].total)
+    //         })
+    // }
 
     const RemoveDetailsId = async (id) => {
-        await axios.delete(`${import.meta.env.VITE_API_URL}/removesaleByid.php?id=${id}`)
-            .then(res => {
-                if (res.status === 200) {
-                    getOrderFood()
-                }
+        await axios.delete(`${import.meta.env.VITE_BAKUP_URL}/bills/${id}`)
+        await axios.delete(`${import.meta.env.VITE_BAKUP_URL}/billsdetails/${id}`)
 
-            })
+        await getOrderFood()
     }
 
-    const geCountorder = async () => {
-        await axios.get('https://api.sasirestuarant.com/orderFood.php?countOrder')
-            .then(res => {
-                setCounter(res.data)
-            })
-    }
+    // const geCountorder = async () => {
+    //     await axios.get('https://api.sasirestuarant.com/orderFood.php?countOrder')
+    //         .then(res => {
+    //             setCounter(res.data)
+    //         })
+    // }
 
-    const geOutcome = async () => {
-        await axios.get('https://delivery.sasirestuarant.com/account/outcome')
-            .then(res => {
-                setOutcome(res.data._sum.total)
-            })
-    }
+    // const geOutcome = async () => {
+    //     await axios.get('https://delivery.sasirestuarant.com/account/outcome')
+    //         .then(res => {
+    //             setOutcome(res.data._sum.total)
+    //         })
+    // }
 
     const deleteBill = async (id) => {
         Swal.fire({
@@ -72,27 +69,13 @@ const Report = () => {
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'ยืนยันรายการ',
-            cancelButtonText:'ยกเลิก'
+            cancelButtonText: 'ยกเลิก'
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(import.meta.env.VITE_API_URL+'/orderFood.php?billId=' + id)
-                    .then(res => {
-                        if (res.status === 200) {
-                            Swal.fire(
-                                'ยกเลิกออเดอร์!',
-                                'ระบบได้ยกเลิกออเดอร์สำเร็จ',
-                                'success'
-                            );
-                            getOrderFood();
-                        }
-                    }).catch(error => {
-                        Swal.fire(
-                            'Error!',
-                            'An error occurred while deleting the bill.',
-                            'error'
-                        );
-                    });
+
+                RemoveDetailsId(id)
             }
+
         });
 
     }
@@ -100,15 +83,13 @@ const Report = () => {
 
     useEffect(() => {
         getOrderFood()
-        geCountorder()
-        getOrderFoodMounth()
-        geOutcome()
+
     }, [])
 
     useEffect(() => {
 
 
-    }, [totalMounth])
+    }, [])
 
     useEffect(() => {
 
@@ -123,9 +104,9 @@ const Report = () => {
                         <Card>
                             <Card.Body>
                                 <Card.Title className="text-center" style={{ color: 'red' }}> รายจ่ายวันนี้   {new Intl.NumberFormat().format(outcome)} บาท</Card.Title>
-                                <Card.Title className="text-center" style={{ color: 'green' }}> ยอดขายวันนี้   {new Intl.NumberFormat().format(totalToday)} บาท 
+                                <Card.Title className="text-center" style={{ color: 'green' }}> ยอดขายวันนี้   {new Intl.NumberFormat().format(totalToday)} บาท
 
-                                  
+
                                 </Card.Title>
                                 {counter.length > 0 && counter?.map(item => {
 
@@ -181,14 +162,14 @@ const Report = () => {
                                             <TableCell align="right">{row.customerName}</TableCell>
                                             <TableCell align="right">{row.timeOrder}</TableCell>
                                             <TableCell align="right">
-                                                <Detail 
-                                               
-                                                id={row.bill_ID} 
-                                              
+                                                <Detail
+
+                                                    id={row.bill_ID}
+
                                                 />
                                             </TableCell>
                                             <TableCell align="right">
-                                                <Button variant="danger" onClick={() => deleteBill(row.bill_ID)}> ยกเลิก  </Button>
+                                                <Button variant="danger" onClick={() => deleteBill(row.id)}> ยกเลิก  </Button>
                                             </TableCell>
                                         </TableRow>
                                     ))}

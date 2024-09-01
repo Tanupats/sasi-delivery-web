@@ -5,7 +5,7 @@ const Detail = (props) => {
     const [data, setData] = useState([])
    
     const getData = async () => {
-        axios.get('https://api.sasirestuarant.com/record_sale.php?billId=' + id)
+        axios.get(`${import.meta.env.VITE_BAKUP_URL}/billsdetails/${id}`)
             .then(res => {
                 setData(res.data)     
             })

@@ -1,9 +1,11 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { Row, Col, Card, Image, Button, Modal,Form } from "react-bootstrap";
+import { Row, Col, Card, Image, Button, Modal, Form } from "react-bootstrap";
 import Badge from 'react-bootstrap/Badge';
 import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import FoodMenuForm from "./FoodMenuForm";
+import Swal from 'sweetalert2';
 const FoodMenuAdmin = () => {
 
     const [foods, setFoods] = useState([]);
@@ -33,18 +35,52 @@ const FoodMenuAdmin = () => {
         handleShow()
     }
 
-    const updateData = async ()=>{
-            const body ={foodname:data.foodname}; 
-            const {id} = data;
-            await axios.put(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/${id}`,body)
-            .then(res=>{
-                if(res.status===200){
+    const updateData = async () => {
+        const body = { foodname: data.foodname };
+        const { id } = data;
+        await axios.put(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/${id}`, body)
+            .then(res => {
+                if (res.status === 200) {
                     alert('update menu success');
                 }
             })
-            handleClose()
-            getFoodMenu()
+        handleClose()
+        getFoodMenu()
     }
+
+    const onDeleteMenu = async (id) => {
+        Swal.fire({
+            title: 'คุณต้องการลบเมนูนี้หรือไม่ ?',
+            text: "กดยืนยันเพื่อลบ",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'ยืนยันรายการ',
+            cancelButtonText: 'ยกเลิก'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.delete(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/${id}`)
+                    .then(res => {
+                        if (res.status === 200) {
+                            Swal.fire(
+                                'ลบเมนูสำเร็จ!',                      
+                                'success'
+                            );
+                            getFoodMenu();
+                        }
+                    }).catch(error => {
+                        Swal.fire(
+                            error,
+                            'An error occurred while deleting the bill.',
+                            'error'
+                        );
+                    });
+            }
+        });
+
+    }
+
 
     const getFoodMenu = () => {
         fetch(import.meta.env.VITE_BAKUP_URL + '/foodmenu')
@@ -53,7 +89,6 @@ const FoodMenuAdmin = () => {
                 if (data) {
                     setFoods(data);
                 }
-
             })
     }
 
@@ -98,55 +133,58 @@ const FoodMenuAdmin = () => {
 
                         </Col>
 
-                        <FoodMenuForm  />
+                        <FoodMenuForm />
 
-                        <div className="menu-list" style={{overflow:'auto',height:'100vh'}}> 
+                        <div className="menu-list" style={{ overflow: 'auto', height: '100vh' }}>
                             <Row>
 
-                           
-                        {
-                            foods?.map((item, index) => {
-                                return (<>
+
+                                {
+                                    foods?.map((item, index) => {
+                                        return (<>
 
 
-                                    <Col md={6} xs={12} key={index}>
-                                        <Card style={{ height: 'auto', marginBottom: '12px' }}>
-                                            <Card.Body>
-                                                <Row>
-                                                    <Col md={4}
-                                                        xs={4}
-                                                    >
-                                                        <Image style={{ width: "100%", height: '100px', objectFit: 'cover' }}
-                                                            src={`${import.meta.env.VITE_BAKUP_URL}/images/${item.img}`} />
-                                                    </Col>
-                                                    <Col md={4} xs={4}>
+                                            <Col md={6} xs={12} key={index}>
+                                                <Card style={{ height: 'auto', marginBottom: '12px' }}>
+                                                    <Card.Body>
+                                                        <Row>
+                                                            <Col md={4}
+                                                                xs={4}
+                                                            >
+                                                                <Image style={{ width: "100%", height: '100px', objectFit: 'cover' }}
+                                                                    src={`${import.meta.env.VITE_BAKUP_URL}/images/${item.img}`} />
+                                                            </Col>
+                                                            <Col md={4} xs={4}>
 
-                                                        <h5>{item.foodname}</h5>
-                                                        <h5>{item.Price}฿</h5>
+                                                                <h5>{item.foodname}</h5>
+                                                                <h5>{item.Price}฿</h5>
+                                                            </Col>
+                                                            <Col md={4} xs={4} className="text-center">
+                                                                <Button
+                                                                    onClick={() => onSelectMenu(item)}
+                                                                    variant="light"
+                                                                >
+                                                                    <EditIcon />
+                                                                </Button> {' '}
+                                                                <Button
+                                                                    onClick={() => onDeleteMenu(item.id)}
+                                                                    variant="danger"
+                                                                >
+                                                                    <DeleteIcon />
+                                                                </Button>
+                                                            </Col>
+                                                        </Row>
+
+                                                    </Card.Body>
 
 
+                                                </Card>
 
-                                                    </Col>
-                                                    <Col md={4} xs={4} className="text-center">
-                                                        <Button
-                                                            onClick={() => onSelectMenu(item)}
-                                                            variant="warning"
-                                                        >
-                                                            <EditIcon />
-                                                        </Button>
-                                                    </Col>
-                                                </Row>
-
-                                            </Card.Body>
-
-
-                                        </Card>
-
-                                    </Col>
-                                </>)
-                            })
-                        }
-                         </Row>
+                                            </Col>
+                                        </>)
+                                    })
+                                }
+                            </Row>
                         </div>
                     </Row>
 
@@ -154,54 +192,57 @@ const FoodMenuAdmin = () => {
                 </Card.Body>
             </Card>
 
-            <Modal  size="lg"  show={show} onHide={handleClose}>
+            <Modal size="lg" show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>แก้ไขเมนูอาหาร</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
 
-                 
-                    <Row>
 
-                        <Col md={12} xs={12}>
-                            <Card style={{ height: 'auto', marginBottom: '10px', padding: '10px' }}>
-                                <Card.Body className='p-0'>
-                                    <Row>
-                                        <Col md={5}
-                                            xs={5}
-                                        >
-                                            <Image style={{ width: "100%", height: '180px', objectFit: 'cover' }}
-                                                src={`${import.meta.env.VITE_BASE_URL}/img/${data.img}`} />
-                                        </Col>
-                                        <Col md={5} xs={5}>
-                                        <Form.Group>
-                                            <Form.Label>เมนู </Form.Label>
-                                            <Form.Control 
-                                            type="text" 
-                                            onChange={(e)=>setData({...data,foodname:e.target.value})}
-                                            defaultValue={data?.foodname}/>
-                                        </Form.Group>
-                                        <Form.Group>
-                                            <Form.Label>ราคา </Form.Label>
+                        <Row>
 
-                                            <Form.Control type="text" defaultValue={data?.Price}/>
-                                        </Form.Group>
+                            <Col md={12} xs={12}>
+                                <Card style={{ height: 'auto', marginBottom: '10px', padding: '10px' }}>
+                                    <Card.Body className='p-0'>
+                                        <Row>
+                                            <Col md={5}
+                                                xs={5}
+                                            >
+                                                <Image style={{ width: "100%", height: '180px', objectFit: 'cover' }}
+                                                    src={`${import.meta.env.VITE_BASE_URL}/img/${data.img}`} />
+                                            </Col>
+                                            <Col md={5} xs={5}>
+                                                <Form.Group>
+                                                    <Form.Label>เมนู </Form.Label>
+                                                    <Form.Control
+                                                        type="text"
+                                                        onChange={(e) => setData({ ...data, foodname: e.target.value })}
+                                                        defaultValue={data?.foodname} />
+                                                </Form.Group>
+                                                <Form.Group>
+                                                    <Form.Label>ราคา </Form.Label>
 
-                                        
-                                        </Col>
-
-                                    </Row>
-
-                                </Card.Body>
+                                                    <Form.Control 
+                                                     onChange={(e) => setData({ ...data, Price: e.target.value })}
+                                                    type="text" 
+                                                    defaultValue={data?.Price} />
+                                                </Form.Group>
 
 
-                            </Card>
+                                            </Col>
 
-                        </Col>
+                                        </Row>
+
+                                    </Card.Body>
 
 
-                    </Row>
+                                </Card>
+
+                            </Col>
+
+
+                        </Row>
                     </Form>
                 </Modal.Body>
 

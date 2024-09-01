@@ -49,20 +49,20 @@ const NavbarMenu = () => {
   }
 
   const logout = () => {
-    sessionStorage.clear()
+    localStorage.clear()
     window.location.href = '/';
   }
 
- 
+
   useEffect(() => {
-      console.log(auth)
-  }, [auth,staffName])
+    console.log(auth)
+  }, [auth, staffName])
 
   return (
     <Router>
 
       {
-       auth === 'authenticated'  && (
+        auth === 'authenticated' && (
 
           <Navbar bg="light" data-bs-theme="light" className='when-print' sticky='top' expand="lg">
             <Container fluid>
@@ -108,7 +108,7 @@ const NavbarMenu = () => {
                       </Nav.Link>
                       <Nav.Link>
                         <Link to={'/orders'} style={{ textDecoration: 'none', color: '#000' }}>
-                          <DeliveryDiningIcon /> ออเดอร์
+                          <DeliveryDiningIcon /> การจัดส่ง
                         </Link>
                       </Nav.Link>
                       <Nav.Link>
@@ -226,7 +226,7 @@ const NavbarMenu = () => {
         <Route path="/pos" Component={Pos}></Route>
         <Route path="/report" Component={Report}></Route>
         <Route path="/admin" Component={Admin}></Route>
-        <Route path="/register" Component={Register}></Route>        
+        <Route path="/register" Component={Register}></Route>
       </Routes>
     </Router>
   );

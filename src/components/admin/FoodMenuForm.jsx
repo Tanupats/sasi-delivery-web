@@ -11,7 +11,6 @@ const FoodMenuForm = () => {
     const [status, setStatus] = useState("1");
     const [menuType, setMenuType] = useState([]);
     const [menuTypeId, setMenuTypeId] = useState("");
-    const [filename, setFilename] = useState("");
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -22,20 +21,26 @@ const FoodMenuForm = () => {
             })
     }
 
-    const saveData = async () => {
+
+    let filename = "";
+    const uploadFile = async () => {
         const formData = new FormData();
         formData.append('file', img);
         await axios.post(`${import.meta.env.VITE_BAKUP_URL}/upload`, formData)
             .then(res => {
                 if (res.status === 200) {
                     console.log(res.data.filename)
-                    setFilename(res.data.filename);
+                    filename = res.data.filename
                 }
             })
+
         handleClose()
     }
 
-    const postMenu = async () => {
+    const postMenu = async (e) => {
+
+        e.preventDefault()
+        await uploadFile();
         if (filename !== '') {
             const body = {
                 foodname: foodname,
@@ -48,7 +53,7 @@ const FoodMenuForm = () => {
                 .then(res => {
                     if (res.status === 200) {
                         alert('created menu success');
-                        setFilename("")
+
                     }
                 })
 
@@ -77,8 +82,8 @@ const FoodMenuForm = () => {
 
     useEffect(() => {
 
-        postMenu()
-    }, [filename])
+
+    }, [])
     return (<>
 
         <Row className="mb-4">
@@ -93,11 +98,8 @@ const FoodMenuForm = () => {
                 <Modal.Title>เพิ่มเมนู</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Form>
-
-
+                <Form id="addmenu" onSubmit={(e) => postMenu(e)}>
                     <Row>
-
                         <Col md={12} xs={12}>
                             <Card style={{ height: 'auto', marginBottom: '10px', padding: '10px' }}>
                                 <Card.Body className='p-0'>
@@ -110,6 +112,7 @@ const FoodMenuForm = () => {
 
                                                 <Image src={imgPreview} style={{ width: '100%', height: '180px', objectFit: 'cover' }} />
                                                 <Form.Control
+                                                    required
                                                     type="file"
                                                     onChange={handleImageChange}
                                                 />
@@ -178,7 +181,11 @@ const FoodMenuForm = () => {
             </Modal.Body>
 
             <Modal.Footer>
-                <Button variant="success" onClick={() => saveData()}>
+                <Button
+                    form="addmenu"
+                    type="submit"
+                    variant="success"
+                >
                     เพิ่มเมนู
                 </Button>
                 <Button variant="danger" onClick={handleClose}>

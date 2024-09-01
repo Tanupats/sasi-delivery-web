@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Form, Button, Navbar, Nav, } from 'react-bootstrap'
 import axios from "axios";
-import moment from "moment";
+import './index.scss';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -10,6 +10,11 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import FoodMenuAdmin from "./FoodMenuAdmin";
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import CreditCardIcon from '@mui/icons-material/CreditCard';
+import DataThresholdingIcon from '@mui/icons-material/DataThresholding';
+import RecentActorsIcon from '@mui/icons-material/RecentActors';
+import moment from "moment";
 const Admin = () => {
 
     const [listname, setListName] = useState("");
@@ -17,6 +22,14 @@ const Admin = () => {
     const [Price, setPrice] = useState("");
     const [openMenu, setOpenMenu] = useState("เมนูอาหาร");
     const [data, setData] = useState([]);
+    const [outcome, setOutcome] = useState(0);
+
+    const geOutcome = async () => {
+        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/account/outcome`)
+            .then(res => {
+                setOutcome(res.data._sum.total)
+            })
+    }
 
     const getData = async () => {
 
@@ -48,39 +61,43 @@ const Admin = () => {
 
     }
     const handleNavClick = (event) => {
-        const menuText = event.currentTarget.textContent;
-        setOpenMenu(menuText);
+
+        setOpenMenu(event);
     };
     useEffect(() => {
-        getData()
+        getData();
+
     }
         , [])
     useEffect(() => {
 
     }
         , [openMenu])
+    useEffect(() => {
+        geOutcome()
+    }
+        , [data])
 
     return (
         <Row>
 
-            <Col md={3}>
-                <Navbar expand="lg" className="flex-column vh-100">
-                    <Navbar.Brand href="#">จัดการร้านค้า</Navbar.Brand>
-                    <Nav className="flex-column w-100">
-                        <Nav.Link onClick={handleNavClick}>เมนูอาหาร</Nav.Link>
-                        <Nav.Link onClick={handleNavClick}>บัญชี</Nav.Link>
-                        <Nav.Link onClick={handleNavClick}>สรุปยอดขาย</Nav.Link>
-                        <Nav.Link onClick={handleNavClick}>พนักงาน</Nav.Link>
+            <Col md={3} className="dash-board">
+                <Navbar expand="lg" className="d-flex flex-column vh-100" style={{ height: '100%' }}>
+                    <Nav className="flex-column w-100" style={{ flex: 1 }}>
+                        <Nav.Link onClick={() => handleNavClick("เมนูอาหาร")}><MenuBookIcon /> เมนูอาหาร</Nav.Link>
+                        <Nav.Link onClick={() => handleNavClick("บัญชี")}><CreditCardIcon /> บัญชี</Nav.Link>
+                        <Nav.Link onClick={() => handleNavClick("สรุปยอดขาย")}><DataThresholdingIcon /> สรุปยอดขาย</Nav.Link>
+                        <Nav.Link onClick={() => handleNavClick("พนักงาน")}> <RecentActorsIcon /> พนักงาน</Nav.Link>
                     </Nav>
                 </Navbar>
-
             </Col>
+
             <Col md={8}>
 
                 {
                     openMenu === "เมนูอาหาร" && (
 
-                            <FoodMenuAdmin />
+                        <FoodMenuAdmin />
                     )
                 }
                 {
@@ -127,7 +144,7 @@ const Admin = () => {
                                             <TableCell component="th" scope="row">
                                                 {row.account_id}
                                             </TableCell>
-                                            <TableCell align="right">{row.date_account}</TableCell>
+                                            <TableCell align="right">{moment(row.date_account).format('YYYY-MM-DD')}</TableCell>
                                             <TableCell align="right">{row.listname}</TableCell>
                                             <TableCell align="right">{row.quantity}</TableCell>
                                             <TableCell align="right">{row.Price}</TableCell>
@@ -139,8 +156,8 @@ const Admin = () => {
                                     ))}
                                 </TableBody>
                             </Table>
-                            <div className="mt-4">
-                                <h5>รวมทั้งหมด</h5>
+                            <div className="mt-4 p-2">
+                                <h5>รวมทั้งหมด {outcome}      บาท</h5>
                             </div>
 
                         </TableContainer>

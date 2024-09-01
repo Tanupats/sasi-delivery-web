@@ -1,5 +1,12 @@
-@media print {
+.header-pos{
+  display: none;
+}
 
+@media print {
+  .header-pos{
+    display: block;
+  }
+  
     @page {
       width: 80mm;
       margin: 0 auto; 
@@ -29,3 +36,4 @@ padding-top: 0;
     .name{
       display: none;
     }
+

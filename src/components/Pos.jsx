@@ -13,7 +13,9 @@ import axios from 'axios';
 import SaveIcon from '@mui/icons-material/Save';
 let active = 2;
 let items = [];
-import moment from 'moment';
+import EggAltIcon from '@mui/icons-material/EggAlt';
+import QRCode from 'qrcode.react';
+import generatePayload from 'promptpay-qr'
 import { useNavigate } from "react-router-dom";
 for (let number = 1; number <= 5; number++) {
   items.push(
@@ -50,6 +52,7 @@ const Pos = () => {
   const [menu, setMenu] = useState([]);
   const [menuType, setMenuType] = useState([]);
   const [show, setShow] = useState(false);
+  const [shop, setShop] = useState(null);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -59,18 +62,57 @@ const Pos = () => {
   const [defaultMenu, setDefaultMenu] = useState({})
   const [newId, setNewId] = useState("")
 
+
+  const [phoneNumber, setPhoneNumber] = useState("0983460756");
+  const [showQr, setShowQr] = useState(false);
+  const [qrCode, setqrCode] = useState("sample");
+  const [numberEage, setNumberEage] = useState(0);
+  const [newPrice, setNewPrice] = useState(0);
+
   const printSlip = () => {
+
     window.print()
   }
 
-  const onSelectMenu = (obj) => {
 
-    getQueueNumber()
+  function handleQR() {
+    setqrCode(generatePayload(phoneNumber, { amount: sumPrice }));
+  }
+  const userid = localStorage.getItem("userId");
+  const getMyShop = async () => {
+    await axios.get(`${import.meta.env.VITE_BAKUP_URL}/shop/shop-user/${userid}`)
+      .then((res) => {
+
+        setShop(res.data)
+      })
+  }
+
+  const addEage = () => {
+    let id = nanoid(10)
+    addTocart({ foodname: "ไข่ดาว", Price: 5, id: id, quantity: numberEage })
+    handleClose();
+  }
+
+  const confirmMenu = async () => {
     let ID = nanoid(10)
     setNewId(ID)
-    addTocart({ ...obj, id: ID })
+    addTocart({ ...defaultMenu, id: ID })
+    handleClose();
+
+  }
+
+  const onSelectMenu = (obj) => {
     setDefaultMenu(obj)
+    setNewPrice(obj.Price)
+    getQueueNumber()
     handleShow()
+  }
+
+  const updateSpecail = () => {
+    const price = Number(newPrice) + 10
+    console.log(defaultMenu)
+    setDefaultMenu({ ...defaultMenu, foodname: defaultMenu.foodname + 'พิเศษ', Price: price })
+
   }
 
   const getMenu = async () => {
@@ -98,12 +140,13 @@ const Pos = () => {
   }
 
   useEffect(() => {
+    getMyShop()
     getMenuType()
     getMenu()
   }, [])
 
   useEffect(() => {
-    const Time = new Date().getHours()+':'+new Date().getMinutes()+" น.";
+    const Time = new Date().getHours() + ':' + new Date().getMinutes() + " น.";
     const DateToday = new Date().toLocaleDateString()
 
     setTime(Time);
@@ -111,19 +154,21 @@ const Pos = () => {
 
   }, [queueNumber])
 
-
+  useEffect(() => {
+    handleQR()
+  }, [sumPrice])
 
 
 
 
   return (
-
-    <div>
+<>
+   
       <Container fluid>
 
 
 
-        <Row className='mt-3' style={{ height: '100vh' }}>
+        <Row className='mt-3'>
           <Col md={2} className='whenprint' >
             <div className='menu-type'>
               <Row>
@@ -156,7 +201,7 @@ const Pos = () => {
               <div className='menu' >
 
                 <Row>
-                  <h5>เมนูอาหาร</h5>
+
                   {
                     menu.map(item => {
                       return (
@@ -176,31 +221,21 @@ const Pos = () => {
             </div>
           </Col>
           <Col md={4}>
-            <div>
-              <div className='text-center'>
+         
+              <div className='header-pos text-center'>
 
                 <h6> SASI Restaurant หนองคาย</h6>
                 <h6>  ใบเสร็จรับเงิน</h6>
                 <h6> ลำดับคิว {queueNumber} </h6>
-                วันที่ {date} {time }
-                <h6>รายการอาหาร</h6>
+                วันที่ {date} {time}
+                <h6>รายการอาหาร</h6>ุุุุุุุุุุุุุุุุุุุุุุุ
               </div>
-
+ุุุุุ
               <Row>
-                <div >
+                
                   <Col md={12}>
 
                     <Table>
-                      {/* <thead>
-                        <tr>
-                        <th>รายการ</th>
-                        <th>จำนวน</th>
-                        <th></th>
-                        <th>ราคา</th>
-                        <th></th>
-                      </tr>
-                      </thead> */}
-
                       <tbody>
                         {
 
@@ -220,36 +255,38 @@ const Pos = () => {
                             )
                           })
                         }
-
-
                         <tr>
                           <td >ราคารวม {sumPrice} บาท</td>
                           <td ></td>
-
                         </tr>
-
                         <tr>
-                          <td  colSpan={4}>การรับอาหาร-{orderType}</td>
-                        
-
+                          <td colSpan={4}>การรับอาหาร-{orderType}</td>
                         </tr>
                         <tr>
                           <td > {name}</td>
                           <td ></td>
 
                         </tr>
+                        <div className='text-center'>
+                          <Row>
 
+                            <Col md={12}>
+                              <Button className='when-print mb-2' onClick={() => { handleQR(), setShowQr(!showQr) }}>สร้าง QR CODE</Button>
+                            </Col>
+                            <Col md={12} className='text-center'>
+                              {
+                                showQr ? <center><QRCode value={qrCode} /></center> : <></>
+                              }
+                            </Col>
+                          </Row>
+                        </div>
                       </tbody>
                     </Table>
-
-
-
                   </Col>
                 </div>
               </Row>
-
-
-              <div>
+            
+              
                 <Form>
 
                   <ButtonGroup className='when-print'>
@@ -263,8 +300,8 @@ const Pos = () => {
                       onClick={() => { setOrderType("รับเอง"), setName("รับเองหน้าร้าน") }}
                       style={{ border: 'none' }} >รับเอง</Button>
                   </ButtonGroup>
-      
-      
+
+
                   <Row className='order-type when-print'>
                     <Col>
 
@@ -299,12 +336,10 @@ const Pos = () => {
 
                 </Row>
 
-              </div>
+          
 
-            </div>
-          </Col>
-        </Row>
-
+       
+        
       </Container>
 
       <Modal show={show} onHide={handleClose}>
@@ -313,8 +348,6 @@ const Pos = () => {
         </Modal.Header>
         <Modal.Body>
           <Row>
-
-
             <Col md={12} xs={12}>
               <Card style={{ height: 'auto', marginBottom: '10px', padding: '10px' }}>
                 <Card.Body className='p-0'>
@@ -327,27 +360,42 @@ const Pos = () => {
                           <Form.Label> รายการ</Form.Label>
                           <Form.Control
                             type="text"
-                            defaultValue={defaultMenu?.foodname}
+                            value={defaultMenu?.foodname}
                             placeholder='เมนู'
-                            onChange={(e) => updateFoodName(newId, e.target.value)}
+                            onChange={(e) => setDefaultMenu({ ...defaultMenu, foodname: e.target.value })}
 
                           />
-
                         </Form>
-
                       </Row>
                     </Col>
 
-                    <Col md={12}>
+                    <Col md={12} className='mt-2'>
                       <Form.Label> หมายเหตุ </Form.Label>
                       <Form.Control
                         type="text"
                         placeholder='หมายเหตุ'
-                        onChange={(e) => updateNote(newId, e.target.value)}
+                        onChange={(e) => setDefaultMenu({ ...defaultMenu, note: e.target.value })}
 
                       />
                     </Col>
 
+                    <Col md={12} className='mt-2'>
+                      <ButtonGroup className='when-print mb-2'>
+                        <Button className='btn btn-primary'
+                          onClick={() => updateSpecail()}
+                          style={{ border: 'none' }} > { } พิเศษ { }</Button>
+                        {/* <Button className='btn btn-success'
+                          onClick={() => setMenuNormal(newId, defaultMenu)}
+                          style={{ border: 'none' }} >ธรรมดา</Button>{" "} */}
+
+                      </ButtonGroup><br />
+                      <Button onClick={() => setNumberEage(numberEage + 1)}>+</Button>
+                      <Button variant='light'> ไข่ดาว {numberEage}
+                        <EggAltIcon style={{ color: '#FD720D' }} />
+                      </Button>
+                      <Button onClick={() => setNumberEage(numberEage - 1)}>-</Button> {" "}
+                      <Button variant='light' onClick={() => addEage()}>เพิ่ม</Button>
+                    </Col>
                   </Row>
 
                 </Card.Body>
@@ -358,94 +406,68 @@ const Pos = () => {
 
             </Col>
 
-            <Col md={12}>
 
-              <ButtonGroup className='when-print mb-2'>
-                <Button className='btn btn-primary'
-                  onClick={() => setMenuPichet(newId)}
-                  style={{ border: 'none' }} > { }พิเศษ { }</Button>
-                <Button className='btn btn-success'
-                  onClick={() => setMenuNormal(newId, defaultMenu)}
-                  style={{ border: 'none' }} >ธรรมดา</Button>
+            <Col md={6}>
+              <Form.Group>
+                <Form.Label> จำนวน </Form.Label>
+                <Row>
 
-              </ButtonGroup>
+                  <Col md={2}>
+                    <Button onClick={() => { updateQuantity(newId, (defaultMenu.quntity + 1)) }}>+</Button>
+                  </Col>
+                  <Col md={8}>
+                    <Form.Control
+                      className='w-100'
+                      type='number'
+                      value={defaultMenu.quntity}
+                      onChange={(e) => { updateQuantity(newId, e.target.value) }} />
+                  </Col>
+                  <Col md={2}>
+                    <Button onClick={() => { updateQuantity(newId, (defaultMenu.quntity - 1)) }}>-</Button>
+                  </Col>
+                </Row>
+
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group>
+                <Form.Label> ราคา </Form.Label>
+                <Form.Control
+                  value={defaultMenu.price}
+                  type='number'
+                  onChange={(e) => updatePrice(newId, e.target.value)} />
+              </Form.Group>
 
             </Col>
-            {
 
-              cart?.map(item => {
-                if (item.id === newId) {
-                  return (
-
-                    <>
-                      <Col md={6}>
-                        <Form.Group>
-                          <Form.Label> จำนวน </Form.Label>
-                          <Row>
-
-                            <Col md={2}>
-                              <Button onClick={() => { updateQuantity(newId, (item.quntity + 1)) }}>+</Button>
-                            </Col>
-                            <Col md={8}>
-                              <Form.Control
-                                className='w-100'
-                                type='number'
-                                value={item.quntity}
-                                onChange={(e) => { updateQuantity(newId, e.target.value) }} />
-                            </Col>
-                            <Col md={2}>
-                              <Button onClick={() => { updateQuantity(newId, (item.quntity - 1)) }}>-</Button>
-                            </Col>
-                          </Row>
-
-                        </Form.Group>
-                      </Col>
-                      <Col md={6}>
-                        <Form.Group>
-                          <Form.Label> ราคา </Form.Label>
-                          <Form.Control
-                            value={item.price}
-                            type='number'
-                            onChange={(e) => updatePrice(newId, e.target.value)} />
-                        </Form.Group>
-
-                      </Col>
-                    </>
-                  )
-                }
-              })
-            }
 
 
           </Row>
         </Modal.Body>
-        {
-          cart.length > 0 && (<>
-            <Modal.Footer>
-              <Container>
+
+        <Modal.Footer>
+          <Container>
 
 
-                <Row>
+            <Row>
 
-                  <Col md={6}>
-                    <Button variant="success w-100" onClick={() => handleClose()}>
-                      ยืนยัน
-                    </Button>
-                  </Col>
-                  <Col md={6}>
-                    <Button variant="danger w-100" onClick={handleClose}>
-                      ยกเลิก
-                    </Button>
-                  </Col>
-                </Row>
-              </Container>
+              <Col md={6}>
+                <Button variant="success w-100" onClick={() => { confirmMenu() }}>
+                  ยืนยัน
+                </Button>
+              </Col>
+              <Col md={6}>
+                <Button variant="danger w-100" onClick={handleClose}>
+                  ยกเลิก
+                </Button>
+              </Col>
+            </Row>ุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุ
+            </Container >
+        </Modal.Footer>
 
-            </Modal.Footer>
-          </>)
-        }
       </Modal>
-    </div>
-  );
+ 
+ </> );
 }
 
 export default Pos; 

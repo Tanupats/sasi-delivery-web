@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState, useContext,useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Card, Row, Col, Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { AuthData } from "../ContextData";
@@ -16,11 +16,13 @@ const Login = () => {
             .then(res => {
                 if (res) {
                     if (res.status === 200) {
-                        const { name, department, token } = res.data;
-                        sessionStorage.setItem("name", name)
-                        sessionStorage.setItem("role", department)
-                        sessionStorage.setItem("token", token)
-                        sessionStorage.setItem("auth", 'authenticated')
+                        const { name, department, token,id } = res.data;
+                        localStorage.setItem("name", name)
+                        localStorage.setItem("role", department)
+                        localStorage.setItem("token", token)
+                        localStorage.setItem("auth", 'authenticated')
+                        localStorage.setItem("userId", id)
+
                         setAuth('authenticated')
                         setStaffName(name)
                         router('/pos')
@@ -31,13 +33,13 @@ const Login = () => {
             })
     }
 
-    useEffect(()=>{
+    useEffect(() => {
 
-                if(sessionStorage.getItem("auth")==="authenticated"){
+        if (localStorage.getItem("auth") === "authenticated") {
 
-                    router('/pos')
-                }
-    },[])
+            router('/pos')
+        }
+    }, [])
     return (
         <>
             <Row className="mt-4">

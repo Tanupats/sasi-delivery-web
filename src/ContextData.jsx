@@ -9,14 +9,15 @@ function Context({ children }) {
     const [toTal, setTotal] = useState(0);
     const [sumPrice, setSumPrice] = useState(0);
     const [name, setName] = useState("");
-    const [messangerId, setMessangerId] = useState("");
+    const [messangerId, setMessangerId] = useState("idoksodkoskdf");
     const [orderType, setOrderType] = useState("สั่งกลับบ้าน");
     const [role, setRole] = useState("");
     const [queue, setQueu] = useState([]);
     const [queueNumber, setQueueNumber] = useState(0);
-    const authCheck = sessionStorage.getItem("auth");
+    const authCheck = localStorage.getItem("auth");
     const [auth, setAuth] = useState(authCheck || 'not_authenticated');
     const [staffName, setStaffName] = useState("");
+    
     let Bid = "sa" + nanoid(10);
 
     const getQueueNumber = async () => {
@@ -31,9 +32,9 @@ function Context({ children }) {
             id: data.id,
             name: data.foodname,
             price: data.Price,
-            quntity: 1,
+            quntity: 1 || data.quantity,
             photo: data.img,
-            note: ""
+            note: data.note
         }
         if (cart.length === 0) {
             setCart([itemCart]);
@@ -92,25 +93,23 @@ function Context({ children }) {
 
     const saveOrder = async () => {
 
+        let id = '';
         if (sumPrice > 0) {
-
-
-
-
             const body = {
-                bill_ID: Bid,
+
                 amount: sumPrice,
                 ordertype: orderType,
                 statusOrder: "รับออเดอร์แล้ว",
-                customerName: name,
-                queueNumber: queueNumber,
-                messengerId: messangerId
+                customerName: name || "test",
+                queueNumber: String(queueNumber),
+                messengerId: messangerId || "okefoekfo"
             }
 
-            fetch(`${import.meta.env.VITE_API_URL}/orderFood.php`, { method: 'POST', body: JSON.stringify(body) })
+            await axios.post(`${import.meta.env.VITE_BAKUP_URL}/bills`, body)
                 .then(res => {
                     if (res.status === 200) {
-
+                        console.log(res)
+                        id = res.data.bill_ID
                         Swal.fire({
                             title: 'สั่งอาหารสำเร็จ',
                             text: 'คำสั่งซื้อของคุณส่งไปยังร้านค้าแล้ว',
@@ -121,14 +120,14 @@ function Context({ children }) {
                 })
 
             cart.map(({ name, price, quntity, note }) => {
-                let bodyDetails = {
-                    bill_ID: Bid,
+                const bodyDetails = {
+                    bills_id: id,
                     foodname: name,
-                    price: price,
+                    price: parseFloat(price),
                     quantity: quntity,
                     note: note
                 }
-                fetch(`${import.meta.env.VITE_API_URL}/record_sale.php`, { method: 'POST', body: JSON.stringify(bodyDetails) })
+                axios.post(`${import.meta.env.VITE_BAKUP_URL}/billsdetails`, bodyDetails)
             })
             setCart([])
             setName("")
@@ -200,10 +199,10 @@ function Context({ children }) {
     }, [cart])
 
     useEffect(() => {
-        setStaffName(sessionStorage.getItem('name'));
+        setStaffName(localStorage.getItem('name'));
         setAuth(authCheck);
-        setMessangerId(sessionStorage.getItem("messangerId"));
-        setRole(sessionStorage.getItem("role"));
+        setMessangerId(localStorage.getItem("messangerId"));
+        setRole(localStorage.getItem("role"));
         getQueu() // for delivert queue 
         getQueueNumber()// for bill q1 q2 q3 
     }, [])
