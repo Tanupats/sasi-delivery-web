@@ -116,7 +116,7 @@ const Pos = () => {
   }
 
   const getMenu = async () => {
-    await axios.get(import.meta.env.VITE_BAKUP_URL + '/foodmenu').then(
+    await axios.get(`${import.meta.env.VITE_BAKUP_URL}/foodmenu`).then(
       res => {
         if (res.status === 200) {
           setMenu(res.data);
@@ -162,13 +162,14 @@ const Pos = () => {
 
 
   return (
-<>
-   
+    <>
       <Container fluid>
+        ุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุ
 
-
-
+        ุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุ
         <Row className='mt-3'>
+          ุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุ
+
           <Col md={2} className='whenprint' >
             <div className='menu-type'>
               <Row>
@@ -220,73 +221,70 @@ const Pos = () => {
 
             </div>
           </Col>
+
           <Col md={4}>
-         
-              <div className='header-pos text-center'>
 
-                <h6> SASI Restaurant หนองคาย</h6>
-                <h6>  ใบเสร็จรับเงิน</h6>
-                <h6> ลำดับคิว {queueNumber} </h6>
-                วันที่ {date} {time}
-                <h6>รายการอาหาร</h6>ุุุุุุุุุุุุุุุุุุุุุุุ
-              </div>
-ุุุุุ
-              <Row>
-                
-                  <Col md={12}>
+            <div className='header-pos text-center'>
 
-                    <Table>
-                      <tbody>
-                        {
+              <h6> SASI Restaurant หนองคาย</h6>
+              <h6>  ใบเสร็จรับเงิน</h6>
+              <h6> ลำดับคิว {queueNumber} </h6>
+              วันที่ {date} {time}
+              <h6>รายการอาหาร</h6>
+            </div>
 
-                          cart.map(item => {
+            <Row>
 
-                            return (
+              <Col md={12}>
 
-                              <tr style={{ padding: 0, margin: 0 }}>
-                                <td >{item.name} <br></br> {item.note}</td>
-                                <td colSpan={2}>{item.quntity}</td>
-                                <td colSpan={2}>{item.price}</td>
-                                <td>
-                                  <div className='whenprint'>
-                                    <CancelIcon onClick={() => removeCart(item.id)}
-                                      variant='light' style={{ color: 'red', }} /></div></td>
-                              </tr>
-                            )
-                          })
-                        }
-                        <tr>
-                          <td >ราคารวม {sumPrice} บาท</td>
-                          <td ></td>
-                        </tr>
-                        <tr>
-                          <td colSpan={4}>การรับอาหาร-{orderType}</td>
-                        </tr>
-                        <tr>
-                          <td > {name}</td>
-                          <td ></td>
+                <Table>
+                  <tbody>
+                    {
 
-                        </tr>
-                        <div className='text-center'>
-                          <Row>
+                      cart.map(item => {
 
-                            <Col md={12}>
-                              <Button className='when-print mb-2' onClick={() => { handleQR(), setShowQr(!showQr) }}>สร้าง QR CODE</Button>
-                            </Col>
-                            <Col md={12} className='text-center'>
-                              {
-                                showQr ? <center><QRCode value={qrCode} /></center> : <></>
-                              }
-                            </Col>
-                          </Row>
-                        </div>
-                      </tbody>
-                    </Table>
-                  </Col>
-                </div>
-              </Row>
-            
-              
+                        return (
+
+                          <tr style={{ padding: 0, margin: 0 }}>
+                            <td >{item.name} <br></br> {item.note}</td>
+                            <td colSpan={2}>{item.quntity}</td>
+                            <td colSpan={2}>{item.price}</td>
+                            <td>
+                              <div className='whenprint'>
+                                <CancelIcon onClick={() => removeCart(item.id)}
+                                  variant='light' style={{ color: 'red', }} /></div></td>
+                          </tr>
+                        )
+                      })
+                    }
+                    <tr>
+                      <td >ราคารวม {sumPrice} บาท</td>
+                      <td ></td>
+                    </tr>
+                    <tr>
+                      <td colSpan={4}>การรับอาหาร-{orderType}</td>
+                    </tr>
+                    <tr>
+                      <td > {name}</td>
+                      <td ></td>
+
+                    </tr>
+                    <div className='text-center'>
+                      <Row>
+
+                        <Col md={12}>
+                          <Button className='when-print mb-2' onClick={() => { handleQR(), setShowQr(!showQr) }}>สร้าง QR CODE</Button>
+                        </Col>
+                        <Col md={12} className='text-center'>
+                          {
+                            showQr ? <center><QRCode value={qrCode} /></center> : <></>
+                          }
+                        </Col>
+                      </Row>
+                    </div>
+                  </tbody>
+                </Table>
+
                 <Form>
 
                   <ButtonGroup className='when-print'>
@@ -336,10 +334,18 @@ const Pos = () => {
 
                 </Row>
 
-          
 
-       
-        
+              </Col>
+
+            </Row>
+          </Col>
+
+        </Row>
+
+
+
+
+
       </Container>
 
       <Modal show={show} onHide={handleClose}>
@@ -441,7 +447,6 @@ const Pos = () => {
             </Col>
 
 
-
           </Row>
         </Modal.Body>
 
@@ -461,13 +466,14 @@ const Pos = () => {
                   ยกเลิก
                 </Button>
               </Col>
-            </Row>ุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุ
-            </Container >
+            </Row>
+          </Container >
         </Modal.Footer>
 
       </Modal>
- 
- </> );
+
+    </>
+  );
 }
 
 export default Pos; 
