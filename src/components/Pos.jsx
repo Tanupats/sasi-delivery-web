@@ -68,6 +68,7 @@ const Pos = () => {
   const [qrCode, setqrCode] = useState("sample");
   const [numberEage, setNumberEage] = useState(0);
   const [newPrice, setNewPrice] = useState(0);
+  const [quantity, setQuantity] = useState(1);
 
   const printSlip = () => {
 
@@ -96,7 +97,7 @@ const Pos = () => {
   const confirmMenu = async () => {
     let ID = nanoid(10)
     setNewId(ID)
-    addTocart({ ...defaultMenu, id: ID })
+    addTocart({ ...defaultMenu, id: ID, quantity: quantity })
     handleClose();
 
   }
@@ -108,10 +109,21 @@ const Pos = () => {
     handleShow()
   }
 
+  let olemenu = "";
+  let oleprice = 0
   const updateSpecail = () => {
     const price = Number(newPrice) + 10
     console.log(defaultMenu)
+    olemenu = defaultMenu.foodname;
+    oleprice = defaultMenu.Price;
     setDefaultMenu({ ...defaultMenu, foodname: defaultMenu.foodname + 'พิเศษ', Price: price })
+
+  }
+
+  const updateNormal = () => {
+
+    console.log(defaultMenu)
+    setDefaultMenu({ ...defaultMenu, foodname: olemenu, Price: oleprice })
 
   }
 
@@ -159,16 +171,19 @@ const Pos = () => {
   }, [sumPrice])
 
 
+  useEffect(() => {
+    console.log(cart)
+  }, [cart])
+
+
 
 
   return (
     <>
       <Container fluid>
-        ุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุ
 
-        ุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุ
         <Row className='mt-3'>
-          ุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุุ
+
 
           <Col md={2} className='whenprint' >
             <div className='menu-type'>
@@ -178,14 +193,17 @@ const Pos = () => {
                 {
                   menuType.map((item, index) => {
 
-                    return (<Col md={12}>
-                      <Button
-                        className='w-100 mb-2'
-                        key={index}
-                        onClick={() => getMenuBytypeId(item.id)}
-                        style={{ backgroundColor: '#FD720D', border: 'none' }}
-                      >   {item.name}</Button>
-                    </Col>)
+                    return (
+                      <React.Fragment key={index} >
+                        <Col md={12}>
+                          <Button
+                            className='w-100 mb-2'
+
+                            onClick={() => getMenuBytypeId(item.id)}
+                            style={{ backgroundColor: '#FD720D', border: 'none' }}
+                          >   {item.name}</Button>
+                        </Col>
+                      </React.Fragment>)
                   })
                 }
 
@@ -204,12 +222,13 @@ const Pos = () => {
                 <Row>
 
                   {
-                    menu.map(item => {
+                    menu.map((item, index) => {
                       return (
-                        <Col md={6} onClick={() => onSelectMenu(item)}>
-                          <FoodComponent data={item} />
-                        </Col>
-                      )
+                        <React.Fragment key={index}>
+                          <Col md={6} onClick={() => onSelectMenu(item)}>
+                            <FoodComponent data={item} />
+                          </Col>
+                        </React.Fragment>)
                     })
                   }
 
@@ -387,20 +406,22 @@ const Pos = () => {
 
                     <Col md={12} className='mt-2'>
                       <ButtonGroup className='when-print mb-2'>
-                        <Button className='btn btn-primary'
+                        <Button
+                          style={{ height: '46px', border: 'none' }}
+                          className='btn btn-primary'
                           onClick={() => updateSpecail()}
-                          style={{ border: 'none' }} > { } พิเศษ { }</Button>
-                        {/* <Button className='btn btn-success'
-                          onClick={() => setMenuNormal(newId, defaultMenu)}
-                          style={{ border: 'none' }} >ธรรมดา</Button>{" "} */}
+                        > { } พิเศษ { }</Button>
+                        <Button className='btn btn-success'
+                          onClick={() => updateNormal()}
+                          style={{ border: 'none' }} >ธรรมดา</Button>{" "}
 
                       </ButtonGroup><br />
-                      <Button onClick={() => setNumberEage(numberEage + 1)}>+</Button>
+                      {/* <Button onClick={() => setNumberEage(numberEage + 1)}>+</Button>
                       <Button variant='light'> ไข่ดาว {numberEage}
                         <EggAltIcon style={{ color: '#FD720D' }} />
-                      </Button>
-                      <Button onClick={() => setNumberEage(numberEage - 1)}>-</Button> {" "}
-                      <Button variant='light' onClick={() => addEage()}>เพิ่ม</Button>
+                      </Button> */}
+                      {/* <Button onClick={() => setNumberEage(numberEage - 1)}>-</Button> {" "}
+                      <Button variant='light' onClick={() => addEage()}>เพิ่ม</Button> */}
                     </Col>
                   </Row>
 
@@ -419,17 +440,17 @@ const Pos = () => {
                 <Row>
 
                   <Col md={2}>
-                    <Button onClick={() => { updateQuantity(newId, (defaultMenu.quntity + 1)) }}>+</Button>
+                    <Button onClick={() => { setQuantity(quantity + 1) }}>+</Button>
                   </Col>
                   <Col md={8}>
                     <Form.Control
                       className='w-100'
                       type='number'
-                      value={defaultMenu.quntity}
+                      value={quantity}
                       onChange={(e) => { updateQuantity(newId, e.target.value) }} />
                   </Col>
                   <Col md={2}>
-                    <Button onClick={() => { updateQuantity(newId, (defaultMenu.quntity - 1)) }}>-</Button>
+                    <Button onClick={() => { setQuantity(quantity - 1)}}>-</Button>
                   </Col>
                 </Row>
 
@@ -439,7 +460,7 @@ const Pos = () => {
               <Form.Group>
                 <Form.Label> ราคา </Form.Label>
                 <Form.Control
-                  value={defaultMenu.price}
+                  value={defaultMenu.Price}
                   type='number'
                   onChange={(e) => updatePrice(newId, e.target.value)} />
               </Form.Group>

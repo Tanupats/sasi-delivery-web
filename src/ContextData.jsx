@@ -2,37 +2,36 @@ import { createContext, useState, useEffect } from "react";
 export const AuthData = createContext();
 import axios from "axios";
 import Swal from 'sweetalert2'
-import { nanoid } from 'nanoid'
 
 function Context({ children }) {
     const [cart, setCart] = useState([])
     const [toTal, setTotal] = useState(0);
     const [sumPrice, setSumPrice] = useState(0);
     const [name, setName] = useState("");
-    const [messangerId, setMessangerId] = useState("idoksodkoskdf");
+    const [messangerId, setMessangerId] = useState("");
     const [orderType, setOrderType] = useState("สั่งกลับบ้าน");
     const [role, setRole] = useState("");
-    const [queue, setQueu] = useState([]);
+    const [queue, setQueu] = useState(0);
     const [queueNumber, setQueueNumber] = useState(0);
     const authCheck = localStorage.getItem("auth");
     const [auth, setAuth] = useState(authCheck || 'not_authenticated');
     const [staffName, setStaffName] = useState("");
-    
-    let Bid = "sa" + nanoid(10);
+
 
     const getQueueNumber = async () => {
-        await axios.get(`${import.meta.env.VITE_API_URL}/queue/index.php`)
+        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/queueNumber`)
             .then(res => {
-                setQueueNumber(res.data.queue);
+                setQueueNumber(res.data.queueNumber);
             })
     }
 
     const addTocart = (data) => {
+        console.log('in card', data)
         let itemCart = {
             id: data.id,
             name: data.foodname,
             price: data.Price,
-            quntity: 1 || data.quantity,
+            quantity: data.quantity,
             photo: data.img,
             note: data.note
         }
@@ -71,7 +70,7 @@ function Context({ children }) {
     const updateQuantity = (id, qt) => {
         let newCart = cart.map(item => {
             if (item.id === id) {
-                return { ...item, quntity: qt }
+                return { ...item, quantity: qt }
             }
             return item;
         });
@@ -100,9 +99,9 @@ function Context({ children }) {
                 amount: sumPrice,
                 ordertype: orderType,
                 statusOrder: "รับออเดอร์แล้ว",
-                customerName: name || "test",
+                customerName: name,
                 queueNumber: String(queueNumber),
-                messengerId: messangerId || "okefoekfo"
+                messengerId: messangerId
             }
 
             await axios.post(`${import.meta.env.VITE_BAKUP_URL}/bills`, body)
@@ -119,12 +118,12 @@ function Context({ children }) {
                     }
                 })
 
-            cart.map(({ name, price, quntity, note }) => {
+            cart.map(({ name, price, quantity, note }) => {
                 const bodyDetails = {
                     bills_id: id,
                     foodname: name,
                     price: parseFloat(price),
-                    quantity: quntity,
+                    quantity: quantity,
                     note: note
                 }
                 axios.post(`${import.meta.env.VITE_BAKUP_URL}/billsdetails`, bodyDetails)
@@ -144,10 +143,10 @@ function Context({ children }) {
 
 
     const getQueu = async () => {
-        await axios.get(`${import.meta.env.VITE_API_URL}/getQueue.php`)
+        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/queues`)
             .then(res => {
                 if (res.status === 200) {
-                    setQueu(res.data[0].count_order)
+                    setQueu(res.data.queues)
                 }
             })
     }
@@ -181,8 +180,7 @@ function Context({ children }) {
         if (cart.length > 0) {
             let total = 0;
             cart.map(item => {
-                total += (item?.quntity * item?.price);
-
+                total += (item?.quantity * item?.price);
             })
             let item = cart?.length;
             setTotal(item);
@@ -196,6 +194,7 @@ function Context({ children }) {
 
     useEffect(() => {
         sumAmount()
+        console.log(cart)
     }, [cart])
 
     useEffect(() => {
@@ -206,15 +205,18 @@ function Context({ children }) {
         getQueu() // for delivert queue 
         getQueueNumber()// for bill q1 q2 q3 
     }, [])
+    useEffect(() => {
+        console.log(sumPrice)
+    }, [sumPrice])
+    useEffect(() => {
 
-    // useEffect(() => {
+        const interval = setInterval(() => {
+            getQueu();
+        }, 5000); // ดึงข้อมูลจาก API ทุกๆ 5 วินาที
 
-    //     const interval = setInterval(() => {
-    //         getQueu();
-    //     }, 5000); // ดึงข้อมูลจาก API ทุกๆ 5 วินาที
+        return () => clearInterval(interval);
+    }, [])
 
-    //     return () => clearInterval(interval);
-    // }, [])
 
     return (<>
 

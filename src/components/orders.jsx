@@ -8,58 +8,46 @@ import moment from "moment/moment";
 const Orders = () => {
 
     const [report, setReport] = useState([]);
-    const [date, setDate] = useState(moment(new Date()).format('YYYY-MM-DD'));
-    const [status, setStatus] = useState("");
+    const [status, setStatus] = useState("รับออเดอร์แล้ว");
 
     const getMenuReport = async (status) => {
-       
-        await axios.get(`${import.meta.env.VITE_API_URL}/report.php?Date_times=${date}&statusOrder=${status}`)
-            .then(res => {
-                setReport(res.data);
-            }) 
-            setStatus(status)
+
+        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/bills?status=${status}`)
+            .then(res => { setReport(res.data) })
+
     }
 
-    const UpdateStatus = async (Bill_id, status) => {
-        setStatus(status)
-        let body = {
-            status: status,
-
+    const UpdateStatus = async (id, status) => {
+        const body = {
+            statusOrder:status
         }
-        await fetch(`${import.meta.env.VITE_API_URL}/updateStatusOrder.php?id=${Bill_id}`, { method: 'PUT', body: JSON.stringify(body) })
-            .then((res) =>
-                res.json()
-            ).then((data) => {
+        await axios.put(`${import.meta.env.VITE_BAKUP_URL}/bills/${id}`, body)
+            .then((data) => {
                 if (data) {
-                    getMenuReport(status);
+                    getMenuReport("รับออเดอร์แล้ว");
                 }
             })
     }
 
-    const OnPrint = () => {
-        window.print();
-    }
 
     useEffect(() => {
-
         getMenuReport("รับออเดอร์แล้ว")
     }, [])
 
     useEffect(() => {
 
     }, [report])
-  
+
 
     return (<>
-        <Row>
+        <Row className="mt-3">
             <Col md={12}>
 
                 <Card style={{ border: 'none', marginTop: '12px' }}  >
 
 
-                    <Card.Title className="text-center title" as={'h6'}>
-                        SASI Restuarant หนองคาย <br />
-                        รายการสั่งอาหาาร</Card.Title>
+                    <Card.Title className="text-center title" as={'h5'}>
+                        จัดการออเดอร์ Delivery</Card.Title>
                     <Form>
                         {/* <Form.Label>
                                 ค้นหาด้วยวันที่
@@ -67,73 +55,57 @@ const Orders = () => {
                             <Form.Control type="date"/> */}
                         <Row className="when-print">
                             <ButtonGroup aria-label="Basic example">
-                                <Button variant="primary" onClick={() => { getMenuReport("รับออเดอร์แล้ว") }}>รับออเดอร์</Button>
-                                <Button variant="danger" onClick={() => { getMenuReport("กำลังทำอาหาร") }}>กำลังทำ</Button>
-                                <Button variant="success" onClick={() => { getMenuReport("ออเดอร์พร้อมส่ง") }}>รอส่ง</Button>
-                                <Button variant="primary" onClick={() => { getMenuReport("ส่งแล้ว") }}>ส่งแล้ว</Button>
+                                <Button variant="primary" onClick={() => { getMenuReport("รับออเดอร์แล้ว") }}>ออเดอร์ใหม่</Button>
+                                <Button variant="success" onClick={() => { getMenuReport("ทำเสร็จแล้ว") }}>ทำเสร็จแล้ว</Button>
+
                             </ButtonGroup>
                         </Row>
 
-                        {
-                            report.map(item => {
-                                return (<>
-                                    <Card className="mb-4 mt-4">
-                                        <Card.Body>
-                                            <p>รหัสคำสั่งซื้อ  {item.bill_ID} เวลา{item.timeOrder}<br />
-                                                ลูกค้า {item.customerName}</p>
-                                               <p> รวมทั้งหมด {item.amount}</p>
-                                            <Alert className="when-print bg-white"> <b> สถานะ : {item.statusOrder} </b></Alert>
-                                            
-                                            {/* <Details bill_ID={item.bill_ID} status={item.statusOrder} /> */}
-                                            <Row>
-                                                {/* {
+                        <Row>
 
-                                                    item.statusOrder === 'รับออเดอร์แล้ว' && (
-                                                        <Col md={2}>
-                                                            <Button className="w-100 when-print" onClick={() => OnPrint()}>พิมพ์ใบเสร็จ</Button>
-                                                        </Col>
-                                                    )
-                                                } */}
 
-                                                {
-                                                    item.statusOrder === "รับออเดอร์แล้ว" && (
-                                                        <Col md={4}>
-                                                            <Button
-                                                                className="when-print"
-                                                                variant="danger w-100"
-                                                                onClick={() => UpdateStatus(item.bill_ID, "กำลังทำอาหาร")}>กำลังทำ</Button>
-                                                        </Col>
-                                                    )
-                                                }
-                                                {
-                                                    item.statusOrder === "กำลังทำอาหาร" && (
-                                                        <Col md={4}>
-                                                            <Button className="when-print"
-                                                                onClick={() => UpdateStatus(item.bill_ID, "ออเดอร์พร้อมส่ง")}
-                                                                variant="success w-100" >พร้อมส่ง</Button>
-                                                        </Col>
-                                                    )
-                                                }
-                                                {
-                                                    item.statusOrder === "ออเดอร์พร้อมส่ง" && (
-                                                        <Col md={4}>
-                                                            <Button className="when-print"
-                                                                onClick={() => UpdateStatus(item.bill_ID, "ส่งแล้ว")}
-                                                                variant="success w-100" >เปลี่ยนสถาน่ะเป็นส่งแล้ว</Button>
-                                                        </Col>
-                                                    )
-                                                }
-                                            </Row>
-                                        </Card.Body>
-                                    </Card>
-                                </>)
-                            })
-                        }
+                            {
+                                report.map(item => {
+                                    if (item.ordertype === "สั่งกลับบ้าน") {
 
+                                        return (<>
+                                            <Col md={4}>
+                                                <Card className="mb-4 mt-4">
+                                                    <Card.Body>
+                                                        <b>  ลูกค้า {item.customerName}</b>
+                                                        <p>รหัสคำสั่งซื้อ  {item.bill_ID.substr(0, 5)} <br />
+                                                            เวลาสั่งซื้อ{moment(item.timeOrder).format('HH:mm')}
+                                                        </p>
+                                                        <p> รวมทั้งหมด {item.amount}</p>
+                                                        <p> คิวที่ {item.queueNumber}</p>
+                                                        <Alert className="when-print bg-white"> <b> สถานะ : {item.statusOrder} </b></Alert>
+
+                                                        {/* <Details bill_ID={item.bill_ID} status={item.statusOrder} /> */}
+                                                        <Row>
+
+
+                                                            <Col md={12}>
+                                                                <Button className="when-print"
+                                                                    onClick={() => UpdateStatus(item.id, "ทำเสร็จแล้ว")}
+                                                                    variant="primary w-100" >ออเดอร์พร้อมส่ง</Button>
+                                                            </Col>
+
+
+                                                        </Row>
+                                                    </Card.Body>
+                                                </Card>
+                                            </Col>
+                                        </>)
+
+                                    }
+
+                                })
+                            }
+                        </Row>
                     </Form>
                     {
                         report.length === 0 && (
-                            <Alert className="mt-4 text-center">  ยังไม่มีรายการ {status} </Alert>
+                            <Alert className="mt-4 text-center"> ยังไม่มีรายการ </Alert>
 
                         )
                     }

@@ -19,7 +19,8 @@ const Admin = () => {
 
     const [listname, setListName] = useState("");
     const [quantity, setQuantity] = useState("");
-    const [Price, setPrice] = useState("");
+    const [Price, setPrice] = useState(0.0);
+    const [weight, setWeight] = useState(0.0);
     const [openMenu, setOpenMenu] = useState("เมนูอาหาร");
     const [data, setData] = useState([]);
     const [outcome, setOutcome] = useState(0);
@@ -43,23 +44,32 @@ const Admin = () => {
                 }
             })
     }
+    const deleteOutcome = async (id) => {
+        try {
+            await axios.delete(`${import.meta.env.VITE_BAKUP_URL}/account/${id}`);
+            await getData(); // รีเฟรชข้อมูลหลังจากลบเสร็จ
+        } catch (error) {
+            console.error("Error deleting the record:", error);
+            // คุณสามารถเพิ่ม SweetAlert2 สำหรับแจ้งเตือนเมื่อเกิดข้อผิดพลาดได้
+        }
+    }
 
     const saveOutcome = async (e) => {
         e.preventDefault();
-        let sum = quantity * Price;
+        let sum = (quantity * Price); // กำหนดให้ผลรวมมีทศนิยม 2 ตำแหน่ง
 
         const body = {
             date_account: new Date().toISOString(),
             listname: listname,
             quantity: parseInt(quantity),
-            Price: Price,
-            total: sum
+            Price: parseFloat(Price),
+            total: sum // แปลงผลรวมกลับเป็นตัวเลข
         }
 
-        await axios.post(`${import.meta.env.VITE_BAKUP_URL}/account`, body,)
-        await getData()
-
+        await axios.post(`${import.meta.env.VITE_BAKUP_URL}/account`, body);
+        await getData();
     }
+
     const handleNavClick = (event) => {
 
         setOpenMenu(event);
@@ -105,20 +115,26 @@ const Admin = () => {
 
                         <Form onSubmit={(e) => saveOutcome(e)}>
 
-                            <Form.Group>
+                            <Form.Group className="mb-2">
                                 <Form.Label> รายการ </Form.Label>
                                 <Form.Control type="text" placeholder="รายการ" onChange={(e) => setListName(e.target.value)} />
 
                             </Form.Group>
-                            <Form.Group>
+                            <Form.Group className="mb-2">
                                 <Form.Label> จำนวน </Form.Label>
                                 <Form.Control type="number" placeholder="จำนวน" onChange={(e) => setQuantity(e.target.value)} />
+                                <Form.Label> น้ำหนัก </Form.Label>
+                                <Form.Control
+                                    step="0.03"
+                                    type="number" placeholder="น้ำหนัก" onChange={(e) => setWeight(e.target.value)} />
 
                             </Form.Group>
-                            <Form.Group>
+                            <Form.Group className="mb-2">
                                 <Form.Label> ราคา </Form.Label>
-                                <Form.Control type="text" placeholder="ราคา" onChange={(e) => setPrice(e.target.value)} />
-
+                                <Form.Control
+                                    type="text"
+                                    placeholder="ราคา"
+                                    onChange={(e) => setPrice(e.target.value)} />
                             </Form.Group>
                             <Button type="submit" variant="primary mt-4 w-50"> บันทึก </Button>
                         </Form>  <TableContainer component={Paper} className="mt-3">
@@ -149,6 +165,7 @@ const Admin = () => {
                                             <TableCell align="right">{row.quantity}</TableCell>
                                             <TableCell align="right">{row.Price}</TableCell>
                                             <TableCell align="right">{row.total}</TableCell>
+                                            <TableCell align="right"><Button variant="danger" onClick={() => deleteOutcome(row.account_id)}> ลบ </Button></TableCell>
 
 
                                         </TableRow>

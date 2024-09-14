@@ -108,7 +108,7 @@ const NavbarMenu = () => {
                       </Nav.Link>
                       <Nav.Link>
                         <Link to={'/orders'} style={{ textDecoration: 'none', color: '#000' }}>
-                          <DeliveryDiningIcon /> การจัดส่ง
+                          <DeliveryDiningIcon /> ออเดอร์ (9+)
                         </Link>
                       </Nav.Link>
                       <Nav.Link>
@@ -136,7 +136,7 @@ const NavbarMenu = () => {
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>รายการสั่งอาหาร</Modal.Title>
+          <Modal.Title>สรุปรายการสั่งอาหาร</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Row>
@@ -146,28 +146,34 @@ const NavbarMenu = () => {
 
 
                   <Col md={12} xs={12}>
-                    <Card style={{ height: '130px', marginBottom: '10px', padding: '10px' }}>
+                    <Card style={{ height: '130px', marginBottom: '10px', padding: '0px' }}>
                       <Card.Body className='p-0'>
                         <Row>
                           <Col md={5}
                             xs={5}
                           >
-                            <Image style={{ width: "100%", height: '100px', objectFit: 'cover' }}
+                            <Image style={{ width: "100%", height: '130px', objectFit: 'cover' }}
                               src={`${import.meta.env.VITE_BASE_URL}/img/${item.photo}`} />
                           </Col>
                           <Col md={5} xs={5}>
-                            <h6>{item?.name}</h6>
+                            <div className="menu-list mt-3">
+                               <h6>{item?.name}</h6>
                             <h6>{item?.price}฿</h6>
+                            </div>
+                           
                             <Row>
+                              <Col md={12}>
+                             
                               <Form>
-
                                 <Form.Control
+                                className='w-100'
                                   type="text"
-                                  placeholder='หมายเหตุเพิ่มเติม'
+                                  placeholder='คำอธิบายเพิ่มเติม'
                                   onChange={(e) => updateNote(item.id, e.target.value)}
                                   defaultValue={item.note}
                                 />
-                              </Form>
+                              </Form> 
+                              </Col>
                             </Row>
                           </Col>
                           <Col md={2} xs={2} className="text-center">
@@ -175,7 +181,7 @@ const NavbarMenu = () => {
                               onClick={() => removeCart(item.id)}
                               style={{ float: 'right' }}
 
-                              variant="danger">
+                              variant="light">
                               <RemoveCircleOutlineIcon />
                             </Button>
                           </Col>
@@ -193,8 +199,8 @@ const NavbarMenu = () => {
             {
               cart.length > 0 ? (
                 <>
-                  <span>รวมทั้งหมด {sumPrice} บาท</span>
-                  <span>จำนวน {toTal} รายการ</span>
+                  <b>รวมทั้งหมด {sumPrice} บาท</b>
+                  <b>จำนวน {toTal} รายการ</b>
                 </>
               ) : (
                 <Alert variant='danger' className='pd-4'>

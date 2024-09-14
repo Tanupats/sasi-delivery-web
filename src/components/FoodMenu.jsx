@@ -10,9 +10,10 @@ const FoodMenu = () => {
 
     const { userid, username } = useParams();
 
-    sessionStorage.setItem("name", username)
-    sessionStorage.setItem("messangerId", userid)
-    sessionStorage.setItem("role", "user");
+    localStorage.setItem("name", username)
+    localStorage.setItem("messangerId", userid)
+    localStorage.setItem("role", "user");
+    localStorage.setItem("auth", "authenticated");
 
     const { addTocart } = useContext(AuthData)
     const [foods, setFoods] = useState([]);
@@ -20,26 +21,27 @@ const FoodMenu = () => {
 
     const onSelectMenu = (obj) => {
         let ID = nanoid(10)
-        addTocart({ ...obj, id: ID })
+        addTocart({ ...obj, id: ID,quantity:1 })
     }
 
     const getMenuType = async () => {
-        await axios.get(`${import.meta.env.VITE_API_URL}/GetmenuType.php`)
+        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/menutype`)
             .then(res => {
                 setMenuType(res.data);
             })
     }
 
 
+
     const getMenuBytypeId = async (id) => {
-        await axios.get(`${import.meta.env.VITE_API_URL}/getMenuId.php?TypeID=${id}`)
+        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/${id}`)
             .then(res => {
                 setFoods(res.data);
             })
     }
 
     const getFoodMenu = () => {
-        fetch(import.meta.env.VITE_BAKUP_URL+'/foodmenu')
+        fetch(`${import.meta.env.VITE_BAKUP_URL}/foodmenu`)
             .then((res) => res.json())
             .then((data) => {
                 if (data) {
@@ -50,8 +52,10 @@ const FoodMenu = () => {
     }
 
     useEffect(() => {
+
         getMenuType();
         getFoodMenu();
+
     }, [])
     return (
         <>
@@ -66,21 +70,23 @@ const FoodMenu = () => {
                             {
                                 menuType.length > 0 && menuType?.map((item, index) => {
 
-                                    return (
+                                    return (<React.Fragment  key={index}>
+
+
 
 
                                         <Badge
-                                            key={index}
+
                                             style={{
                                                 marginRight: '12px',
                                                 fontSize: '18px',
                                                 backgroundColor: '#FD720D', marginBottom: '12px'
                                             }}
-                                            onClick={() => getMenuBytypeId(item.TypeID)}
+                                            onClick={() => getMenuBytypeId(item.id)}
                                             pill bg="">
-                                            {item.T_name}
+                                            {item.name}
                                         </Badge>
-
+                                    </React.Fragment>
                                     )
                                 })
                             }
