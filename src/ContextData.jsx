@@ -174,6 +174,7 @@ function Context({ children }) {
         setCart(newCart);
 
     }
+    
 
 
     const sumAmount = () => {

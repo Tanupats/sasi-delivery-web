@@ -52,7 +52,7 @@ const Pos = () => {
   const [menu, setMenu] = useState([]);
   const [menuType, setMenuType] = useState([]);
   const [show, setShow] = useState(false);
-  const [shop, setShop] = useState(null);
+  const [shop, setShop] = useState({});
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -83,16 +83,11 @@ const Pos = () => {
   const getMyShop = async () => {
     await axios.get(`${import.meta.env.VITE_BAKUP_URL}/shop/shop-user/${userid}`)
       .then((res) => {
-
-        setShop(res.data)
+        setShop({ ...res.data[0] })
       })
   }
 
-  const addEage = () => {
-    let id = nanoid(10)
-    addTocart({ foodname: "ไข่ดาว", Price: 5, id: id, quantity: numberEage })
-    handleClose();
-  }
+
 
   const confirmMenu = async () => {
     let ID = nanoid(10)
@@ -181,15 +176,10 @@ const Pos = () => {
   return (
     <>
       <Container fluid>
-
         <Row className='mt-3'>
-
-
           <Col md={2} className='whenprint' >
             <div className='menu-type'>
               <Row>
-
-
                 {
                   menuType.map((item, index) => {
 
@@ -206,9 +196,6 @@ const Pos = () => {
                       </React.Fragment>)
                   })
                 }
-
-
-
               </Row>
 
             </div>
@@ -245,7 +232,7 @@ const Pos = () => {
 
             <div className='header-pos text-center'>
 
-              <h6> SASI Restaurant หนองคาย</h6>
+              <h6> {shop.name}</h6>
               <h6>  ใบเสร็จรับเงิน</h6>
               <h6> ลำดับคิว {queueNumber} </h6>
               วันที่ {date} {time}
@@ -259,14 +246,12 @@ const Pos = () => {
                 <Table>
                   <tbody>
                     {
-
                       cart.map(item => {
-
                         return (
 
                           <tr style={{ padding: 0, margin: 0 }}>
                             <td >{item.name} <br></br> {item.note}</td>
-                            <td colSpan={2}>{item.quntity}</td>
+                            <td colSpan={2}>{item.quantity}</td>
                             <td colSpan={2}>{item.price}</td>
                             <td>
                               <div className='whenprint'>
@@ -277,7 +262,7 @@ const Pos = () => {
                       })
                     }
                     <tr>
-                      <td >ราคารวม {sumPrice} บาท</td>
+                      <td >รวมทั้งหมด {sumPrice} บาท</td>
                       <td ></td>
                     </tr>
                     <tr>
@@ -288,19 +273,19 @@ const Pos = () => {
                       <td ></td>
 
                     </tr>
-                    <div className='text-center'>
-                      <Row>
+                    {/* <div className='text-center'>
+                        <Row>
 
-                        <Col md={12}>
-                          <Button className='when-print mb-2' onClick={() => { handleQR(), setShowQr(!showQr) }}>สร้าง QR CODE</Button>
-                        </Col>
-                        <Col md={12} className='text-center'>
-                          {
-                            showQr ? <center><QRCode value={qrCode} /></center> : <></>
-                          }
-                        </Col>
-                      </Row>
-                    </div>
+                          <Col md={12}>
+                            <Button className='when-print mb-2 w-100' onClick={() => { handleQR(), setShowQr(!showQr) }}>สร้าง QR CODE</Button>
+                          </Col>
+                          <Col md={12} className='text-center'>
+                            {
+                              showQr ? <center><QRCode value={qrCode} /></center> : <></>
+                            }
+                          </Col>
+                        </Row>
+                      </div> */}
                   </tbody>
                 </Table>
 
@@ -348,17 +333,11 @@ const Pos = () => {
                       <SaveIcon />  บันทึก
                     </Button>
                   </Col>
-
-
-
                 </Row>
 
-
               </Col>
-
             </Row>
           </Col>
-
         </Row>
 
 
@@ -369,7 +348,7 @@ const Pos = () => {
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>รายการสั่งอาหาร</Modal.Title>
+          <Modal.Title>รายการอาหาร</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Row>
@@ -411,9 +390,9 @@ const Pos = () => {
                           className='btn btn-primary'
                           onClick={() => updateSpecail()}
                         > { } พิเศษ { }</Button>
-                        <Button className='btn btn-success'
+                        {/* <Button className='btn btn-success'
                           onClick={() => updateNormal()}
-                          style={{ border: 'none' }} >ธรรมดา</Button>{" "}
+                          style={{ border: 'none' }} >ธรรมดา</Button>{" "} */}
 
                       </ButtonGroup><br />
                       {/* <Button onClick={() => setNumberEage(numberEage + 1)}>+</Button>
@@ -450,7 +429,7 @@ const Pos = () => {
                       onChange={(e) => { updateQuantity(newId, e.target.value) }} />
                   </Col>
                   <Col md={2}>
-                    <Button onClick={() => { setQuantity(quantity - 1)}}>-</Button>
+                    <Button onClick={() => { setQuantity(quantity - 1) }}>-</Button>
                   </Col>
                 </Row>
 

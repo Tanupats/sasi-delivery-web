@@ -28,7 +28,6 @@ const Login = () => {
                         router('/pos')
                     }
 
-
                 }
             })
     }

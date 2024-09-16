@@ -87,11 +87,7 @@ const NavbarMenu = () => {
                           <AccountBoxIcon /> คำสั่งซื้อ
                         </Link>
                       </Nav.Link>
-                      <Nav.Link>
-                        <Link style={{ textDecoration: 'none', color: '#000' }} to={'/queueNumber'}>
-                          <AddToQueueIcon /> คิวตอนนี้ {queue}
-                        </Link>
-                      </Nav.Link>
+                    
                     </>
                   )}
                   {role === 'admin' || 'manager' && (
@@ -108,7 +104,7 @@ const NavbarMenu = () => {
                       </Nav.Link>
                       <Nav.Link>
                         <Link to={'/orders'} style={{ textDecoration: 'none', color: '#000' }}>
-                          <DeliveryDiningIcon /> ออเดอร์ (9+)
+                          <DeliveryDiningIcon /> ออเดอร์
                         </Link>
                       </Nav.Link>
                       <Nav.Link>
