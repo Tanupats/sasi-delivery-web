@@ -8,7 +8,6 @@ function Context({ children }) {
     const [toTal, setTotal] = useState(0);
     const [sumPrice, setSumPrice] = useState(0);
     const [name, setName] = useState("");
-    const [messangerId, setMessangerId] = useState("");
     const [orderType, setOrderType] = useState("สั่งกลับบ้าน");
     const [role, setRole] = useState("");
     const [queue, setQueu] = useState(0);
@@ -26,7 +25,6 @@ function Context({ children }) {
     }
 
     const addTocart = (data) => {
-        console.log('in card', data)
         let itemCart = {
             id: data.id,
             name: data.foodname,
@@ -91,27 +89,24 @@ function Context({ children }) {
     const resetCart = () => setCart([]);
 
     const saveOrder = async () => {
-
         let id = '';
         if (sumPrice > 0) {
             const body = {
-
                 amount: sumPrice,
                 ordertype: orderType,
                 statusOrder: "รับออเดอร์แล้ว",
                 customerName: name,
                 queueNumber: String(queueNumber),
-                messengerId: messangerId
+                messengerId: 'pos1234'
             }
-
             await axios.post(`${import.meta.env.VITE_BAKUP_URL}/bills`, body)
                 .then(res => {
                     if (res.status === 200) {
                         console.log(res)
                         id = res.data.bill_ID
                         Swal.fire({
-                            title: 'สั่งอาหารสำเร็จ',
-                            text: 'คำสั่งซื้อของคุณส่งไปยังร้านค้าแล้ว',
+                            title: 'ทำรายการสำเร็จ',
+                            text: 'บันทึกข้อมูลสำเร็จ',
                             icon: 'success',
                             confirmButtonText: 'ยืนยัน'
                         })
@@ -128,9 +123,9 @@ function Context({ children }) {
                 }
                 axios.post(`${import.meta.env.VITE_BAKUP_URL}/billsdetails`, bodyDetails)
             })
-            setCart([])
-            setName("")
-            getQueueNumber()
+            setCart([]);
+            setName("");
+            getQueueNumber();
         } else {
             Swal.fire({
                 title: 'ไม่มีรายการอาหาร',
@@ -164,7 +159,6 @@ function Context({ children }) {
     }
 
     const setMenuNormal = (id, defaultData) => {
-
         let newCart = cart.map(item => {
             if (item.id === id) {
                 return { ...item, price: defaultData.Price, name: defaultData.foodname }
@@ -172,9 +166,7 @@ function Context({ children }) {
             return item;
         });
         setCart(newCart);
-
     }
-    
 
 
     const sumAmount = () => {
@@ -201,7 +193,6 @@ function Context({ children }) {
     useEffect(() => {
         setStaffName(localStorage.getItem('name'));
         setAuth(authCheck);
-        setMessangerId(localStorage.getItem("messangerId"));
         setRole(localStorage.getItem("role"));
         getQueu() // for delivert queue 
         getQueueNumber()// for bill q1 q2 q3 
@@ -232,7 +223,6 @@ function Context({ children }) {
                 saveOrder,
                 updateNote,
                 name,
-                messangerId,
                 queue,
                 resetCart,
                 setOrderType,

@@ -46,7 +46,7 @@ const Orders = () => {
                 <Card style={{ border: 'none', marginTop: '12px' }}  >
 
 
-                    <Card.Title className="text-center title" as={'h5'}>
+                    <Card.Title className="text-center when-print" as={'h5'}>
                         จัดการออเดอร์ Delivery</Card.Title>
                     <Form>
                         {/* <Form.Label>
@@ -66,8 +66,6 @@ const Orders = () => {
 
                             {
                                 report.map(item => {
-                                    if (item.ordertype === "สั่งกลับบ้าน") {
-
                                         return (<>
                                             <Col md={4}>
                                                 <Card className="mb-4 mt-4">
@@ -84,7 +82,12 @@ const Orders = () => {
                                                         <Row>
 
 
-                                                            <Col md={12}>
+                                                            <Col md={6}>
+                                                                <Button className="when-print"
+                                                                    onClick={() => window.print()}
+                                                                    variant="primary w-100" >พิมพ์</Button>
+                                                            </Col>
+                                                            <Col md={6}>
                                                                 <Button className="when-print"
                                                                     onClick={() => UpdateStatus(item.id, "ทำเสร็จแล้ว")}
                                                                     variant="primary w-100" >ออเดอร์พร้อมส่ง</Button>
@@ -97,7 +100,7 @@ const Orders = () => {
                                             </Col>
                                         </>)
 
-                                    }
+                                    
 
                                 })
                             }

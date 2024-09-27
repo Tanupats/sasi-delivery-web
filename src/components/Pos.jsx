@@ -94,7 +94,7 @@ const Pos = () => {
     setNewId(ID)
     addTocart({ ...defaultMenu, id: ID, quantity: quantity })
     handleClose();
-
+    setQuantity(1);
   }
 
   const onSelectMenu = (obj) => {
@@ -360,16 +360,27 @@ const Pos = () => {
                     <Col md={12}>
 
                       <Row>
-                        <Form>
-                          <Form.Label> รายการ</Form.Label>
-                          <Form.Control
-                            type="text"
-                            value={defaultMenu?.foodname}
-                            placeholder='เมนู'
-                            onChange={(e) => setDefaultMenu({ ...defaultMenu, foodname: e.target.value })}
+                        <Col md={8}>
+                          <Form>
+                            <Form.Label> รายการ</Form.Label>
+                            <Form.Control
+                              type="text"
+                              value={defaultMenu?.foodname}
+                              placeholder='เมนู'
+                              onChange={(e) => setDefaultMenu({ ...defaultMenu, foodname: e.target.value })}
 
-                          />
-                        </Form>
+                            />
+                          
+                          </Form>
+                        </Col>
+                        <Col md={4}>
+                          <Button
+                              style={{ height: '46px', border: 'none' }}
+                              className='btn btn-primary'
+                              onClick={() => updateSpecail()}
+                            > { } พิเศษ { }</Button>
+                        </Col>
+
                       </Row>
                     </Col>
 
@@ -383,25 +394,7 @@ const Pos = () => {
                       />
                     </Col>
 
-                    <Col md={12} className='mt-2'>
-                      <ButtonGroup className='when-print mb-2'>
-                        <Button
-                          style={{ height: '46px', border: 'none' }}
-                          className='btn btn-primary'
-                          onClick={() => updateSpecail()}
-                        > { } พิเศษ { }</Button>
-                        {/* <Button className='btn btn-success'
-                          onClick={() => updateNormal()}
-                          style={{ border: 'none' }} >ธรรมดา</Button>{" "} */}
 
-                      </ButtonGroup><br />
-                      {/* <Button onClick={() => setNumberEage(numberEage + 1)}>+</Button>
-                      <Button variant='light'> ไข่ดาว {numberEage}
-                        <EggAltIcon style={{ color: '#FD720D' }} />
-                      </Button> */}
-                      {/* <Button onClick={() => setNumberEage(numberEage - 1)}>-</Button> {" "}
-                      <Button variant='light' onClick={() => addEage()}>เพิ่ม</Button> */}
-                    </Col>
                   </Row>
 
                 </Card.Body>
@@ -441,7 +434,7 @@ const Pos = () => {
                 <Form.Control
                   value={defaultMenu.Price}
                   type='number'
-                  onChange={(e) => updatePrice(newId, e.target.value)} />
+                  onChange={(e) =>setDefaultMenu({ ...defaultMenu, Price: e.target.value })} />
               </Form.Group>
 
             </Col>
