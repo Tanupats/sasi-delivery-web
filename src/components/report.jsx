@@ -13,6 +13,7 @@ import RoomServiceIcon from '@mui/icons-material/RoomService';
 import Detail from "./DetailReport";
 import { Card, Row, Col, Button } from "react-bootstrap"
 import Swal from 'sweetalert2';
+import moment from "moment/moment";
 const Report = () => {
     const [totalToday, setTotalToday] = useState(0)
     const [totalMounth, settotalMounth] = useState(0)
@@ -138,7 +139,7 @@ const Report = () => {
                             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell>หมายเลขคำสั่งซื้อ</TableCell>
+                                        <TableCell>ลำดับ</TableCell>
                                         <TableCell align="right">ประเภท</TableCell>
                                         <TableCell align="right">ยอดรวม</TableCell>
                                         <TableCell align="right">ชื่อลูกค้า</TableCell>
@@ -151,16 +152,16 @@ const Report = () => {
                                 <TableBody>
                                     {data?.map((row) => (
                                         <TableRow
-                                            key={row.bill_ID}
+                                            key={row.queueNumber}
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                         >
                                             <TableCell component="th" scope="row">
-                                                {row.bill_ID}
+                                                {row.queueNumber}
                                             </TableCell>
                                             <TableCell align="right">{row.ordertype}</TableCell>
                                             <TableCell align="right">{row.amount}</TableCell>
                                             <TableCell align="right">{row.customerName}</TableCell>
-                                            <TableCell align="right">{row.timeOrder}</TableCell>
+                                            <TableCell align="right">{moment( row.timeOrder).format('HH:mm') } น.</TableCell>
                                             <TableCell align="right">
                                                 <Detail
 
