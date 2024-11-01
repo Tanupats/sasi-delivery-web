@@ -19,7 +19,7 @@ const Orders = () => {
 
     const UpdateStatus = async (id, status) => {
         const body = {
-            statusOrder:status
+            statusOrder: status
         }
         await axios.put(`${import.meta.env.VITE_BAKUP_URL}/bills/${id}`, body)
             .then((data) => {
@@ -66,41 +66,48 @@ const Orders = () => {
 
                             {
                                 report.map(item => {
-                                        return (<>
-                                            <Col md={4}>
-                                                <Card className="mb-4 mt-4">
-                                                    <Card.Body>
-                                                        <b>  ลูกค้า {item.customerName}</b>
-                                                        <p>รหัสคำสั่งซื้อ  {item.bill_ID.substr(0, 5)} <br />
-                                                            เวลาสั่งซื้อ{moment(item.timeOrder).format('HH:mm')}
-                                                        </p>
-                                                        <p> รวมทั้งหมด {item.amount}</p>
-                                                        <p> คิวที่ {item.queueNumber}</p>
-                                                        <Alert className="when-print bg-white"> <b> สถานะ : {item.statusOrder} </b></Alert>
+                                    return (<>
+                                        <Col md={4}>
+                                            <Card className="mb-4 mt-4">
+                                                <Card.Body>
+                                                    <b>  ลูกค้า {item.customerName}</b>
+                                                    <p>รหัสคำสั่งซื้อ  {item.bill_ID.substr(0, 5)} <br />
+                                                        เวลาสั่งซื้อ{moment(item.timeOrder).format('HH:mm')}
+                                                    </p>
+                                                    <p> รวมทั้งหมด {item.amount}</p>
+                                                    <p> คิวที่ {item.queueNumber}</p>
+                                                    <Alert className="when-print bg-white"> <b> สถานะ : {item.statusOrder} </b></Alert>
 
-                                                        {/* <Details bill_ID={item.bill_ID} status={item.statusOrder} /> */}
-                                                        <Row>
+                                                    <Details bill_ID={item.bill_ID} 
+                                                    status={item.statusOrder} />
+                                                    <Row>
+
+                                                        {
+                                                            item.statusOrder === "รับออเดอร์แล้ว" && (<>
+                                                                <Col md={6}>
+                                                                    <Button className="when-print"
+                                                                        onClick={() => window.print()}
+                                                                        variant="primary w-100" >พิมพ์</Button>
+                                                                </Col>
+
+                                                          </>  )
+                                                        }
 
 
-                                                            <Col md={6}>
-                                                                <Button className="when-print"
-                                                                    onClick={() => window.print()}
-                                                                    variant="primary w-100" >พิมพ์</Button>
-                                                            </Col>
-                                                            <Col md={6}>
-                                                                <Button className="when-print"
-                                                                    onClick={() => UpdateStatus(item.id, "ทำเสร็จแล้ว")}
-                                                                    variant="primary w-100" >ออเดอร์พร้อมส่ง</Button>
-                                                            </Col>
+                                                        <Col md={6}>
+                                                            <Button className="when-print"
+                                                                onClick={() => UpdateStatus(item.id, "ทำเสร็จแล้ว")}
+                                                                variant="success w-100" >ออเดอร์พร้อมส่ง</Button>
+                                                        </Col>
 
 
-                                                        </Row>
-                                                    </Card.Body>
-                                                </Card>
-                                            </Col>
-                                        </>)
+                                                    </Row>
+                                                </Card.Body>
+                                            </Card>
+                                        </Col>
+                                    </>)
 
-                                    
+
 
                                 })
                             }

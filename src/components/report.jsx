@@ -18,12 +18,13 @@ const Report = () => {
     const [totalToday, setTotalToday] = useState(0)
     const [totalMounth, settotalMounth] = useState(0)
     const [data, setData] = useState([])
-    const [counter, setCounter] = useState([]);
+    const [counter, setCounter] = useState({});
     const [outcome, setOutcome] = useState(0);
+    const token = localStorage.getItem("token");
 
     const getOrderFood = async () => {
         let sumToday = 0;
-        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/bills`)
+        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/bills`, { headers: { 'apikey': token } })
             .then(res => {
                 setData(res.data)
                 res?.data?.map(item => {
@@ -47,12 +48,12 @@ const Report = () => {
         await getOrderFood()
     }
 
-    // const geCountorder = async () => {
-    //     await axios.get('https://api.sasirestuarant.com/orderFood.php?countOrder')
-    //         .then(res => {
-    //             setCounter(res.data)
-    //         })
-    // }
+    const geReportByorder = async () => {
+        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/report/count-order-type`)
+            .then(res => {
+                setCounter(res.data)
+            })
+    }
 
     // const geOutcome = async () => {
     //     await axios.get('https://delivery.sasirestuarant.com/account/outcome')
@@ -83,18 +84,11 @@ const Report = () => {
 
 
     useEffect(() => {
-        getOrderFood()
-
+        geReportByorder();
+        getOrderFood();
     }, [])
 
-    useEffect(() => {
 
-
-    }, [])
-
-    useEffect(() => {
-
-    }, [data])
 
 
     return (<>
@@ -106,24 +100,34 @@ const Report = () => {
                             <Card.Body>
                                 <Card.Title className="text-center" style={{ color: 'red' }}> รายจ่ายวันนี้   {new Intl.NumberFormat().format(outcome)} บาท</Card.Title>
                                 <Card.Title className="text-center" style={{ color: 'green' }}> ยอดขายวันนี้   {new Intl.NumberFormat().format(totalToday)} บาท
-
-
                                 </Card.Title>
-                                {counter.length > 0 && counter?.map(item => {
+                                <Card className="mt-2">
+                                    <Card.Body>
+                                        <div className="text-center">
+                                            <DeliveryDiningIcon style={{ fontSize: '30px' }} />เดลิเวอรี่ จำนวน {counter.takeawayCount} บิล
+                                            <p> ยอด = {counter.takeawayTotalAmount} บาท</p>
+                                            <p> {((counter.takeawayCount / counter.totalCount) * 100).toFixed(2)} %</p>
 
-                                    return (<>
-                                        <Card className="mt-2">
-                                            <Card.Body>
-                                                <div className="text-center"> {item?.ordertype === 'สั่งกลับบ้าน' && <DeliveryDiningIcon style={{ fontSize: '30px' }} />}
-                                                </div>
-                                                <div className="text-center"> {item?.ordertype === 'เสิร์ฟในร้าน' && <RoomServiceIcon style={{ fontSize: '30px' }} />}
-                                                </div>
-                                                <h5 className="text-center">    {item?.ordertype} {item?.total_bill} </h5>
+                                        </div>
+                                        <div className="text-center">
+                                            <RoomServiceIcon style={{ fontSize: '30px' }} />ทานที่ร้าน จำนวน {counter.dineInCount} บิล  <p> ยอด = {counter.dineInTotalAmount} บาท</p>
+                                            <p> {((counter.dineInCount / counter.totalCount) * 100).toFixed(2)} %</p>
+                                        </div>
+
+                                        <div className="text-center">
+                                            <RoomServiceIcon style={{ fontSize: '30px' }} />รับเอง จำนวน {counter.pickupCount} บิล
+                                            <p> ยอด = {counter.pickupTotalAmount} บาท</p>
+                                            <p>{((counter.pickupCount / counter.totalCount) * 100).toFixed(2)} %</p>
+                                        </div>
+                                        <div className="text-center">
+                                            <p>รวมทั้งหมด {counter.totalCount} บิล</p>
+                                        </div>
 
 
-                                            </Card.Body>
-                                        </Card> </>)
-                                })}
+
+                                    </Card.Body>
+                                </Card>
+
                             </Card.Body>
                         </Card>
                     </Col>
@@ -161,7 +165,7 @@ const Report = () => {
                                             <TableCell align="right">{row.ordertype}</TableCell>
                                             <TableCell align="right">{row.amount}</TableCell>
                                             <TableCell align="right">{row.customerName}</TableCell>
-                                            <TableCell align="right">{moment( row.timeOrder).format('HH:mm') } น.</TableCell>
+                                            <TableCell align="right">{moment(row.timeOrder).format('HH:mm')} น.</TableCell>
                                             <TableCell align="right">
                                                 <Detail
 

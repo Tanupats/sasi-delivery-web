@@ -16,9 +16,9 @@ const Detail = (props) => {
     }, [])
 
     return (<>
-        {data?.map(item => {
+        {data?.map((item,index) => {
 
-            return (<> <p> {item.quantity}   {item.price} {item.foodname}   </p> </>)
+            return (<React.Fragment key={index}> <p> {item.quantity}   {item.price} {item.foodname}   </p> </React.Fragment>)
         })}
     </>)
 }

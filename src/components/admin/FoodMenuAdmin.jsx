@@ -141,10 +141,10 @@ const FoodMenuAdmin = () => {
 
                                 {
                                     foods?.map((item, index) => {
-                                        return (<>
+                                        return (<React.Fragment key={index}>
 
 
-                                            <Col md={6} xs={12} key={index}>
+                                            <Col md={6} xs={12} >
                                                 <Card style={{ height: 'auto', marginBottom: '12px' }}>
                                                     <Card.Body>
                                                         <Row>
@@ -181,7 +181,7 @@ const FoodMenuAdmin = () => {
                                                 </Card>
 
                                             </Col>
-                                        </>)
+                                        </React.Fragment>)
                                     })
                                 }
                             </Row>

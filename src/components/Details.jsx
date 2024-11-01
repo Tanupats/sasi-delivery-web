@@ -9,17 +9,13 @@ const Details = (props) => {
     const [dataMenus, setDataMenus] = useState("");
 
     const [options, setOption] = useState([])
-
     const [optionsFood, setOptionFood] = useState([])
-
-    const [role, setRole] = useState(sessionStorage.getItem("role"))
 
     //MENU LIST 
     const [foodname, setFoodName] = useState("")
     const [price, setPrice] = useState(0);
     const [note, setNote] = useState("");
     const [quantity, setQuantity] = useState(1);
-    const [totalNew, setTotalNew] = useState("");
 
     const [formName, setFormName] = useState("");
     const [menuType, setMenuType] = useState([]);
@@ -33,7 +29,7 @@ const Details = (props) => {
     }
 
     const getMenuType = async () => {
-        await axios.get(`${import.meta.env.VITE_API_URL}/GetmenuType.php`)
+        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/menutype`)
             .then(res => {
                 setMenuType(res.data);
             })
@@ -52,7 +48,7 @@ const Details = (props) => {
     }
 
     const getDetail = async () => {
-        await axios.get(`${import.meta.env.VITE_API_URL}/record_sale.php?billId=${bill_ID}`)
+        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/billsdetails/${bill_ID}`)
             .then(res => {
                 setDetail(res.data);
             })
@@ -113,19 +109,12 @@ const Details = (props) => {
 
     useEffect(() => {
         let newOption = menuType.map(item => {
-            return { label: item.T_name, value: item.TypeID }
+            return { label: item.name, value: item.id }
         })
         setOption(newOption);
     }, [menuType])
 
  
-    useEffect(() => {
-        let total = 0;
-        detail.map(item => {
-            total += (item.quantity * item.price)
-        })
-        setTotalNew(total)
-    }, [detail])
 
     useEffect(() => {
         console.log(dataMenus)
@@ -140,22 +129,11 @@ const Details = (props) => {
         <Row>
 
 
-
-            {
-                status !== "ออเดอร์พร้อมส่ง"  || status === 'ส่งแล้ว' && role !== "user" && (
-
-                    <Col md={6}>
+            <Col md={6}>
                         {/* <h1>{status}</h1> */}
                         <Button className="when-print" variant="success" onClick={() => handleShow('', 'newMenu')}> เพิ่มเมนูใหม่</Button>
-                    </Col>
-                )
-            }
-
-
-
-
-
-
+            </Col>
+      
         </Row>
 
         <ListGroup className="mt-2">
@@ -170,7 +148,7 @@ const Details = (props) => {
                             </Col>
 
                             {
-                                status !== "ออเดอร์พร้อมส่ง" || status === 'ส่งแล้ว' && role !== "user" && (
+                                status === "รับออเดอร์แล้ว"  && (
                                     <Col md={4}>
 
                                         <Button className="when-print mb-2"
@@ -190,7 +168,7 @@ const Details = (props) => {
             }
 
 
-            <p style={{ fontSize: '18px' }}>รวมทั้งหมด {totalNew} บาท</p>
+         
 
         </ListGroup>
 

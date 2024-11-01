@@ -64,7 +64,7 @@ const NavbarMenu = () => {
       {
         auth === 'authenticated' && (
 
-          <Navbar bg="light" data-bs-theme="light" className='when-print' sticky='top' expand="lg">
+          <Navbar bg="light" data-bs-theme="light" className='when-print' sticky='top'>
             <Container fluid>
               {
                 role === 'admin' || 'manager' && (<Navbar.Brand href="#home">SASI POS</Navbar.Brand>)
@@ -74,44 +74,44 @@ const NavbarMenu = () => {
                 <Nav className="me-auto text-center">
                   {role === 'user' && (
                     <>
-                      <Nav.Link>
+                    
                         <Link style={{ textDecoration: 'none', color: '#000' }} to={`/foodMenu/${messangerId}/${name}`}>
                           <RestaurantMenuIcon /> เมนูอาหาร
                         </Link>
-                      </Nav.Link>
+                  
                       <Nav.Link onClick={handleShow}>
                         <LocalMallIcon /> {toTal}
                       </Nav.Link>
-                      <Nav.Link>
+                      
                         <Link style={{ textDecoration: 'none', color: '#000' }} to={'/Myorder'}>
                           <AccountBoxIcon /> คำสั่งซื้อ
                         </Link>
-                      </Nav.Link>
+                     
                     
                     </>
                   )}
                   {role === 'admin' || 'manager' && (
                     <>
-                      <Nav.Link>
+                     
                         <Link to={'/pos'} style={{ textDecoration: 'none', color: '#000' }}>
                           <ListAltIcon /> ขายอาหาร
                         </Link>
-                      </Nav.Link>
-                      <Nav.Link>
+                    
+                   
                         <Link to={'/report'} style={{ textDecoration: 'none', color: '#000' }}>
                           <CurrencyBitcoinIcon /> ยอดขาย
                         </Link>
-                      </Nav.Link>
-                      <Nav.Link>
+                    
+                     
                         <Link to={'/orders'} style={{ textDecoration: 'none', color: '#000' }}>
                           <DeliveryDiningIcon /> ออเดอร์
                         </Link>
-                      </Nav.Link>
-                      <Nav.Link>
+                     
+                      
                         <Link to={'/admin'} style={{ textDecoration: 'none', color: '#000' }}>
                           <StoreIcon /> จัดการร้านค้า
                         </Link>
-                      </Nav.Link>
+                     
                     </>
                   )}
                 </Nav>

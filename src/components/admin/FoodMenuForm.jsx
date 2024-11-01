@@ -150,8 +150,8 @@ const FoodMenuForm = () => {
                                                 <Form.Select
                                                     onChange={(e) => setMenuTypeId(e.target.value)}
                                                     aria-label="Default select example">
-                                                    {menuType.map((item) => {
-                                                        return (<option value={item.id}>{item.name}</option>)
+                                                    {menuType.map((item,index) => {
+                                                        return (<option  key={index}  value={item.id}>{item.name}</option>)
                                                     })}
                                                 </Form.Select>
                                             </Form.Group>

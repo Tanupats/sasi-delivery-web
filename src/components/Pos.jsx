@@ -83,10 +83,9 @@ const Pos = () => {
   const getMyShop = async () => {
     await axios.get(`${import.meta.env.VITE_BAKUP_URL}/shop/shop-user/${userid}`)
       .then((res) => {
-        setShop({ ...res.data[0] })
+        setShop({ ...res?.data[0] })
       })
   }
-
 
 
   const confirmMenu = async () => {
@@ -170,6 +169,14 @@ const Pos = () => {
     console.log(cart)
   }, [cart])
 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {  // ตรวจสอบว่าค่า token ไม่มีหรือเป็นค่าว่าง
+      router('/');
+    }
+  }, []);
+
+
 
 
 
@@ -190,7 +197,13 @@ const Pos = () => {
                             className='w-100 mb-2'
 
                             onClick={() => getMenuBytypeId(item.id)}
-                            style={{ backgroundColor: '#FD720D', border: 'none' }}
+                            style={{
+                              backgroundColor:
+
+                                '#FD720D',
+                              fontSize: 18,
+                              border: 'none'
+                            }}
                           >   {item.name}</Button>
                         </Col>
                       </React.Fragment>)
@@ -273,19 +286,19 @@ const Pos = () => {
                       <td ></td>
 
                     </tr>
-                    {/* <div className='text-center'>
-                        <Row>
+                    <div className='text-center'>
+                      <Row>
 
-                          <Col md={12}>
-                            <Button className='when-print mb-2 w-100' onClick={() => { handleQR(), setShowQr(!showQr) }}>สร้าง QR CODE</Button>
-                          </Col>
-                          <Col md={12} className='text-center'>
-                            {
-                              showQr ? <center><QRCode value={qrCode} /></center> : <></>
-                            }
-                          </Col>
-                        </Row>
-                      </div> */}
+                        <Col md={12}>
+                          <Button className='when-print mb-2 w-100' onClick={() => { handleQR(), setShowQr(!showQr) }}>สร้าง QR CODE</Button>
+                        </Col>
+                        <Col md={12} className='text-center'>
+                          {
+                            showQr ? <center><QRCode value={qrCode} /></center> : <></>
+                          }
+                        </Col>
+                      </Row>
+                    </div>
                   </tbody>
                 </Table>
 
@@ -370,15 +383,15 @@ const Pos = () => {
                               onChange={(e) => setDefaultMenu({ ...defaultMenu, foodname: e.target.value })}
 
                             />
-                          
+
                           </Form>
                         </Col>
                         <Col md={4}>
                           <Button
-                              style={{ height: '46px', border: 'none' }}
-                              className='btn btn-primary'
-                              onClick={() => updateSpecail()}
-                            > { } พิเศษ { }</Button>
+                            style={{ height: '46px', border: 'none' }}
+                            className='btn btn-primary'
+                            onClick={() => updateSpecail()}
+                          > { } พิเศษ { }</Button>
                         </Col>
 
                       </Row>
@@ -434,7 +447,7 @@ const Pos = () => {
                 <Form.Control
                   value={defaultMenu.Price}
                   type='number'
-                  onChange={(e) =>setDefaultMenu({ ...defaultMenu, Price: e.target.value })} />
+                  onChange={(e) => setDefaultMenu({ ...defaultMenu, Price: e.target.value })} />
               </Form.Group>
 
             </Col>
