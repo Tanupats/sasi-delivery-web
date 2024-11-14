@@ -96,8 +96,6 @@ const Pos = () => {
     handleShow()
   }
 
-  let olemenu = "";
-  let oleprice = 0
   const updateSpecail = () => {
     const price = Number(newPrice) + 10
     console.log(defaultMenu)

@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState, useEffect,useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Row, Col, Card, Image, Button, Modal, Form } from "react-bootstrap";
 import Badge from 'react-bootstrap/Badge';
 import EditIcon from '@mui/icons-material/Edit';
@@ -8,7 +8,7 @@ import FoodMenuForm from "./FoodMenuForm";
 import Swal from 'sweetalert2';
 import { AuthData } from "../../ContextData";
 const FoodMenuAdmin = () => {
-    const {user} = useContext(AuthData);
+    const { user } = useContext(AuthData);
     const [foods, setFoods] = useState([]);
     const [menuType, setMenuType] = useState([]);
     const [data, setData] = useState({});
@@ -37,7 +37,7 @@ const FoodMenuAdmin = () => {
     }
 
     const updateData = async () => {
-        const body = { foodname: data.foodname };
+        const body = { foodname: data.foodname, status: data.status };
         const { id } = data;
         await axios.put(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/${id}`, body)
             .then(res => {
@@ -65,7 +65,7 @@ const FoodMenuAdmin = () => {
                     .then(res => {
                         if (res.status === 200) {
                             Swal.fire(
-                                'ลบเมนูสำเร็จ!',                      
+                                'ลบเมนูสำเร็จ!',
                                 'success'
                             );
                             getFoodMenu();
@@ -224,12 +224,29 @@ const FoodMenuAdmin = () => {
                                                 <Form.Group>
                                                     <Form.Label>ราคา </Form.Label>
 
-                                                    <Form.Control 
-                                                     onChange={(e) => setData({ ...data, Price: e.target.value })}
-                                                    type="text" 
-                                                    defaultValue={data?.Price} />
+                                                    <Form.Control
+                                                        onChange={(e) => setData({ ...data, Price: e.target.value })}
+                                                        type="text"
+                                                        defaultValue={data?.Price} />
                                                 </Form.Group>
+                                                {
 
+                                                    data.status === 1 && (
+
+                                                        <Form.Group>
+                                                            <Form.Label> มีจำหน่าย</Form.Label>
+                                                            <Form.Check checked={data.status} onClick={() => setData({ ...data, status: 0 })} />
+                                                        </Form.Group>
+                                                    )
+                                                }
+                                                {
+
+                                                    data.status === 0 && (
+                                                        <Form.Group>
+                                                            <Form.Label> สินค้าหมด</Form.Label>
+                                                            <Form.Check checked={data.status} onClick={() => setData({ ...data, status: 1 })} />
+                                                        </Form.Group>
+                                                    )}
 
                                             </Col>
 
