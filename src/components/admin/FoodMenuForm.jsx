@@ -1,8 +1,10 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Row, Col, Card, Image, Button, Modal, Form } from "react-bootstrap";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { AuthData } from "../../ContextData";
 const FoodMenuForm = () => {
+    const { user } = useContext(AuthData);
     const [show, setShow] = useState(false);
     const [foodname, setFoodName] = useState("");
     const [price, setPrice] = useState(50);
@@ -38,7 +40,6 @@ const FoodMenuForm = () => {
     }
 
     const postMenu = async (e) => {
-
         e.preventDefault()
         await uploadFile();
         if (filename !== '') {
@@ -47,7 +48,8 @@ const FoodMenuForm = () => {
                 TypeID: parseInt(menuTypeId),
                 Price: parseInt(price),
                 img: filename, code: code,
-                status: parseInt(status)
+                status: parseInt(status),
+                shop_id: user.shop.shop_id
             };
             await axios.post(`${import.meta.env.VITE_BAKUP_URL}/foodmenu`, body)
                 .then(res => {
@@ -150,8 +152,8 @@ const FoodMenuForm = () => {
                                                 <Form.Select
                                                     onChange={(e) => setMenuTypeId(e.target.value)}
                                                     aria-label="Default select example">
-                                                    {menuType.map((item,index) => {
-                                                        return (<option  key={index}  value={item.id}>{item.name}</option>)
+                                                    {menuType.map((item, index) => {
+                                                        return (<option key={index} value={item.id}>{item.name}</option>)
                                                     })}
                                                 </Form.Select>
                                             </Form.Group>

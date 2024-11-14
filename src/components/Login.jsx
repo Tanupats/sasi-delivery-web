@@ -7,7 +7,7 @@ const Login = () => {
     const router = useNavigate()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const { setAuth, setStaffName } = useContext(AuthData);
+    const { setAuth, setStaffName, setUser } = useContext(AuthData);
 
     const login = async (e) => {
         e.preventDefault();
@@ -16,14 +16,13 @@ const Login = () => {
             .then(res => {
                 if (res) {
                     if (res.status === 200) {
-                        const { name, department, token,id } = res.data;
+                        const { name, department, token, id } = res.data;
                         localStorage.setItem("name", name)
                         localStorage.setItem("role", department)
                         localStorage.setItem("token", token)
-                        localStorage.setItem("auth", 'authenticated')
                         localStorage.setItem("userId", id)
+                        setUser(res.data)
 
-                        setAuth('authenticated')
                         setStaffName(name)
                         router('/pos')
                     }
@@ -32,13 +31,7 @@ const Login = () => {
             })
     }
 
-    useEffect(() => {
 
-        if (localStorage.getItem("auth") === "authenticated") {
-
-            router('/pos')
-        }
-    }, [])
     return (
         <>
             <Row className="mt-4">

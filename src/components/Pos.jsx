@@ -17,6 +17,7 @@ import EggAltIcon from '@mui/icons-material/EggAlt';
 import QRCode from 'qrcode.react';
 import generatePayload from 'promptpay-qr'
 import { useNavigate } from "react-router-dom";
+
 for (let number = 1; number <= 5; number++) {
   items.push(
     <Pagination.Item key={number} active={number === active}>
@@ -46,14 +47,14 @@ const Pos = () => {
     updateFoodName,
     queueNumber,
     getQueueNumber,
+    user
   } =
     useContext(AuthData)
 
   const [menu, setMenu] = useState([]);
   const [menuType, setMenuType] = useState([]);
   const [show, setShow] = useState(false);
-  const [shop, setShop] = useState({});
-
+ 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -66,7 +67,6 @@ const Pos = () => {
   const [phoneNumber, setPhoneNumber] = useState("0983460756");
   const [showQr, setShowQr] = useState(false);
   const [qrCode, setqrCode] = useState("sample");
-  const [numberEage, setNumberEage] = useState(0);
   const [newPrice, setNewPrice] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
@@ -79,14 +79,7 @@ const Pos = () => {
   function handleQR() {
     setqrCode(generatePayload(phoneNumber, { amount: sumPrice }));
   }
-  const userid = localStorage.getItem("userId");
-  const getMyShop = async () => {
-    await axios.get(`${import.meta.env.VITE_BAKUP_URL}/shop/shop-user/${userid}`)
-      .then((res) => {
-        setShop({ ...res?.data[0] })
-      })
-  }
-
+  
 
   const confirmMenu = async () => {
     let ID = nanoid(10)
@@ -114,12 +107,6 @@ const Pos = () => {
 
   }
 
-  const updateNormal = () => {
-
-    console.log(defaultMenu)
-    setDefaultMenu({ ...defaultMenu, foodname: olemenu, Price: oleprice })
-
-  }
 
   const getMenu = async () => {
     await axios.get(`${import.meta.env.VITE_BAKUP_URL}/foodmenu`).then(
@@ -146,10 +133,12 @@ const Pos = () => {
   }
 
   useEffect(() => {
-    getMyShop()
+
     getMenuType()
     getMenu()
   }, [])
+
+
 
   useEffect(() => {
     const Time = new Date().getHours() + ':' + new Date().getMinutes() + " น.";
@@ -158,16 +147,9 @@ const Pos = () => {
     setTime(Time);
     setDate(DateToday)
 
-  }, [queueNumber])
-
-  useEffect(() => {
     handleQR()
   }, [sumPrice])
 
-
-  useEffect(() => {
-    console.log(cart)
-  }, [cart])
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -182,7 +164,7 @@ const Pos = () => {
 
   return (
     <>
-      <Container fluid>
+      <Container fluid style={{height:'100vh'}}>
         <Row className='mt-3'>
           <Col md={2} className='whenprint' >
             <div className='menu-type'>
@@ -245,7 +227,7 @@ const Pos = () => {
 
             <div className='header-pos text-center'>
 
-              <h6> {shop.name}</h6>
+              <h6> {user?.shop?.name}</h6>
               <h6>  ใบเสร็จรับเงิน</h6>
               <h6> ลำดับคิว {queueNumber} </h6>
               วันที่ {date} {time}

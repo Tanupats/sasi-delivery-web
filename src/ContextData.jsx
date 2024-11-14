@@ -12,9 +12,24 @@ function Context({ children }) {
     const [role, setRole] = useState("");
     const [queue, setQueu] = useState(0);
     const [queueNumber, setQueueNumber] = useState(0);
-    const authCheck = localStorage.getItem("auth");
-    const [auth, setAuth] = useState(authCheck || 'not_authenticated');
     const [staffName, setStaffName] = useState("");
+    const [user, setUser] = useState({ name: '' })
+
+
+    const getUser = async () => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            await axios.get(import.meta.env.VITE_BAKUP_URL + '/user/me', { headers: { 'apikey': token } })
+                .then(res => {
+                    if (res) {
+                        if (res.status === 200) {
+                            setUser(res.data)
+                        }
+                    }
+                })
+        }
+    }
+
 
 
     const getQueueNumber = async () => {
@@ -89,6 +104,7 @@ function Context({ children }) {
     const resetCart = () => setCart([]);
 
     const saveOrder = async () => {
+        const { shop_id } = user?.shop;
         let id = '';
         if (sumPrice > 0) {
             const body = {
@@ -97,18 +113,20 @@ function Context({ children }) {
                 statusOrder: "รับออเดอร์แล้ว",
                 customerName: name,
                 queueNumber: String(queueNumber),
-                messengerId: 'pos1234'
+                messengerId: 'pos1234',
+                shop_id: shop_id
             }
             await axios.post(`${import.meta.env.VITE_BAKUP_URL}/bills`, body)
                 .then(res => {
                     if (res.status === 200) {
-                        console.log(res)
+
                         id = res.data.bill_ID
                         Swal.fire({
                             title: 'ทำรายการสำเร็จ',
                             text: 'บันทึกข้อมูลสำเร็จ',
                             icon: 'success',
-                            confirmButtonText: 'ยืนยัน'
+                            confirmButtonText: 'ยืนยัน',
+                            timer: 1300
                         })
                     }
                 })
@@ -187,28 +205,16 @@ function Context({ children }) {
 
     useEffect(() => {
         sumAmount()
-        console.log(cart)
     }, [cart])
 
     useEffect(() => {
         setStaffName(localStorage.getItem('name'));
-        setAuth(authCheck);
         setRole(localStorage.getItem("role"));
-        getQueu() // for delivert queue 
-        getQueueNumber()// for bill q1 q2 q3 
-    }, [])
-    useEffect(() => {
-        console.log(sumPrice)
-    }, [sumPrice])
-    useEffect(() => {
-
-        const interval = setInterval(() => {
-            getQueu();
-        }, 5000); // ดึงข้อมูลจาก API ทุกๆ 5 วินาที
-
-        return () => clearInterval(interval);
     }, [])
 
+    useEffect(()=>{
+        getUser();
+    },[])
 
     return (<>
 
@@ -236,9 +242,11 @@ function Context({ children }) {
                 role,
                 queueNumber,
                 getQueueNumber,
-                auth, setAuth,
+               
                 staffName,
-                setStaffName
+                setStaffName,
+                user,
+                setUser
             }}>
             {children}
         </AuthData.Provider>

@@ -1,13 +1,14 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext } from "react";
 import { Row, Col, Card, Image, Button, Modal, Form } from "react-bootstrap";
 import Badge from 'react-bootstrap/Badge';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FoodMenuForm from "./FoodMenuForm";
 import Swal from 'sweetalert2';
+import { AuthData } from "../../ContextData";
 const FoodMenuAdmin = () => {
-
+    const {user} = useContext(AuthData);
     const [foods, setFoods] = useState([]);
     const [menuType, setMenuType] = useState([]);
     const [data, setData] = useState({});
