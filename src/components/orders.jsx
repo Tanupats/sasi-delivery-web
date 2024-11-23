@@ -6,13 +6,12 @@ import Details from "./Details";
 import moment from "moment/moment";
 
 const Orders = () => {
-
+    const token = localStorage.getItem("token");
     const [report, setReport] = useState([]);
-    const [status, setStatus] = useState("รับออเดอร์แล้ว");
 
     const getMenuReport = async (status) => {
 
-        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/bills?status=${status}`)
+        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/bills?status=${status}`, { headers: { 'apikey': token }})
             .then(res => { setReport(res.data) })
 
     }

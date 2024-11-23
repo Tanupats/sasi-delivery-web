@@ -121,8 +121,8 @@ const Details = (props) => {
     }, [dataMenus])
 
    useEffect(()=>{
-     console.log(bill_ID)
-    },[bill_ID])
+     console.log(detail)
+    },[detail])
 
     return (<>
 

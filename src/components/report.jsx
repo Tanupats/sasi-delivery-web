@@ -11,15 +11,15 @@ import axios from "axios";
 import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import RoomServiceIcon from '@mui/icons-material/RoomService';
 import Detail from "./DetailReport";
-import { Card, Row, Col, Button } from "react-bootstrap"
+import { Card, Row, Col, Button, Form } from "react-bootstrap"
 import Swal from 'sweetalert2';
 import moment from "moment/moment";
 const Report = () => {
     const [totalToday, setTotalToday] = useState(0)
-    const [totalMounth, settotalMounth] = useState(0)
     const [data, setData] = useState([])
     const [counter, setCounter] = useState({});
-    const [outcome, setOutcome] = useState(0);
+    const [startDate, setStartDate] = useState(moment(new Date()).format('YYYY-MM-DD'));
+    const [endDate, setEndDate] = useState(moment(new Date()).format('YYYY-MM-DD'));
     const token = localStorage.getItem("token");
 
     const getOrderFood = async () => {
@@ -34,12 +34,15 @@ const Report = () => {
             })
     }
 
-    // const getOrderFoodMounth = async () => {
-    //     await axios.get(`${import.meta.env.VITE_API_URL}/orderFood.php?Dateinput=mounth`)
-    //         .then(res => {
-    //             settotalMounth(res.data[0].total)
-    //         })
-    // }
+    const searchOrder = async () => {
+        const body = { startDate: startDate, endDate: endDate }
+        await axios.post(`${import.meta.env.VITE_BAKUP_URL}/bills/searchByDate`, body, { headers: { 'apikey': token } })
+            .then((res) => {
+                setData(res.data.data);
+                setTotalToday(res.data.total);
+            })
+    }
+
 
     const RemoveDetailsId = async (id) => {
         await axios.delete(`${import.meta.env.VITE_BAKUP_URL}/bills/${id}`)
@@ -49,7 +52,7 @@ const Report = () => {
     }
 
     const geReportByorder = async () => {
-        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/report/count-order-type`)
+        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/report/count-order-type?startDate=${startDate}&endDate=${endDate}`)
             .then(res => {
                 setCounter(res.data)
             })
@@ -74,7 +77,6 @@ const Report = () => {
             cancelButtonText: 'ยกเลิก'
         }).then((result) => {
             if (result.isConfirmed) {
-
                 RemoveDetailsId(id)
             }
 
@@ -83,10 +85,11 @@ const Report = () => {
     }
 
 
+
     useEffect(() => {
+        searchOrder()
         geReportByorder();
-        getOrderFood();
-    }, [])
+    }, [startDate, endDate])
 
 
 
@@ -95,14 +98,37 @@ const Report = () => {
         <Card>
             <Card.Body>
                 <Row className="mt-4">
-                    <Col md={6}>
+                    <Col md={12}>
                         <Card>
                             <Card.Body>
-                                <Card.Title className="text-center" style={{ color: 'red' }}> รายจ่ายวันนี้   {new Intl.NumberFormat().format(outcome)} บาท</Card.Title>
+                                <Form>
+                                    <Row className="mb-3">
+
+                                        <Col md={6}>
+                                            <Form.Label>
+                                                วันเริ่มต้น
+                                            </Form.Label>
+                                            <Form.Control
+                                                onChange={(e) => setStartDate(e.target.value)}
+                                                value={startDate}
+                                                type="date" />
+                                        </Col>
+                                        <Col md={6}>
+                                            <Form.Label>
+                                                วันสิ้นสุด
+                                            </Form.Label>
+                                            <Form.Control type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+                                        </Col>
+
+                                    </Row>
+
+
+                                </Form>
                                 <Card.Title className="text-center" style={{ color: 'green' }}> ยอดขายวันนี้   {new Intl.NumberFormat().format(totalToday)} บาท
                                 </Card.Title>
                                 <Card className="mt-2">
                                     <Card.Body>
+
                                         <div className="text-center">
                                             <DeliveryDiningIcon style={{ fontSize: '30px' }} />เดลิเวอรี่ จำนวน {counter.takeawayCount} บิล
                                             <p> ยอด = {counter.takeawayTotalAmount} บาท</p>
@@ -131,13 +157,7 @@ const Report = () => {
                             </Card.Body>
                         </Card>
                     </Col>
-                    <Col md={6}>
-                        <Card>
-                            <Card.Body>
-                                <Card.Title className="text-center" style={{ color: 'blue' }} > ยอดขายเดือนนี้  {new Intl.NumberFormat().format(totalMounth)} บาท</Card.Title>
-                            </Card.Body>
-                        </Card>
-                    </Col>
+
                     <Col md={12} >
                         <TableContainer component={Paper} className="mt-3">
                             <Table sx={{ minWidth: 650 }} aria-label="simple table">

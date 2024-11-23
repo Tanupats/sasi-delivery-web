@@ -54,7 +54,7 @@ const Pos = () => {
   const [menu, setMenu] = useState([]);
   const [menuType, setMenuType] = useState([]);
   const [show, setShow] = useState(false);
- 
+
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -79,7 +79,7 @@ const Pos = () => {
   function handleQR() {
     setqrCode(generatePayload(phoneNumber, { amount: sumPrice }));
   }
-  
+
 
   const confirmMenu = async () => {
     let ID = nanoid(10)
@@ -96,14 +96,6 @@ const Pos = () => {
     handleShow()
   }
 
-  const updateSpecail = () => {
-    const price = Number(newPrice) + 10
-    console.log(defaultMenu)
-    olemenu = defaultMenu.foodname;
-    oleprice = defaultMenu.Price;
-    setDefaultMenu({ ...defaultMenu, foodname: defaultMenu.foodname + 'พิเศษ', Price: price })
-
-  }
 
 
   const getMenu = async () => {
@@ -159,10 +151,9 @@ const Pos = () => {
 
 
 
-
   return (
     <>
-      <Container fluid style={{height:'100vh'}}>
+      <Container fluid style={{ height: '100vh' }}>
         <Row className='mt-3'>
           <Col md={2} className='whenprint' >
             <div className='menu-type'>
@@ -368,9 +359,10 @@ const Pos = () => {
                         </Col>
                         <Col md={4}>
                           <Button
-                            style={{ height: '46px', border: 'none' }}
-                            className='btn btn-primary'
-                            onClick={() => updateSpecail()}
+                            style={{ height: '46px', border: 'none',marginTop:'30px' }}
+                            className='btn btn-primary w-100'
+                            onClick={() => setDefaultMenu({ ...defaultMenu, foodname: defaultMenu.foodname + 'พิเศษ', Price: parseInt(defaultMenu.Price) + 10 })
+                            }
                           > { } พิเศษ { }</Button>
                         </Col>
 
