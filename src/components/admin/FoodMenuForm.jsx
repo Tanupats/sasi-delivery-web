@@ -3,9 +3,10 @@ import React, { useState, useEffect, useContext } from "react";
 import { Row, Col, Card, Image, Button, Modal, Form } from "react-bootstrap";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { AuthData } from "../../ContextData";
-const FoodMenuForm = () => {
+const FoodMenuForm = (props) => {
     const { user } = useContext(AuthData);
     const [show, setShow] = useState(false);
+    const [showType, setShowType] = useState(false);
     const [foodname, setFoodName] = useState("");
     const [price, setPrice] = useState(50);
     const [img, setImg] = useState("");
@@ -13,16 +14,21 @@ const FoodMenuForm = () => {
     const [status, setStatus] = useState("1");
     const [menuType, setMenuType] = useState([]);
     const [menuTypeId, setMenuTypeId] = useState("");
+    const [typeName, setTypeName] = useState("");
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    const getMenuType = async () => {
-        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/menutype`)
-            .then(res => {
-                setMenuType(res.data);
-            })
-    }
 
+    const handleCloseType = () => setShowType(false);
+    const handleShowType = () => setShowType(true);
+
+    const getMenuType = async () => {
+        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/menutype/${user.shop?.shop_id}`)
+          .then(res => {
+            console.log(res.data)
+            setMenuType(res.data);
+          })
+      }
 
     let filename = "";
     const uploadFile = async () => {
@@ -37,6 +43,23 @@ const FoodMenuForm = () => {
             })
 
         handleClose()
+    }
+
+    const postMenuType = async (e) => {
+        e.preventDefault()
+        const body = {
+
+            name: typeName,
+            shop_id: user.shop.shop_id
+        };
+        await axios.post(`${import.meta.env.VITE_BAKUP_URL}/menutype`, body)
+            .then(res => {
+                if (res.status === 200) {
+                    alert('created type menu success');
+                    handleCloseType()
+                }
+            })
+       props.getMenuType();
     }
 
     const postMenu = async (e) => {
@@ -80,18 +103,23 @@ const FoodMenuForm = () => {
 
     useEffect(() => {
         getMenuType()
-    }, [])
+    }, [user])
 
     useEffect(() => {
+       
+    }, [menuType])
 
 
-    }, [])
     return (<>
 
         <Row className="mb-4">
             <Col>
                 <Button onClick={() => handleShow()}>
                     <AddCircleIcon /> เพิ่มเมนู </Button>
+            </Col>
+            <Col>
+                <Button onClick={() => handleShowType()}>
+                    <AddCircleIcon /> เพิ่มประเภท </Button>
             </Col>
 
         </Row>
@@ -191,6 +219,62 @@ const FoodMenuForm = () => {
                     เพิ่มเมนู
                 </Button>
                 <Button variant="danger" onClick={handleClose}>
+                    ยกเลิก
+                </Button>
+            </Modal.Footer>
+
+
+        </Modal>
+        <Modal size="lg" show={showType} onHide={handleCloseType}>
+            <Modal.Header closeButton>
+                <Modal.Title>เพิ่มประเภท</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form id="addmenu" onSubmit={(e) => postMenuType(e)}>
+                    <Row>
+                        <Col md={12} xs={12}>
+                            <Card style={{ height: 'auto', marginBottom: '10px', padding: '10px' }}>
+                                <Card.Body className='p-0'>
+                                    <Row>
+
+                                        <Col md={12} xs={12}>
+                                            <Form.Group className="mb-2">
+                                                <Form.Label>ประเภท </Form.Label>
+                                                <Form.Control
+                                                    type="text"
+                                                    placeholder="เมนู"
+                                                    onChange={(e) => setTypeName(e.target.value)}
+                                                    value={typeName} />
+                                            </Form.Group>
+
+
+
+
+                                        </Col>
+
+                                    </Row>
+
+                                </Card.Body>
+
+
+                            </Card>
+
+                        </Col>
+
+
+                    </Row>
+                </Form>
+            </Modal.Body>
+
+            <Modal.Footer>
+                <Button
+                    form="addmenu"
+                    type="submit"
+                    variant="success"
+                >
+                    บันทึก
+                </Button>
+                <Button variant="danger" onClick={handleCloseType}>
                     ยกเลิก
                 </Button>
             </Modal.Footer>

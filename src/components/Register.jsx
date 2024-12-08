@@ -13,6 +13,8 @@ const Register = () => {
     const [shopName, setshopName] = useState("")
     const [photo, setPhoto] = useState("")
 
+
+
     const createUser = async () => {
 
         const bodyUser = { name: name, email: email, password: password, department: "admin" };
@@ -29,6 +31,8 @@ const Register = () => {
     }
 
     const createShop = async () => {
+
+        
         const bodyShop = { name: shopName, user_id: String(userId), photo: photo }
         await axios.post(import.meta.env.VITE_BAKUP_URL + '/shop', bodyShop)
             .then(res => {

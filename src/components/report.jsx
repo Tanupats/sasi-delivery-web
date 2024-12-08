@@ -35,7 +35,7 @@ const Report = () => {
     }
 
     const searchOrder = async () => {
-        const body = { startDate: startDate, endDate: endDate }
+        const body = { startDate: startDate }
         await axios.post(`${import.meta.env.VITE_BAKUP_URL}/bills/searchByDate`, body, { headers: { 'apikey': token } })
             .then((res) => {
                 setData(res.data.data);
@@ -52,18 +52,11 @@ const Report = () => {
     }
 
     const geReportByorder = async () => {
-        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/report/count-order-type?startDate=${startDate}&endDate=${endDate}`)
+        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/report/count-order-type?startDate=${startDate}`)
             .then(res => {
                 setCounter(res.data)
             })
     }
-
-    // const geOutcome = async () => {
-    //     await axios.get('https://delivery.sasirestuarant.com/account/outcome')
-    //         .then(res => {
-    //             setOutcome(res.data._sum.total)
-    //         })
-    // }
 
     const deleteBill = async (id) => {
         Swal.fire({
@@ -89,7 +82,7 @@ const Report = () => {
     useEffect(() => {
         searchOrder()
         geReportByorder();
-    }, [startDate, endDate])
+    }, [startDate])
 
 
 
@@ -113,12 +106,7 @@ const Report = () => {
                                                 value={startDate}
                                                 type="date" />
                                         </Col>
-                                        <Col md={6}>
-                                            <Form.Label>
-                                                วันสิ้นสุด
-                                            </Form.Label>
-                                            <Form.Control type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-                                        </Col>
+
 
                                     </Row>
 

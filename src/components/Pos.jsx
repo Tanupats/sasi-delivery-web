@@ -99,7 +99,7 @@ const Pos = () => {
 
 
   const getMenu = async () => {
-    await axios.get(`${import.meta.env.VITE_BAKUP_URL}/foodmenu`).then(
+    await axios.get(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/getByShop/${user.shop?.shop_id}`).then(
       res => {
         if (res.status === 200) {
           setMenu(res.data);
@@ -109,7 +109,7 @@ const Pos = () => {
   }
 
   const getMenuType = async () => {
-    await axios.get(`${import.meta.env.VITE_BAKUP_URL}/menutype`)
+    await axios.get(`${import.meta.env.VITE_BAKUP_URL}/menutype/${user.shop?.shop_id}`)
       .then(res => {
         setMenuType(res.data);
       })
@@ -123,10 +123,14 @@ const Pos = () => {
   }
 
   useEffect(() => {
+    if (user.shop?.shop_id !== "") {
+      getMenuType()
+      getMenu()
+    }
 
-    getMenuType()
-    getMenu()
-  }, [])
+
+
+  }, [user.shop?.shop_id])
 
 
 
@@ -222,11 +226,9 @@ const Pos = () => {
               วันที่ {date} {time}
               <h6>รายการอาหาร</h6>
             </div>
-
             <Row>
-
               <Col md={12}>
-
+              <h6>รายการอาหาร</h6>
                 <Table>
                   <tbody>
                     {
@@ -253,43 +255,48 @@ const Pos = () => {
                       <td colSpan={4}>การรับอาหาร-{orderType}</td>
                     </tr>
                     <tr>
-                      <td > {name}</td>
+                      <td >{name}</td>
                       <td ></td>
 
                     </tr>
-                    <div className='text-center'>
-                      <Row>
+                    {
 
-                        <Col md={12}>
-                          <Button className='when-print mb-2 w-100' onClick={() => { handleQR(), setShowQr(!showQr) }}>สร้าง QR CODE</Button>
-                        </Col>
-                        <Col md={12} className='text-center'>
-                          {
-                            showQr ? <center><QRCode value={qrCode} /></center> : <></>
-                          }
-                        </Col>
-                      </Row>
-                    </div>
+                      cart?.length > 0 && (
+                        <Row>
+
+                          <Col md={12}>
+                            <Button className='when-print mb-2 w-100' onClick={() => { handleQR(), setShowQr(!showQr) }}>Patment QR </Button>
+                          </Col>
+                          <Col md={12} className='text-center'>
+                            {
+                              showQr ? <center><QRCode value={qrCode} /></center> : <></>
+                            }
+                          </Col>
+                        </Row>
+                      )
+                    }
+
+
                   </tbody>
                 </Table>
 
                 <Form>
+                  <Row className='order-type when-print '>
+                    <ButtonGroup >
+                      <Button className='btn btn-primary w-100'
+                        onClick={() => { setOrderType("เสิร์ฟในร้าน"), setName("ทานที่ร้าน") }}
+                        style={{ border: 'none' }} >เสิร์ฟในร้าน</Button>
+                      <Button className='btn btn-success w-100'
+                        onClick={() => setOrderType("สั่งกลับบ้าน")}
+                        style={{ border: 'none' }} >สั่งกลับบ้าน</Button>
+                      <Button className='btn btn-danger w-100'
+                        onClick={() => { setOrderType("รับเอง"), setName("รับเองหน้าร้าน") }}
+                        style={{ border: 'none' }} >รับเอง</Button>
+                    </ButtonGroup>
 
-                  <ButtonGroup className='when-print'>
-                    <Button className='btn btn-primary'
-                      onClick={() => { setOrderType("เสิร์ฟในร้าน"), setName("ทานที่ร้าน") }}
-                      style={{ border: 'none' }} >เสิร์ฟในร้าน</Button>
-                    <Button className='btn btn-success'
-                      onClick={() => setOrderType("สั่งกลับบ้าน")}
-                      style={{ border: 'none' }} >สั่งกลับบ้าน</Button>
-                    <Button className='btn btn-danger'
-                      onClick={() => { setOrderType("รับเอง"), setName("รับเองหน้าร้าน") }}
-                      style={{ border: 'none' }} >รับเอง</Button>
-                  </ButtonGroup>
 
 
-                  <Row className='order-type when-print'>
-                    <Col>
+                    <Col md={12} className='mt-3'>
 
                       <Form.Control
                         type="text"
@@ -359,7 +366,7 @@ const Pos = () => {
                         </Col>
                         <Col md={4}>
                           <Button
-                            style={{ height: '46px', border: 'none',marginTop:'30px' }}
+                            style={{ height: '46px', border: 'none', marginTop: '30px' }}
                             className='btn btn-primary w-100'
                             onClick={() => setDefaultMenu({ ...defaultMenu, foodname: defaultMenu.foodname + 'พิเศษ', Price: parseInt(defaultMenu.Price) + 10 })
                             }

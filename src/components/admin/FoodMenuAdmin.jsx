@@ -7,6 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FoodMenuForm from "./FoodMenuForm";
 import Swal from 'sweetalert2';
 import { AuthData } from "../../ContextData";
+
 const FoodMenuAdmin = () => {
     const { user } = useContext(AuthData);
     const [foods, setFoods] = useState([]);
@@ -17,7 +18,7 @@ const FoodMenuAdmin = () => {
     const handleShow = () => setShow(true);
 
     const getMenuType = async () => {
-        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/menutype`)
+        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/menutype/${user.shop.shop_id}`)
             .then(res => {
                 setMenuType(res.data);
             })
@@ -37,12 +38,18 @@ const FoodMenuAdmin = () => {
     }
 
     const updateData = async () => {
-        const body = { foodname: data.foodname, status: data.status };
+        const body = { foodname: data.foodname, status: data.status, Price: data.Price };
         const { id } = data;
         await axios.put(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/${id}`, body)
             .then(res => {
                 if (res.status === 200) {
-                    alert('update menu success');
+                    Swal.fire({
+                        title: 'แก้ไขเมนู',
+                        text: 'บันทึกข้อมูลสำเร็จ',
+                        icon: 'success',
+                        confirmButtonText: 'ยืนยัน',
+                        timer: 1300
+                    })
                 }
             })
         handleClose()
@@ -84,7 +91,7 @@ const FoodMenuAdmin = () => {
 
 
     const getFoodMenu = () => {
-        fetch(import.meta.env.VITE_BAKUP_URL + '/foodmenu')
+        fetch(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/getByShop/${user.shop?.shop_id}`)
             .then((res) => res.json())
             .then((data) => {
                 if (data) {
@@ -96,7 +103,7 @@ const FoodMenuAdmin = () => {
     useEffect(() => {
         getMenuType();
         getFoodMenu();
-    }, [])
+    }, [user])
     useEffect(() => {
         console.log(data)
     }, [data])
@@ -132,9 +139,10 @@ const FoodMenuAdmin = () => {
                                 })
                             }
 
+
                         </Col>
 
-                        <FoodMenuForm />
+                        <FoodMenuForm getMenuType={getMenuType} />
 
                         <div className="menu-list" style={{ overflow: 'auto', height: '100vh' }}>
                             <Row>
@@ -210,8 +218,8 @@ const FoodMenuAdmin = () => {
                                             <Col md={5}
                                                 xs={5}
                                             >
-                                                <Image style={{ width: "100%", height: '180px', objectFit: 'cover' }}
-                                                    src={`${import.meta.env.VITE_BASE_URL}/img/${data.img}`} />
+                                                <Image style={{ width: "100%", objectFit: 'cover' }}
+                                                    src={`${import.meta.env.VITE_BAKUP_URL}/images/${data.img}`} />
                                             </Col>
                                             <Col md={5} xs={5}>
                                                 <Form.Group>
