@@ -99,7 +99,7 @@ const Report = () => {
 
                                         <Col md={6}>
                                             <Form.Label>
-                                                วันเริ่มต้น
+                                               ค้นหาจากวันที่ 
                                             </Form.Label>
                                             <Form.Control
                                                 onChange={(e) => setStartDate(e.target.value)}

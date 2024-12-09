@@ -3,6 +3,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Row, Col, Card, Image, Button, Modal, Form } from "react-bootstrap";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { AuthData } from "../../ContextData";
+import Swal from 'sweetalert2';
 const FoodMenuForm = (props) => {
     const { user } = useContext(AuthData);
     const [show, setShow] = useState(false);
@@ -24,11 +25,11 @@ const FoodMenuForm = (props) => {
 
     const getMenuType = async () => {
         await axios.get(`${import.meta.env.VITE_BAKUP_URL}/menutype/${user.shop?.shop_id}`)
-          .then(res => {
-            console.log(res.data)
-            setMenuType(res.data);
-          })
-      }
+            .then(res => {
+                console.log(res.data)
+                setMenuType(res.data);
+            })
+    }
 
     let filename = "";
     const uploadFile = async () => {
@@ -48,18 +49,22 @@ const FoodMenuForm = (props) => {
     const postMenuType = async (e) => {
         e.preventDefault()
         const body = {
-
             name: typeName,
             shop_id: user.shop.shop_id
         };
         await axios.post(`${import.meta.env.VITE_BAKUP_URL}/menutype`, body)
             .then(res => {
                 if (res.status === 200) {
-                    alert('created type menu success');
+                    Swal.fire({
+                        title: 'บันทึกข้อมูลสำเร็จ',
+                        icon: 'success',
+                        confirmButtonText: 'ยืนยัน',
+                        timer: 1300
+                    })
                     handleCloseType()
                 }
             })
-       props.getMenuType();
+        props.getMenuType();
     }
 
     const postMenu = async (e) => {
@@ -106,7 +111,7 @@ const FoodMenuForm = (props) => {
     }, [user])
 
     useEffect(() => {
-       
+
     }, [menuType])
 
 
@@ -242,7 +247,7 @@ const FoodMenuForm = (props) => {
                                                 <Form.Label>ประเภท </Form.Label>
                                                 <Form.Control
                                                     type="text"
-                                                    placeholder="เมนู"
+                                                    placeholder="ชื่อประเภท"
                                                     onChange={(e) => setTypeName(e.target.value)}
                                                     value={typeName} />
                                             </Form.Group>

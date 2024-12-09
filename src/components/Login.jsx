@@ -30,38 +30,8 @@ const Login = () => {
                 }
             })
     }
-    useEffect(() => {
-        // โหลด SDK ของ Facebook
-        window.fbAsyncInit = function () {
-            window.FB.init({
-                appId: "831737185629037", // ใส่ App ID ของคุณ
-                cookie: true,
-                xfbml: true,
-                version: "v17.0", // ใช้เวอร์ชันล่าสุดของ Graph API
-            });
-        };
-    }, []);
 
-    const handleFacebookLogin = () => {
-        window.FB.login(
-            (response) => {
-                if (response.status === "connected") {
-                    console.log("Login Success!", response);
-                    fetchFacebookUserData();
-                } else {
-                    console.log("Login Failed!", response);
-                }
-            },
-            { scope: "public_profile,email" }
-        );
-    };
-    const fetchFacebookUserData = () => {
-        window.FB.api("/me", { fields: "name,email,picture" }, (response) => {
-            console.log("User Data:", response);
-            // คุณสามารถใช้ response เพื่อแสดงข้อมูลผู้ใช้
-        });
-    };
-  
+
     return (
         <>
             <Row className="mt-4">
@@ -72,23 +42,52 @@ const Login = () => {
                     <Card className="mt-4">
                         <Card.Body>
                             <Card.Title className="text-center">
-                                SASI Delivery <br />
+                                SASI POS <br />
                                 Login </Card.Title>
 
+                            <Form onSubmit={login}>
+                                <Form.Group>
+                                    <Form.Label>
+                                        email
+                                    </Form.Label>
+                                    <Form.Control
+                                        required
+                                        placeholder="email"
+                                        type="email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                    />
+                                </Form.Group>
+                                <Form.Group className="mt-2">
+                                    <Form.Label>
+                                        password
+                                    </Form.Label>
 
+                                    <Form.Control
+                                        required
+                                        placeholder="password"
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        type="password"
+                                    />
 
+                                </Form.Group>
 
+                                <Button
+                                    type="submit"
+                                    variant="success"
+                                    className="w-100 mt-4"
+                                >เข้าสู่ระบบ</Button>
+                                <div className="text-center mt-4">
+                                    <p> หรือ </p>
+                                </div>
 
-                            <Button
-                                onClick={()=>handleFacebookLogin()}
-                              
-                                variant="primary"
-                                className="w-100 mt-4"
-                            >เข้าสู่ระบบด้วย FaceBook</Button>
+                                <Button
+                                    onClick={() => router('/register')}
+                                    variant="primary"
+                                    className="w-100 mt-2"
+                                >ลงทะเบียนผู้ใช้</Button>
 
-
-
-
+                            </Form>
                         </Card.Body>
                     </Card>
                 </Col>

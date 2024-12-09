@@ -109,7 +109,7 @@ const FoodMenuAdmin = () => {
     }, [data])
     return (
         <>
-            <Card>
+            <Card style={{width:'100%'}}>
                 <Card.Title className="text-center mt-3">  รายการอาหาร</Card.Title>
                 <Card.Body>
 

@@ -48,23 +48,30 @@ const NavbarMenu = () => {
 
           <Navbar bg="light" data-bs-theme="light" className='when-print' sticky='top'>
             <Container fluid>
-              <Navbar.Brand href="#home">SASI Delivery</Navbar.Brand>
+              <Navbar.Brand href="#home">SASI POS</Navbar.Brand>
 
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
               <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto text-center">
                   <>
-                    <Link to={'/foodMenu/123/music'} style={{ textDecoration: 'none', color: '#000' }}>
-                      <ListAltIcon /> รายการ
+                  <Link to={'/pos'} style={{ textDecoration: 'none', color: '#000' }}>
+                  &nbsp;  <ListAltIcon /> ขายอาหาร
                     </Link>
 
                     <Link to={'/report'} style={{ textDecoration: 'none', color: '#000' }}>
-                      <CurrencyBitcoinIcon /> คำสั่งซื้อ
+                    &nbsp;  <CurrencyBitcoinIcon /> ยอดขาย
                     </Link>
 
+
                     <Link to={'/orders'} style={{ textDecoration: 'none', color: '#000' }}>
-                      &nbsp; <DeliveryDiningIcon />  ออเดอร์ส่ง
+                    &nbsp;   <DeliveryDiningIcon />  ออเดอร์
                     </Link>
+
+
+                    <Link to={'/admin'} style={{ textDecoration: 'none', color: '#000' }}>
+                      &nbsp; <StoreIcon />  {user?.shop?.name }
+                    </Link>
+
                   </>
 
                 </Nav>
