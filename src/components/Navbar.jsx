@@ -18,6 +18,7 @@ import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import LogoutIcon from '@mui/icons-material/Logout';
 import StoreIcon from '@mui/icons-material/Store';
 import Register from './Register';
+import Swal from 'sweetalert2';
 const NavbarMenu = () => {
   const {
     auth,
@@ -26,14 +27,29 @@ const NavbarMenu = () => {
   } =
     useContext(AuthData);
 
+
   const logout = () => {
-    localStorage.clear()
-    window.location.href = '/';
-  }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will be logged out of your account!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, logout!',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        localStorage.clear();
+        window.location.href = '/';
+      }
+    });
+  };
 
   useEffect(() => {
-    console.log(auth)
-  }, [auth, staffName])
+  
+    console.log(staffName)
+  }, [staffName])
 
   return (
     <Router>
@@ -42,7 +58,7 @@ const NavbarMenu = () => {
 
       {
 
-        staffName !== "" && (
+        staffName !== null && (
 
 
 
@@ -54,22 +70,22 @@ const NavbarMenu = () => {
               <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto text-center">
                   <>
-                  <Link to={'/pos'} style={{ textDecoration: 'none', color: '#000' }}>
-                  &nbsp;  <ListAltIcon /> ขายอาหาร
+                    <Link to={'/pos'} style={{ textDecoration: 'none', color: '#000' }}>
+                      &nbsp;  <ListAltIcon /> ขายอาหาร
                     </Link>
 
                     <Link to={'/report'} style={{ textDecoration: 'none', color: '#000' }}>
-                    &nbsp;  <CurrencyBitcoinIcon /> ยอดขาย
+                      &nbsp;  <CurrencyBitcoinIcon /> ยอดขาย
                     </Link>
 
 
                     <Link to={'/orders'} style={{ textDecoration: 'none', color: '#000' }}>
-                    &nbsp;   <DeliveryDiningIcon />  ออเดอร์
+                      &nbsp;   <DeliveryDiningIcon />  ออเดอร์
                     </Link>
 
 
                     <Link to={'/admin'} style={{ textDecoration: 'none', color: '#000' }}>
-                      &nbsp; <StoreIcon />  {user?.shop?.name }
+                      &nbsp; <StoreIcon />  {user?.shop?.name}
                     </Link>
 
                   </>

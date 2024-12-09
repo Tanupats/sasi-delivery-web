@@ -123,14 +123,14 @@ const Pos = () => {
   }
 
   useEffect(() => {
-    if (user.shop?.shop_id !== "") {
+    
       getMenuType()
       getMenu()
-    }
+    
 
 
 
-  }, [user.shop?.shop_id])
+  }, [user])
 
 
 
@@ -224,11 +224,10 @@ const Pos = () => {
               <h6>  ใบเสร็จรับเงิน</h6>
               <h6> ลำดับคิว {queueNumber} </h6>
               วันที่ {date} {time}
-              <h6>รายการอาหาร</h6>
             </div>
             <Row>
               <Col md={12}>
-              <h6>รายการอาหาร</h6>
+           
                 <Table>
                   <tbody>
                     {
