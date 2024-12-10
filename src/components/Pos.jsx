@@ -88,12 +88,6 @@ const Pos = () => {
       })
   }
 
-  const addEage = () => {
-    let id = nanoid(10)
-    addTocart({ foodname: "ไข่ดาว", Price: 5, id: id, quantity: numberEage })
-    handleClose();
-  }
-
   const confirmMenu = async () => {
     let ID = nanoid(10)
     setNewId(ID)

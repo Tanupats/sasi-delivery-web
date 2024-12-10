@@ -26,6 +26,13 @@ function Context({ children }) {
     }
 
     const addTocart = (data) => {
+        Swal.fire({
+            title: 'เพิ่มรายการสำเร็จ',
+            text: 'เพิ่มรายการลงตะกร้า',
+            icon: 'success',
+        
+            timer:1300
+        })
         console.log('in card', data)
         let itemCart = {
             id: data.id,
@@ -99,7 +106,7 @@ function Context({ children }) {
                 amount: sumPrice,
                 ordertype: orderType,
                 statusOrder: "รับออเดอร์แล้ว",
-                customerName: name,
+                customerName: staffName,
                 queueNumber: String(queueNumber),
                 messengerId: messangerId
             }
@@ -205,17 +212,15 @@ function Context({ children }) {
         getQueu() // for delivert queue 
         getQueueNumber()// for bill q1 q2 q3 
     }, [])
-    useEffect(() => {
-        console.log(sumPrice)
-    }, [sumPrice])
-    useEffect(() => {
+ 
+    // useEffect(() => {
 
-        const interval = setInterval(() => {
-            getQueu();
-        }, 5000); // ดึงข้อมูลจาก API ทุกๆ 5 วินาที
+    //     const interval = setInterval(() => {
+    //         getQueu();
+    //     }, 7000);
 
-        return () => clearInterval(interval);
-    }, [])
+    //     return () => clearInterval(interval);
+    // }, [])
 
 
     return (<>

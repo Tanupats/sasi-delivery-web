@@ -7,13 +7,13 @@ import Details from "./Details";
 import moment from "moment";
 const Myorder = () => {
 
-    let messengerId = sessionStorage.getItem("messangerId");
+    let messengerId = localStorage.getItem("messangerId");
     const [myOrder, setMyorder] = useState([]);
     const getMyorder = () => {
 
-        axios.get(`${import.meta.env.VITE_API_URL}/GetMyorder.php?messengerid=${messengerId}`)
+        axios.get(`${import.meta.env.VITE_BAKUP_URL}/bills/myorder?messengerId=${messengerId}`)
             .then(res => {
-                if (res.data != null) {
+                if (res.status===200) {
                     setMyorder(res.data);
                 }
 
@@ -55,13 +55,14 @@ const Myorder = () => {
                                         <>
                                             <Card className="mb-4">
                                                 <Card.Body>
-                                                    <p>รหัสออเดอร์ {item.bill_ID}  วันที่สั่งซื้อ { }
+                                                    <p>รหัสออเดอร์ {item.bill_ID.slice(-5).toUpperCase()} <br />  วันที่สั่งออเดอร์ { }
                                                         {moment(item.Date_times).format('YYYY-MM-DD')}
+                                                      &nbsp;  เวลา {moment(item.Date_times).format('HH:mm')} น.
                                                     </p>
                                                     <Card.Title> รายการอาหาร</Card.Title>
                                                     <Details bill_ID={item.bill_ID} status={item.statusOrder} />
-                                                    <h5>สถานะ {item.statusOrder}</h5>
-                                                    <h5>การรับสินค้า - {item.ordertype}</h5>
+                                                    <p style={{ fontSize: '18px' }}>รวมทั้งหมด {item.amount} บาท</p>
+                                                    <Alert> <h5> {item.statusOrder}</h5></Alert>
                                                 </Card.Body>
 
                                             </Card>
@@ -76,18 +77,19 @@ const Myorder = () => {
                             myOrder.map(item => {
                                 if (item.statusOrder !== "รับออเดอร์แล้ว") {
                                     return (<>
-                                        <Card className="mb-4">
-                                            <Card.Body>
-                                                <p>รหัสออเดอร์ {item.bill_ID}  วันที่สั่งซื้อ { }
-                                                    {moment(item.Date_times).format('YYYY-MM-DD')} 
-                                                </p>
-                                                <Card.Title> รายการอาหาร</Card.Title>
-                                                <Details bill_ID={item.bill_ID} status={item.statusOrder} />
-                                                <h5>สถานะ {item.statusOrder}</h5>
-                                                <h5>การรับสินค้า - {item.ordertype}</h5>
-                                            </Card.Body>
+                                          <Card className="mb-4">
+                                                <Card.Body>
+                                                    <p>รหัสออเดอร์ {item.bill_ID.slice(-5).toUpperCase()} <br />  วันที่สั่งออเดอร์ { }
+                                                        {moment(item.Date_times).format('YYYY-MM-DD')}
+                                                      &nbsp;  เวลา {moment(item.Date_times).format('HH:mm')} น.
+                                                    </p>
+                                                  
+                                                    <Details bill_ID={item.bill_ID} status={item.statusOrder} />
+                                                    <p style={{ fontSize: '18px' }}>รวมทั้งหมด {item.amount} บาท</p>
+                                                    <Alert> <h5> {item.statusOrder}</h5></Alert>
+                                                </Card.Body>
 
-                                        </Card>
+                                            </Card>
                                     </>)
                                 }
                             })

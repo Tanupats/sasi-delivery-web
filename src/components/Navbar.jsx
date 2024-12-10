@@ -18,11 +18,8 @@ import Pos from './Pos';
 import Report from './report';
 import Login from './Login';
 import Admin from './admin';
-import ListAltIcon from '@mui/icons-material/ListAlt';
-import CurrencyBitcoinIcon from '@mui/icons-material/CurrencyBitcoin';
-import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import LogoutIcon from '@mui/icons-material/Logout';
-import StoreIcon from '@mui/icons-material/Store';
+import Swal from 'sweetalert2'
 import Register from './Register';
 const NavbarMenu = () => {
   const { toTal,
@@ -44,8 +41,10 @@ const NavbarMenu = () => {
   const handleShow = () => setShow(true);
 
   const onSave = () => {
+  
     saveOrder()
     handleClose()
+  
   }
 
   const logout = () => {
@@ -61,78 +60,55 @@ const NavbarMenu = () => {
   return (
     <Router>
 
-      {
-        auth === 'authenticated' && (
 
-          <Navbar bg="light" data-bs-theme="light" className='when-print' sticky='top' expand="lg">
-            <Container fluid>
-              {
-                role === 'admin' || 'manager' && (<Navbar.Brand href="#home">SASI POS</Navbar.Brand>)
-              }
-              <Navbar.Toggle aria-controls="basic-navbar-nav" />
-              <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="me-auto text-center">
-                  {role === 'user' && (
-                    <>
-                      <Nav.Link>
-                        <Link style={{ textDecoration: 'none', color: '#000' }} to={`/foodMenu/${messangerId}/${name}`}>
-                          <RestaurantMenuIcon /> เมนูอาหาร
-                        </Link>
-                      </Nav.Link>
-                      <Nav.Link onClick={handleShow}>
-                        <LocalMallIcon /> {toTal}
-                      </Nav.Link>
-                      <Nav.Link>
-                        <Link style={{ textDecoration: 'none', color: '#000' }} to={'/Myorder'}>
-                          <AccountBoxIcon /> คำสั่งซื้อ
-                        </Link>
-                      </Nav.Link>
-                      <Nav.Link>
-                        <Link style={{ textDecoration: 'none', color: '#000' }} to={'/queueNumber'}>
-                          <AddToQueueIcon /> คิวตอนนี้ {queue}
-                        </Link>
-                      </Nav.Link>
-                    </>
-                  )}
-                  {role === 'admin' || 'manager' && (
-                    <>
-                      <Nav.Link>
-                        <Link to={'/pos'} style={{ textDecoration: 'none', color: '#000' }}>
-                          <ListAltIcon /> ขายอาหาร
-                        </Link>
-                      </Nav.Link>
-                      <Nav.Link>
-                        <Link to={'/report'} style={{ textDecoration: 'none', color: '#000' }}>
-                          <CurrencyBitcoinIcon /> ยอดขาย
-                        </Link>
-                      </Nav.Link>
-                      <Nav.Link>
-                        <Link to={'/orders'} style={{ textDecoration: 'none', color: '#000' }}>
-                          <DeliveryDiningIcon /> ออเดอร์ (9+)
-                        </Link>
-                      </Nav.Link>
-                      <Nav.Link>
-                        <Link to={'/admin'} style={{ textDecoration: 'none', color: '#000' }}>
-                          <StoreIcon /> จัดการร้านค้า
-                        </Link>
-                      </Nav.Link>
-                    </>
-                  )}
-                </Nav>
-                {role === 'admin' || 'manager' && (
-                  <Nav className="ml-auto">
-                    <Nav.Link >
-                      {staffName}
-                    </Nav.Link>
-                    <Nav.Link onClick={logout}>
-                      <LogoutIcon />  ออกจากระบบ
-                    </Nav.Link>
-                  </Nav>
-                )}
-              </Navbar.Collapse>
-            </Container>
-          </Navbar>
-        )}
+
+      <Navbar bg="light" data-bs-theme="light" className='when-print' sticky='top' expand="lg">
+        <Container fluid>
+          <Navbar.Brand href="#home">SASI Delivery</Navbar.Brand>
+
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="me-auto text-center">
+
+              <>
+                <Nav.Link>
+                  <Link style={{ textDecoration: 'none', color: '#000' }} to={`/foodmenu/${messangerId}/${staffName}`}>
+                    <RestaurantMenuIcon /> เมนูอาหาร
+                  </Link>
+                </Nav.Link>
+                <Nav.Link onClick={handleShow}>
+                  ตะกร้า  <LocalMallIcon /> {toTal}
+                </Nav.Link>
+                <Nav.Link>
+                  <Link style={{ textDecoration: 'none', color: '#000' }} to={'/Myorder'}>
+                    <AccountBoxIcon /> คำสั่งซื้อ
+                  </Link>
+                </Nav.Link>
+                <Nav.Link>
+                  <Link style={{ textDecoration: 'none', color: '#000' }} to={'/queueNumber'}>
+                    <AddToQueueIcon /> คิวตอนนี้ {queue}
+                  </Link>
+                </Nav.Link>
+              </>
+
+
+
+
+            </Nav>
+
+            <Nav className="ml-auto">
+              <Nav.Link >
+                {staffName}
+              </Nav.Link>
+              <Nav.Link onClick={logout}>
+                <LogoutIcon />  ออกจากระบบ
+              </Nav.Link>
+            </Nav>
+
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
@@ -157,22 +133,22 @@ const NavbarMenu = () => {
                           </Col>
                           <Col md={5} xs={5}>
                             <div className="menu-list mt-3">
-                               <h6>{item?.name}</h6>
-                            <h6>{item?.price}฿</h6>
+                              <h6>{item?.name}</h6>
+                              <h6>{item?.price}฿</h6>
                             </div>
-                           
+
                             <Row>
                               <Col md={12}>
-                             
-                              <Form>
-                                <Form.Control
-                                className='w-100'
-                                  type="text"
-                                  placeholder='คำอธิบายเพิ่มเติม'
-                                  onChange={(e) => updateNote(item.id, e.target.value)}
-                                  defaultValue={item.note}
-                                />
-                              </Form> 
+
+                                <Form>
+                                  <Form.Control
+                                    className='w-100'
+                                    type="text"
+                                    placeholder='คำอธิบายเพิ่มเติม'
+                                    onChange={(e) => updateNote(item.id, e.target.value)}
+                                    defaultValue={item.note}
+                                  />
+                                </Form>
                               </Col>
                             </Row>
                           </Col>
@@ -201,6 +177,7 @@ const NavbarMenu = () => {
                 <>
                   <b>รวมทั้งหมด {sumPrice} บาท</b>
                   <b>จำนวน {toTal} รายการ</b>
+                  <b style={{color:'red'}}> จำนวนรอคิว {queue} คิว </b>
                 </>
               ) : (
                 <Alert variant='danger' className='pd-4'>
@@ -226,7 +203,7 @@ const NavbarMenu = () => {
       <Routes>
         <Route path="/" Component={Login}></Route>
         <Route path="/orders" Component={Orders}></Route>
-        <Route path="/foodMenu/:userid/:username" Component={FoodMenu}></Route>
+        <Route path="/foodmenu/:userid/:username" Component={FoodMenu}></Route>
         <Route path="/Myorder" Component={Myorder}></Route>
         <Route path="/queueNumber" Component={GetQueu}></Route>
         <Route path="/pos" Component={Pos}></Route>
