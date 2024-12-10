@@ -14,7 +14,6 @@ import Orders from './orders';
 import GetQueu from './GetQueu';
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import AddToQueueIcon from '@mui/icons-material/AddToQueue';
-import Pos from './Pos';
 import Report from './report';
 import Login from './Login';
 import Admin from './admin';
@@ -206,7 +205,6 @@ const NavbarMenu = () => {
         <Route path="/foodmenu/:userid/:username" Component={FoodMenu}></Route>
         <Route path="/Myorder" Component={Myorder}></Route>
         <Route path="/queueNumber" Component={GetQueu}></Route>
-        <Route path="/pos" Component={Pos}></Route>
         <Route path="/report" Component={Report}></Route>
         <Route path="/admin" Component={Admin}></Route>
         <Route path="/register" Component={Register}></Route>
