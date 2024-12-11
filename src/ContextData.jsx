@@ -8,14 +8,14 @@ function Context({ children }) {
     const [toTal, setTotal] = useState(0);
     const [sumPrice, setSumPrice] = useState(0);
     const [name, setName] = useState("");
-    const [messangerId, setMessangerId] = useState("");
+    
     const [orderType, setOrderType] = useState("สั่งกลับบ้าน");
     const [role, setRole] = useState("");
     const [queue, setQueu] = useState(0);
     const [queueNumber, setQueueNumber] = useState(0);
     const authCheck = localStorage.getItem("auth");
     const [auth, setAuth] = useState(authCheck || 'not_authenticated');
-    const [staffName, setStaffName] = useState("");
+
 
 
     const getQueueNumber = async () => {
@@ -96,7 +96,8 @@ function Context({ children }) {
     }
 
     const resetCart = () => setCart([]);
-
+    const messangerId = localStorage.getItem('messangerId');
+    const username = localStorage.getItem('name');
     const saveOrder = async () => {
 
         let id = '';
@@ -106,7 +107,7 @@ function Context({ children }) {
                 amount: sumPrice,
                 ordertype: orderType,
                 statusOrder: "รับออเดอร์แล้ว",
-                customerName: staffName,
+                customerName: username,
                 queueNumber: String(queueNumber),
                 messengerId: messangerId
             }
@@ -205,10 +206,6 @@ function Context({ children }) {
     }, [cart])
 
     useEffect(() => {
-        setStaffName(localStorage.getItem('name'));
-        setAuth(authCheck);
-        setMessangerId(localStorage.getItem("messangerId"));
-        setRole(localStorage.getItem("role"));
         getQueu() // for delivert queue 
         getQueueNumber()// for bill q1 q2 q3 
     }, [])
@@ -251,8 +248,7 @@ function Context({ children }) {
                 queueNumber,
                 getQueueNumber,
                 auth, setAuth,
-                staffName,
-                setStaffName
+             
             }}>
             {children}
         </AuthData.Provider>

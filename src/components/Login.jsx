@@ -12,13 +12,17 @@ const Login = () => {
         if (response.accessToken) {
             // ส่ง accessToken ไป backend เพื่อยืนยันตัวตน
             console.log('User is logged in:', response);
+            const { userID, name } = response;
+            localStorage.setItem("name", name)
+            localStorage.setItem("messangerId", userID)
+            router('/foodmenu')
         } else {
             console.log('User cancelled login or did not fully authorize.');
         }
     };
- 
 
-  
+
+
     return (
         <>
             <Row className="mt-4">
@@ -32,16 +36,16 @@ const Login = () => {
                                 SASI Delivery <br />
                                 Login </Card.Title>
 
-                                <h2>Login with Facebook</h2>
-            <FacebookLogin
-                appId="831737185629037" // ใส่ App ID ของคุณ
-                autoLoad={false} // ตั้งเป็น true หากต้องการโหลดอัตโนมัติ
-                fields="name,email,picture"
-                callback={handleResponse} // ฟังก์ชันที่เรียกเมื่อสำเร็จ
-                textButton="Login with Facebook"
-                icon="fa-facebook"
-                cssClass="my-facebook-button-class"
-            />
+
+                            <FacebookLogin
+                                appId="831737185629037" // ใส่ App ID ของคุณ
+                                autoLoad={false} // ตั้งเป็น true หากต้องการโหลดอัตโนมัติ
+                                fields="name,email,picture"
+                                callback={handleResponse} // ฟังก์ชันที่เรียกเมื่อสำเร็จ
+                                textButton="Login with Facebook"
+                                icon="fa-facebook"
+                                cssClass="my-facebook-button-class"
+                            />
                         </Card.Body>
                     </Card>
                 </Col>

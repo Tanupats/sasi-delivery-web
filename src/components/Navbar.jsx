@@ -53,8 +53,8 @@ const NavbarMenu = () => {
 
 
   useEffect(() => {
-    console.log(auth)
-  }, [auth, staffName])
+    console.log(toTal)
+  }, [toTal])
 
   return (
     <Router>
@@ -71,7 +71,7 @@ const NavbarMenu = () => {
 
               <>
                 <Nav.Link>
-                  <Link style={{ textDecoration: 'none', color: '#000' }} to={`/foodmenu/${messangerId}/${staffName}`}>
+                  <Link style={{ textDecoration: 'none', color: '#000' }} to={`/foodmenu`}>
                     <RestaurantMenuIcon /> เมนูอาหาร
                   </Link>
                 </Nav.Link>
@@ -202,7 +202,7 @@ const NavbarMenu = () => {
       <Routes>
         <Route path="/" Component={Login}></Route>
         <Route path="/orders" Component={Orders}></Route>
-        <Route path="/foodmenu/:userid/:username" Component={FoodMenu}></Route>
+        <Route path="/foodmenu" Component={FoodMenu}></Route>
         <Route path="/Myorder" Component={Myorder}></Route>
         <Route path="/queueNumber" Component={GetQueu}></Route>
         <Route path="/report" Component={Report}></Route>
