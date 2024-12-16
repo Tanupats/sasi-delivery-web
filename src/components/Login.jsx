@@ -1,12 +1,13 @@
 import axios from "axios";
-import React, { useState, useContext, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Card, Row, Col, Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { AuthData } from "../ContextData";
 import FacebookLogin from 'react-facebook-login';
 const Login = () => {
     const router = useNavigate()
-
+    const auth = useContext(AuthData);
+    const {setName,name} = auth
     const handleResponse = (response) => {
         console.log('Facebook response:', response);
         if (response.accessToken) {
@@ -14,6 +15,7 @@ const Login = () => {
             console.log('User is logged in:', response);
             const { userID, name } = response;
             localStorage.setItem("name", name)
+            setName(name)
             localStorage.setItem("messangerId", userID)
             router('/foodmenu')
         } else {
@@ -21,7 +23,11 @@ const Login = () => {
         }
     };
 
-
+// useEffect(()=>{
+//         if(name!==""){
+//             router('/foodmenu');
+//         }
+// },[])
 
     return (
         <>

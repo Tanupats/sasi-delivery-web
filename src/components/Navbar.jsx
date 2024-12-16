@@ -29,9 +29,7 @@ const NavbarMenu = () => {
     updateNote,
     messangerId,
     queue,
-    role,
-    auth,
-    staffName
+    name
   } =
     useContext(AuthData);
 
@@ -40,10 +38,10 @@ const NavbarMenu = () => {
   const handleShow = () => setShow(true);
 
   const onSave = () => {
-  
+
     saveOrder()
     handleClose()
-  
+
   }
 
   const logout = () => {
@@ -53,8 +51,8 @@ const NavbarMenu = () => {
 
 
   useEffect(() => {
-    console.log(toTal)
-  }, [toTal])
+    console.log(name)
+  }, [name])
 
   return (
     <Router>
@@ -67,42 +65,46 @@ const NavbarMenu = () => {
 
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
+
+
+
             <Nav className="me-auto text-center">
 
-              <>
-                <Nav.Link>
+            <Nav.Link>
                   <Link style={{ textDecoration: 'none', color: '#000' }} to={`/foodmenu`}>
                     <RestaurantMenuIcon /> เมนูอาหาร
                   </Link>
                 </Nav.Link>
-                <Nav.Link onClick={handleShow}>
-                  ตะกร้า  <LocalMallIcon /> {toTal}
-                </Nav.Link>
-                <Nav.Link>
-                  <Link style={{ textDecoration: 'none', color: '#000' }} to={'/Myorder'}>
-                    <AccountBoxIcon /> คำสั่งซื้อ
-                  </Link>
-                </Nav.Link>
-                <Nav.Link>
-                  <Link style={{ textDecoration: 'none', color: '#000' }} to={'/queueNumber'}>
-                    <AddToQueueIcon /> คิวตอนนี้ {queue}
-                  </Link>
-                </Nav.Link>
-              </>
+              
 
-
-
-
-            </Nav>
-
-            <Nav className="ml-auto">
-              <Nav.Link >
-                {staffName}
+              <Nav.Link onClick={handleShow}>
+                ตะกร้า  <LocalMallIcon /> {toTal}
               </Nav.Link>
-              <Nav.Link onClick={logout}>
-                <LogoutIcon />  ออกจากระบบ
+              <Nav.Link>
+                <Link style={{ textDecoration: 'none', color: '#000' }} to={'/Myorder'}>
+                  <AccountBoxIcon /> คำสั่งซื้อ
+                </Link>
+              </Nav.Link>
+              <Nav.Link>
+                <Link style={{ textDecoration: 'none', color: '#000' }} to={'/queueNumber'}>
+                  <AddToQueueIcon /> คิวตอนนี้ {queue}
+                </Link>
               </Nav.Link>
             </Nav>
+
+            {
+              name !== null && (
+                <Nav className="ml-auto">
+                  <Nav.Link >
+                    {name}
+                  </Nav.Link>
+                  <Nav.Link onClick={logout}>
+                    <LogoutIcon />  ออกจากระบบ
+                  </Nav.Link>
+                </Nav>
+
+              )
+            }
 
           </Navbar.Collapse>
         </Container>
@@ -176,7 +178,7 @@ const NavbarMenu = () => {
                 <>
                   <b>รวมทั้งหมด {sumPrice} บาท</b>
                   <b>จำนวน {toTal} รายการ</b>
-                  <b style={{color:'red'}}> จำนวนรอคิว {queue} คิว </b>
+                  <b style={{ color: 'red' }}> จำนวนรอคิว {queue} คิว </b>
                 </>
               ) : (
                 <Alert variant='danger' className='pd-4'>

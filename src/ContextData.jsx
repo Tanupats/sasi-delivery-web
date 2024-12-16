@@ -101,7 +101,7 @@ function Context({ children }) {
     const saveOrder = async () => {
 
         let id = '';
-        if (sumPrice > 0) {
+        if (username !== null) {   
             const body = {
 
                 amount: sumPrice,
@@ -137,15 +137,20 @@ function Context({ children }) {
                 axios.post(`${import.meta.env.VITE_BAKUP_URL}/billsdetails`, bodyDetails)
             })
             setCart([])
-            setName("")
             getQueueNumber()
         } else {
             Swal.fire({
-                title: 'ไม่มีรายการอาหาร',
-                text: 'กรุณาเลือกรายการอาหาร',
+                title: 'ยังไม่ได้เข้าสู่ระบบ',
+                text: 'กรุณาเข้าสู่ระบบก่อนสั่งอาหาร',
                 icon: 'error',
                 confirmButtonText: 'ยืนยัน'
-            })
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Redirect ไปยังหน้า login
+                    window.location.href = '/'; // ใส่ URL ของหน้าล็อกอินของคุณ
+                }
+            });
+            
         }
     }
 
@@ -208,16 +213,17 @@ function Context({ children }) {
     useEffect(() => {
         getQueu() // for delivert queue 
         getQueueNumber()// for bill q1 q2 q3 
+        setName(localStorage.getItem('name'))
     }, [])
  
-    // useEffect(() => {
+    useEffect(() => {
 
-    //     const interval = setInterval(() => {
-    //         getQueu();
-    //     }, 7000);
+        const interval = setInterval(() => {
+            getQueu();
+        }, 7000);
 
-    //     return () => clearInterval(interval);
-    // }, [])
+        return () => clearInterval(interval);
+    }, [])
 
 
     return (<>
@@ -239,6 +245,7 @@ function Context({ children }) {
                 setOrderType,
                 orderType,
                 setName,
+                name,
                 updatePrice,
                 updateQuantity,
                 setMenuPichet,
@@ -247,7 +254,8 @@ function Context({ children }) {
                 role,
                 queueNumber,
                 getQueueNumber,
-                auth, setAuth,
+                auth, 
+                setAuth,
              
             }}>
             {children}
