@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Form, Button, Navbar, Nav, } from 'react-bootstrap'
+import { Row, Col, Form, Button, Navbar, Nav,Card } from 'react-bootstrap'
 import axios from "axios";
 import './index.scss';
 import Table from '@mui/material/Table';
@@ -24,11 +24,18 @@ const Admin = () => {
     const [openMenu, setOpenMenu] = useState("เมนูอาหาร");
     const [data, setData] = useState([]);
     const [outcome, setOutcome] = useState(0);
+    const [inComeNow, setIncomeNow] = useState(0);
 
     const geOutcome = async () => {
         await axios.get(`${import.meta.env.VITE_BAKUP_URL}/account/outcome`)
             .then(res => {
                 setOutcome(res.data._sum.total)
+            })
+    }
+    const geIncomeNow = async () => {
+        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/bills/reportByMounth`)
+            .then(res => {
+                setIncomeNow(res.data.totalAmount)
             })
     }
 
@@ -80,7 +87,9 @@ const Admin = () => {
     }
         , [])
     useEffect(() => {
-
+        if (openMenu === "สรุปยอดขาย") {
+            geIncomeNow()
+        }
     }
         , [openMenu])
     useEffect(() => {
@@ -179,6 +188,28 @@ const Admin = () => {
 
                         </TableContainer>
                     </>)
+                }
+                {
+
+                    openMenu === "สรุปยอดขาย" && (<Row className="mt-3">
+                        <Col md={12}>
+                            <Card>
+                                <Card.Body>
+                                <Card.Title>
+
+                                   ยอดขายเดือน {new Date().getMonth()}  =   { inComeNow} บาท
+                                </Card.Title>
+                                </Card.Body>
+
+                            </Card>
+                        </Col>
+
+
+
+                    </Row>
+
+
+                    )
                 }
 
 
