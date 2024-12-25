@@ -104,7 +104,7 @@ const FoodMenu = () => {
                                                         <Image style={{ width: "100%", height: '150px', objectFit: 'cover' }}
                                                             src={`${import.meta.env.VITE_BAKUP_URL}/images/${item.img}`} />
                                                     </Col>
-                                                    <Col md={4} xs={4}>
+                                                    <Col md={8} xs={8}>
 
                                                         <h5>{item.foodname}</h5>
                                                         <h5>{item.Price}฿</h5>
@@ -112,14 +112,14 @@ const FoodMenu = () => {
 
 
                                                     </Col>
-                                                    <Col md={4} xs={4} className="text-center">
+                                                    {/* <Col md={4} xs={4} className="text-center">
                                                         <Button
                                                             onClick={() => onSelectMenu(item)}
                                                             style={{ backgroundColor: '#FD720D', border: 'none' }}
                                                         >
                                                             <AddCircleIcon />
                                                         </Button>
-                                                    </Col>
+                                                    </Col> */}
                                                 </Row>
 
                                             </Card.Body>

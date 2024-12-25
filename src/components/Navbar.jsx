@@ -61,7 +61,7 @@ const NavbarMenu = () => {
 
       <Navbar bg="light" data-bs-theme="light" className='when-print' sticky='top' expand="lg">
         <Container fluid>
-          <Navbar.Brand href="#home">SASI Delivery</Navbar.Brand>
+          <Navbar.Brand href="#home">SASI  คิวตอนนี้ {queue}</Navbar.Brand>
 
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
@@ -77,7 +77,7 @@ const NavbarMenu = () => {
                 </Nav.Link>
               
 
-              <Nav.Link onClick={handleShow}>
+              {/* <Nav.Link onClick={handleShow}>
                 ตะกร้า  <LocalMallIcon /> {toTal}
               </Nav.Link>
               <Nav.Link>
@@ -89,7 +89,7 @@ const NavbarMenu = () => {
                 <Link style={{ textDecoration: 'none', color: '#000' }} to={'/queueNumber'}>
                   <AddToQueueIcon /> คิวตอนนี้ {queue}
                 </Link>
-              </Nav.Link>
+              </Nav.Link> */}
             </Nav>
 
             {
@@ -202,7 +202,7 @@ const NavbarMenu = () => {
         }
       </Modal>
       <Routes>
-        <Route path="/" Component={Login}></Route>
+        <Route path="/" Component={FoodMenu}></Route>
         <Route path="/orders" Component={Orders}></Route>
         <Route path="/foodmenu" Component={FoodMenu}></Route>
         <Route path="/Myorder" Component={Myorder}></Route>
