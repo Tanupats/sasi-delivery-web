@@ -19,9 +19,9 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import StoreIcon from '@mui/icons-material/Store';
 import Register from './Register';
 import Swal from 'sweetalert2';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 const NavbarMenu = () => {
   const {
-    auth,
     staffName,
     user
   } =
@@ -46,10 +46,7 @@ const NavbarMenu = () => {
     });
   };
 
-  useEffect(() => {
-  
-    console.log(staffName)
-  }, [staffName])
+
 
   return (
     <Router>
@@ -62,7 +59,7 @@ const NavbarMenu = () => {
 
 
 
-          <Navbar bg="light" data-bs-theme="light" className='when-print' sticky='top'>
+          <Navbar style={{ backgroundColor: '#FD720D' }} className='when-print ' sticky='top'>
             <Container fluid>
               <Navbar.Brand href="#home">SASI POS</Navbar.Brand>
 
@@ -70,21 +67,21 @@ const NavbarMenu = () => {
               <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto text-center">
                   <>
-                    <Link to={'/pos'} style={{ textDecoration: 'none', color: '#000' }}>
+                    <Link to={'/pos'} style={{ textDecoration: 'none', color: '#fff' }}>
                       &nbsp;  <ListAltIcon /> ขายอาหาร
                     </Link>
 
-                    <Link to={'/report'} style={{ textDecoration: 'none', color: '#000' }}>
+                    <Link to={'/report'} style={{ textDecoration: 'none', color: '#fff' }}>
                       &nbsp;  <CurrencyBitcoinIcon /> ยอดขาย
                     </Link>
 
 
-                    <Link to={'/orders'} style={{ textDecoration: 'none', color: '#000' }}>
+                    <Link to={'/orders'} style={{ textDecoration: 'none', color: '#fff' }}>
                       &nbsp;   <DeliveryDiningIcon />  ออเดอร์
                     </Link>
 
 
-                    <Link to={'/admin'} style={{ textDecoration: 'none', color: '#000' }}>
+                    <Link to={'/admin'} style={{ textDecoration: 'none', color: '#fff' }}>
                       &nbsp; <StoreIcon />  {user?.shop?.name}
                     </Link>
 
@@ -92,11 +89,11 @@ const NavbarMenu = () => {
 
                 </Nav>
 
-                <Nav className="ml-auto">
-                  <Nav.Link >
-                    {staffName}
+                <Nav className="ml-auto" >
+                  <Nav.Link style={{ textDecoration: 'none', color: '#fff' }}>
+                    < AccountCircleIcon />  {staffName}
                   </Nav.Link>
-                  <Nav.Link onClick={logout}>
+                  <Nav.Link onClick={logout} style={{ textDecoration: 'none', color: '#fff' }}>
                     <LogoutIcon />  ออกจากระบบ
                   </Nav.Link>
                 </Nav>

@@ -154,8 +154,8 @@ const FoodMenuAdmin = () => {
 
 
                                             <Col md={6} xs={12} >
-                                                <Card style={{ height: 'auto', marginBottom: '12px' }}>
-                                                    <Card.Body>
+                                                <Card style={{ height: 'auto', marginBottom: '12px',padding:0 }}>
+                                                    <Card.Body style={{padding:5}}>
                                                         <Row>
                                                             <Col md={4}
                                                                 xs={4}

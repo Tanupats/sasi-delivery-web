@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Row, Col, Form, Button, Navbar, Nav,Card } from 'react-bootstrap'
+import React, { useState, useEffect, useContext } from "react";
+import { Row, Col, Form, Button, Navbar, Nav, Card } from 'react-bootstrap'
 import axios from "axios";
 import './index.scss';
 import Table from '@mui/material/Table';
@@ -15,8 +15,10 @@ import CreditCardIcon from '@mui/icons-material/CreditCard';
 import DataThresholdingIcon from '@mui/icons-material/DataThresholding';
 import RecentActorsIcon from '@mui/icons-material/RecentActors';
 import moment from "moment";
+import { Modal } from "react-bootstrap";
+import { AuthData } from "../../ContextData";
 const Admin = () => {
-
+    const { user } = useContext(AuthData);
     const [listname, setListName] = useState("");
     const [quantity, setQuantity] = useState("");
     const [Price, setPrice] = useState(0.0);
@@ -25,6 +27,7 @@ const Admin = () => {
     const [data, setData] = useState([]);
     const [outcome, setOutcome] = useState(0);
     const [inComeNow, setIncomeNow] = useState(0);
+    const [open, setOpen] = useState(false);
 
     const geOutcome = async () => {
         await axios.get(`${import.meta.env.VITE_BAKUP_URL}/account/outcome`)
@@ -40,17 +43,15 @@ const Admin = () => {
     }
 
     const getData = async () => {
-
         await fetch(`${import.meta.env.VITE_BAKUP_URL}/account`)
             .then((res) => res.json())
             .then((data) => {
-
                 if (data) {
-
                     setData(data);
                 }
             })
     }
+
     const deleteOutcome = async (id) => {
         try {
             await axios.delete(`${import.meta.env.VITE_BAKUP_URL}/account/${id}`);
@@ -63,13 +64,15 @@ const Admin = () => {
 
     const saveOutcome = async (e) => {
         e.preventDefault();
-        let sum = (quantity * Price); // กำหนดให้ผลรวมมีทศนิยม 2 ตำแหน่ง
+        const { shop_id } = user?.shop;
+        let sum = (quantity * Price);
 
         const body = {
             date_account: new Date().toISOString(),
             listname: listname,
             quantity: parseInt(quantity),
             Price: parseFloat(Price),
+            shop_id: shop_id,
             total: sum // แปลงผลรวมกลับเป็นตัวเลข
         }
 
@@ -112,7 +115,7 @@ const Admin = () => {
             </Col>
 
             <Col md={9}>
-
+                    
                 {
                     openMenu === "เมนูอาหาร" && (
 
@@ -132,10 +135,7 @@ const Admin = () => {
                             <Form.Group className="mb-2">
                                 <Form.Label> จำนวน </Form.Label>
                                 <Form.Control type="number" placeholder="จำนวน" onChange={(e) => setQuantity(e.target.value)} />
-                                <Form.Label> น้ำหนัก </Form.Label>
-                                <Form.Control
-                                    step="0.03"
-                                    type="number" placeholder="น้ำหนัก" onChange={(e) => setWeight(e.target.value)} />
+
 
                             </Form.Group>
                             <Form.Group className="mb-2">
@@ -146,7 +146,9 @@ const Admin = () => {
                                     onChange={(e) => setPrice(e.target.value)} />
                             </Form.Group>
                             <Button type="submit" variant="primary mt-4 w-50"> บันทึก </Button>
-                        </Form>  <TableContainer component={Paper} className="mt-3">
+                        </Form>
+
+                        <TableContainer component={Paper} className="mt-3">
                             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                                 <TableHead>
                                     <TableRow>
@@ -195,10 +197,10 @@ const Admin = () => {
                         <Col md={12}>
                             <Card>
                                 <Card.Body>
-                                <Card.Title>
+                                    <Card.Title>
 
-                                   ยอดขายเดือน {new Date().getMonth()}  =   { inComeNow} บาท
-                                </Card.Title>
+                                        ยอดขายเดือนนี้   {inComeNow} บาท
+                                    </Card.Title>
                                 </Card.Body>
 
                             </Card>

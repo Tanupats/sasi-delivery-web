@@ -6,9 +6,17 @@
   @page {
     width: 80mm;
     margin: 0 auto; 
+     font-size: 16px;
   }
   .when-print{
     display: none;
   }
     
+  }
+  .sum-price{
+    width: 100%;
+    padding: 12px;
+    height: 50px;
+    color: #fff;
+    background-color:#FD720D;
   }

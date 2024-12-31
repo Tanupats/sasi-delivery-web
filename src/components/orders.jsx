@@ -56,7 +56,7 @@ const Orders = () => {
 
 
                     <Card.Title className="text-center when-print" as={'h5'}>
-                        จัดการออเดอร์ Delivery</Card.Title>
+                        จัดการออเดอร์</Card.Title>
                     <Form>
                         {/* <Form.Label>
                                 ค้นหาด้วยวันที่
@@ -91,7 +91,7 @@ const Orders = () => {
                                                     <Details bill_ID={item.bill_ID} status={item.statusOrder} />
                                                     <b>รวมทั้งหมด {item.amount} บาท</b>
                                                     <Row className="mt-2">
-                                                        {item.statusOrder === 'รับออเดอร์แล้ว' && (
+                                                        {/* {item.statusOrder === 'รับออเดอร์แล้ว' && (
                                                             <Col md={6}>
                                                                 <Button
                                                                     className="when-print"
@@ -101,16 +101,16 @@ const Orders = () => {
                                                                     พิมพ์
                                                                 </Button>
                                                             </Col>
-                                                        )}
+                                                        )} */}
                                                         {
                                                             item.statusOrder === 'รับออเดอร์แล้ว' && (
-                                                                <Col md={6}>
+                                                                <Col md={12}>
                                                                     <Button
                                                                         className="when-print"
                                                                         onClick={() => UpdateStatus(item.id, 'ทำเสร็จแล้ว')}
                                                                         variant="success w-100"
                                                                     >
-                                                                      ออเดอร์พร้อมส่ง
+                                                                        ทำอาหารเสร็จแล้ว
                                                                     </Button>
                                                                 </Col>
                                                             )

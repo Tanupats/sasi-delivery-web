@@ -15,9 +15,9 @@ function Context({ children }) {
     const [staffName, setStaffName] = useState("");
     const [user, setUser] = useState({ name: '' })
 
-
+    const token = localStorage.getItem("token");
     const getUser = async () => {
-        const token = localStorage.getItem("token");
+
         if (token) {
             await axios.get(import.meta.env.VITE_BAKUP_URL + '/user/me', { headers: { 'apikey': token } })
                 .then(res => {
@@ -116,7 +116,7 @@ function Context({ children }) {
                 messengerId: 'pos1234',
                 shop_id: shop_id
             }
-            await axios.post(`${import.meta.env.VITE_BAKUP_URL}/bills`, body)
+            await axios.post(`${import.meta.env.VITE_BAKUP_URL}/bills`, body, { headers: { 'apikey': token } })
                 .then(res => {
                     if (res.status === 200) {
 
@@ -139,7 +139,7 @@ function Context({ children }) {
                     quantity: quantity,
                     note: note
                 }
-                axios.post(`${import.meta.env.VITE_BAKUP_URL}/billsdetails`, bodyDetails)
+                axios.post(`${import.meta.env.VITE_BAKUP_URL}/billsdetails`, bodyDetails, { headers: { 'apikey': token } })
             })
             setCart([]);
             setName("");
@@ -212,9 +212,9 @@ function Context({ children }) {
         setRole(localStorage.getItem("role"));
     }, [])
 
-    useEffect(()=>{
+    useEffect(() => {
         getUser();
-    },[])
+    }, [])
 
     return (<>
 
@@ -242,7 +242,7 @@ function Context({ children }) {
                 role,
                 queueNumber,
                 getQueueNumber,
-               
+
                 staffName,
                 setStaffName,
                 user,

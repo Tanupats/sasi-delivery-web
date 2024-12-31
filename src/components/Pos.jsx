@@ -13,7 +13,7 @@ import axios from 'axios';
 import SaveIcon from '@mui/icons-material/Save';
 let active = 2;
 let items = [];
-import EggAltIcon from '@mui/icons-material/EggAlt';
+import { httpGet } from '../http';
 import QRCode from 'qrcode.react';
 import generatePayload from 'promptpay-qr'
 import { useNavigate } from "react-router-dom";
@@ -63,6 +63,7 @@ const Pos = () => {
   const [defaultMenu, setDefaultMenu] = useState({})
   const [newId, setNewId] = useState("")
 
+  const token = localStorage.getItem("token");
 
   const [phoneNumber, setPhoneNumber] = useState("0983460756");
   const [showQr, setShowQr] = useState(false);
@@ -96,20 +97,18 @@ const Pos = () => {
     handleShow()
   }
 
-
-
-  const getMenu = async () => {
-    await axios.get(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/getByShop/${user.shop?.shop_id}`).then(
-      res => {
+  const getMenu = () => {
+    httpGet(`/foodmenu/getByShop/${user.shop?.shop_id}`,{ headers: { 'apikey': token } })
+      .then(res => {
         if (res.status === 200) {
           setMenu(res.data);
         }
       }
-    )
+      )
   }
 
   const getMenuType = async () => {
-    await axios.get(`${import.meta.env.VITE_BAKUP_URL}/menutype/${user.shop?.shop_id}`)
+    httpGet(`/menutype/${user.shop?.shop_id}`,{ headers: { 'apikey': token }})
       .then(res => {
         setMenuType(res.data);
       })
@@ -123,10 +122,13 @@ const Pos = () => {
   }
 
   useEffect(() => {
-    
-      getMenuType()
-      getMenu()
-    
+
+
+    getMenuType()
+    getMenu()
+
+
+
 
 
 
@@ -227,7 +229,7 @@ const Pos = () => {
             </div>
             <Row>
               <Col md={12}>
-           
+                <div className='whenprint'> <h5>รายการอาหาร</h5></div>
                 <Table>
                   <tbody>
                     {
@@ -246,8 +248,8 @@ const Pos = () => {
                         )
                       })
                     }
-                    <tr>
-                      <td >รวมทั้งหมด {sumPrice} บาท</td>
+                    <tr >
+                      <td >รวมทั้งหมด {cart.length} รายการ</td>
                       <td ></td>
                     </tr>
                     <tr>
@@ -258,26 +260,35 @@ const Pos = () => {
                       <td ></td>
 
                     </tr>
-                    {
-
-                      cart?.length > 0 && (
-                        <Row>
-
-                          <Col md={12}>
-                            <Button className='when-print mb-2 w-100' onClick={() => { handleQR(), setShowQr(!showQr) }}>Patment QR </Button>
-                          </Col>
-                          <Col md={12} className='text-center'>
-                            {
-                              showQr ? <center><QRCode value={qrCode} /></center> : <></>
-                            }
-                          </Col>
-                        </Row>
-                      )
-                    }
-
-
                   </tbody>
                 </Table>
+                <Row>
+                  <Col md={12}>
+
+                    <div className="sum-price mb-2">
+                      <h5>รวมทั้งหมด {sumPrice}</h5>
+                    </div>
+                  </Col>
+                </Row>
+                {
+
+                  cart?.length > 0 && (
+                    <Row>
+
+                      <Col md={12}>
+                        <Button className='when-print mb-2 w-100' onClick={() => { handleQR(), setShowQr(!showQr) }}>Patment QR </Button>
+                      </Col>
+                      <Col md={12} className='text-center'>
+                        {
+                          showQr ? <center><QRCode value={qrCode} /></center> : <></>
+                        }
+                      </Col>
+                    </Row>
+                  )
+                }
+
+
+
 
                 <Form>
                   <Row className='order-type when-print '>

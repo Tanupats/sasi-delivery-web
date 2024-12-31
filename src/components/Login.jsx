@@ -43,6 +43,7 @@ const Login = () => {
                         <Card.Body>
                             <Card.Title className="text-center">
                                 SASI POS <br />
+                                <br />
                                 Login </Card.Title>
 
                             <Form onSubmit={login}>
@@ -74,7 +75,8 @@ const Login = () => {
 
                                 <Button
                                     type="submit"
-                                    variant="success"
+                                    style={{ backgroundColor: '#FD720D', border: '0px' }}
+
                                     className="w-100 mt-4"
                                 >เข้าสู่ระบบ</Button>
                                 <div className="text-center mt-4">
