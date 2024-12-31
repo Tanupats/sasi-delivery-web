@@ -19,7 +19,6 @@ const Report = () => {
     const [data, setData] = useState([])
     const [counter, setCounter] = useState({});
     const [startDate, setStartDate] = useState(moment(new Date()).format('YYYY-MM-DD'));
-    const [endDate, setEndDate] = useState(moment(new Date()).format('YYYY-MM-DD'));
     const token = localStorage.getItem("token");
 
     const getOrderFood = async () => {
