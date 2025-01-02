@@ -8,15 +8,11 @@ function Context({ children }) {
     const [toTal, setTotal] = useState(0);
     const [sumPrice, setSumPrice] = useState(0);
     const [name, setName] = useState("");
-    
     const [orderType, setOrderType] = useState("สั่งกลับบ้าน");
-    const [role, setRole] = useState("");
     const [queue, setQueu] = useState(0);
     const [queueNumber, setQueueNumber] = useState(0);
     const authCheck = localStorage.getItem("auth");
     const [auth, setAuth] = useState(authCheck || 'not_authenticated');
-
-
 
     const getQueueNumber = async () => {
         await axios.get(`${import.meta.env.VITE_BAKUP_URL}/queueNumber`)
@@ -251,7 +247,7 @@ function Context({ children }) {
                 setMenuPichet,
                 setMenuNormal,
                 updateFoodName,
-                role,
+              
                 queueNumber,
                 getQueueNumber,
                 auth, 

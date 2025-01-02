@@ -70,14 +70,14 @@ const NavbarMenu = () => {
 
             <Nav className="me-auto text-center">
 
-            <Nav.Link>
-                  <Link style={{ textDecoration: 'none', color: '#000' }} to={`/foodmenu`}>
-                    <RestaurantMenuIcon /> เมนูอาหาร
-                  </Link>
-                </Nav.Link>
-              
+              <Nav.Link>
+                <Link style={{ textDecoration: 'none', color: '#000' }} to={`/foodmenu`}>
+                  <RestaurantMenuIcon /> เมนูอาหาร
+                </Link>
+              </Nav.Link>
 
-              {/* <Nav.Link onClick={handleShow}>
+
+              <Nav.Link onClick={handleShow}>
                 ตะกร้า  <LocalMallIcon /> {toTal}
               </Nav.Link>
               <Nav.Link>
@@ -89,7 +89,7 @@ const NavbarMenu = () => {
                 <Link style={{ textDecoration: 'none', color: '#000' }} to={'/queueNumber'}>
                   <AddToQueueIcon /> คิวตอนนี้ {queue}
                 </Link>
-              </Nav.Link> */}
+              </Nav.Link>
             </Nav>
 
             {
@@ -202,7 +202,7 @@ const NavbarMenu = () => {
         }
       </Modal>
       <Routes>
-        <Route path="/" Component={FoodMenu}></Route>
+        <Route path="/" Component={Login}></Route>
         <Route path="/orders" Component={Orders}></Route>
         <Route path="/foodmenu" Component={FoodMenu}></Route>
         <Route path="/Myorder" Component={Myorder}></Route>
