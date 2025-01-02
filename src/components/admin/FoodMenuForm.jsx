@@ -16,7 +16,7 @@ const FoodMenuForm = (props) => {
     const [menuType, setMenuType] = useState([]);
     const [menuTypeId, setMenuTypeId] = useState("");
     const [typeName, setTypeName] = useState("");
-
+    const token = localStorage.getItem("token");
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
@@ -24,7 +24,7 @@ const FoodMenuForm = (props) => {
     const handleShowType = () => setShowType(true);
 
     const getMenuType = async () => {
-        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/menutype/${user.shop?.shop_id}`)
+        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/menutype/${user.shop?.shop_id}`,{ headers: { 'apikey': token } })
             .then(res => {
                 console.log(res.data)
                 setMenuType(res.data);

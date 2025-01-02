@@ -10,3 +10,21 @@ export const httpGet = async (path, params) => {
   }
 };
 
+export const httpPost = async (path, body) => {
+  try {
+    const response = await axios.post(`${baseURL + path}`, body);
+    return response
+  } catch (error) {
+    console.log('error fetch')
+  }
+};
+
+export const httpDelete = async (path) => {
+  try {
+    const response = await axios.delete(`${baseURL + path}`);
+    return response
+  } catch (error) {
+    console.log('error fetch')
+  }
+};
+

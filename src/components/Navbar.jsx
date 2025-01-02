@@ -61,7 +61,7 @@ const NavbarMenu = () => {
 
           <Navbar style={{ backgroundColor: '#FD720D' }} className='when-print ' sticky='top'>
             <Container fluid>
-              <Navbar.Brand href="#home">SASI POS</Navbar.Brand>
+              <Navbar.Brand href="/pos" style={{color:'#fff'}}>SASI POS</Navbar.Brand>
 
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
               <Navbar.Collapse id="basic-navbar-nav">

@@ -16,14 +16,18 @@ const FoodMenuAdmin = () => {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    const token = localStorage.getItem("token");
 
     const getMenuType = async () => {
-        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/menutype/${user.shop.shop_id}`)
-            .then(res => {
-                setMenuType(res.data);
-            })
-    }
+        const id = user?.shop?.shop_id
+        if (id) {
+            await axios.get(`${import.meta.env.VITE_BAKUP_URL}/menutype/${id}`, { headers: { 'apikey': token } })
+                .then(res => {
+                    setMenuType(res.data);
+                })
+        }
 
+    }
 
     const getMenuBytypeId = async (id) => {
         await axios.get(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/${id}`)
@@ -91,7 +95,7 @@ const FoodMenuAdmin = () => {
 
 
     const getFoodMenu = () => {
-        fetch(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/getByShop/${user.shop?.shop_id}`)
+        fetch(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/getByShop/${user.shop?.shop_id}`, { headers: { 'apikey': token } })
             .then((res) => res.json())
             .then((data) => {
                 if (data) {
@@ -109,7 +113,7 @@ const FoodMenuAdmin = () => {
     }, [data])
     return (
         <>
-            <Card style={{width:'100%'}}>
+            <Card style={{ width: '100%' }}>
                 <Card.Title className="text-center mt-3">  รายการอาหาร</Card.Title>
                 <Card.Body>
 
@@ -154,8 +158,8 @@ const FoodMenuAdmin = () => {
 
 
                                             <Col md={6} xs={12} >
-                                                <Card style={{ height: 'auto', marginBottom: '12px',padding:0 }}>
-                                                    <Card.Body style={{padding:5}}>
+                                                <Card style={{ height: 'auto', marginBottom: '12px', padding: 0 }}>
+                                                    <Card.Body style={{ padding: 5 }}>
                                                         <Row>
                                                             <Col md={4}
                                                                 xs={4}
