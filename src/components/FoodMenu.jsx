@@ -95,31 +95,27 @@ const FoodMenu = () => {
 
 
                                     <Col md={6} xs={12} key={index}>
-                                        <Card style={{ height: '180px', marginBottom: '12px' }}>
-                                            <Card.Body>
-                                                <Row>
+                                        <Card style={{ height: '180px', marginBottom: '12px',margin:0,padding:12 }}>
+                                            <Card.Body style={{margin:0,padding:0 }}>
+                                                <Row >
                                                     <Col md={4}
-                                                        xs={4}
+                                                        xs={4}                                                                      
                                                     >
                                                         <Image style={{ width: "100%", height: '150px', objectFit: 'cover' }}
                                                             src={`${import.meta.env.VITE_BAKUP_URL}/images/${item.img}`} />
                                                     </Col>
-                                                    <Col md={8} xs={8}>
-
+                                                    <Col md={3} xs={3}>
                                                         <h5>{item.foodname}</h5>
                                                         <h5>{item.Price}฿</h5>
-
-
-
                                                     </Col>
-                                                    {/* <Col md={4} xs={4} className="text-center">
+                                                    <Col md={3} xs={3} className="text-center">
                                                         <Button
                                                             onClick={() => onSelectMenu(item)}
                                                             style={{ backgroundColor: '#FD720D', border: 'none' }}
                                                         >
                                                             <AddCircleIcon />
                                                         </Button>
-                                                    </Col> */}
+                                                    </Col>
                                                 </Row>
 
                                             </Card.Body>
