@@ -42,6 +42,7 @@ const Pos = () => {
     updateQuantity,
     queueNumber,
     getQueueNumber,
+    shop,
     user
   } =
     useContext(AuthData)
@@ -71,6 +72,7 @@ const Pos = () => {
     window.print()
   }
 
+ 
 
   function handleQR() {
     setqrCode(generatePayload(phoneNumber, { amount: sumPrice }));
@@ -93,7 +95,7 @@ const Pos = () => {
   }
 
   const getMenu = () => {
-    httpGet(`/foodmenu/getByShop/${user.shop?.shop_id}`,{ headers: { 'apikey': token } })
+    httpGet(`/foodmenu/getByShop/${shop.shop_id}`,{ headers: { 'apikey': token } })
       .then(res => {
         if (res.status === 200) {
           setMenu(res.data);
@@ -102,32 +104,19 @@ const Pos = () => {
       )
   }
 
-  const getMenuType = async () => {
-    httpGet(`/menutype/${user.shop?.shop_id}`,{ headers: { 'apikey': token }})
+  const getMenuType =  () => {
+    httpGet(`/menutype/${shop.shop_id}`,{ headers: { 'apikey': token }})
       .then(res => {
         setMenuType(res.data);
       })
   }
 
-  const getMenuBytypeId = async (id) => {
-    await axios.get(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/${id}`)
+  const getMenuBytypeId =  (id) => {
+    httpGet(`/foodmenu/${id}`)
       .then(res => {
         setMenu(res.data);
       })
   }
-
-  useEffect(() => {
-
-
-    getMenuType()
-    getMenu()
-
-
-
-
-
-
-  }, [user])
 
 
 
@@ -148,6 +137,11 @@ const Pos = () => {
       router('/');
     }
   }, []);
+
+  useEffect(() => {
+    getMenuType()
+    getMenu()
+  }, [user,shop])
 
 
 
@@ -217,7 +211,7 @@ const Pos = () => {
 
             <div className='header-pos text-center'>
 
-              <h6> {user?.shop?.name}</h6>
+              <h6> {shop?.name}</h6>
               <h6>  ใบเสร็จรับเงิน</h6>
               <h6> ลำดับคิว {queueNumber} </h6>
               วันที่ {date} {time}
@@ -252,19 +246,22 @@ const Pos = () => {
                     </tr>
                     <tr>
                       <td >{name}</td>
-                      <td ></td>
+                    
 
+                    </tr>
+                    <tr>
+                    <td colSpan={4}>รวมทั้งหมด {sumPrice} บาท</td>
                     </tr>
                   </tbody>
                 </Table>
-                <Row>
+                {/* <Row>
                   <Col md={12}>
 
                     <div className="sum-price mb-2">
-                      <h5>รวมทั้งหมด {sumPrice}</h5>
+                     
                     </div>
                   </Col>
-                </Row>
+                </Row> */}
                 {
 
                   cart?.length > 0 && (

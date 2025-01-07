@@ -3,11 +3,19 @@ import React, { useState, useContext, useEffect } from "react";
 import { Card, Row, Col, Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { AuthData } from "../ContextData";
+import { httpGet } from "../http";
 const Login = () => {
     const router = useNavigate()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const { setAuth, setStaffName, setUser } = useContext(AuthData);
+    const { setAuth, setStaffName, setUser, setShop } = useContext(AuthData);
+
+    const getShop = (id) => {
+        httpGet('/shop/shop-user/' + id).then((res) => {
+            console.log(res.data)
+            setShop({...res.data[0]})
+        })
+    }
 
     const login = async (e) => {
         e.preventDefault();
@@ -22,7 +30,7 @@ const Login = () => {
                         localStorage.setItem("token", token)
                         localStorage.setItem("userId", id)
                         setUser(res.data)
-
+                        getShop(id)
                         setStaffName(name)
                         router('/pos')
                     }

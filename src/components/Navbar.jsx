@@ -23,7 +23,8 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 const NavbarMenu = () => {
   const {
     staffName,
-    user
+    user,
+    shop
   } =
     useContext(AuthData);
 
@@ -82,7 +83,7 @@ const NavbarMenu = () => {
 
 
                     <Link to={'/admin'} style={{ textDecoration: 'none', color: '#fff' }}>
-                      &nbsp; <StoreIcon />  {user?.shop?.name}
+                      &nbsp; <StoreIcon />  {shop?.name}
                     </Link>
 
                   </>

@@ -116,6 +116,7 @@ const Report = () => {
                                 <Card className="mt-2">
                                     <Card.Body>
 
+                                            
                                         <div className="text-center">
                                             <DeliveryDiningIcon style={{ fontSize: '30px' }} />เดลิเวอรี่ จำนวน {counter.takeawayCount} บิล
                                             <p> ยอด = {counter.takeawayTotalAmount} บาท</p>

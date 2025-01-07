@@ -2,7 +2,7 @@ import { createContext, useState, useEffect } from "react";
 export const AuthData = createContext();
 import axios from "axios";
 import Swal from 'sweetalert2'
-
+import { httpGet } from "./http";
 function Context({ children }) {
     const [cart, setCart] = useState([])
     const [toTal, setTotal] = useState(0);
@@ -14,6 +14,7 @@ function Context({ children }) {
     const [queueNumber, setQueueNumber] = useState(0);
     const [staffName, setStaffName] = useState("");
     const [user, setUser] = useState({ name: '' })
+    const [shop, setShop] = useState({})
 
     const token = localStorage.getItem("token");
     const getUser = async () => {
@@ -185,6 +186,12 @@ function Context({ children }) {
         });
         setCart(newCart);
     }
+   const getShop = (id) => {
+        httpGet('/shop/shop-user/' + id).then((res) => {
+            console.log({...res.data[0]})
+            setShop({...res.data[0]})
+        })
+    }
 
 
     const sumAmount = () => {
@@ -213,7 +220,9 @@ function Context({ children }) {
     }, [])
 
     useEffect(() => {
+        const userid = localStorage.getItem("userId")
         getUser();
+        getShop(userid);
     }, [])
 
     return (<>
@@ -246,7 +255,9 @@ function Context({ children }) {
                 staffName,
                 setStaffName,
                 user,
-                setUser
+                setUser,
+                shop,
+                setShop
             }}>
             {children}
         </AuthData.Provider>

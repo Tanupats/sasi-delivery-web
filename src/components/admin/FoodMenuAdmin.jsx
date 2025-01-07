@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
 import { AuthData } from "../../ContextData";
 
 const FoodMenuAdmin = () => {
-    const { user } = useContext(AuthData);
+    const { shop } = useContext(AuthData);
     const [foods, setFoods] = useState([]);
     const [menuType, setMenuType] = useState([]);
     const [data, setData] = useState({});
@@ -19,7 +19,7 @@ const FoodMenuAdmin = () => {
     const token = localStorage.getItem("token");
 
     const getMenuType = async () => {
-        const id = user?.shop?.shop_id
+        const id = shop?.shop_id
         if (id) {
             await axios.get(`${import.meta.env.VITE_BAKUP_URL}/menutype/${id}`, { headers: { 'apikey': token } })
                 .then(res => {
@@ -95,7 +95,7 @@ const FoodMenuAdmin = () => {
 
 
     const getFoodMenu = () => {
-        fetch(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/getByShop/${user.shop?.shop_id}`, { headers: { 'apikey': token } })
+        fetch(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/getByShop/${shop?.shop_id}`, { headers: { 'apikey': token } })
             .then((res) => res.json())
             .then((data) => {
                 if (data) {
@@ -107,7 +107,7 @@ const FoodMenuAdmin = () => {
     useEffect(() => {
         getMenuType();
         getFoodMenu();
-    }, [user])
+    }, [shop])
     useEffect(() => {
         console.log(data)
     }, [data])

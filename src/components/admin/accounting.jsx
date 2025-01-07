@@ -11,30 +11,40 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import moment from "moment";
 const Accounting = () => {
-    const { user } = useContext(AuthData);
+    const { shop } = useContext(AuthData);
     const [data, setData] = useState([]);
     const [outcome, setOutcome] = useState(0);
     const token = localStorage.getItem("token");
     const [listname, setListName] = useState("");
-    const [quantity, setQuantity] = useState("");
+    const [quantity, setQuantity] = useState(1);
     const [Price, setPrice] = useState(0.0);
     const [weight, setWeight] = useState(0.0);
-    
+
     const saveOutcome = async (e) => {
         e.preventDefault();
-        const { shop_id } = user?.shop;
-        let sum = (quantity * Price);
+        const { shop_id } = shop;
+
+        // แปลง quantity และ Price เป็นตัวเลขทศนิยม
+        const quantityValue = parseFloat(quantity);
+        const priceValue = parseFloat(Price);
+
+        // คำนวณผลรวมที่มีทศนิยม
+        const sum = quantityValue * priceValue;
+
+        // สร้าง body ที่จะส่งไปยัง API
         const body = {
             date_account: new Date().toISOString(),
             listname: listname,
-            quantity: parseInt(quantity),
-            Price: parseFloat(Price),
+            quantity: quantityValue,
+            Price: parseFloat(priceValue),
             shop_id: shop_id,
-            total: sum
-        }
+            total:parseFloat(sum) ,
+        };
+
+        // ส่งข้อมูลไปยัง endpoint
         await httpPost('/account', body);
         await getData();
-    }
+    };
 
     const getData = async () => {
         await httpGet('/account')
@@ -57,41 +67,69 @@ const Accounting = () => {
     const geOutcome = async () => {
         await httpGet(`/account/outcome`)
             .then(res => {
-                setOutcome(res._sum.total)
+                setOutcome(res.data._sum.total)
             })
     }
 
+
     useEffect(() => {
+        getData();
+        geOutcome()
+    }
+        , [])
+    useEffect(() => {
+       
         geOutcome()
     }
         , [data])
-    useEffect(() => {
-        getData();
-
-    }
-        , [])
     return (<>
 
-        <Form onSubmit={(e) => saveOutcome(e)}>
+        <Form onSubmit={(e) => saveOutcome(e)} className="mt-4">
+            <Row>
 
-            <Form.Group className="mb-2">
-                <Form.Label> รายการ </Form.Label>
-                <Form.Control type="text" placeholder="รายการ" onChange={(e) => setListName(e.target.value)} />
+                <Col>
+                    <Form.Group className="mb-2">
+                        <Form.Label> รายการ </Form.Label>
+                        <Form.Control type="text" placeholder="รายการ" onChange={(e) => setListName(e.target.value)} />
 
-            </Form.Group>
-            <Form.Group className="mb-2">
-                <Form.Label> จำนวน </Form.Label>
-                <Form.Control type="number" placeholder="จำนวน" onChange={(e) => setQuantity(e.target.value)} />
+                    </Form.Group>
+                </Col>
+                <Col>
+                    <Form.Group className="mb-2">
+                        <Form.Label> จำนวน </Form.Label>
+                        <Form.Control
+                            value={quantity}
+                            type="number"
+                            placeholder="1" onChange={(e) => setQuantity(e.target.value)} />
 
 
-            </Form.Group>
-            <Form.Group className="mb-2">
-                <Form.Label> ราคา </Form.Label>
-                <Form.Control
-                    type="text"
-                    placeholder="ราคา"
-                    onChange={(e) => setPrice(e.target.value)} />
-            </Form.Group>
+                    </Form.Group>
+                </Col>
+                <Col>
+                    <Form.Group className="mb-2">
+                        <Form.Label> ราคา </Form.Label>
+                        <Form.Control
+                            type="number"
+                            step="0.01"
+                            pattern="^\d*\.?\d*$" // อนุญาตเฉพาะตัวเลขและจุดทศนิยม
+                            placeholder="00.00 บาท"
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                // แปลงค่าเป็นตัวเลขแบบทศนิยม
+                                const numericValue = parseFloat(value);
+                                if (!isNaN(numericValue)) {
+                                    setPrice(numericValue);
+                                } else {
+                                    setPrice(0); // กำหนดค่าเริ่มต้นหากป้อนไม่ถูกต้อง
+                                }
+                            }}
+                        />
+                    </Form.Group>
+                </Col>
+            </Row>
+
+
+
             <Button type="submit" variant="primary mt-4 w-50"> บันทึก </Button>
         </Form>
 

@@ -5,7 +5,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { AuthData } from "../../ContextData";
 import Swal from 'sweetalert2';
 const FoodMenuForm = (props) => {
-    const { user } = useContext(AuthData);
+    const { shop } = useContext(AuthData);
     const [show, setShow] = useState(false);
     const [showType, setShowType] = useState(false);
     const [foodname, setFoodName] = useState("");
@@ -24,7 +24,7 @@ const FoodMenuForm = (props) => {
     const handleShowType = () => setShowType(true);
 
     const getMenuType = async () => {
-        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/menutype/${user.shop?.shop_id}`,{ headers: { 'apikey': token } })
+        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/menutype/${shop?.shop_id}`, { headers: { 'apikey': token } })
             .then(res => {
                 console.log(res.data)
                 setMenuType(res.data);
@@ -50,7 +50,7 @@ const FoodMenuForm = (props) => {
         e.preventDefault()
         const body = {
             name: typeName,
-            shop_id: user.shop.shop_id
+            shop_id: shop.shop_id
         };
         await axios.post(`${import.meta.env.VITE_BAKUP_URL}/menutype`, body)
             .then(res => {
@@ -77,7 +77,7 @@ const FoodMenuForm = (props) => {
                 Price: parseInt(price),
                 img: filename, code: code,
                 status: parseInt(status),
-                shop_id: user.shop.shop_id
+                shop_id: shop.shop_id
             };
             await axios.post(`${import.meta.env.VITE_BAKUP_URL}/foodmenu`, body)
                 .then(res => {
@@ -108,7 +108,7 @@ const FoodMenuForm = (props) => {
 
     useEffect(() => {
         getMenuType()
-    }, [user])
+    }, [shop])
 
     useEffect(() => {
 
