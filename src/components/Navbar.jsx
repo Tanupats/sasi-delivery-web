@@ -77,14 +77,14 @@ const NavbarMenu = () => {
               </Nav.Link>
 
 
-              <Nav.Link onClick={handleShow}>
+              {/* <Nav.Link onClick={handleShow}>
                 ตะกร้า  <LocalMallIcon /> {toTal}
               </Nav.Link>
               <Nav.Link>
                 <Link style={{ textDecoration: 'none', color: '#000' }} to={'/Myorder'}>
                   <AccountBoxIcon /> คำสั่งซื้อ
                 </Link>
-              </Nav.Link>
+              </Nav.Link> */}
               <Nav.Link>
                 <Link style={{ textDecoration: 'none', color: '#000' }} to={'/queueNumber'}>
                   <AddToQueueIcon /> คิวตอนนี้ {queue}
@@ -92,7 +92,7 @@ const NavbarMenu = () => {
               </Nav.Link>
             </Nav>
 
-            {
+            {/* {
               name !== null && (
                 <Nav className="ml-auto">
                   <Nav.Link >
@@ -104,7 +104,7 @@ const NavbarMenu = () => {
                 </Nav>
 
               )
-            }
+            } */}
 
           </Navbar.Collapse>
         </Container>
@@ -202,7 +202,7 @@ const NavbarMenu = () => {
         }
       </Modal>
       <Routes>
-        <Route path="/" Component={Login}></Route>
+        <Route path="/" Component={FoodMenu}></Route>
         <Route path="/orders" Component={Orders}></Route>
         <Route path="/foodmenu" Component={FoodMenu}></Route>
         <Route path="/Myorder" Component={Myorder}></Route>
