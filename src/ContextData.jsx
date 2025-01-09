@@ -221,7 +221,8 @@ function Context({ children }) {
 
     useEffect(() => {
         getUser();
-
+        const userid = localStorage.getItem("userId");
+        getShop(userid);
     }, [])
 
     return (<>

@@ -96,7 +96,7 @@ const Report = () => {
 
                                         <Col md={6}>
                                             <Form.Label>
-                                               ค้นหาจากวันที่ 
+                                                ค้นหาจากวันที่
                                             </Form.Label>
                                             <Form.Control
                                                 onChange={(e) => setStartDate(e.target.value)}
@@ -114,25 +114,34 @@ const Report = () => {
                                 <Card className="mt-2">
                                     <Card.Body>
 
-                                            
-                                        <div className="text-center">
-                                            <DeliveryDiningIcon style={{ fontSize: '30px' }} />เดลิเวอรี่ จำนวน {counter.takeawayCount} บิล
-                                            <p> ยอด = {counter.takeawayTotalAmount} บาท</p>
-                                            <p> {((counter.takeawayCount / counter.totalCount) * 100).toFixed(2)} %</p>
+                                        <Row>
+                                            <Col md={4}>
 
-                                        </div>
-                                        <div className="text-center">
-                                            <RoomServiceIcon style={{ fontSize: '30px' }} />ทานที่ร้าน จำนวน {counter.dineInCount} บิล  <p> ยอด = {counter.dineInTotalAmount} บาท</p>
-                                            <p> {((counter.dineInCount / counter.totalCount) * 100).toFixed(2)} %</p>
-                                        </div>
+                                                <div className="text-center card-report-1">  <DeliveryDiningIcon style={{ fontSize: '30px' }} /> <br />
+                                                    เดลิเวอรี่ จำนวน {counter.takeawayCount} บิล
+                                                    <p> ยอด = {new Intl.NumberFormat().format(counter.takeawayTotalAmount)} บาท</p>
+                                                    <p> {((counter.takeawayCount / counter.totalCount) * 100).toFixed(2)} %</p>
 
-                                        <div className="text-center">
-                                            <RoomServiceIcon style={{ fontSize: '30px' }} />รับเอง จำนวน {counter.pickupCount} บิล
-                                            <p> ยอด = {counter.pickupTotalAmount} บาท</p>
-                                            <p>{((counter.pickupCount / counter.totalCount) * 100).toFixed(2)} %</p>
-                                        </div>
-                                        <div className="text-center">
-                                            <p>รวมทั้งหมด {counter.totalCount} บิล</p>
+                                                </div> </Col>
+                                            <Col md={4}>
+                                                <div className="text-center card-report-2">
+                                                    <RoomServiceIcon style={{ fontSize: '30px' }} />
+                                                    <br /> ทานที่ร้าน จำนวน {counter.dineInCount} บิล
+                                                    <p> ยอด = {new Intl.NumberFormat().format(counter.dineInTotalAmount)} บาท</p>
+                                                    <p> {((counter.dineInCount / counter.totalCount) * 100).toFixed(2)} %</p>
+                                                </div>
+                                            </Col>
+                                            <Col md={4}>
+                                                <div className="text-center card-report-3">
+                                                    <RoomServiceIcon style={{ fontSize: '30px' }} />  <br />     รับเอง จำนวน {counter.pickupCount} บิล
+                                                    <p> ยอด = {new Intl.NumberFormat().format(counter.pickupTotalAmount)} บาท</p>
+                                                    <p>{((counter.pickupCount / counter.totalCount) * 100).toFixed(2)} %</p>
+                                                </div>
+                                            </Col>
+
+                                        </Row>
+                                        <div className="text-center mt-4">
+                                            <b>รวมทั้งหมด {counter.totalCount} บิล</b>
                                         </div>
 
 

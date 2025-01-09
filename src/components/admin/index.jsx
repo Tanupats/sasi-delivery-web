@@ -20,10 +20,11 @@ const Admin = () => {
 
     const [inComeNow, setIncomeNow] = useState(0);
     const [open, setOpen] = useState(false);
+    const token = localStorage.getItem("token");
 
 
     const geIncomeNow = async () => {
-        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/bills/reportByMounth`)
+        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/bills/reportByMounth`,{headers:{'apikey':token}})
             .then(res => {
                 setIncomeNow(res.data.totalAmount)
             })
