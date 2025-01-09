@@ -105,7 +105,7 @@ function Context({ children }) {
     const resetCart = () => setCart([]);
 
     const saveOrder = async () => {
-        const { shop_id } = user?.shop;
+        const { shop_id } = shop;
         let id = '';
         if (sumPrice > 0) {
             const body = {
@@ -186,10 +186,10 @@ function Context({ children }) {
         });
         setCart(newCart);
     }
-   const getShop = (id) => {
+    const getShop = (id) => {
         httpGet('/shop/shop-user/' + id).then((res) => {
-            console.log({...res.data[0]})
-            setShop({...res.data[0]})
+            console.log({ ...res.data[0] })
+            setShop({ ...res.data[0] })
         })
     }
 
@@ -220,9 +220,8 @@ function Context({ children }) {
     }, [])
 
     useEffect(() => {
-        const userid = localStorage.getItem("userId")
         getUser();
-        getShop(userid);
+
     }, [])
 
     return (<>
@@ -251,12 +250,12 @@ function Context({ children }) {
                 role,
                 queueNumber,
                 getQueueNumber,
-
                 staffName,
                 setStaffName,
                 user,
                 setUser,
                 shop,
+                getShop,
                 setShop
             }}>
             {children}

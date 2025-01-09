@@ -9,7 +9,6 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
 import { AuthData } from "../ContextData";
 import { nanoid } from 'nanoid'
-import axios from 'axios';
 import SaveIcon from '@mui/icons-material/Save';
 let active = 2;
 let items = [];
@@ -42,6 +41,7 @@ const Pos = () => {
     updateQuantity,
     queueNumber,
     getQueueNumber,
+    getShop,
     shop,
     user
   } =
@@ -60,6 +60,7 @@ const Pos = () => {
   const [newId, setNewId] = useState("")
 
   const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("userId");
 
   const [phoneNumber, setPhoneNumber] = useState("0983460756");
   const [showQr, setShowQr] = useState(false);
@@ -139,9 +140,16 @@ const Pos = () => {
   }, []);
 
   useEffect(() => {
-    getMenuType()
-    getMenu()
-  }, [user,shop])
+    getShop(userId);
+
+  }, [])
+
+
+  useEffect(() => {
+
+    getMenuType();
+    getMenu();
+  }, [shop])
 
 
 

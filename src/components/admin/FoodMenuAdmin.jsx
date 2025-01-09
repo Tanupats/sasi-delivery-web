@@ -7,16 +7,27 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FoodMenuForm from "./FoodMenuForm";
 import Swal from 'sweetalert2';
 import { AuthData } from "../../ContextData";
-
+import { httpGet } from "../../http";
 const FoodMenuAdmin = () => {
     const { shop } = useContext(AuthData);
     const [foods, setFoods] = useState([]);
     const [menuType, setMenuType] = useState([]);
     const [data, setData] = useState({});
+    const [stock, setStock] = useState([]);
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    const [menuTypeId, setMenuTypeId] = useState("");
     const token = localStorage.getItem("token");
+
+  const getStockProduct = async () => {
+        await httpGet('/stock')
+            .then((data) => {
+                if (data) {
+                    setStock(data.data);
+                }
+            })
+    }
 
     const getMenuType = async () => {
         const id = shop?.shop_id
@@ -107,6 +118,7 @@ const FoodMenuAdmin = () => {
     useEffect(() => {
         getMenuType();
         getFoodMenu();
+        getStockProduct();
     }, [shop])
     useEffect(() => {
         console.log(data)
@@ -240,6 +252,17 @@ const FoodMenuAdmin = () => {
                                                         onChange={(e) => setData({ ...data, Price: e.target.value })}
                                                         type="text"
                                                         defaultValue={data?.Price} />
+                                                </Form.Group>
+                                                <Form.Group>
+                                                    <Form.Label>เลือกสต็อกสินค้า </Form.Label>
+
+                                                   <Form.Select
+                                                                                                       onChange={(e) => setMenuTypeId(e.target.value)}
+                                                                                                       aria-label="Default select example">
+                                                                                                       {stock?.map((item, index) => {
+                                                                                                           return (<option key={index} value={item.id}>{item.name}</option>)
+                                                                                                       })}
+                                                                                                   </Form.Select>
                                                 </Form.Group>
                                                 {
 

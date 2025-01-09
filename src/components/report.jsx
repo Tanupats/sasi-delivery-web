@@ -45,8 +45,6 @@ const Report = () => {
 
     const RemoveDetailsId = async (id) => {
         await axios.delete(`${import.meta.env.VITE_BAKUP_URL}/bills/${id}`)
-        //await axios.delete(`${import.meta.env.VITE_BAKUP_URL}/billsdetails/${id}`)
-
         await getOrderFood()
     }
 

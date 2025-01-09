@@ -28,3 +28,13 @@ export const httpDelete = async (path) => {
   }
 };
 
+
+export const httpPut = async (path,params) => {
+  try {
+    const response = await axios.put(`${baseURL + path}`,params);
+    return response
+  } catch (error) {
+    console.log('error fetch')
+  }
+};
+
