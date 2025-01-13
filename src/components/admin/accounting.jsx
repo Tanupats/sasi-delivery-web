@@ -19,6 +19,7 @@ const Accounting = () => {
     const [quantity, setQuantity] = useState(1);
     const [Price, setPrice] = useState(0.0);
     const [weight, setWeight] = useState(0.0);
+    const [date,setDate] =useState(moment( new Date()).format('YYYY-MM-DD'))
 
     const saveOutcome = async (e) => {
         e.preventDefault();
@@ -33,7 +34,7 @@ const Accounting = () => {
 
         // สร้าง body ที่จะส่งไปยัง API
         const body = {
-            date_account: new Date().toISOString(),
+            date_account: new Date(date).toISOString(),
             listname: listname,
             quantity: quantityValue,
             Price: parseFloat(priceValue),
@@ -42,12 +43,13 @@ const Accounting = () => {
         };
 
         // ส่งข้อมูลไปยัง endpoint
-        await httpPost('/account', body);
+        await httpPost('/account',body)
         await getData();
+       
     };
 
     const getData = async () => {
-        await httpGet('/account')
+        await httpGet(`/account?date=${date}`)
             .then((data) => {
                 if (data) {
                     setData(data.data);
@@ -74,6 +76,11 @@ const Accounting = () => {
 
     useEffect(() => {
         getData();
+     
+    }
+        , [date])
+    useEffect(() => {
+        getData();
         geOutcome()
     }
         , [])
@@ -86,7 +93,11 @@ const Accounting = () => {
 
         <Form onSubmit={(e) => saveOutcome(e)} className="mt-4">
             <Row>
-
+                    <Col>
+                    <Form.Label> วันที่ </Form.Label>  <Form.Control
+                    value={date}
+                    type="date"  onChange={(e)=>setDate(e.target.value)}/>
+                    </Col>
                 <Col>
                     <Form.Group className="mb-2">
                         <Form.Label> รายการ </Form.Label>
@@ -133,7 +144,8 @@ const Accounting = () => {
             <Button type="submit" variant="primary mt-4 w-50"> บันทึก </Button>
         </Form>
 
-        <TableContainer component={Paper} className="mt-3">
+        <TableContainer component={Paper} className="mt-3"> 
+         
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                     <TableRow>

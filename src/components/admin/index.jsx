@@ -14,19 +14,27 @@ import Stock from "./stock";
 import Accounting from "./accounting";
 const Admin = () => {
     const { user } = useContext(AuthData);
-  
+
     const [openMenu, setOpenMenu] = useState("เมนูอาหาร");
 
 
     const [inComeNow, setIncomeNow] = useState(0);
+    const [outComeNow, setOutcomeNow] = useState(0);
     const [open, setOpen] = useState(false);
     const token = localStorage.getItem("token");
 
 
     const geIncomeNow = async () => {
-        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/bills/reportByMounth`,{headers:{'apikey':token}})
+        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/bills/reportByMounth`, { headers: { 'apikey': token } })
             .then(res => {
-                setIncomeNow(res.data.totalAmount)
+                setIncomeNow(res.data.totalAmount);
+            })
+    }
+
+    const geOutcomeNow = async () => {
+        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/account/outcome-mounth`)
+            .then(res => {
+                setOutcomeNow(res.data._sum.total);
             })
     }
 
@@ -37,10 +45,11 @@ const Admin = () => {
 
         setOpenMenu(event);
     };
-   
+
     useEffect(() => {
         if (openMenu === "สรุปยอดขาย") {
-            geIncomeNow()
+            geIncomeNow();
+            geOutcomeNow();
         }
     }
         , [openMenu])
@@ -82,7 +91,9 @@ const Admin = () => {
                                 <Card.Body>
                                     <Card.Title>
 
-                                        ยอดขายเดือนนี้   {inComeNow} บาท
+                                        ยอดขายเดือนนี้   {inComeNow} บาท  <br />
+                                        รายจ่ายเดือนนี้   { outComeNow} บาท  <br /> 
+                                        กำไรขั้นต้น {(inComeNow-outComeNow)} บาท  
                                     </Card.Title>
                                 </Card.Body>
                             </Card>

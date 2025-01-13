@@ -17,10 +17,10 @@ const FoodMenuAdmin = () => {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    const [menuTypeId, setMenuTypeId] = useState("");
+    const [stockId, setStockId] = useState(0);
     const token = localStorage.getItem("token");
 
-  const getStockProduct = async () => {
+    const getStockProduct = async () => {
         await httpGet('/stock')
             .then((data) => {
                 if (data) {
@@ -53,9 +53,9 @@ const FoodMenuAdmin = () => {
     }
 
     const updateData = async () => {
-        const body = { foodname: data.foodname, status: data.status, Price: data.Price };
+        const body = { foodname: data.foodname, status: data.status, Price: data.Price, stockId: parseInt(stockId) };
         const { id } = data;
-        await axios.put(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/${id}`, body)
+        await axios.put(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/${id}`, body, { headers: { 'apikey': token } })
             .then(res => {
                 if (res.status === 200) {
                     Swal.fire({
@@ -256,13 +256,13 @@ const FoodMenuAdmin = () => {
                                                 <Form.Group>
                                                     <Form.Label>เลือกสต็อกสินค้า </Form.Label>
 
-                                                   <Form.Select
-                                                                                                       onChange={(e) => setMenuTypeId(e.target.value)}
-                                                                                                       aria-label="Default select example">
-                                                                                                       {stock?.map((item, index) => {
-                                                                                                           return (<option key={index} value={item.id}>{item.name}</option>)
-                                                                                                       })}
-                                                                                                   </Form.Select>
+                                                    <Form.Select
+                                                        onChange={(e) => setStockId(e.target.value)}
+                                                        aria-label="Default select example">
+                                                        {stock?.map((item, index) => {
+                                                            return (<option key={index} value={item.id}>{item.name}</option>)
+                                                        })}
+                                                    </Form.Select>
                                                 </Form.Group>
                                                 {
 

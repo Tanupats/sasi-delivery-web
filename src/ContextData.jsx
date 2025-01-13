@@ -41,13 +41,15 @@ function Context({ children }) {
     }
 
     const addTocart = (data) => {
+       
         let itemCart = {
             id: data.id,
             name: data.foodname,
             price: data.Price,
             quantity: data.quantity,
             photo: data.img,
-            note: data.note
+            note: data.note,
+            stockId:data.stockId
         }
         if (cart.length === 0) {
             setCart([itemCart]);
@@ -55,7 +57,7 @@ function Context({ children }) {
             setCart([...cart, itemCart]);
         }
     }
-
+   
     const removeCart = (id) => {
         let newCart = cart.filter(item => item.id !== id);
         setCart(newCart);
@@ -211,7 +213,8 @@ function Context({ children }) {
     }
 
     useEffect(() => {
-        sumAmount()
+        sumAmount();
+        console.log(cart);
     }, [cart])
 
     useEffect(() => {
