@@ -108,7 +108,7 @@ function Context({ children }) {
                 messengerId: messangerId
             }
 
-            await axios.post(`${import.meta.env.VITE_BAKUP_URL}/bills`, body)
+            await axios.post(`${import.meta.env.VITE_BAKUP_URL}/bills`, body,{headers:{'apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImlhdCI6MTczODA0MTEyMSwiZXhwIjoxNzM4MTI3NTIxfQ.TcdmMuNId9g4gW4SMsRESuKoPext2yZjqse0IfS1hLE'}})
                 .then(res => {
                     if (res.status === 200) {
                         console.log(res)

@@ -91,31 +91,31 @@ const FoodMenu = () => {
                         </Col>
                         {
                             foods?.map((item, index) => {
-                                return (<>
+                                return (<React.Fragment key={index}>
 
 
-                                    <Col md={6} xs={12} key={index}>
+                                    <Col md={6} xs={12} >
                                         <Card style={{ height: '180px', marginBottom: '12px',margin:0,padding:12 }}>
                                             <Card.Body style={{margin:0,padding:0 }}>
                                                 <Row >
-                                                    <Col md={5}
-                                                        xs={5}                                                                      
+                                                    <Col md={3}
+                                                        xs={3}                                                                      
                                                     >
                                                         <Image style={{ width: "100%", height: '150px', objectFit: 'cover' }}
                                                             src={`${import.meta.env.VITE_BAKUP_URL}/images/${item.img}`} />
                                                     </Col>
-                                                    <Col md={7} xs={7}>
+                                                    <Col md={5} xs={5}>
                                                         <h5>{item.foodname}</h5>
                                                         <h5>{item.Price}฿</h5>
                                                     </Col>
-                                                    {/* <Col md={3} xs={3} className="text-center">
+                                                    <Col md={4} xs={4} className="text-center">
                                                         <Button
                                                             onClick={() => onSelectMenu(item)}
                                                             style={{ backgroundColor: '#FD720D', border: 'none' }}
                                                         >
                                                             <AddCircleIcon />
                                                         </Button>
-                                                    </Col> */}
+                                                    </Col>
                                                 </Row>
 
                                             </Card.Body>
@@ -124,7 +124,7 @@ const FoodMenu = () => {
                                         </Card>
 
                                     </Col>
-                                </>)
+                                </React.Fragment>)
                             })
                         }
                     </Row>
