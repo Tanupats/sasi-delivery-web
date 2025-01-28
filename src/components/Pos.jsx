@@ -230,10 +230,10 @@ const Pos = () => {
                 <Table>
                   <tbody>
                     {
-                      cart.map(item => {
+                      cart.map((item,index) => {
                         return (
 
-                          <tr style={{ padding: 0, margin: 0 }}>
+                          <tr style={{ padding: 0, margin: 0 }} key={index}>
                             <td >{item.name} <br></br> {item.note}</td>
                             <td colSpan={2}>{item.quantity}</td>
                             <td colSpan={2}>{item.price}</td>

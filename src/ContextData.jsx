@@ -2,7 +2,7 @@ import { createContext, useState, useEffect } from "react";
 export const AuthData = createContext();
 import axios from "axios";
 import Swal from 'sweetalert2'
-import { httpGet } from "./http";
+import { httpGet, httpPut } from "./http";
 function Context({ children }) {
     const [cart, setCart] = useState([])
     const [toTal, setTotal] = useState(0);
@@ -41,7 +41,7 @@ function Context({ children }) {
     }
 
     const addTocart = (data) => {
-       
+
         let itemCart = {
             id: data.id,
             name: data.foodname,
@@ -49,7 +49,7 @@ function Context({ children }) {
             quantity: data.quantity,
             photo: data.img,
             note: data.note,
-            stockId:data.stockId
+            stockId: data.stockId
         }
         if (cart.length === 0) {
             setCart([itemCart]);
@@ -57,7 +57,7 @@ function Context({ children }) {
             setCart([...cart, itemCart]);
         }
     }
-   
+
     const removeCart = (id) => {
         let newCart = cart.filter(item => item.id !== id);
         setCart(newCart);
@@ -134,7 +134,7 @@ function Context({ children }) {
                     }
                 })
 
-            cart.map(({ name, price, quantity, note }) => {
+            cart.map(({ name, price, quantity, note, stockId }) => {
                 const bodyDetails = {
                     bills_id: id,
                     foodname: name,
@@ -143,6 +143,8 @@ function Context({ children }) {
                     note: note
                 }
                 axios.post(`${import.meta.env.VITE_BAKUP_URL}/billsdetails`, bodyDetails, { headers: { 'apikey': token } })
+
+                updateStockId(stockId, quantity);
             })
             setCart([]);
             setName("");
@@ -157,6 +159,19 @@ function Context({ children }) {
         }
     }
 
+    const updateStockId = (id, numberStock) => {
+
+        httpGet(`/stock/${id}`).then((res) => {
+            console.log(res.data)
+        }
+
+        )
+
+        const body = {
+            stock_quantity: numberStock
+        }
+        //httpPut(`/stock/${id}`, body)
+    }
 
     const getQueu = async () => {
         await axios.get(`${import.meta.env.VITE_BAKUP_URL}/queues`)
@@ -188,9 +203,9 @@ function Context({ children }) {
         });
         setCart(newCart);
     }
+
     const getShop = (id) => {
         httpGet('/shop/shop-user/' + id).then((res) => {
-            console.log({ ...res.data[0] })
             setShop({ ...res.data[0] })
         })
     }
@@ -202,6 +217,7 @@ function Context({ children }) {
             cart.map(item => {
                 total += (item?.quantity * item?.price);
             })
+            
             let item = cart?.length;
             setTotal(item);
             setSumPrice(total)

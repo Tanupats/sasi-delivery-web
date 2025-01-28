@@ -16,6 +16,13 @@ const Orders = () => {
 
     }
 
+    const getMenuFinish = async (status) => {
+
+        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/bills?status=${status}&sortBy=queueNumber&sortOrder=desc`, { headers: { 'apikey': token } })
+            .then(res => { setReport(res.data) })
+
+    }
+
     const [printBillId, setPrintBillId] = useState(null);
 
     const handlePrint = (billId) => {
@@ -34,8 +41,12 @@ const Orders = () => {
             .then((data) => {
                 if (data) {
                     getMenuReport("รับออเดอร์แล้ว");
+                    if(status==='ส่งสำเร็จ'){
+                        getMenuFinish("ทำเสร็จแล้ว")
+                    }
                 }
             })
+
     }
 
 
@@ -65,14 +76,14 @@ const Orders = () => {
                         <Row className="when-print">
                             <ButtonGroup aria-label="Basic example">
                                 <Button variant="primary" onClick={() => { getMenuReport("รับออเดอร์แล้ว") }}>ออเดอร์ใหม่</Button>
-                                <Button variant="success" onClick={() => { getMenuReport("ทำเสร็จแล้ว") }}>ทำเสร็จแล้ว</Button>
+                                <Button variant="success" onClick={() => { getMenuFinish("ทำเสร็จแล้ว") }}>ทำเสร็จแล้ว</Button>
                                 <Button variant="primary" onClick={() => { getMenuReport("ส่งสำเร็จ") }}>ส่งสำเร็จ</Button>
 
                             </ButtonGroup>
                         </Row>
 
                         <Row>
-                            {report.map((item) => (
+                            {report.map((item, index) => (
                                 <React.Fragment key={item.id}>
                                     {(printBillId === null || printBillId === item.bill_ID) && (
                                         <Col md={4}>
@@ -83,7 +94,8 @@ const Orders = () => {
                                                         รหัสคำสั่งซื้อ {item.bill_ID.substr(0, 5)} <br />
                                                         คิวที่ {item.queueNumber} <br />
                                                         เวลาสั่งซื้อ {moment(item.timeOrder).format('HH:mm')} &nbsp;
-                                                        วันที่สั่งซื้อ {moment(item.timeOrder).format('YYYY-MM-DD')}
+                                                        วันที่สั่งซื้อ {moment(item.timeOrder).format('YYYY-MM-DD')}<br />
+
                                                     </p>
                                                     <Alert className="when-print bg-white">
                                                         <b>สถานะ : {item.statusOrder}</b>

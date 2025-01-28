@@ -12,6 +12,7 @@ import { Modal } from "react-bootstrap";
 import { AuthData } from "../../ContextData";
 import Stock from "./stock";
 import Accounting from "./accounting";
+import ReportProduct from "./ReportProduct";
 const Admin = () => {
     const { user } = useContext(AuthData);
 
@@ -64,6 +65,7 @@ const Admin = () => {
                         <Nav.Link onClick={() => handleNavClick("สรุปยอดขาย")}><DataThresholdingIcon /> สรุปยอดขาย</Nav.Link>
                         <Nav.Link onClick={() => handleNavClick("พนักงาน")}> <RecentActorsIcon /> พนักงาน</Nav.Link>
                         <Nav.Link onClick={() => handleNavClick("สต๊อก")}> <RecentActorsIcon /> สต๊อกสินค้า</Nav.Link>
+                        <Nav.Link onClick={() => handleNavClick("สรุปรายการสั่งซื้อ")}> <RecentActorsIcon /> สรุปรายการสั่งซื้อ</Nav.Link>
                     </Nav>
                 </Navbar>
             </Col>
@@ -99,6 +101,12 @@ const Admin = () => {
                             </Card>
                         </Col>
                     </Row>
+                    )
+                }
+                {
+                    openMenu === "สรุปรายการสั่งซื้อ" && (
+
+                        <ReportProduct />
                     )
                 }
             </Col>

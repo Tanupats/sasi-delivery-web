@@ -85,9 +85,9 @@ const NavbarMenu = () => {
                     <Link to={'/admin'} style={{ textDecoration: 'none', color: '#fff' }}>
                       &nbsp; <StoreIcon />  {shop?.name}
                     </Link>
-                    <Link to={'/admin'} style={{ textDecoration: 'none', color: '#fff' }}>
+                    {/* <Link to={'/admin'} style={{ textDecoration: 'none', color: '#fff' }}>
                       &nbsp; <StoreIcon />  FaceBookPage
-                    </Link>
+                    </Link> */}
 
                   </>
 

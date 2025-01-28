@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Row, Col, Form, Button, Navbar, Nav, Card } from 'react-bootstrap'
-import { httpDelete, httpGet, httpPost } from "../../http";
+import { httpDelete, httpGet, httpPost, httpPut } from "../../http";
 import { AuthData } from "../../ContextData";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -10,6 +10,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import moment from "moment";
+import Swal from 'sweetalert2';
 const Accounting = () => {
     const { shop } = useContext(AuthData);
     const [data, setData] = useState([]);
@@ -59,17 +60,53 @@ const Accounting = () => {
 
     const deleteOutcome = async (id) => {
         try {
-            await httpDelete(`/account/${id}`);
-            await getData();
+            // แสดง Swal เพื่อยืนยันการลบ
+            const result = await Swal.fire({
+                title: 'ยืนยันการลบ?',
+                text: 'คุณต้องการลบข้อมูลนี้หรือไม่!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'ใช่, ลบเลย!',
+                cancelButtonText: 'ยกเลิก',
+            });
+    
+            if (result.isConfirmed) {
+                // หากผู้ใช้กดยืนยัน
+                await httpDelete(`/account/${id}`);
+                await getData();
+                Swal.fire({
+                    title: 'ลบข้อมูลสำเร็จ!',
+                    icon: 'success',
+                    timer: 1500,
+                    showConfirmButton: false,
+                });
+            }
         } catch (error) {
-            console.error("Error deleting the record:", error);
+            console.error('Error deleting the record:', error);
+            Swal.fire({
+                title: 'เกิดข้อผิดพลาด',
+                text: 'ไม่สามารถลบข้อมูลได้',
+                icon: 'error',
+                confirmButtonText: 'ตกลง',
+            });
         }
-    }
+    };
 
     const geOutcome = async () => {
         await httpGet(`/account/outcome`)
             .then(res => {
                 setOutcome(res.data._sum.total)
+            })
+    }
+    const updateAccountId = async (id,value) => {
+        await httpPut(`/account/${id}`,{listname:value})
+            .then(res => {
+                if(res.status===200){
+                       getData()
+                }
+             
             })
     }
 
@@ -169,7 +206,9 @@ const Accounting = () => {
                                 {row.account_id}
                             </TableCell>
                             <TableCell align="right">{moment(row.date_account).format('YYYY-MM-DD')}</TableCell>
-                            <TableCell align="right">{row.listname}</TableCell>
+                            <TableCell align="right"> <Form.Control 
+                            onChange={(e)=>updateAccountId(row.account_id,e.target.value)}
+                            value={row.listname}/>  </TableCell>
                             <TableCell align="right">{row.quantity}</TableCell>
                             <TableCell align="right">{row.Price}</TableCell>
                             <TableCell align="right">{row.total}</TableCell>
