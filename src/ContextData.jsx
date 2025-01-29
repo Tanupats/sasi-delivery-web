@@ -144,7 +144,7 @@ function Context({ children }) {
                 }
                 axios.post(`${import.meta.env.VITE_BAKUP_URL}/billsdetails`, bodyDetails, { headers: { 'apikey': token } })
 
-                updateStockId(stockId, quantity);
+                //updateStockId(stockId, quantity);
             })
             setCart([]);
             setName("");
@@ -159,28 +159,28 @@ function Context({ children }) {
         }
     }
 
-    const updateStockId = (id, numberStock) => {
+    // const updateStockId = (id, numberStock) => {
 
-        httpGet(`/stock/${id}`).then((res) => {
-            console.log(res.data)
-        }
+    //     httpGet(`/stock/${id}`).then((res) => {
+    //         console.log(res.data)
+    //     }
 
-        )
+    //     )
 
-        const body = {
-            stock_quantity: numberStock
-        }
-        //httpPut(`/stock/${id}`, body)
-    }
+    //     const body = {
+    //         stock_quantity: numberStock
+    //     }
+    //     //httpPut(`/stock/${id}`, body)
+    // }
 
-    const getQueu = async () => {
-        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/queues`)
-            .then(res => {
-                if (res.status === 200) {
-                    setQueu(res.data.queues)
-                }
-            })
-    }
+    // const getQueu = async () => {
+    //     await axios.get(`${import.meta.env.VITE_BAKUP_URL}/queues`)
+    //         .then(res => {
+    //             if (res.status === 200) {
+    //                 setQueu(res.data.queues)
+    //             }
+    //         })
+    // }
 
     const setMenuPichet = (id) => {
         let newCart = cart.map(item => {
@@ -217,9 +217,10 @@ function Context({ children }) {
             cart.map(item => {
                 total += (item?.quantity * item?.price);
             })
-            
-            let item = cart?.length;
-            setTotal(item);
+
+            let totalQuantity = cart.reduce((sum, item) => sum + (item?.quantity || 0), 0);
+
+            setTotal(totalQuantity);
             setSumPrice(total)
 
         } else {
@@ -229,8 +230,7 @@ function Context({ children }) {
     }
 
     useEffect(() => {
-        sumAmount();
-        console.log(cart);
+        sumAmount()
     }, [cart])
 
     useEffect(() => {
@@ -245,7 +245,6 @@ function Context({ children }) {
     }, [])
 
     return (<>
-
         <AuthData.Provider
             value={{
                 toTal,

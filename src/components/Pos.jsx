@@ -43,7 +43,8 @@ const Pos = () => {
     getQueueNumber,
     getShop,
     shop,
-    user
+    user,
+    toTal
   } =
     useContext(AuthData)
 
@@ -246,7 +247,7 @@ const Pos = () => {
                       })
                     }
                     <tr >
-                      <td >รวมทั้งหมด {cart.length} รายการ</td>
+                      <td >รวมทั้งหมด {toTal} รายการ</td>
                       <td ></td>
                     </tr>
                     <tr>
