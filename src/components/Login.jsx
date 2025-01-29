@@ -64,7 +64,7 @@ FB.login(function(response) {
             appId      : '831737185629037',
             cookie     : true,                     // Enable cookies to allow the server to access the session.
             xfbml      : true,                     // Parse social plugins on this webpage.
-            version    : 'v17.0'           // Use this Graph API version for this call.
+            version    : 'v22.0'           // Use this Graph API version for this call.
           });
       
       
