@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Row, Col, Card, Image, Button, Modal, ListGroup, Form } from "react-bootstrap";
 import axios from "axios";
 import Select from 'react-select'
+import { httpDelete, httpGet, httpPost, httpPut } from "../http";
 const Details = (props) => {
+    const token = localStorage.getItem("token");
     let { bill_ID, status } = props;
     const [detail, setDetail] = useState([]);
     const [show, setShow] = useState(false);
@@ -29,7 +31,7 @@ const Details = (props) => {
     }
 
     const getMenuType = async () => {
-        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/menutype`)
+        await httpGet(`/menutype`)
             .then(res => {
                 setMenuType(res.data);
             })
@@ -37,25 +39,25 @@ const Details = (props) => {
 
     const getMenuBytypeId = async (id) => {
         console.log(id.value)
-        await axios.get(`${import.meta.env.VITE_API_URL}/getMenuId.php?TypeID=${id.value}`)
+        await httpGet(`/foodmenu/${id.value}`)
             .then(res => {
 
                 let newOption = res.data.map(item => {
-                    return { label: item.foodname, value: item.foodname, price: item.Price }
+                    return { label: item.foodname, value: item.foodname, price: parseInt(item.Price) }
                 })
                 setOptionFood(newOption);
             })
     }
 
     const getDetail = async () => {
-        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/billsdetails/${bill_ID}`)
+        await httpGet(`/billsdetails/${bill_ID}`)
             .then(res => {
                 setDetail(res.data);
             })
     }
 
     const deleteById = async (id) => {
-        await axios.delete(`${import.meta.env.VITE_API_URL}/removesaleByid?id=${id}`)
+        await httpDelete(`/billsdetails/remove/${id}`)
             .then(res => {
                 if (res.status === 200) {
                     getDetail()
@@ -73,25 +75,25 @@ const Details = (props) => {
             quantity: quantity ? quantity : dataMenus.quantity,
             note: note ? note : dataMenus.note
         }
-        await axios.put(`${import.meta.env.VITE_API_URL}/record_sale.php?id=${id}`, body)
+        await httpPut(`/billsdetails/${id}`, body, { headers: { 'apikey': token } })
             .then(res => {
                 if (res.status === 200) {
                     getDetail()
                 }
             })
         handleClose()
-        //update total new after update foodmenu 
+        //update total new after update food menu 
     }
 
     const addNewMenu = async () => {
         const body = {
-            bill_ID: bill_ID
+            bills_id: bill_ID
             , foodname: dataMenus.label
             , price: dataMenus.price
             , quantity: quantity
             , note: note
         };
-        await axios.post(`${import.meta.env.VITE_API_URL}/record_sale.php`, body)
+        await httpPost(`/billsdetails`, body, { headers: { 'apikey': token } })
             .then(res => {
                 if (res.status === 200) {
 
@@ -114,27 +116,28 @@ const Details = (props) => {
         setOption(newOption);
     }, [menuType])
 
- 
+
 
     useEffect(() => {
         console.log(dataMenus)
     }, [dataMenus])
 
-   useEffect(()=>{
-     console.log(detail)
-    },[detail])
+    useEffect(() => {
+        console.log(detail)
+    }, [detail])
 
     return (<>
 
-        {/* <Row>
+        <Row>
 
 
             <Col md={6}>
-                        
-                        <Button className="when-print" variant="success" onClick={() => handleShow('', 'newMenu')}> เพิ่มเมนูใหม่</Button>
+
+                <Button className="when-print" variant="success" onClick={() => handleShow('', 'newMenu')}> เพิ่มเมนูใหม่</Button>
             </Col>
-      
-        </Row> */}
+
+
+        </Row>
 
         <ListGroup className="mt-2">
 
@@ -147,8 +150,8 @@ const Details = (props) => {
                                 <ListGroup.Item style={{ border: 'none', margin: '0px', padding: '0px', fontSize: '18px' }}> X   {item.quantity}  {item.foodname}  {item.note}  {item.price}</ListGroup.Item>
                             </Col>
 
-                            {/* {
-                                status === "รับออเดอร์แล้ว"  && (
+                            {
+                                status === "รับออเดอร์แล้ว" && (
                                     <Col md={4}>
 
                                         <Button className="when-print mb-2"
@@ -159,7 +162,7 @@ const Details = (props) => {
                                         <Button className="when-print mb-2" variant="danger"
                                             onClick={() => deleteById(item.id)}>ลบ</Button>
                                     </Col>
-                                )} */}
+                                )}
 
                         </Row>
 
@@ -168,7 +171,7 @@ const Details = (props) => {
             }
 
 
-         
+
 
         </ListGroup>
 
@@ -253,19 +256,20 @@ const Details = (props) => {
                                 <Col md={12} xs={12}>
                                     <Form.Group>
                                         <Form.Label>เลือกประเภท</Form.Label>
-                                        <Select 
-                                        placeholder="เลือกประเภท"
-                                        options={options} 
-                                        onChange={(e) => getMenuBytypeId(e)} />
+                                        <Select
+                                            placeholder="เลือกประเภท"
+                                            options={options}
+                                            onChange={(e) => getMenuBytypeId(e)} />
                                     </Form.Group>
-                                    <Form.Group>
-                                        <Form.Label>เลือกเมนู</Form.Label>
-                                        <Select 
-                                        placeholder="เลือกเมนู"
-                                        options={optionsFood} 
-                                        onChange={(e) => setDataMenus(e)} />
+
+                                    <Form.Group className="mt-2">
+                                        <Form.Label>รายการอาหาร</Form.Label>
+                                        <Select
+                                            placeholder="เลือกเมนู"
+                                            options={optionsFood}
+                                            onChange={(e) => setDataMenus(e)} />
                                     </Form.Group>
-                                    <Form.Group>
+                                    <Form.Group className="mt-2">
 
                                         <Form.Label>
                                             หมายเหตุ
@@ -275,14 +279,14 @@ const Details = (props) => {
                                             placeholder='หมายเหตุเพิ่มเติม'
                                         />
                                     </Form.Group>
-                                    <Form.Group>
+                                    <Form.Group className="mt-2">
                                         <Form.Label>จำนวน</Form.Label>
                                         <Form.Control type="number"
                                             defaultValue={1}
                                             onChange={(e) => setQuantity(e.target.value)}
                                         />
                                     </Form.Group>
-                                    <Form.Group>
+                                    <Form.Group className="mt-2">
 
                                         <Form.Label>ราคา</Form.Label>
                                         <Form.Control type="text"
@@ -302,7 +306,7 @@ const Details = (props) => {
                                             onClick={() => addNewMenu()}
                                             style={{ float: 'left' }}
                                             variant="success">
-                                            เพิ่มเมนูใหม่
+                                            บันทึก
                                         </Button>
                                     </Col>
                                     <Col md={6}>

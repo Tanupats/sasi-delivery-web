@@ -140,7 +140,7 @@ function Context({ children }) {
                     foodname: name,
                     price: parseFloat(price),
                     quantity: quantity,
-                    note: note
+                    note: note,
                 }
                 axios.post(`${import.meta.env.VITE_BAKUP_URL}/billsdetails`, bodyDetails, { headers: { 'apikey': token } })
 

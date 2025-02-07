@@ -4,7 +4,8 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import axios from "axios";
 import Details from "./Details";
 import moment from "moment/moment";
-
+import { httpDelete } from "../http";
+import Swal from 'sweetalert2';
 const Orders = () => {
     const token = localStorage.getItem("token");
     const [report, setReport] = useState([]);
@@ -29,9 +30,15 @@ const Orders = () => {
         setPrintBillId(billId);
         setTimeout(() => {
             window.print();
-            setPrintBillId(null); // รีเซ็ตหลังจากพิมพ์เสร็จ
-        }, 1000); // ตั้ง timeout เพื่อให้แน่ใจว่า UI อัปเดตก่อนพิมพ์
+            setPrintBillId(null); 
+        }, 3000); 
     };
+
+    const CancelOrder = async (id,bid) => {
+        await httpDelete(`/bills/${id}`)
+        await httpDelete(`/billsdetails/${bid}`)
+        await getMenuReport("รับออเดอร์แล้ว")
+    }
 
     const UpdateStatus = async (id, status) => {
         const body = {
@@ -41,13 +48,32 @@ const Orders = () => {
             .then((data) => {
                 if (data) {
                     getMenuReport("รับออเดอร์แล้ว");
-                    if(status==='ส่งสำเร็จ'){
+                    if (status === 'ส่งสำเร็จ') {
                         getMenuFinish("ทำเสร็จแล้ว")
                     }
                 }
             })
 
     }
+    const deleteBill = async (id,bid) => {
+        Swal.fire({
+            title: 'คุณต้องการยกเลิกออเดอร์หรือไม่ ?',
+            text: "กดยืนยันเพื่อยกเลิก",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'ยืนยันรายการ',
+            cancelButtonText: 'ยกเลิก'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                CancelOrder(id,bid)
+            }
+
+        });
+
+    }
+
 
 
     useEffect(() => {
@@ -84,12 +110,15 @@ const Orders = () => {
 
                         <Row>
                             {report.map((item, index) => (
-                                <React.Fragment key={item.id}>
+                                <React.Fragment key={index}>
                                     {(printBillId === null || printBillId === item.bill_ID) && (
                                         <Col md={4}>
                                             <Card className="mb-4 mt-4" id={item.id}>
                                                 <Card.Body>
-                                                    <b>ลูกค้า {item.customerName}</b>
+                                                    
+                                                            <b>ลูกค้า {item.customerName}</b>
+                                                     
+
                                                     <p>
                                                         รหัสคำสั่งซื้อ {item.bill_ID.substr(0, 5)} <br />
                                                         คิวที่ {item.queueNumber} <br />
@@ -103,7 +132,7 @@ const Orders = () => {
                                                     <Details bill_ID={item.bill_ID} status={item.statusOrder} />
                                                     <b>รวมทั้งหมด {item.amount} บาท</b>
                                                     <Row className="mt-2">
-                                                        {/* {item.statusOrder === 'รับออเดอร์แล้ว' && (
+                                                        {item.statusOrder === 'รับออเดอร์แล้ว' && (<>
                                                             <Col md={6}>
                                                                 <Button
                                                                     className="when-print"
@@ -113,12 +142,21 @@ const Orders = () => {
                                                                     พิมพ์
                                                                 </Button>
                                                             </Col>
-                                                        )} */}
+                                                            <Col md={6}>
+                                                                <Button
+                                                                    className="when-print"
+                                                                    onClick={() => deleteBill(item.id,item.bill_ID)}
+                                                                    variant="danger w-100"
+                                                                >
+                                                                    ยกเลิก
+                                                                </Button>
+                                                            </Col></>
+                                                        )}
                                                         {
                                                             item.statusOrder === 'รับออเดอร์แล้ว' && (
                                                                 <Col md={12}>
                                                                     <Button
-                                                                        className="when-print"
+                                                                        className="when-print mt-4"
                                                                         onClick={() => UpdateStatus(item.id, 'ทำเสร็จแล้ว')}
                                                                         variant="success w-100"
                                                                     >
