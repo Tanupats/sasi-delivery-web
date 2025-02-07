@@ -77,6 +77,7 @@ const FoodMenu = () => {
                                             style={{
                                                 marginRight: '12px',
                                                 fontSize: '18px',
+                                                cursor:'pointer',
                                                 backgroundColor: '#FD720D', marginBottom: '12px'
                                             }}
                                             onClick={() => getMenuBytypeId(item.id)}

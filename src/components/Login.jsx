@@ -59,19 +59,7 @@ FB.login(function(response) {
          
     useEffect(() => {
    
-        window.fbAsyncInit = function() {
-          FB.init({
-            appId      : '831737185629037',
-            cookie     : true,                     // Enable cookies to allow the server to access the session.
-            xfbml      : true,                     // Parse social plugins on this webpage.
-            version    : 'v22.0'           // Use this Graph API version for this call.
-          });
-      
-      
-          FB.getLoginStatus(function(response) {   // Called after the JS SDK has been initialized.
-            statusChangeCallback(response);        // Returns the login status.
-          });
-        };
+     
        
     
   }, []);
@@ -89,12 +77,12 @@ FB.login(function(response) {
                             <Card.Title className="text-center">
                                 SASI Delivery <br />
                                 Login </Card.Title>
-{/* 
+
                                 <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
-</fb:login-button> */}
+</fb:login-button>
 <Button  onClick={()=>login()} >login</Button>
-{/* <div id="status">
-</div> */}
+<div id="status">
+</div>
 
                         </Card.Body>
                     </Card>
