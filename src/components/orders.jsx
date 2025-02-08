@@ -30,8 +30,8 @@ const Orders = () => {
         setPrintBillId(billId);
         setTimeout(() => {
             window.print();
-            setPrintBillId(null); 
-        }, 3000); 
+           
+        }, 2000); 
     };
 
     const CancelOrder = async (id,bid) => {
@@ -55,6 +55,7 @@ const Orders = () => {
             })
 
     }
+
     const deleteBill = async (id,bid) => {
         Swal.fire({
             title: 'คุณต้องการยกเลิกออเดอร์หรือไม่ ?',
@@ -95,10 +96,7 @@ const Orders = () => {
                     <Card.Title className="text-center when-print" as={'h5'}>
                         จัดการออเดอร์</Card.Title>
                     <Form>
-                        {/* <Form.Label>
-                                ค้นหาด้วยวันที่
-                            </Form.Label>
-                            <Form.Control type="date"/> */}
+                     
                         <Row className="when-print">
                             <ButtonGroup aria-label="Basic example">
                                 <Button variant="primary" onClick={() => { getMenuReport("รับออเดอร์แล้ว") }}>ออเดอร์ใหม่</Button>
@@ -107,7 +105,7 @@ const Orders = () => {
 
                             </ButtonGroup>
                         </Row>
-
+                        <Row className="mt-4 when-print"> <Col><Button onClick={()=>setPrintBillId(null)} >  RESET PRINT </Button></Col></Row>    
                         <Row>
                             {report.map((item, index) => (
                                 <React.Fragment key={index}>
