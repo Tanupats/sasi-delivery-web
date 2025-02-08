@@ -3,8 +3,7 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
-import { Row, Col, Card, Image, Button, Modal, Form, Alert } from "react-bootstrap";
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import { AuthData } from "../ContextData";
@@ -19,7 +18,11 @@ import Login from './Login';
 import Admin from './admin';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Swal from 'sweetalert2'
+import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
+import { Home, ShoppingCart, Receipt, AccountCircle } from "@mui/icons-material";
+import Cart from './Cart';
 import Register from './Register';
+
 const NavbarMenu = () => {
   const { toTal,
     cart,
@@ -36,13 +39,7 @@ const NavbarMenu = () => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
-  const onSave = () => {
-
-    saveOrder()
-    handleClose()
-
-  }
+  const [value, setValue] = useState(0);
 
   const logout = () => {
     localStorage.clear()
@@ -71,8 +68,10 @@ const NavbarMenu = () => {
                   <RestaurantMenuIcon /> เมนูอาหาร
                 </Link>
               </Nav.Link>
-              <Nav.Link onClick={handleShow}>
-                ตะกร้า  <LocalMallIcon /> {toTal}
+              <Nav.Link >
+                <Link style={{ textDecoration: 'none', color: '#000' }} to={'/cart'}>
+                  
+                  ตะกร้า  <LocalMallIcon /> {toTal}  </Link>
               </Nav.Link>
               <Nav.Link>
                 <Link style={{ textDecoration: 'none', color: '#000' }} to={'/Myorder'}>
@@ -104,97 +103,28 @@ const NavbarMenu = () => {
         </Container>
       </Navbar>
 
+      <Paper sx={{
+        position: "fixed",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        width: "100%",
+        zIndex: 1000, // ทำให้แน่ใจว่ามันอยู่บนสุด
+      }} elevation={3}>
+        <BottomNavigation
+          showLabels
+          value={value}
 
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>สรุปรายการสั่งอาหาร</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Row>
-            {
-              cart.length !== 0 && cart?.map(item => {
-                return (<>
+        >
+          <BottomNavigation showLabels value={value}>
+            <BottomNavigationAction label="เมนู" icon={<Home />} component={Link} to="/foodmenu" />
+            <BottomNavigationAction label="คำสั่งซื้อ" icon={<Receipt />} component={Link} to="/Myorder" />
+            <BottomNavigationAction label={"ตะกร้า "+toTal} icon={<ShoppingCart />} component={Link} to="/cart" />
+            <BottomNavigationAction label="โปรไฟล์" icon={<AccountCircle />} component={Link} to="/profile" />
+          </BottomNavigation>
+        </BottomNavigation>
+      </Paper>
 
-
-                  <Col md={12} xs={12}>
-                    <Card style={{ height: '130px', marginBottom: '10px', padding: '0px' }}>
-                      <Card.Body className='p-0'>
-                        <Row>
-                          <Col md={5}
-                            xs={5}
-                          >
-                            <Image style={{ width: "100%", height: '130px', objectFit: 'cover' }}
-                              src={`${import.meta.env.VITE_BASE_URL}/img/${item.photo}`} />
-                          </Col>
-                          <Col md={5} xs={5}>
-                            <div className="menu-list mt-3">
-                              <h6>{item?.name}</h6>
-                              <h6>{item?.price}฿</h6>
-                            </div>
-
-                            <Row>
-                              <Col md={12}>
-
-                                <Form>
-                                  <Form.Control
-                                    className='w-100'
-                                    type="text"
-                                    placeholder='คำอธิบายเพิ่มเติม'
-                                    onChange={(e) => updateNote(item.id, e.target.value)}
-                                    defaultValue={item.note}
-                                  />
-                                </Form>
-                              </Col>
-                            </Row>
-                          </Col>
-                          <Col md={2} xs={2} className="text-center">
-                            <Button
-                              onClick={() => removeCart(item.id)}
-                              style={{ float: 'right' }}
-
-                              variant="light">
-                              <RemoveCircleOutlineIcon />
-                            </Button>
-                          </Col>
-                        </Row>
-
-                      </Card.Body>
-
-
-                    </Card>
-
-                  </Col>
-                </>)
-              })
-            }
-            {
-              cart.length > 0 ? (
-                <>
-                  <b>รวมทั้งหมด {sumPrice} บาท</b>
-                  <b>จำนวน {toTal} รายการ</b>
-                  <b style={{ color: 'red' }}> จำนวนรอคิว {queue} คิว </b>
-                </>
-              ) : (
-                <Alert variant='danger' className='pd-4'>
-                  ยังไม่มีรายการสั่งอาหาร
-
-                </Alert>)
-            }
-          </Row>
-        </Modal.Body>
-        {
-          cart.length > 0 && (<>
-            <Modal.Footer>
-              <Button variant="success" onClick={() => onSave()}>
-                ยืนยันสั่งออเดอร์
-              </Button>
-              <Button variant="danger" onClick={handleClose}>
-                ยกเลิก
-              </Button>
-            </Modal.Footer>
-          </>)
-        }
-      </Modal>
       <Routes>
         <Route path="/" Component={Login}></Route>
         <Route path="/orders" Component={Orders}></Route>
@@ -204,6 +134,7 @@ const NavbarMenu = () => {
         <Route path="/report" Component={Report}></Route>
         <Route path="/admin" Component={Admin}></Route>
         <Route path="/register" Component={Register}></Route>
+        <Route path="/cart" Component={Cart}></Route>
       </Routes>
     </Router>
   );

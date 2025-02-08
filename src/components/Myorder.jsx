@@ -55,7 +55,7 @@ const Myorder = () => {
                                         <>
                                             <Card className="mb-4">
                                                 <Card.Body>
-                                                    <p>รหัสออเดอร์ {item.bill_ID.slice(-5).toUpperCase()} <br />  วันที่สั่งออเดอร์ { }
+                                                    <p>หมายเลขออเดอร์ {item.bill_ID.slice(-5).toUpperCase()} <br />  วันที่สั่งออเดอร์ { }
                                                         {moment(item.Date_times).format('YYYY-MM-DD')}
                                                       &nbsp;  เวลา {moment(item.Date_times).format('HH:mm')} น.
                                                     </p>
@@ -79,7 +79,7 @@ const Myorder = () => {
                                     return (<>
                                           <Card className="mb-4">
                                                 <Card.Body>
-                                                    <p>รหัสออเดอร์ {item.bill_ID.slice(-5).toUpperCase()} <br />  วันที่สั่งออเดอร์ { }
+                                                    <p> หมายเลขออเดอร์ {item.bill_ID.slice(-5).toUpperCase()} <br />  วันที่สั่งออเดอร์ { }
                                                         {moment(item.Date_times).format('YYYY-MM-DD')}
                                                       &nbsp;  เวลา {moment(item.Date_times).format('HH:mm')} น.
                                                     </p>
