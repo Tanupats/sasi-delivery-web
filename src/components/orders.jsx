@@ -47,13 +47,11 @@ const Orders = () => {
         await axios.put(`${import.meta.env.VITE_BAKUP_URL}/bills/${id}`, body)
             .then((data) => {
                 if (data) {
+                   
                     getMenuReport("รับออเดอร์แล้ว");
-                    if (status === 'ส่งสำเร็จ') {
-                        getMenuFinish("ทำเสร็จแล้ว")
-                    }
                 }
             })
-
+           
     }
 
     const deleteBill = async (id,bid) => {
