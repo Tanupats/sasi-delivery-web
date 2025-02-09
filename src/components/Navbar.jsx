@@ -128,7 +128,7 @@ const NavbarMenu = () => {
       <Routes>
         <Route path="/" Component={Login}></Route>
         <Route path="/orders" Component={Orders}></Route>
-        <Route path="/foodmenu" Component={FoodMenu}></Route>
+        <Route path="/foodmenu/:userid/:name" Component={FoodMenu}></Route>
         <Route path="/Myorder" Component={Myorder}></Route>
         <Route path="/queueNumber" Component={GetQueu}></Route>
         <Route path="/report" Component={Report}></Route>

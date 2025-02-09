@@ -8,10 +8,7 @@ import { AuthData } from "../ContextData";
 import { nanoid } from 'nanoid'
 const FoodMenu = () => {
 
-   
-
-  
- 
+    const {userid}  = useParams();
     const { addTocart } = useContext(AuthData)
     const [foods, setFoods] = useState([]);
     const [menuType, setMenuType] = useState([]);
@@ -95,21 +92,23 @@ const FoodMenu = () => {
                                 return (<React.Fragment key={index}>
 
 
-                                    <Col md={6} xs={12} >
-                                        <Card style={{ height: '180px', marginBottom: '12px',margin:0,padding:12 }}>
+                                    <Col className="mb-2"
+                                    md={6} 
+                                    xs={12}   >
+                                        <Card style={{ height: '183px', marginBottom: '12px',margin:0,padding:5 }}>
                                             <Card.Body style={{margin:0,padding:0 }}>
                                                 <Row >
-                                                    <Col md={3}
-                                                        xs={3}                                                                      
+                                                    <Col
+                                                     md={3}
+                                                        xs={5}                                                                      
                                                     >
-                                                        <Image style={{ width: "100%", height: '150px', objectFit: 'cover' }}
+                                                    <Image style={{ width: "100%", height: '170px', objectFit: 'cover' }}
                                                             src={`${import.meta.env.VITE_BAKUP_URL}/images/${item.img}`} />
                                                     </Col>
-                                                    <Col md={5} xs={5}>
+                                                    <Col md={9}
+                                                     xs={7}>
                                                         <h5>{item.foodname}</h5>
                                                         <h5>{item.Price}฿</h5>
-                                                    </Col>
-                                                    <Col md={4} xs={4} className="text-center">
                                                         <Button
                                                             onClick={() => onSelectMenu(item)}
                                                             style={{ backgroundColor: '#FD720D', border: 'none' }}
@@ -117,6 +116,7 @@ const FoodMenu = () => {
                                                             <AddCircleIcon />
                                                         </Button>
                                                     </Col>
+                                                   
                                                 </Row>
 
                                             </Card.Body>
