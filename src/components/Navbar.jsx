@@ -25,22 +25,13 @@ import Register from './Register';
 
 const NavbarMenu = () => {
   const { toTal,
-    cart,
-    sumPrice,
-    removeCart,
-    saveOrder,
-    updateNote,
-    messangerId,
     queue,
-    name
   } =
     useContext(AuthData);
 
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
   const [value, setValue] = useState(0);
-
+  const id =    localStorage.getItem("messangerId")
+  const name = localStorage.getItem("name")
   const logout = () => {
     localStorage.clear()
     window.location.href = '/';
@@ -64,13 +55,13 @@ const NavbarMenu = () => {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto text-center">
               <Nav.Link>
-                <Link style={{ textDecoration: 'none', color: '#000' }} to={`/foodmenu`}>
+                <Link style={{ textDecoration: 'none', color: '#000' }} to={`/foodmenu/${id}/${name}`}>
                   <RestaurantMenuIcon /> เมนูอาหาร
                 </Link>
               </Nav.Link>
               <Nav.Link >
                 <Link style={{ textDecoration: 'none', color: '#000' }} to={'/cart'}>
-                  
+
                   ตะกร้า  <LocalMallIcon /> {toTal}  </Link>
               </Nav.Link>
               <Nav.Link>
@@ -119,7 +110,7 @@ const NavbarMenu = () => {
           <BottomNavigation showLabels value={value}>
             <BottomNavigationAction label="เมนู" icon={<Home />} component={Link} to="/foodmenu" />
             <BottomNavigationAction label="คำสั่งซื้อ" icon={<Receipt />} component={Link} to="/Myorder" />
-            <BottomNavigationAction label={"ตะกร้า "+toTal} icon={<ShoppingCart />} component={Link} to="/cart" />
+            <BottomNavigationAction label={"ตะกร้า " + toTal} icon={<ShoppingCart />} component={Link} to="/cart" />
             <BottomNavigationAction label="โปรไฟล์" icon={<AccountCircle />} component={Link} to="/profile" />
           </BottomNavigation>
         </BottomNavigation>

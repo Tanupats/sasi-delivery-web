@@ -111,6 +111,10 @@ const FoodMenu = () => {
                                                      xs={7}>
                                                         <h5>{item.foodname}</h5>
                                                         <h5>{item.Price}฿</h5>
+
+                                                        {
+                                                            item.status === 0 &&  ( <p style={{color:'red'}}> ** ของหมด   </p>)
+                                                        } 
                                                         <Button
                                                             onClick={() => onSelectMenu(item)}
                                                             style={{ backgroundColor: '#FD720D', border: 'none' }}
