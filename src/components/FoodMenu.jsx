@@ -8,7 +8,9 @@ import { AuthData } from "../ContextData";
 import { nanoid } from 'nanoid'
 const FoodMenu = () => {
 
-    const {userid}  = useParams();
+    const {userid,name}  = useParams();
+    localStorage.setItem("messangerId",userid)
+    localStorage.setItem("name",name)
     const { addTocart } = useContext(AuthData)
     const [foods, setFoods] = useState([]);
     const [menuType, setMenuType] = useState([]);
