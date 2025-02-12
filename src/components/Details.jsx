@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Card, Image, Button, Modal, ListGroup, Form } from "react-bootstrap";
-import axios from "axios";
 import Select from 'react-select'
 import { httpDelete, httpGet, httpPost, httpPut } from "../http";
 const Details = (props) => {
@@ -38,7 +37,6 @@ const Details = (props) => {
     }
 
     const getMenuBytypeId = async (id) => {
-        console.log(id.value)
         await httpGet(`/foodmenu/${id.value}`)
             .then(res => {
 
@@ -67,6 +65,12 @@ const Details = (props) => {
         handleClose()
     }
 
+    const updateAmount = async ()=>{
+        const body = {};
+        await httpPut(`/billsdetails/${bill_ID}`)
+    }
+
+
     const UpdateDetailById = async () => {
         let id = dataMenus.id;
         let body = {
@@ -82,7 +86,6 @@ const Details = (props) => {
                 }
             })
         handleClose()
-        //update total new after update food menu 
     }
 
     const addNewMenu = async () => {

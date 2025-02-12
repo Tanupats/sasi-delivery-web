@@ -1,140 +1,123 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import LocalMallIcon from '@mui/icons-material/LocalMall';
-
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import { AuthData } from "../ContextData";
 import FoodMenu from './FoodMenu';
 import Myorder from './Myorder';
 import Orders from './orders';
 import GetQueu from './GetQueu';
-import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
-import AddToQueueIcon from '@mui/icons-material/AddToQueue';
+import Pos from './Pos';
 import Report from './report';
 import Login from './Login';
 import Admin from './admin';
+import ListAltIcon from '@mui/icons-material/ListAlt';
+import CurrencyBitcoinIcon from '@mui/icons-material/CurrencyBitcoin';
+import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import LogoutIcon from '@mui/icons-material/Logout';
-import Swal from 'sweetalert2'
-import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
-import { Home, ShoppingCart, Receipt, AccountCircle } from "@mui/icons-material";
-import Cart from './Cart';
+import StoreIcon from '@mui/icons-material/Store';
 import Register from './Register';
-
+import Swal from 'sweetalert2';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 const NavbarMenu = () => {
-  const { toTal,
-    cart,
-    sumPrice,
-    removeCart,
-    saveOrder,
-    updateNote,
-    messangerId,
-    queue,
-    name
+  const {
+    staffName,
+    user,
+    shop
   } =
     useContext(AuthData);
 
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  const [value, setValue] = useState(0);
 
   const logout = () => {
-    localStorage.clear()
-    window.location.href = '/';
-  }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will be logged out of your account!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, logout!',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        localStorage.clear();
+        window.location.href = '/';
+      }
+    });
+  };
 
 
-  useEffect(() => {
-    console.log(name)
-  }, [name])
 
   return (
     <Router>
 
 
 
-      <Navbar bg="light" data-bs-theme="light" className='when-print' sticky='top' expand="lg">
-        <Container fluid>
-          <Navbar.Brand href="#home">SASI  คิวตอนนี้ {queue}</Navbar.Brand>
+      {
 
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto text-center">
-              <Nav.Link>
-                <Link style={{ textDecoration: 'none', color: '#000' }} to={`/foodmenu`}>
-                  <RestaurantMenuIcon /> เมนูอาหาร
-                </Link>
-              </Nav.Link>
-              <Nav.Link >
-                <Link style={{ textDecoration: 'none', color: '#000' }} to={'/cart'}>
-                  
-                  ตะกร้า  <LocalMallIcon /> {toTal}  </Link>
-              </Nav.Link>
-              <Nav.Link>
-                <Link style={{ textDecoration: 'none', color: '#000' }} to={'/Myorder'}>
-                  <AccountBoxIcon /> คำสั่งซื้อ
-                </Link>
-              </Nav.Link>
-              <Nav.Link>
-                <Link style={{ textDecoration: 'none', color: '#000' }} to={'/queueNumber'}>
-                  <AddToQueueIcon /> คิวตอนนี้ {queue}
-                </Link>
-              </Nav.Link>
-            </Nav>
+        staffName !== null && (
 
-            {
-              name !== null && (
-                <Nav className="ml-auto">
-                  <Nav.Link >
-                    {name}
-                  </Nav.Link>
-                  {/* <Nav.Link onClick={logout}>
-                    <LogoutIcon />  ออกจากระบบ
-                  </Nav.Link> */}
+
+
+          <Navbar style={{ backgroundColor: '#FD720D' }} className='when-print ' sticky='top'>
+            <Container fluid>
+              <Navbar.Brand href="/pos" style={{color:'#fff'}}>SASI POS</Navbar.Brand>
+
+              <Navbar.Toggle aria-controls="basic-navbar-nav" />
+              <Navbar.Collapse id="basic-navbar-nav">
+                <Nav className="me-auto text-center">
+                  <>
+                    <Link to={'/pos'} style={{ textDecoration: 'none', color: '#fff' }}>
+                      &nbsp;  <ListAltIcon /> ขายอาหาร
+                    </Link>
+
+                    <Link to={'/report'} style={{ textDecoration: 'none', color: '#fff' }}>
+                      &nbsp;  <CurrencyBitcoinIcon /> ยอดขาย
+                    </Link>
+
+
+                    <Link to={'/orders'} style={{ textDecoration: 'none', color: '#fff' }}>
+                      &nbsp;   <DeliveryDiningIcon />  ออเดอร์
+                    </Link>
+
+
+                    <Link to={'/admin'} style={{ textDecoration: 'none', color: '#fff' }}>
+                      &nbsp; <StoreIcon />  {shop?.name}
+                    </Link>
+                    {/* <Link to={'/admin'} style={{ textDecoration: 'none', color: '#fff' }}>
+                      &nbsp; <StoreIcon />  FaceBookPage
+                    </Link> */}
+
+                  </>
+
                 </Nav>
 
-              )
-            }
+                <Nav className="ml-auto" >
+                  <Nav.Link style={{ textDecoration: 'none', color: '#fff' }}>
+                    < AccountCircleIcon />  {staffName}
+                  </Nav.Link>
+                  <Nav.Link onClick={logout} style={{ textDecoration: 'none', color: '#fff' }}>
+                    <LogoutIcon />  ออกจากระบบ
+                  </Nav.Link>
+                </Nav>
 
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-
-      <Paper sx={{
-        position: "fixed",
-        bottom: 0,
-        left: 0,
-        right: 0,
-        width: "100%",
-        zIndex: 1000, // ทำให้แน่ใจว่ามันอยู่บนสุด
-      }} elevation={3}>
-        <BottomNavigation
-          showLabels
-          value={value}
-
-        >
-          <BottomNavigation showLabels value={value}>
-            <BottomNavigationAction label="เมนู" icon={<Home />} component={Link} to="/foodmenu" />
-            <BottomNavigationAction label="คำสั่งซื้อ" icon={<Receipt />} component={Link} to="/Myorder" />
-            <BottomNavigationAction label={"ตะกร้า "+toTal} icon={<ShoppingCart />} component={Link} to="/cart" />
-            <BottomNavigationAction label="โปรไฟล์" icon={<AccountCircle />} component={Link} to="/profile" />
-          </BottomNavigation>
-        </BottomNavigation>
-      </Paper>
+              </Navbar.Collapse>
+            </Container>
+          </Navbar>
+        )
+      }
 
       <Routes>
         <Route path="/" Component={Login}></Route>
         <Route path="/orders" Component={Orders}></Route>
-        <Route path="/foodmenu/:userid/:name" Component={FoodMenu}></Route>
         <Route path="/Myorder" Component={Myorder}></Route>
         <Route path="/queueNumber" Component={GetQueu}></Route>
+        <Route path="/foodMenu/:userid/:username" Component={FoodMenu}></Route>
+        <Route path="/pos" Component={Pos}></Route>
         <Route path="/report" Component={Report}></Route>
         <Route path="/admin" Component={Admin}></Route>
         <Route path="/register" Component={Register}></Route>
-        <Route path="/cart" Component={Cart}></Route>
       </Routes>
     </Router>
   );

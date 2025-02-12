@@ -2,7 +2,8 @@ import { createContext, useState, useEffect } from "react";
 export const AuthData = createContext();
 import axios from "axios";
 import Swal from 'sweetalert2'
-import { httpGet, httpPut } from "./http";
+import { httpGet } from "./http";
+
 function Context({ children }) {
     const [cart, setCart] = useState([])
     const [toTal, setTotal] = useState(0);
@@ -15,7 +16,7 @@ function Context({ children }) {
     const [staffName, setStaffName] = useState("");
     const [user, setUser] = useState({ name: '' })
     const [shop, setShop] = useState({})
-
+    const [orderCount, setOrderCount] = useState(0);
     const token = localStorage.getItem("token");
     const getUser = async () => {
 
@@ -111,7 +112,7 @@ function Context({ children }) {
         let id = '';
         if (sumPrice > 0) {
             const body = {
-                amount: sumPrice,
+                amount: parseInt(sumPrice),
                 ordertype: orderType,
                 statusOrder: "รับออเดอร์แล้ว",
                 customerName: name,
@@ -138,7 +139,7 @@ function Context({ children }) {
                 const bodyDetails = {
                     bills_id: id,
                     foodname: name,
-                    price: parseFloat(price),
+                    price: parseInt(price),
                     quantity: quantity,
                     note: note,
                 }
@@ -243,6 +244,37 @@ function Context({ children }) {
         const userid = localStorage.getItem("userId");
         getShop(userid);
     }, [])
+    
+    // useEffect(() => {
+    //     const fetchOrders = async () => {
+    //         try {
+    //             const response = await httpGet(`/bills?status=รับออเดอร์แล้ว`, { headers: { 'apikey': token } }).then((res) => res.data); // เปลี่ยนเป็น API ของคุณ
+    //             response
+    //             const newOrderCount = response.length;
+
+    //             if (newOrderCount > orderCount) {
+
+    //                 Swal.fire({
+    //                     title: 'มีออเดอร์สั่งซื้อใหม่!',
+    //                     text: 'คำสั่งซื้อใหม่จากลูกค้า',
+    //                     icon: 'success',
+    //                     confirmButtonText: 'ยืนยัน',
+                    
+    //                 })
+
+    //                 setOrderCount(newOrderCount);
+    //             }
+    //         } catch (error) {
+    //             console.error("Error fetching orders:", error);
+    //         }
+
+    //     };
+
+    //     const interval = setInterval(fetchOrders, 5000);
+    //     return () => clearInterval(interval); // ล้าง interval เมื่อ component unmount
+    // }, [orderCount]);
+
+
 
     return (<>
         <AuthData.Provider
