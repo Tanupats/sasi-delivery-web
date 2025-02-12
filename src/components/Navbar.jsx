@@ -108,7 +108,7 @@ const NavbarMenu = () => {
 
         >
           <BottomNavigation showLabels value={value}>
-            <BottomNavigationAction label="เมนู" icon={<Home />} component={Link} to="/foodmenu" />
+            <BottomNavigationAction label="เมนู" icon={<Home />} component={Link}  to={`/foodmenu/${id}/${name}`} />
             <BottomNavigationAction label="คำสั่งซื้อ" icon={<Receipt />} component={Link} to="/Myorder" />
             <BottomNavigationAction label={"ตะกร้า " + toTal} icon={<ShoppingCart />} component={Link} to="/cart" />
             <BottomNavigationAction label="โปรไฟล์" icon={<AccountCircle />} component={Link} to="/profile" />
