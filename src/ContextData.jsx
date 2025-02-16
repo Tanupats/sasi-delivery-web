@@ -26,8 +26,8 @@ function Context({ children }) {
             title: 'เพิ่มรายการสำเร็จ',
             text: 'เพิ่มรายการลงตะกร้า',
             icon: 'success',
-        
-            timer:1300
+
+            timer: 1300
         })
         console.log('in card', data)
         let itemCart = {
@@ -97,7 +97,7 @@ function Context({ children }) {
     const saveOrder = async () => {
 
         let id = '';
-        if (username !== null) {   
+        if (username !== null) {
             const body = {
 
                 amount: sumPrice,
@@ -146,7 +146,7 @@ function Context({ children }) {
                     window.location.href = '/'; // ใส่ URL ของหน้าล็อกอินของคุณ
                 }
             });
-            
+
         }
     }
 
@@ -160,9 +160,15 @@ function Context({ children }) {
             })
     }
 
-    const setMenuPichet = (id) => {
+    const [oldData, setOldData] = useState([]);
+
+    const setMenuPichet = (id, data) => {
+        setOldData(prevData => {
+            return [...prevData, data]; // ✅ ต้อง return ค่าใหม่
+        });
+
         let newCart = cart.map(item => {
-            console.log(typeof (item.price))
+
             let newPrice = parseInt(item.price) + 10;
             if (item.id === id) {
                 return { ...item, price: newPrice, name: item.name + "พิเศษ" }
@@ -172,18 +178,28 @@ function Context({ children }) {
         setCart(newCart);
     }
 
-    const setMenuNormal = (id, defaultData) => {
-
+    const setMenuNormal = (id) => {
         let newCart = cart.map(item => {
-            if (item.id === id) {
-                return { ...item, price: defaultData.Price, name: defaultData.foodname }
+            const oldMenu = oldData.find(menu => menu.id === id); // ค้นหาเมนูเก่าจาก oldData
+
+            if (oldMenu) { // ถ้าพบเมนูเดิม
+                if (item.id === id) {
+                    return { ...item, price: oldMenu.price, name: oldMenu.name };
+                }
+                // อัปเดตข้อมูล
             }
             return item;
+            // ถ้าไม่เจอ ให้คืนค่าเดิม
         });
+
         setCart(newCart);
 
     }
 
+    // useEffect(() => {
+    //     console.log('รายการเก่า', oldData)
+
+    // }, [oldData])
 
     const sumAmount = () => {
         if (cart.length > 0) {
@@ -203,7 +219,6 @@ function Context({ children }) {
 
     useEffect(() => {
         sumAmount()
-        console.log(cart)
     }, [cart])
 
     useEffect(() => {
@@ -211,7 +226,7 @@ function Context({ children }) {
         getQueueNumber()// for bill q1 q2 q3 
         setName(localStorage.getItem('name'))
     }, [])
- 
+
     useEffect(() => {
 
         const interval = setInterval(() => {
@@ -247,12 +262,12 @@ function Context({ children }) {
                 setMenuPichet,
                 setMenuNormal,
                 updateFoodName,
-              
+
                 queueNumber,
                 getQueueNumber,
-                auth, 
+                auth,
                 setAuth,
-             
+
             }}>
             {children}
         </AuthData.Provider>

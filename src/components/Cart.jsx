@@ -11,6 +11,10 @@ const Cart = () => {
         saveOrder,
         updateNote,
         queue,
+        setMenuPichet,
+        setMenuNormal,
+        updateQuantity,
+        resetCart
     } = useContext(AuthData);
 
     const onSave = () => {
@@ -29,8 +33,8 @@ const Cart = () => {
                             return (<>
 
 
-                                <Col md={6} xs={12} style={{ marginBottom: '12px' }}>
-                                    <Card style={{ height: '100%', marginBottom: '20px', padding: '6px' }}>
+                                <Col md={6} xs={12} style={{ marginBottom: '12px' }} key={item.id}>
+                                    <Card style={{ height: '100%', marginBottom: '10px', padding: '6px' }}>
                                         <Card.Body className='p-0'>
                                             <Row>
                                                 <Col md={3}
@@ -43,6 +47,34 @@ const Cart = () => {
                                                     <div className="menu-list mt-3">
                                                         <h6>{item?.name}</h6>
                                                         <h6>{item?.price}฿</h6>
+                                                        <Form.Group>
+                                                            <Row className="mt-2">
+                                                                <Col xs={4} md={2}>
+                                                                    <Button
+                                                                        variant="success"
+                                                                        onClick={() => { updateQuantity(item.id, item.quantity + 1) }} >+</Button>
+                                                                </Col>
+                                                                <Col xs={4} md={2} className="text-center p-2">
+                                                                    <h6>{item.quantity}</h6>
+
+                                                                </Col>
+                                                                <Col xs={4} md={2}>
+                                                                    <Button
+                                                                        variant="success"
+                                                                        onClick={() => {
+                                                                            if (item.quantity > 1) { // เช็คว่ามากกว่า 1 ก่อนลดค่า
+                                                                                updateQuantity(item.id, item.quantity - 1);
+                                                                            }
+                                                                        }}
+                                                                    >
+                                                                        -
+                                                                    </Button>
+                                                                </Col>
+
+                                                            </Row>
+
+                                                        </Form.Group>
+
                                                     </div>
 
 
@@ -50,14 +82,19 @@ const Cart = () => {
                                                 <Col md={4} xs={2} className="text-center">
                                                     <Button
                                                         onClick={() => removeCart(item.id)}
-                                                        style={{ float: 'right' }}
+                                                        style={{ float: 'right', color: 'red' }}
 
                                                         variant="light">
                                                         <RemoveCircleOutlineIcon />
                                                     </Button>
                                                 </Col>
-
-                                                <Col md={4} xs={12} >
+                                                <Col md={4} className="mt-3">
+                                                    <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                                        <button type="button" className="btn btn-outline-primary" onClick={() => setMenuNormal(item.id)}>ธรรมดา </button>
+                                                        <button type="button" className="btn btn-outline-success" onClick={() => setMenuPichet(item.id, item)}>พิเศษ </button>
+                                                    </div>
+                                                </Col>
+                                                <Col md={12} xs={12}>
 
                                                     <Form>
                                                         <Form.Control
@@ -69,6 +106,7 @@ const Cart = () => {
                                                         />
                                                     </Form>
                                                 </Col>
+
 
                                             </Row>
 
@@ -95,7 +133,9 @@ const Cart = () => {
 
                                 </Col>
                                 <Col className="mt-3">
-                                    <Button variant="danger" >
+                                    <Button
+                                        onClick={() => resetCart()}
+                                        variant="danger" >
                                         ยกเลิกออเดอร์
                                     </Button>
                                 </Col>

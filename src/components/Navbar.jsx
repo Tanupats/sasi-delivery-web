@@ -39,7 +39,7 @@ const NavbarMenu = () => {
 
 
   useEffect(() => {
-    console.log(name)
+
   }, [name])
 
   return (
