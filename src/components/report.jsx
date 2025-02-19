@@ -11,7 +11,7 @@ import axios from "axios";
 import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import RoomServiceIcon from '@mui/icons-material/RoomService';
 import Detail from "./DetailReport";
-import { Card, Row, Col, Button, Form } from "react-bootstrap"
+import { Card, Row, Col, Button, Form, Modal } from "react-bootstrap"
 import Swal from 'sweetalert2';
 import moment from "moment/moment";
 const Report = () => {
@@ -20,7 +20,9 @@ const Report = () => {
     const [counter, setCounter] = useState({});
     const [startDate, setStartDate] = useState(moment(new Date()).format('YYYY-MM-DD'));
     const token = localStorage.getItem("token");
-
+    const [show, setShow] = useState(false);
+    const [id, setId] = useState("");
+    const handleClose = () => setShow(false);
     const getOrderFood = async () => {
         let sumToday = 0;
         await axios.get(`${import.meta.env.VITE_BAKUP_URL}/bills`, { headers: { 'apikey': token } })
@@ -159,12 +161,12 @@ const Report = () => {
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>ลำดับ</TableCell>
-                                        <TableCell align="right">ประเภท</TableCell>
-                                        <TableCell align="right">ยอดรวม</TableCell>
-                                        <TableCell align="right">ชื่อลูกค้า</TableCell>
-                                        <TableCell align="right">เวลา</TableCell>
-                                        <TableCell align="right">รายการ</TableCell>
-                                        <TableCell align="right">จัดการ</TableCell>
+                                        <TableCell align="left">ประเภท</TableCell>
+                                        <TableCell align="left">ยอดรวม</TableCell>
+                                        <TableCell align="left">ลูกค้า</TableCell>
+                                        <TableCell align="left">เวลา</TableCell>
+                                        <TableCell align="left">รายการ</TableCell>
+                                        <TableCell align="left">จัดการ</TableCell>
 
                                     </TableRow>
                                 </TableHead>
@@ -177,18 +179,16 @@ const Report = () => {
                                             <TableCell component="th" scope="row">
                                                 {row.queueNumber}
                                             </TableCell>
-                                            <TableCell align="right">{row.ordertype}</TableCell>
-                                            <TableCell align="right">{row.amount}</TableCell>
-                                            <TableCell align="right">{row.customerName}</TableCell>
-                                            <TableCell align="right">{moment(row.timeOrder).format('HH:mm')} น.</TableCell>
-                                            <TableCell align="right">
-                                                <Detail
+                                            <TableCell align="left">{row.ordertype}</TableCell>
 
-                                                    id={row.bill_ID}
+                                            <TableCell align="left">{row.amount}</TableCell>
+                                            <TableCell align="left">{row.customerName}</TableCell>
+                                            <TableCell align="left">{moment(row.timeOrder).format('HH:mm')} น.</TableCell>
+                                            <TableCell align="left">
 
-                                                />
+                                                <Button variant="primary" onClick={() => { setId(row.bill_ID), setShow(true) }}> ดูรายการ  </Button>
                                             </TableCell>
-                                            <TableCell align="right">
+                                            <TableCell align="left">
                                                 <Button variant="danger" onClick={() => deleteBill(row.id)}> ยกเลิก  </Button>
                                             </TableCell>
                                         </TableRow>
@@ -201,6 +201,47 @@ const Report = () => {
             </Card.Body>
         </Card>
 
+        <Modal show={show} onHide={handleClose}>
+            <Modal.Header closeButton>
+                <Modal.Title> รายการอาหาร  </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+
+                <Form>
+
+                    <Row>
+
+                        <Col md={12}>
+                            <Detail
+
+                                id={id}
+
+                            />
+                        </Col>
+
+                        <Col md={6}>
+                            <Button
+                                className="mt-3"
+                                onClick={handleClose}
+                                style={{ float: 'left' }}
+                                variant="danger">
+                                ปิด
+                            </Button>
+                        </Col>
+                    </Row>
+
+                </Form>
+
+
+
+
+
+
+
+
+            </Modal.Body>
+
+        </Modal>
     </>)
 }
 

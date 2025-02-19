@@ -12,7 +12,7 @@ const Orders = () => {
     const [report, setReport] = useState([]);
     const [show, setShow] = useState(false);
     const [price, setPrice] = useState(0);
- 
+
 
     const getMenuReport = async (status) => {
         await httpGet(`/bills?status=${status}`, { headers: { 'apikey': token } })
@@ -44,13 +44,28 @@ const Orders = () => {
     const handleClose = () => setShow(false);
 
     const UpdateStatus = async (id, status) => {
-        const body = {
-            statusOrder: status
-        }
-        await httpPut(`/bills/${id}`, body)
+        Swal.fire({
+            title: 'คุณต้องการอัพเดต หรือไม่ ?',
+            text: "กดยืนยันเพื่ออัพเดตสถานะ",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'ยืนยันรายการ',
+            cancelButtonText: 'ยกเลิก'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const body = {
+                    statusOrder: status
+                }
+                await httpPut(`/bills/${id}`, body)
 
-        setReport([]);
-        await getMenuReport("รับออเดอร์แล้ว");
+                setReport([]);
+                await getMenuReport("รับออเดอร์แล้ว");
+
+            }
+
+        });
 
     }
 
@@ -82,7 +97,7 @@ const Orders = () => {
         });
 
     }
-  
+
 
 
     useEffect(() => {
@@ -114,18 +129,18 @@ const Orders = () => {
 
                             </ButtonGroup>
                         </Row>
-                        <Row className="mt-4 when-print"> <Col><Button onClick={() => {setPrintBillId(null),getMenuReport("รับออเดอร์แล้ว")} } >  RESET PRINT </Button></Col></Row>
+                        <Row className="mt-4 when-print"> <Col><Button onClick={() => { setPrintBillId(null), getMenuReport("รับออเดอร์แล้ว") }} >  RESET PRINT </Button></Col></Row>
                         <Row>
                             {report.map((item, index) => (
                                 <React.Fragment key={index}>
                                     {(printBillId === null || printBillId === item.bill_ID) && (
                                         <Col md={4}>
                                             <Card className="mb-4 mt-4" id={item.id}>
-                                                <Card.Body style={{padding:'12px'}}>
+                                                <Card.Body style={{ padding: '12px' }}>
 
                                                     <div className="text-center">
                                                         <h5>ใบเสร็จรับเงิน</h5>  </div>
-                                                   
+
                                                     <p>
                                                         รหัสคำสั่งซื้อ {item.bill_ID.substr(0, 5)} <br />
                                                         คิวที่ {item.queueNumber} <br />
@@ -133,7 +148,7 @@ const Orders = () => {
                                                         วันที่ {moment(item.timeOrder).format('YYYY-MM-DD')}<br />
 
                                                     </p>
-                                                  
+
                                                     <Alert className="when-print bg-white">
                                                         <b>สถานะ : {item.statusOrder}</b>
                                                     </Alert>
