@@ -43,6 +43,7 @@ const Accounting = () => {
             total:parseFloat(sum) ,
         };
 
+        
         // ส่งข้อมูลไปยัง endpoint
         await httpPost('/account',body)
         await getData();
