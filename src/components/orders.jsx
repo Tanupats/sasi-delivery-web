@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Row, Col, Card, Image, Button, Modal, Form, Alert } from "react-bootstrap";
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import axios from "axios";
+
 import Details from "./Details";
 import moment from "moment/moment";
-import { httpDelete, httpGet, httpPut } from "../http";
+import { httpDelete, httpGet, httpPut, sendNotificationBot } from "../http";
 import Swal from 'sweetalert2';
 
 const Orders = () => {
@@ -15,12 +15,14 @@ const Orders = () => {
 
 
     const getMenuReport = async (status) => {
+        setReport([]);
         await httpGet(`/bills?status=${status}`, { headers: { 'apikey': token } })
             .then(res => { setReport(res.data) })
     }
 
     const getMenuFinish = async (status) => {
-        await httpGet(`/bills?status=${status}&sortBy=queueNumber&sortOrder=desc`, { headers: { 'apikey': token } })
+        setReport([]);
+        await httpGet(`/bills?status=${status}`, { headers: { 'apikey': token } })
             .then(res => { setReport(res.data) })
     }
 
@@ -43,7 +45,7 @@ const Orders = () => {
 
     const handleClose = () => setShow(false);
 
-    const UpdateStatus = async (id, status) => {
+    const UpdateStatus = async (id, status, messageid) => {
         Swal.fire({
             title: 'คุณต้องการอัพเดต หรือไม่ ?',
             text: "กดยืนยันเพื่ออัพเดตสถานะ",
@@ -62,6 +64,12 @@ const Orders = () => {
 
                 setReport([]);
                 await getMenuReport("รับออเดอร์แล้ว");
+                if (status === "ทำเสร็จแล้ว") {
+                    if (messageid !== "pos1234") {
+                        sendNotificationBot(messageid)
+                    }
+
+                }
 
             }
 
@@ -190,7 +198,7 @@ const Orders = () => {
                                                                 <Col md={12}>
                                                                     <Button
                                                                         className="when-print mt-4"
-                                                                        onClick={() => UpdateStatus(item.id, 'ทำเสร็จแล้ว')}
+                                                                        onClick={() => UpdateStatus(item.id, 'ทำเสร็จแล้ว', item.messengerId)}
                                                                         variant="success w-100"
                                                                     >
                                                                         ทำอาหารเสร็จแล้ว
