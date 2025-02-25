@@ -86,7 +86,7 @@ const Myorder = () => {
                                                   
                                                     <Details bill_ID={item.bill_ID} status={item.statusOrder} />
                                                     <p style={{ fontSize: '18px' }}>รวมทั้งหมด {item.amount} บาท</p>
-                                                    <Alert> <h5> {item.statusOrder}</h5></Alert>
+                                                    <Alert> <h5>  {item.statusOrder}</h5></Alert>
                                                 </Card.Body>
 
                                             </Card>

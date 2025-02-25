@@ -94,12 +94,12 @@ function Context({ children }) {
     const resetCart = () => setCart([]);
     const messangerId = localStorage.getItem('messangerId');
     const username = localStorage.getItem('name');
-    const saveOrder = async () => {
 
+    const saveOrder = async () => {
+        await getQueueNumber();
         let id = '';
         if (username !== null) {
             const body = {
-
                 amount: sumPrice,
                 ordertype: orderType,
                 statusOrder: "รับออเดอร์แล้ว",
@@ -133,7 +133,7 @@ function Context({ children }) {
                 axios.post(`${import.meta.env.VITE_BAKUP_URL}/billsdetails`, bodyDetails)
             })
             setCart([])
-            getQueueNumber()
+
         } else {
             Swal.fire({
                 title: 'ยังไม่ได้เข้าสู่ระบบ',
@@ -196,10 +196,7 @@ function Context({ children }) {
 
     }
 
-    // useEffect(() => {
-    //     console.log('รายการเก่า', oldData)
 
-    // }, [oldData])
 
     const sumAmount = () => {
         if (cart.length > 0) {
@@ -222,9 +219,8 @@ function Context({ children }) {
     }, [cart])
 
     useEffect(() => {
-        getQueu() // for delivert queue 
+        getQueu() // for delivery queue 
         getQueueNumber()// for bill q1 q2 q3 
-        setName(localStorage.getItem('name'))
     }, [])
 
     useEffect(() => {

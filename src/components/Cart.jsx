@@ -1,9 +1,10 @@
 import React, { useContext } from "react";
 import { AuthData } from "../ContextData";
-import { Row, Col, Card, Image, Button, Modal, Form, Alert } from "react-bootstrap";
+import { Row, Col, Card, Image, Button, Form, Alert } from "react-bootstrap";
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
-
+import { useNavigate } from "react-router-dom";
 const Cart = () => {
+    const router = useNavigate()
     const { toTal,
         cart,
         sumPrice,
@@ -18,7 +19,8 @@ const Cart = () => {
     } = useContext(AuthData);
 
     const onSave = () => {
-        saveOrder()
+        saveOrder();
+        router('/Myorder');
     }
 
     return (<>
@@ -141,7 +143,7 @@ const Cart = () => {
                                 </Col>
                             </>
                         ) : (
-                            <Alert variant='danger' className='pd-3'>
+                            <Alert variant='danger' className='pd-3 text-center'>
                                 ยังไม่มีรายการสั่งอาหาร
 
                             </Alert>)

@@ -16,8 +16,7 @@ import AddToQueueIcon from '@mui/icons-material/AddToQueue';
 import Report from './report';
 import Login from './Login';
 import Admin from './admin';
-import LogoutIcon from '@mui/icons-material/Logout';
-import Swal from 'sweetalert2'
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
 import { Home, ShoppingCart, Receipt, AccountCircle } from "@mui/icons-material";
 import Cart from './Cart';
@@ -30,7 +29,7 @@ const NavbarMenu = () => {
     useContext(AuthData);
 
   const [value, setValue] = useState(0);
-  const id =    localStorage.getItem("messangerId")
+  const id = localStorage.getItem("messangerId")
   const name = localStorage.getItem("name")
   const logout = () => {
     localStorage.clear()
@@ -108,10 +107,10 @@ const NavbarMenu = () => {
 
         >
           <BottomNavigation showLabels value={value}>
-            <BottomNavigationAction label="เมนู" icon={<Home />} component={Link}  to={`/foodmenu/${id}/${name}`} />
-            <BottomNavigationAction label="คำสั่งซื้อ" icon={<Receipt />} component={Link} to="/Myorder" />
-            <BottomNavigationAction label={"ตะกร้า " + toTal} icon={<ShoppingCart />} component={Link} to="/cart" />
-            <BottomNavigationAction label="โปรไฟล์" icon={<AccountCircle />} component={Link} to="/profile" />
+            <BottomNavigationAction onClick={() => setValue(0)} label="เมนู" icon={<MenuBookIcon />} component={Link} to={`/foodmenu/${id}/${name}`} />
+            <BottomNavigationAction onClick={() => setValue(1)} label="คำสั่งซื้อ" icon={<Receipt />} component={Link} to="/Myorder" />
+            <BottomNavigationAction onClick={() => setValue(2)} label={"ตะกร้า " +  toTal} icon={<ShoppingCart />} component={Link} to="/cart" />
+            <BottomNavigationAction onClick={() => setValue(3)} label="โปรไฟล์" icon={<AccountCircle />} component={Link} to="/profile" />
           </BottomNavigation>
         </BottomNavigation>
       </Paper>
