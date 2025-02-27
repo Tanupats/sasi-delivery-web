@@ -4,7 +4,7 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
 import Details from "./Details";
 import moment from "moment/moment";
-import { httpDelete, httpGet, httpPut, sendNotificationBot } from "../http";
+import { httpDelete, httpGet, httpPut, sendDelivery, sendNotificationBot } from "../http";
 import Swal from 'sweetalert2';
 
 const Orders = () => {
@@ -70,6 +70,13 @@ const Orders = () => {
                     }
 
                 }
+                if (status === "กำลังส่ง") {
+                    if (messageid !== "pos1234") {
+                        sendDelivery(messageid)
+                    }
+
+                }
+
 
             }
 
@@ -133,6 +140,7 @@ const Orders = () => {
                             <ButtonGroup aria-label="Basic example">
                                 <Button variant="primary" onClick={() => { getMenuReport("รับออเดอร์แล้ว") }}>ออเดอร์ใหม่</Button>
                                 <Button variant="success" onClick={() => { getMenuFinish("ทำเสร็จแล้ว") }}>ทำเสร็จแล้ว</Button>
+                                <Button variant="warning" onClick={() => { getMenuFinish("กำลังส่ง") }}>กำลังส่ง</Button>
                                 <Button variant="primary" onClick={() => { getMenuReport("ส่งสำเร็จ") }}>ส่งสำเร็จ</Button>
 
                             </ButtonGroup>
@@ -208,17 +216,34 @@ const Orders = () => {
                                                         }
 
                                                         {
-                                                            item.statusOrder === 'ทำเสร็จแล้ว' && (
-                                                                <Col md={6}>
+                                                            item.statusOrder === 'ทำเสร็จแล้ว' && (<>
+                                                                <Col md={12}>
+                                                                    <Button
+                                                                        className="when-print"
+                                                                        onClick={() => UpdateStatus(item.id, 'กำลังส่ง', item.messengerId)}
+                                                                        variant="success w-100"
+                                                                    >
+                                                                        กำลังส่ง
+                                                                    </Button>
+
+                                                                </Col>
+
+                                                            </>)
+                                                        }
+                                                        {
+                                                            item.statusOrder === 'กำลังส่ง' && (<>
+                                                                <Col md={12}>
                                                                     <Button
                                                                         className="when-print"
                                                                         onClick={() => UpdateStatus(item.id, 'ส่งสำเร็จ')}
                                                                         variant="success w-100"
                                                                     >
-                                                                        จัดส่งแล้ว
+                                                                        ส่งสำเร็จ
                                                                     </Button>
+
                                                                 </Col>
-                                                            )
+
+                                                            </>)
                                                         }
 
                                                     </Row>

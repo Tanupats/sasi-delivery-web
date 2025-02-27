@@ -47,3 +47,12 @@ export const sendNotificationBot = async (userid) => {
   }
 };
 
+export const sendDelivery = async (userid) => {
+  try {
+    const response = await axios.post(`https://api.chatfuel.com/bots/5e102b272685af000183388a/users/${userid}/send?chatfuel_token=qwYLsCSz8hk4ytd6CPKP4C0oalstMnGdpDjF8YFHPHCieKNc0AfrnjVs91fGuH74&chatfuel_block_name=delivery_ok`,{message:"test"});
+    return response
+  } catch (error) {
+    console.log('error fetch')
+  }
+};
+
