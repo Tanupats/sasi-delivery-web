@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Card, Image, Button, Modal, Form, Alert } from "react-bootstrap";
+import { Row, Col, Card, Button, Modal, Form, Alert } from "react-bootstrap";
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
-
 import Details from "./Details";
 import moment from "moment/moment";
 import { httpDelete, httpGet, httpPut, sendDelivery, sendNotificationBot } from "../http";
@@ -12,7 +11,8 @@ const Orders = () => {
     const [report, setReport] = useState([]);
     const [show, setShow] = useState(false);
     const [price, setPrice] = useState(0);
-
+    const [printBillId, setPrintBillId] = useState(null);
+    const [id, setId] = useState(null);
 
     const getMenuReport = async (status) => {
         setReport([]);
@@ -26,10 +26,16 @@ const Orders = () => {
             .then(res => { setReport(res.data) })
     }
 
-    const [printBillId, setPrintBillId] = useState(null);
-    const [id, setId] = useState(null);
 
-    const handlePrint = (billId) => {
+
+    const handlePrint = async (billId, id) => {
+        const now = new Date();
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const body = {
+            printStatus: `พิมพ์เวลา ${hours}:${minutes}`
+        }
+        await httpPut(`/bills/${id}`, body)
         setPrintBillId(billId);
         setTimeout(() => {
             window.print();
@@ -162,6 +168,7 @@ const Orders = () => {
                                                         คิวที่ {item.queueNumber} <br />
                                                         เวลาสั่งซื้อ {moment(item.timeOrder).format('HH:mm')} น. &nbsp;<br />
                                                         วันที่ {moment(item.timeOrder).format('YYYY-MM-DD')}<br />
+                                                        { item?.printStatus !== null ?  item?.printStatus+' น.' : " "}
 
                                                     </p>
 
@@ -185,7 +192,7 @@ const Orders = () => {
                                                             <Col md={6}>
                                                                 <Button
                                                                     className="when-print"
-                                                                    onClick={() => handlePrint(item.bill_ID)}
+                                                                    onClick={() => handlePrint(item.bill_ID, item.id)}
                                                                     variant="primary w-100"
                                                                 >
                                                                     พิมพ์
