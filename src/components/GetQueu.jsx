@@ -1,5 +1,4 @@
 import React, { useState, useEffect,useContext } from 'react';
-import axios from 'axios';
 import { AuthData } from "../ContextData";
 import { Card } from 'react-bootstrap';
 const GetQueu = () => {

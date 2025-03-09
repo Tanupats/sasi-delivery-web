@@ -145,10 +145,10 @@ function Context({ children }) {
 
 
     const getQueu = async () => {
-        await axios.get(`${import.meta.env.VITE_API_URL}/getQueue.php`)
+        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/queues`)
             .then(res => {
                 if (res.status === 200) {
-                    setQueu(res.data[0].count_order)
+                    setQueu(res.data.queues)
                 }
             })
     }
@@ -208,14 +208,14 @@ function Context({ children }) {
         getQueueNumber()// for bill q1 q2 q3 
     }, [])
 
-    // useEffect(() => {
+    useEffect(() => {
 
-    //     const interval = setInterval(() => {
-    //         getQueu();
-    //     }, 5000); // ดึงข้อมูลจาก API ทุกๆ 5 วินาที
+        const interval = setInterval(() => {
+            getQueu();
+        }, 5000); // ดึงข้อมูลจาก API ทุกๆ 5 วินาที
 
-    //     return () => clearInterval(interval);
-    // }, [])
+        return () => clearInterval(interval);
+    }, [])
 
     return (<>
 

@@ -93,7 +93,12 @@ const FoodMenu = () => {
 
                                                             color: '#FD720D'
                                                         }}>{item.Price}฿</h5>
-                                                        {item.status === 0 ? <b style={{color:'red'}}> ของหมด </b> : ' '}
+                                                        {
+                                                            item.note !== null && (
+                                                              <p style={{color:'red'}}> หมายเหตุ : {item.note}</p>
+                                                            )
+                                                        }
+                                                        {item.status === 0 ? <b style={{ color: 'red' }}> ของหมด </b> : ' '}
                                                     </Col>
 
                                                 </Row>
