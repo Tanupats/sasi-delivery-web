@@ -53,7 +53,7 @@ const FoodMenuAdmin = () => {
     }
 
     const updateData = async () => {
-        const body = { foodname: data.foodname, status: data.status, Price: data.Price, stockId: parseInt(stockId) };
+        const body = { foodname: data.foodname, status: data.status, Price: data.Price, stockId: parseInt(stockId),note:data.note };
         const { id } = data;
         await axios.put(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/${id}`, body, { headers: { 'apikey': token } })
             .then(res => {
@@ -252,6 +252,13 @@ const FoodMenuAdmin = () => {
                                                         onChange={(e) => setData({ ...data, Price: e.target.value })}
                                                         type="text"
                                                         defaultValue={data?.Price} />
+                                                </Form.Group>
+                                                <Form.Group>
+                                                <Form.Label>หมายเหตุ </Form.Label>
+                                                <Form.Control
+                                                        onChange={(e) => setData({ ...data, note: e.target.value })}
+                                                        type="text"
+                                                        defaultValue={data?.note} />
                                                 </Form.Group>
                                                 <Form.Group>
                                                     <Form.Label>เลือกสต็อกสินค้า </Form.Label>
