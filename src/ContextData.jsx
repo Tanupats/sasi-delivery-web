@@ -97,7 +97,6 @@ function Context({ children }) {
 
     const saveOrder = async () => {
         await getQueueNumber();
-        let id = '';
         if (username !== null) {
             const body = {
                 amount: sumPrice,
@@ -108,31 +107,42 @@ function Context({ children }) {
                 messengerId: messangerId
             }
 
-            await axios.post(`${import.meta.env.VITE_BAKUP_URL}/bills/order`, body)
-                .then(res => {
-                    if (res.status === 200) {
-                        console.log(res)
-                        id = res.data.bill_ID
-                        Swal.fire({
-                            title: 'สั่งอาหารสำเร็จ',
-                            text: 'คำสั่งซื้อของคุณส่งไปยังร้านค้าแล้ว',
-                            icon: 'success',
-                            confirmButtonText: 'ยืนยัน'
-                        })
-                    }
-                })
+            try {
+                const res = await axios.post(`${import.meta.env.VITE_BAKUP_URL}/bills/order`, body);
 
-            cart.map(({ name, price, quantity, note }) => {
-                const bodyDetails = {
-                    bills_id: id,
-                    foodname: name,
-                    price: parseFloat(price),
-                    quantity: quantity,
-                    note: note
+                if (res.status === 200) {
+                    const id = res.data.bill_ID;
+                    Swal.fire({
+                        title: 'สั่งอาหารสำเร็จ',
+                        text: 'คำสั่งซื้อของคุณส่งไปยังร้านค้าแล้ว',
+                        icon: 'success',
+                        confirmButtonText: 'ยืนยัน'
+                    });
+
+                    await Promise.all(cart.map(({ name, price, quantity, note }) => {
+                        const bodyDetails = {
+                            bills_id: id,
+                            foodname: name,
+                            price: parseFloat(price),
+                            quantity: quantity,
+                            note: note
+                        };
+
+                        return axios.post(`${import.meta.env.VITE_BAKUP_URL}/billsdetails`, bodyDetails);
+                    }));
+
+                    setCart([]);
                 }
-                axios.post(`${import.meta.env.VITE_BAKUP_URL}/billsdetails`, bodyDetails)
-            })
-            setCart([])
+            } catch (error) {
+                console.error("เกิดข้อผิดพลาดในการสั่งอาหาร: ", error);
+                Swal.fire({
+                    title: 'เกิดข้อผิดพลาด',
+                    text: 'ไม่สามารถสั่งอาหารได้ กรุณาลองใหม่',
+                    icon: 'error',
+                    confirmButtonText: 'ตกลง'
+                });
+            }
+
 
         } else {
             Swal.fire({

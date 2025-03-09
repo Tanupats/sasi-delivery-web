@@ -1,9 +1,10 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AuthData } from "../ContextData";
 import { Row, Col, Card, Image, Button, Form, Alert } from "react-bootstrap";
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { useNavigate } from "react-router-dom";
 const Cart = () => {
+
     const router = useNavigate()
     const { toTal,
         cart,
@@ -15,11 +16,17 @@ const Cart = () => {
         setMenuPichet,
         setMenuNormal,
         updateQuantity,
+        getQueueNumber,
         resetCart
     } = useContext(AuthData);
 
-    const onSave = () => {
-        saveOrder();
+    const [loading, setLoading] = useState(false);
+
+    const onSave = async () => {
+        await getQueueNumber();
+        setLoading(true);
+        await saveOrder();
+        setLoading(false);
         router('/Myorder');
     }
 
@@ -64,7 +71,7 @@ const Cart = () => {
                                                                     <Button
                                                                         variant="success"
                                                                         onClick={() => {
-                                                                            if (item.quantity > 1) { // เช็คว่ามากกว่า 1 ก่อนลดค่า
+                                                                            if (item.quantity > 1) {
                                                                                 updateQuantity(item.id, item.quantity - 1);
                                                                             }
                                                                         }}
@@ -98,15 +105,15 @@ const Cart = () => {
                                                 </Col>
                                                 <Col md={12} xs={12}>
 
-                                                    <Form>
-                                                        <Form.Control
-                                                            className='w-100 mt-3'
-                                                            type="text"
-                                                            placeholder='หมายเหตุพิ่มเติม'
-                                                            onChange={(e) => updateNote(item.id, e.target.value)}
-                                                            defaultValue={item.note}
-                                                        />
-                                                    </Form>
+
+                                                    <Form.Control
+                                                        className='w-100 mt-3'
+                                                        type="text"
+                                                        placeholder='หมายเหตุพิ่มเติม'
+                                                        onChange={(e) => updateNote(item.id, e.target.value)}
+                                                        defaultValue={item.note}
+                                                    />
+
                                                 </Col>
 
 
@@ -129,8 +136,9 @@ const Cart = () => {
                                 <b>จำนวน {toTal} รายการ</b>
                                 <b style={{ color: 'red' }}> จำนวนรอคิว {queue} คิว </b>
                                 <Col className="mt-3">
-                                    <Button variant="success" onClick={() => onSave()}>
-                                        ยืนยันสั่งออเดอร์
+
+                                    <Button variant="success" onClick={() => onSave()} disabled={loading}>
+                                        {loading ? "กำลังบันทึก..." : "ยืนยันสั่งออเดอร์"}
                                     </Button>
 
                                 </Col>
