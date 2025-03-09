@@ -37,7 +37,6 @@ const FoodMenuAdmin = () => {
                     setMenuType(res.data);
                 })
         }
-
     }
 
     const getMenuBytypeId = async (id) => {
@@ -53,7 +52,7 @@ const FoodMenuAdmin = () => {
     }
 
     const updateData = async () => {
-        const body = { foodname: data.foodname, status: data.status, Price: data.Price, stockId: parseInt(stockId),note:data.note };
+        const body = { foodname: data.foodname, status: data.status, Price: data.Price, stockId: parseInt(stockId), notes: data.notes };
         const { id } = data;
         await axios.put(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/${id}`, body, { headers: { 'apikey': token } })
             .then(res => {
@@ -67,8 +66,8 @@ const FoodMenuAdmin = () => {
                     })
                 }
             })
-        handleClose()
-        getFoodMenu()
+        handleClose();
+        getFoodMenu();
     }
 
     const onDeleteMenu = async (id) => {
@@ -254,11 +253,11 @@ const FoodMenuAdmin = () => {
                                                         defaultValue={data?.Price} />
                                                 </Form.Group>
                                                 <Form.Group>
-                                                <Form.Label>หมายเหตุ </Form.Label>
-                                                <Form.Control
-                                                        onChange={(e) => setData({ ...data, note: e.target.value })}
+                                                    <Form.Label>หมายเหตุ </Form.Label>
+                                                    <Form.Control
+                                                        onChange={(e) => setData({ ...data, notes: e.target.value })}
                                                         type="text"
-                                                        defaultValue={data?.note} />
+                                                        defaultValue={data?.notes} />
                                                 </Form.Group>
                                                 <Form.Group>
                                                     <Form.Label>เลือกสต็อกสินค้า </Form.Label>
