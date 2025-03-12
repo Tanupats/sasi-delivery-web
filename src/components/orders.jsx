@@ -151,7 +151,7 @@ const Orders = () => {
 
                             </ButtonGroup>
                         </Row>
-                        <Row className="mt-4 when-print"> <Col><Button onClick={() => { setPrintBillId(null), getMenuReport("รับออเดอร์แล้ว") }} >  RESET PRINT </Button></Col></Row>
+                        <Row className="mt-4 when-print"> <Col><Button onClick={() => { setPrintBillId(null), getMenuReport("รับออเดอร์แล้ว") }} >  REFRESH</Button></Col></Row>
                         <Row>
                             {report.map((item, index) => (
                                 <React.Fragment key={index}>
@@ -162,14 +162,12 @@ const Orders = () => {
 
                                                     <div className="text-center">
                                                         <h5>ใบเสร็จรับเงิน</h5>  </div>
-
                                                     <p>
                                                         รหัสคำสั่งซื้อ {item.bill_ID.substr(0, 5)} <br />
                                                         คิวที่ {item.queueNumber} <br />
                                                         เวลาสั่งซื้อ {moment(item.timeOrder).format('HH:mm')} น. &nbsp;<br />
                                                         วันที่ {moment(item.timeOrder).format('YYYY-MM-DD')}<br />
-                                                        { item?.printStatus !== null ?  item?.printStatus+' น.' : " "}
-
+                                                        {item?.printStatus !== null ? item?.printStatus + ' น.' : " "}
                                                     </p>
 
                                                     <Alert className="when-print bg-white">
@@ -180,6 +178,7 @@ const Orders = () => {
                                                         <Col md={8}>
                                                             <h5>รวมทั้งหมด {item.amount} บาท</h5>
                                                             <h5>ลูกค้า-{item.customerName}</h5>
+                                                            {item.address ? <h5>จัดส่งที่-{item.address}</h5> : " "}
                                                         </Col>
                                                         <Col md={4}>
                                                             <Button className="when-print" variant="warning" onClick={() => { setPrice(item.amount), setShow(true), setId(item.id) }} > แก้ไขราคา </Button>
