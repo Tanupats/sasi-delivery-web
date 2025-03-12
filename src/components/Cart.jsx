@@ -3,6 +3,8 @@ import { AuthData } from "../ContextData";
 import { Row, Col, Card, Image, Button, Form, Alert } from "react-bootstrap";
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { useNavigate } from "react-router-dom";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 const Cart = () => {
 
     const router = useNavigate()
@@ -17,7 +19,9 @@ const Cart = () => {
         setMenuNormal,
         updateQuantity,
         getQueueNumber,
-        resetCart
+        resetCart,
+        Address,
+        setAddress
     } = useContext(AuthData);
 
     const [loading, setLoading] = useState(false);
@@ -134,19 +138,29 @@ const Cart = () => {
                             <>
                                 <b>รวมทั้งหมด {sumPrice} บาท</b>
                                 <b>จำนวน {toTal} รายการ</b>
-                                <b style={{ color: 'red' }}> จำนวนรอคิว {queue} คิว </b>
+                                <b style={{ color: 'red' }}> จำนวน {queue} คิว </b>
+
+                                <Col md={12} xs={12} className="mt-2">
+                                    <Form>
+                                        <Form.Group>
+                                            <Form.Label> ที่อยู่จัดส่ง    </Form.Label>
+                                            <Form.Control type="text"
+                                                onChange={(e) => setAddress(e.target.value)}
+                                                placeholder="ระบุที่อยู่สำหรับจัดส่ง"
+                                                className="mb-2" />
+                                        </Form.Group>
+                                    </Form>
+                                </Col>
                                 <Col className="mt-3">
-
                                     <Button variant="success" onClick={() => onSave()} disabled={loading}>
-                                        {loading ? "กำลังบันทึก..." : "ยืนยันสั่งออเดอร์"}
+                                        {loading ? "กำลังบันทึก..." : <> <CheckCircleIcon /> ยืนยันสั่งออเดอร์</>}
                                     </Button>
-
                                 </Col>
                                 <Col className="mt-3">
                                     <Button
                                         onClick={() => resetCart()}
                                         variant="danger" >
-                                        ยกเลิกออเดอร์
+                                        <CancelIcon />  ยกเลิกออเดอร์
                                     </Button>
                                 </Col>
                             </>

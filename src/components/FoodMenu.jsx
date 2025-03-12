@@ -124,6 +124,12 @@ const FoodMenu = () => {
                                                         xs={7}>
                                                         <h5>{item.foodname}</h5>
                                                         <h5>{item.Price}฿</h5>
+                                                        {
+
+                                                            item.notes ?  (
+                                                                <p style={{ color: 'red' }}> หมายเหตุ :  {item.notes} </p>
+                                                            ) : ""
+                                                        }
 
                                                         {
                                                             item.status === 0 && (<p style={{ color: 'red' }}> ** ของหมด   </p>)

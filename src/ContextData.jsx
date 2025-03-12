@@ -13,6 +13,7 @@ function Context({ children }) {
     const [queueNumber, setQueueNumber] = useState(0);
     const authCheck = localStorage.getItem("auth");
     const [auth, setAuth] = useState(authCheck || 'not_authenticated');
+    const [Address, setAddress] = useState("");
 
     const getQueueNumber = async () => {
         await axios.get(`${import.meta.env.VITE_BAKUP_URL}/queueNumber`)
@@ -104,7 +105,8 @@ function Context({ children }) {
                 statusOrder: "รับออเดอร์แล้ว",
                 customerName: username,
                 queueNumber: String(queueNumber),
-                messengerId: messangerId
+                messengerId: messangerId,
+                address: Address
             }
 
             try {
@@ -113,10 +115,11 @@ function Context({ children }) {
                 if (res.status === 200) {
                     const id = res.data.bill_ID;
                     Swal.fire({
-                        title: 'สั่งอาหารสำเร็จ',
+                        title: 'สั่งออเดอร์สำเร็จ',
                         text: 'คำสั่งซื้อของคุณส่งไปยังร้านค้าแล้ว',
                         icon: 'success',
-                        confirmButtonText: 'ยืนยัน'
+                        confirmButtonText: 'ยืนยัน',
+                        timer: 1200
                     });
 
                     await Promise.all(cart.map(({ name, price, quantity, note }) => {
@@ -131,8 +134,9 @@ function Context({ children }) {
                         return axios.post(`${import.meta.env.VITE_BAKUP_URL}/billsdetails`, bodyDetails);
                     }));
 
-                    setCart([]);
+
                 }
+                setCart([]);
             } catch (error) {
                 console.error("เกิดข้อผิดพลาดในการสั่งอาหาร: ", error);
                 Swal.fire({
@@ -207,17 +211,16 @@ function Context({ children }) {
     }
 
 
-
     const sumAmount = () => {
         if (cart.length > 0) {
+            let totalMenu = 0;
             let total = 0;
             cart.map(item => {
                 total += (item?.quantity * item?.price);
+                totalMenu += item?.quantity;
             })
-            let item = cart?.length;
-            setTotal(item);
+            setTotal(totalMenu);
             setSumPrice(total)
-
         } else {
             setTotal(0);
             setSumPrice(0)
@@ -273,7 +276,8 @@ function Context({ children }) {
                 getQueueNumber,
                 auth,
                 setAuth,
-
+                Address,
+                setAddress
             }}>
             {children}
         </AuthData.Provider>
