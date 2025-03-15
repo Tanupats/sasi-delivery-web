@@ -70,6 +70,16 @@ const FoodMenuAdmin = () => {
         getFoodMenu();
     }
 
+    const updateStatus = async (id, val, TypeID) => {
+        const body = { status: val };
+        await axios.put(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/${id}`, body, { headers: { 'apikey': token } })
+            .then(res => {
+                if (res.status === 200) {
+                    getMenuBytypeId(TypeID);
+                }
+            })
+    }
+
     const onDeleteMenu = async (id) => {
         Swal.fire({
             title: 'คุณต้องการลบเมนูนี้หรือไม่ ?',
@@ -82,7 +92,7 @@ const FoodMenuAdmin = () => {
             cancelButtonText: 'ยกเลิก'
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/${id}`)
+                axios.delete(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/${id}`, { headers: { 'apikey': token } })
                     .then(res => {
                         if (res.status === 200) {
                             Swal.fire(
@@ -175,15 +185,52 @@ const FoodMenuAdmin = () => {
                                                             <Col md={4}
                                                                 xs={4}
                                                             >
-                                                                <Image style={{ width: "100%", height: '100px', objectFit: 'cover' }}
+                                                                <Image style={{ width: "100%", height: '160px', objectFit: 'cover' }}
                                                                     src={`${import.meta.env.VITE_BAKUP_URL}/images/${item.img}`} />
                                                             </Col>
-                                                            <Col md={4} xs={4}>
+                                                            <Col md={6} xs={6}>
 
                                                                 <h5>{item.foodname}</h5>
                                                                 <h5>{item.Price}฿</h5>
+                                                                {
+
+                                                                    item.status === 1 && (
+
+                                                                        <Form.Group>
+                                                                            <Row>
+                                                                                <Col md={6} xs={6} onClick={() => updateStatus(item.id, 0, item.TypeID)}>
+                                                                                    <Form.Label> มีจำหน่าย</Form.Label>
+                                                                                </Col>
+
+                                                                                <Col md={6} xs={6}>
+                                                                                    <Form.Check checked={item.status} onClick={() => updateStatus(item.id, 0, item.TypeID)} />
+                                                                                </Col>
+                                                                            </Row>
+
+
+                                                                        </Form.Group>
+                                                                    )
+                                                                }
+                                                                {
+
+                                                                    item.status === 0 && (
+                                                                        <Form.Group>
+                                                                            <Row>
+
+                                                                                <Col md={6} xs={6} onClick={() => updateStatus(item.id, 1, item.TypeID)}>
+                                                                                    <Form.Label> สินค้าหมด</Form.Label>
+                                                                                </Col>
+                                                                                <Col md={6} xs={6}>
+                                                                                    <Form.Check checked={item.status} onClick={() => updateStatus(item.id, 1, item.TypeID)} />
+                                                                                </Col>
+                                                                            </Row>
+
+
+                                                                        </Form.Group>
+                                                                    )}
+
                                                             </Col>
-                                                            <Col md={4} xs={4} className="text-center">
+                                                            <Col md={2} xs={2} className="text-center">
                                                                 <Button
                                                                     onClick={() => onSelectMenu(item)}
                                                                     variant="light"
@@ -270,24 +317,6 @@ const FoodMenuAdmin = () => {
                                                         })}
                                                     </Form.Select>
                                                 </Form.Group>
-                                                {
-
-                                                    data.status === 1 && (
-
-                                                        <Form.Group>
-                                                            <Form.Label> มีจำหน่าย</Form.Label>
-                                                            <Form.Check checked={data.status} onClick={() => setData({ ...data, status: 0 })} />
-                                                        </Form.Group>
-                                                    )
-                                                }
-                                                {
-
-                                                    data.status === 0 && (
-                                                        <Form.Group>
-                                                            <Form.Label> สินค้าหมด</Form.Label>
-                                                            <Form.Check checked={data.status} onClick={() => setData({ ...data, status: 1 })} />
-                                                        </Form.Group>
-                                                    )}
 
                                             </Col>
 
