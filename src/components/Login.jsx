@@ -13,7 +13,7 @@ const Login = () => {
     const getShop = (id) => {
         httpGet('/shop/shop-user/' + id).then((res) => {
             console.log(res.data)
-            setShop({...res.data[0]})
+            setShop({ ...res.data[0] })
         })
     }
 
@@ -39,7 +39,11 @@ const Login = () => {
             })
     }
 
-
+    useEffect(() => {
+        if (localStorage.getItem("token")) {
+            router('/pos');
+        }
+    }, [])
     return (
         <>
             <Row className="mt-4">

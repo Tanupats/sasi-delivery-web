@@ -71,13 +71,13 @@ const Orders = () => {
                 setReport([]);
                 await getMenuReport("รับออเดอร์แล้ว");
                 if (status === "ทำเสร็จแล้ว") {
-                    if (messageid !== "pos1234") {
+                    if (messageid !== "pos") {
                         sendNotificationBot(messageid)
                     }
 
                 }
                 if (status === "กำลังส่ง") {
-                    if (messageid !== "pos1234") {
+                    if (messageid !== "pos") {
                         sendDelivery(messageid)
                     }
 
@@ -169,7 +169,11 @@ const Orders = () => {
                                                         วันที่ {moment(item.timeOrder).format('YYYY-MM-DD')}<br />
                                                         {item?.printStatus !== null ? item?.printStatus + ' น.' : " "}
                                                     </p>
+                                                    <div className="when-print mb-2">
 
+
+                                                        <b  > สั่งจาก {item.messengerId === 'pos' ? 'Admin' : 'Page'} </b> <br />
+                                                    </div>
                                                     <Alert className="when-print bg-white">
                                                         <b>สถานะ : {item.statusOrder}</b>
                                                     </Alert>

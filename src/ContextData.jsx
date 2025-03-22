@@ -16,7 +16,7 @@ function Context({ children }) {
     const [staffName, setStaffName] = useState("");
     const [user, setUser] = useState({ name: '' })
     const [shop, setShop] = useState({})
-    const [orderCount, setOrderCount] = useState(0);
+    const [statusPrint, setStatusPrint] = useState("");
     const token = localStorage.getItem("token");
     const getUser = async () => {
 
@@ -117,13 +117,13 @@ function Context({ children }) {
                 statusOrder: "รับออเดอร์แล้ว",
                 customerName: name,
                 queueNumber: String(queueNumber),
-                messengerId: 'pos1234',
-                shop_id: shop_id
+                messengerId: 'pos',
+                shop_id: shop_id,
+                printStatus: statusPrint
             }
             await axios.post(`${import.meta.env.VITE_BAKUP_URL}/bills`, body, { headers: { 'apikey': token } })
                 .then(res => {
                     if (res.status === 200) {
-
                         id = res.data.bill_ID
                         Swal.fire({
                             title: 'ทำรายการสำเร็จ',
@@ -134,8 +134,7 @@ function Context({ children }) {
                         })
                     }
                 })
-
-            cart.map(({ name, price, quantity, note, stockId }) => {
+            cart.map(({ name, price, quantity, note }) => {
                 const bodyDetails = {
                     bills_id: id,
                     foodname: name,
@@ -145,7 +144,7 @@ function Context({ children }) {
                 }
                 axios.post(`${import.meta.env.VITE_BAKUP_URL}/billsdetails`, bodyDetails, { headers: { 'apikey': token } })
 
-                //updateStockId(stockId, quantity);
+
             })
             setCart([]);
             setName("");
@@ -244,7 +243,7 @@ function Context({ children }) {
         const userid = localStorage.getItem("userId");
         getShop(userid);
     }, [])
-    
+
     // useEffect(() => {
     //     const fetchOrders = async () => {
     //         try {
@@ -259,7 +258,7 @@ function Context({ children }) {
     //                     text: 'คำสั่งซื้อใหม่จากลูกค้า',
     //                     icon: 'success',
     //                     confirmButtonText: 'ยืนยัน',
-                    
+
     //                 })
 
     //                 setOrderCount(newOrderCount);
@@ -308,6 +307,8 @@ function Context({ children }) {
                 shop,
                 getShop,
                 setShop
+                ,setStatusPrint,
+                statusPrint
             }}>
             {children}
         </AuthData.Provider>

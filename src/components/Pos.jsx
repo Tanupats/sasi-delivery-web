@@ -43,8 +43,9 @@ const Pos = () => {
     getQueueNumber,
     getShop,
     shop,
-    user,
-    toTal
+    toTal,
+    setStatusPrint,
+    statusPrint
   } =
     useContext(AuthData)
 
@@ -70,11 +71,9 @@ const Pos = () => {
   const [quantity, setQuantity] = useState(1);
 
   const printSlip = () => {
-
+    setStatusPrint('พิมพ์เวลา ' + new Date().getHours() + ':' + new Date().getMinutes())
     window.print()
   }
-
- 
 
   function handleQR() {
     setqrCode(generatePayload(phoneNumber, { amount: sumPrice }));
@@ -97,7 +96,7 @@ const Pos = () => {
   }
 
   const getMenu = () => {
-    httpGet(`/foodmenu/getByShop/${shop.shop_id}`,{ headers: { 'apikey': token } })
+    httpGet(`/foodmenu/getByShop/${shop.shop_id}`, { headers: { 'apikey': token } })
       .then(res => {
         if (res.status === 200) {
           setMenu(res.data);
@@ -106,14 +105,14 @@ const Pos = () => {
       )
   }
 
-  const getMenuType =  () => {
-    httpGet(`/menutype/${shop.shop_id}`,{ headers: { 'apikey': token }})
+  const getMenuType = () => {
+    httpGet(`/menutype/${shop.shop_id}`, { headers: { 'apikey': token } })
       .then(res => {
         setMenuType(res.data);
       })
   }
 
-  const getMenuBytypeId =  (id) => {
+  const getMenuBytypeId = (id) => {
     httpGet(`/foodmenu/${id}`)
       .then(res => {
         setMenu(res.data);
@@ -135,7 +134,7 @@ const Pos = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (!token) {  // ตรวจสอบว่าค่า token ไม่มีหรือเป็นค่าว่าง
+    if (!token) {
       router('/');
     }
   }, []);
@@ -218,12 +217,12 @@ const Pos = () => {
 
           <Col md={4}>
 
-            <div className='header-pos text-center'>
+            <div className='header-pos text-center mt-4'>
 
               <h6> {shop?.name}</h6>
               <h6>  ใบเสร็จรับเงิน</h6>
               <h6> ลำดับคิว {queueNumber} </h6>
-              วันที่ {date} {time}
+              วันที่ {date} เวลา {time}  {statusPrint}
             </div>
             <Row>
               <Col md={12}>
@@ -231,7 +230,7 @@ const Pos = () => {
                 <Table>
                   <tbody>
                     {
-                      cart.map((item,index) => {
+                      cart.map((item, index) => {
                         return (
 
                           <tr style={{ padding: 0, margin: 0 }} key={index}>
@@ -255,11 +254,11 @@ const Pos = () => {
                     </tr>
                     <tr>
                       <td >{name}</td>
-                    
+
 
                     </tr>
                     <tr>
-                    <td colSpan={4}>รวมทั้งหมด {sumPrice} บาท</td>
+                      <td colSpan={4}>รวมทั้งหมด {sumPrice} บาท</td>
                     </tr>
                   </tbody>
                 </Table>
