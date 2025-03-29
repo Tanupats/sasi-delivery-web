@@ -8,7 +8,7 @@ import { AuthData } from "../ContextData";
 import { nanoid } from 'nanoid'
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
-
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 const FoodMenu = () => {
 
     const { userid, name } = useParams();
@@ -19,6 +19,7 @@ const FoodMenu = () => {
     const [foods, setFoods] = useState([]);
     const [menuType, setMenuType] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [isVisible, setIsVisible] = useState(false);
 
     const onSelectMenu = (obj) => {
         let ID = nanoid(10)
@@ -58,6 +59,18 @@ const FoodMenu = () => {
         getFoodMenu();
 
     }, [])
+
+    useEffect(() => {
+        const toggleVisibility = () => {
+            setIsVisible(window.scrollY > 300);
+        };
+        window.addEventListener("scroll", toggleVisibility);
+        return () => window.removeEventListener("scroll", toggleVisibility);
+    }, []);
+
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    };
 
     return (
         <>
@@ -126,7 +139,7 @@ const FoodMenu = () => {
                                                         <h5>{item.Price}฿</h5>
                                                         {
 
-                                                            item.notes ?  (
+                                                            item.notes ? (
                                                                 <p style={{ color: 'red' }}> หมายเหตุ :  {item.notes} </p>
                                                             ) : ""
                                                         }
@@ -153,9 +166,14 @@ const FoodMenu = () => {
                                 </React.Fragment>)
                             })
                         }
-
+   <button
+                        onClick={() => scrollToTop()}
+                        className={`scroll-to-top ${isVisible ? "show" : ""}`}
+                    >
+                        <KeyboardArrowUpIcon />
+                    </button>
                     </Row>
-
+                 
 
                 </Card.Body>
             </Card>

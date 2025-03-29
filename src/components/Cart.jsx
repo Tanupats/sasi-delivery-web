@@ -144,7 +144,10 @@ const Cart = () => {
                                     <Form>
                                         <Form.Group>
                                             <Form.Label> ที่อยู่จัดส่ง    </Form.Label>
-                                            <Form.Control type="text"
+                                            <Form.Control
+                                                value={Address}
+                                                type="text"
+                                                required
                                                 onChange={(e) => setAddress(e.target.value)}
                                                 placeholder="ระบุที่อยู่สำหรับจัดส่ง"
                                                 className="mb-2" />

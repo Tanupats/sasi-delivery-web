@@ -9,7 +9,7 @@ function Context({ children }) {
     const [sumPrice, setSumPrice] = useState(0);
     const [name, setName] = useState("");
     const [orderType, setOrderType] = useState("สั่งกลับบ้าน");
-    const [queue, setQueu] = useState(0);
+    const [queue, setQueue] = useState(0);
     const [queueNumber, setQueueNumber] = useState(0);
     const authCheck = localStorage.getItem("auth");
     const [auth, setAuth] = useState(authCheck || 'not_authenticated');
@@ -22,6 +22,15 @@ function Context({ children }) {
             })
     }
 
+    const checkQueueNumber = async () => {
+        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/bills/queuenumber/${queueNumber}`)
+            .then(res => {
+                if (res.data.length > 0) {
+                    setQueueNumber(queueNumber + 1);
+                }
+            })
+    }
+
     const addTocart = (data) => {
         Swal.fire({
             title: 'เพิ่มรายการสำเร็จ',
@@ -30,7 +39,6 @@ function Context({ children }) {
 
             timer: 1300
         })
-        console.log('in card', data)
         let itemCart = {
             id: data.id,
             name: data.foodname,
@@ -95,10 +103,11 @@ function Context({ children }) {
     const resetCart = () => setCart([]);
     const messangerId = localStorage.getItem('messangerId');
     const username = localStorage.getItem('name');
-
+    const dev = import.meta.env.VITE_BAKUP_URL;
+    
     const saveOrder = async () => {
-        await getQueueNumber();
-        if (username !== null) {
+        checkQueueNumber();
+        if (username !== null && messangerId !== null) {
             const body = {
                 amount: sumPrice,
                 ordertype: orderType,
@@ -110,7 +119,7 @@ function Context({ children }) {
             }
 
             try {
-                const res = await axios.post(`${import.meta.env.VITE_BAKUP_URL}/bills/order`, body);
+                const res = await axios.post(`${dev}/bills/order`, body);
 
                 if (res.status === 200) {
                     const id = res.data.bill_ID;
@@ -131,12 +140,10 @@ function Context({ children }) {
                             note: note
                         };
 
-                        return axios.post(`${import.meta.env.VITE_BAKUP_URL}/billsdetails`, bodyDetails);
+                        return axios.post(`${dev}/billsdetails`, bodyDetails);
                     }));
-
-
                 }
-                setCart([]);
+
             } catch (error) {
                 console.error("เกิดข้อผิดพลาดในการสั่งอาหาร: ", error);
                 Swal.fire({
@@ -150,26 +157,20 @@ function Context({ children }) {
 
         } else {
             Swal.fire({
-                title: 'ยังไม่ได้เข้าสู่ระบบ',
-                text: 'กรุณาเข้าสู่ระบบก่อนสั่งอาหาร',
+                title: 'ไม่สามารถสั่งอาหารได้',
+                text: 'กรุณาใช้งานแอพที่กล่องข้อความเพจเพื่อสั่งอาหารเท่านั้น',
                 icon: 'error',
                 confirmButtonText: 'ยืนยัน'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Redirect ไปยังหน้า login
-                    window.location.href = '/'; // ใส่ URL ของหน้าล็อกอินของคุณ
-                }
-            });
-
+            })
         }
     }
 
 
-    const getQueu = async () => {
+    const getQueue = async () => {
         await axios.get(`${import.meta.env.VITE_BAKUP_URL}/queues`)
             .then(res => {
                 if (res.status === 200) {
-                    setQueu(res.data.queues)
+                    setQueue(res.data.queues)
                 }
             })
     }
@@ -228,18 +229,26 @@ function Context({ children }) {
     }
 
     useEffect(() => {
-        sumAmount()
+        sumAmount();
+        if (queueNumber > 0) {
+            getQueueNumber();
+        }
     }, [cart])
 
     useEffect(() => {
-        getQueu() // for delivery queue 
+        if (queueNumber > 0) {
+            checkQueueNumber();
+        }
+    }, [queueNumber])
+
+    useEffect(() => {
+        getQueue() // for delivery queue 
         getQueueNumber()// for bill q1 q2 q3 
     }, [])
 
     useEffect(() => {
-
         const interval = setInterval(() => {
-            getQueu();
+            getQueue();
         }, 7000);
 
         return () => clearInterval(interval);
