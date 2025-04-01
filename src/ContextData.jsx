@@ -108,6 +108,7 @@ function Context({ children }) {
     const resetCart = () => setCart([]);
 
     const saveOrder = async () => {
+        await getQueueNumber();
         const { shop_id } = shop;
         let id = '';
         if (sumPrice > 0) {
@@ -148,7 +149,7 @@ function Context({ children }) {
             })
             setCart([]);
             setName("");
-            getQueueNumber();
+
         } else {
             Swal.fire({
                 title: 'ไม่มีรายการอาหาร',
@@ -307,7 +308,7 @@ function Context({ children }) {
                 shop,
                 getShop,
                 setShop
-                ,setStatusPrint,
+                , setStatusPrint,
                 statusPrint
             }}>
             {children}
