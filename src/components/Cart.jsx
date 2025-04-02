@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { AuthData } from "../ContextData";
 import { Row, Col, Card, Image, Button, Form, Alert } from "react-bootstrap";
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
@@ -26,7 +26,8 @@ const Cart = () => {
 
     const [loading, setLoading] = useState(false);
 
-    const onSave = async () => {
+    const onSave = async (e) => {
+        e.preventDefault();
         await getQueueNumber();
         setLoading(true);
         await saveOrder();
@@ -36,16 +37,12 @@ const Cart = () => {
 
     return (<>
         <Card style={{ height: '100%', marginBottom: '120px' }}>
-
-
             <Card.Body style={{ height: '100%' }}>
                 <Card.Title className="mb-4" >สรุปรายการสั่งอาหาร</Card.Title>
                 <Row>
                     {
                         cart.length !== 0 && cart?.map(item => {
                             return (<>
-
-
                                 <Col md={6} xs={12} style={{ marginBottom: '12px' }} key={item.id}>
                                     <Card style={{ height: '100%', marginBottom: '10px', padding: '6px' }}>
                                         <Card.Body className='p-0'>
@@ -53,7 +50,7 @@ const Cart = () => {
                                                 <Col md={3}
                                                     xs={5}
                                                 >
-                                                    <Image style={{ width: "100%", height: '130px', objectFit: 'cover' }}
+                                                    <Image style={{ width: "100%", height: '130px', objectFit: 'cover', borderRadius: '8px' }}
                                                         src={`${import.meta.env.VITE_BAKUP_URL}/images/${item.photo}`} />
                                                 </Col>
                                                 <Col md={5} xs={5}>
@@ -113,7 +110,7 @@ const Cart = () => {
                                                     <Form.Control
                                                         className='w-100 mt-3'
                                                         type="text"
-                                                        placeholder='หมายเหตุพิ่มเติม'
+                                                        placeholder='หมายเหตุ'
                                                         onChange={(e) => updateNote(item.id, e.target.value)}
                                                         defaultValue={item.note}
                                                     />
@@ -136,12 +133,12 @@ const Cart = () => {
                     {
                         cart.length > 0 ? (
                             <>
-                                <b>รวมทั้งหมด {sumPrice} บาท</b>
-                                <b>จำนวน {toTal} รายการ</b>
-                                <b style={{ color: 'red' }}> จำนวน {queue} คิว </b>
+                                <h5>รวมทั้งหมด {sumPrice} บาท</h5>
+                                <h5>จำนวน {toTal} รายการ</h5>
+                                <h5 style={{ color: 'red' }}> จำนวนรอ {queue} คิว </h5>
 
                                 <Col md={12} xs={12} className="mt-2">
-                                    <Form>
+                                    <Form id="save" onSubmit={(e) => { onSave(e) }}>
                                         <Form.Group>
                                             <Form.Label> ที่อยู่จัดส่ง    </Form.Label>
                                             <Form.Control
@@ -155,7 +152,10 @@ const Cart = () => {
                                     </Form>
                                 </Col>
                                 <Col className="mt-3">
-                                    <Button variant="success" onClick={() => onSave()} disabled={loading}>
+                                    <Button form="save" type="submit"
+                                        variant="success"
+
+                                        disabled={loading}>
                                         {loading ? "กำลังบันทึก..." : <> <CheckCircleIcon /> ยืนยันสั่งออเดอร์</>}
                                     </Button>
                                 </Col>
