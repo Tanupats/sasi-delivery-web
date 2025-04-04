@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useState, useEffect, useContext } from "react";
 import { Row, Col, Card, Image, Button, Modal, Form } from "react-bootstrap";
 import Badge from 'react-bootstrap/Badge';
@@ -7,7 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FoodMenuForm from "./FoodMenuForm";
 import Swal from 'sweetalert2';
 import { AuthData } from "../../ContextData";
-import { httpGet } from "../../http";
+import { httpDelete, httpGet, httpPut } from "../../http";
 const FoodMenuAdmin = () => {
     const { shop } = useContext(AuthData);
     const [foods, setFoods] = useState([]);
@@ -32,7 +31,7 @@ const FoodMenuAdmin = () => {
     const getMenuType = async () => {
         const id = shop?.shop_id
         if (id) {
-            await axios.get(`${import.meta.env.VITE_BAKUP_URL}/menutype/${id}`, { headers: { 'apikey': token } })
+            await httpGet(`/menutype/${id}`, { headers: { 'apikey': token } })
                 .then(res => {
                     setMenuType(res.data);
                 })
@@ -40,7 +39,7 @@ const FoodMenuAdmin = () => {
     }
 
     const getMenuBytypeId = async (id) => {
-        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/${id}`)
+        await httpGet(`/foodmenu/${id}`)
             .then(res => {
                 setFoods(res.data);
             })
@@ -54,7 +53,7 @@ const FoodMenuAdmin = () => {
     const updateData = async () => {
         const body = { foodname: data.foodname, status: data.status, Price: data.Price, stockId: parseInt(stockId), notes: data.notes };
         const { id } = data;
-        await axios.put(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/${id}`, body, { headers: { 'apikey': token } })
+        await httpPut(`/foodmenu/${id}`, body, { headers: { 'apikey': token } })
             .then(res => {
                 if (res.status === 200) {
                     Swal.fire({
@@ -72,7 +71,7 @@ const FoodMenuAdmin = () => {
 
     const updateStatus = async (id, val, TypeID) => {
         const body = { status: val };
-        await axios.put(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/${id}`, body, { headers: { 'apikey': token } })
+        await httpPut(`/foodmenu/${id}`, body, { headers: { 'apikey': token } })
             .then(res => {
                 if (res.status === 200) {
                     getMenuBytypeId(TypeID);
@@ -92,7 +91,7 @@ const FoodMenuAdmin = () => {
             cancelButtonText: 'ยกเลิก'
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/${id}`, { headers: { 'apikey': token } })
+                httpDelete(`/foodmenu/${id}`, { headers: { 'apikey': token } })
                     .then(res => {
                         if (res.status === 200) {
                             Swal.fire(
@@ -113,13 +112,11 @@ const FoodMenuAdmin = () => {
 
     }
 
-
     const getFoodMenu = () => {
-        fetch(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/getByShop/${shop?.shop_id}`, { headers: { 'apikey': token } })
-            .then((res) => res.json())
-            .then((data) => {
-                if (data) {
-                    setFoods(data);
+        httpGet(`/foodmenu/getByShop/${shop?.shop_id}`, { headers: { 'apikey': token } })
+            .then((res) => {
+                if (res.data) {
+                    setFoods(res.data);
                 }
             })
     }
@@ -137,10 +134,10 @@ const FoodMenuAdmin = () => {
             <Card style={{ width: '100%' }}>
                 <Card.Title className="text-center mt-3">  รายการอาหาร</Card.Title>
                 <Card.Body>
-
+                    <FoodMenuForm getMenuType={getMenuType} />
                     <Row>
 
-                        <Col md={12} className="mb-4">
+                        <Col md={12} className="mb-2">
 
                             {
                                 menuType.length > 0 && menuType?.map((item, index) => {
@@ -167,7 +164,7 @@ const FoodMenuAdmin = () => {
 
                         </Col>
 
-                        <FoodMenuForm getMenuType={getMenuType} />
+
 
                         <div className="menu-list" style={{ overflow: 'auto', height: '100vh' }}>
                             <Row>
@@ -186,9 +183,9 @@ const FoodMenuAdmin = () => {
                                                                 xs={4}
                                                             >
                                                                 <Image style={{ width: "100%", height: '160px', objectFit: 'cover' }}
-                                                                    src={`${import.meta.env.VITE_BAKUP_URL}/images/${item.img}`} />
+                                                                    src={`${import.meta.env.VITE_API_URL}/images/${item.img}`} />
                                                             </Col>
-                                                            <Col md={6} xs={6}>
+                                                            <Col md={6} xs={8}>
 
                                                                 <h5>{item.foodname}</h5>
                                                                 <h5>{item.Price}฿</h5>
@@ -230,7 +227,7 @@ const FoodMenuAdmin = () => {
                                                                     )}
 
                                                             </Col>
-                                                            <Col md={2} xs={2} className="text-center">
+                                                            <Col md={2} xs={4} className="text-center">
                                                                 <Button
                                                                     onClick={() => onSelectMenu(item)}
                                                                     variant="light"

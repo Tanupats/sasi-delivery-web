@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseURL = import.meta.env.VITE_BAKUP_URL;
+const baseURL = import.meta.env.VITE_API_URL;
 
 export const httpGet = async (path, params) => {
   try {
@@ -10,9 +10,9 @@ export const httpGet = async (path, params) => {
   }
 };
 
-export const httpPost = async (path, body) => {
+export const httpPost = async (path, body, header) => {
   try {
-    const response = await axios.post(`${baseURL + path}`, body);
+    const response = await axios.post(`${baseURL + path}`, body, header);
     return response
   } catch (error) {
     console.log('error fetch')
@@ -29,9 +29,9 @@ export const httpDelete = async (path) => {
 };
 
 
-export const httpPut = async (path, params) => {
+export const httpPut = async (path, params, header) => {
   try {
-    const response = await axios.put(`${baseURL + path}`, params);
+    const response = await axios.put(`${baseURL + path}`, params, header);
     return response
   } catch (error) {
     console.log('error fetch')
@@ -49,7 +49,7 @@ export const sendNotificationBot = async (userid) => {
 
 export const sendDelivery = async (userid) => {
   try {
-    const response = await axios.post(`https://api.chatfuel.com/bots/5e102b272685af000183388a/users/${userid}/send?chatfuel_token=qwYLsCSz8hk4ytd6CPKP4C0oalstMnGdpDjF8YFHPHCieKNc0AfrnjVs91fGuH74&chatfuel_block_name=delivery_ok`,{message:"test"});
+    const response = await axios.post(`https://api.chatfuel.com/bots/5e102b272685af000183388a/users/${userid}/send?chatfuel_token=qwYLsCSz8hk4ytd6CPKP4C0oalstMnGdpDjF8YFHPHCieKNc0AfrnjVs91fGuH74&chatfuel_block_name=delivery_ok`, { message: "test" });
     return response
   } catch (error) {
     console.log('error fetch')

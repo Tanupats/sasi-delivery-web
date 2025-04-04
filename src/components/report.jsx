@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react"
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -7,13 +6,13 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import axios from "axios";
 import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import RoomServiceIcon from '@mui/icons-material/RoomService';
 import Detail from "./DetailReport";
 import { Card, Row, Col, Button, Form, Modal } from "react-bootstrap"
 import Swal from 'sweetalert2';
 import moment from "moment/moment";
+import { httpDelete, httpGet, httpPost } from "../http";
 const Report = () => {
     const [totalToday, setTotalToday] = useState(0)
     const [data, setData] = useState([])
@@ -23,9 +22,10 @@ const Report = () => {
     const [show, setShow] = useState(false);
     const [id, setId] = useState("");
     const handleClose = () => setShow(false);
+
     const getOrderFood = async () => {
         let sumToday = 0;
-        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/bills`, { headers: { 'apikey': token } })
+        await httpGet(`/bills`, { headers: { 'apikey': token } })
             .then(res => {
                 setData(res.data)
                 res?.data?.map(item => {
@@ -37,7 +37,7 @@ const Report = () => {
 
     const searchOrder = async () => {
         const body = { startDate: startDate }
-        await axios.post(`${import.meta.env.VITE_BAKUP_URL}/bills/searchByDate`, body, { headers: { 'apikey': token } })
+        await httpPost(`/bills/searchByDate`, body, { headers: { 'apikey': token } })
             .then((res) => {
                 setData(res.data.data);
                 setTotalToday(res.data.total);
@@ -46,12 +46,12 @@ const Report = () => {
 
 
     const RemoveDetailsId = async (id) => {
-        await axios.delete(`${import.meta.env.VITE_BAKUP_URL}/bills/${id}`)
-        await getOrderFood()
+        await httpDelete(`/bills/${id}`);
+        await getOrderFood();
     }
 
     const geReportByorder = async () => {
-        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/report/count-order-type?startDate=${startDate}`)
+        await httpGet(`/report/count-order-type?startDate=${startDate}`)
             .then(res => {
                 setCounter(res.data)
             })
@@ -71,20 +71,13 @@ const Report = () => {
             if (result.isConfirmed) {
                 RemoveDetailsId(id)
             }
-
         });
-
     }
-
-
 
     useEffect(() => {
         searchOrder()
         geReportByorder();
     }, [startDate])
-
-
-
 
     return (<>
         <Card>

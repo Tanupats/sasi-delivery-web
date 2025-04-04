@@ -1,40 +1,37 @@
-import axios from "axios";
 import React, { useState, useContext, useEffect } from "react";
 import { Card, Row, Col, Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { AuthData } from "../ContextData";
-import { httpGet } from "../http";
+import { httpGet, httpPost } from "../http";
 const Login = () => {
     const router = useNavigate()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const { setAuth, setStaffName, setUser, setShop } = useContext(AuthData);
+    const { setStaffName, setUser, setShop } = useContext(AuthData);
 
     const getShop = (id) => {
         httpGet('/shop/shop-user/' + id).then((res) => {
-            console.log(res.data)
-            setShop({ ...res.data[0] })
+            setShop({ ...res.data[0] });
         })
     }
 
     const login = async (e) => {
         e.preventDefault();
         const body = { email: email, password: password };
-        await axios.post(import.meta.env.VITE_BAKUP_URL + '/auth/signin', body)
+        await httpPost('/auth/signin', body)
             .then(res => {
                 if (res) {
                     if (res.status === 200) {
                         const { name, department, token, id } = res.data;
-                        localStorage.setItem("name", name)
-                        localStorage.setItem("role", department)
-                        localStorage.setItem("token", token)
-                        localStorage.setItem("userId", id)
-                        setUser(res.data)
-                        getShop(id)
-                        setStaffName(name)
-                        router('/pos')
+                        localStorage.setItem("name", name);
+                        localStorage.setItem("role", department);
+                        localStorage.setItem("token", token);
+                        localStorage.setItem("userId", id);
+                        setUser(res.data);
+                        getShop(id);
+                        setStaffName(name);
+                        router('/pos');
                     }
-
                 }
             })
     }
@@ -53,7 +50,7 @@ const Login = () => {
                 <Col md={4}>
                     <Card className="mt-4">
                         <Card.Body>
-                            <Card.Title className="text-center">
+                            <Card.Title className="text-center" style={{ color: '#FD720D', border: '0px' }}>
                                 SASI POS <br />
                                 <br />
                                 Login </Card.Title>

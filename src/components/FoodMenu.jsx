@@ -105,7 +105,7 @@ const FoodMenu = () => {
                                                         xs={4}
                                                     >
                                                         <Image style={{ width: "100%", height: '150px', objectFit: 'cover' }}
-                                                            src={`${import.meta.env.VITE_BAKUP_URL}/images/${item.img}`} />
+                                                            src={`${import.meta.env.VITE_API_URL}/images/${item.img}`} />
                                                     </Col>
                                                     <Col md={4} xs={4}>
 

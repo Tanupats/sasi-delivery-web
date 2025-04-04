@@ -16,7 +16,7 @@ export default function FoodComponent({ data }) {
                 <Row>
                     <Col md={5}>
                         <Image style={{ width: '100%', height: '100px', objectFit: 'cover' }}
-                            src={import.meta.env.VITE_BAKUP_URL + '/images/' + img} />
+                            src={import.meta.env.VITE_API_URL + '/images/' + img} />
                     </Col>
                     <Col md={7} >
                         <div className="text-left p-2">

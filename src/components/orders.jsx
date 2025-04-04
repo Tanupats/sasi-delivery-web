@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Row, Col, Card, Button, Modal, Form, Alert } from "react-bootstrap";
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Details from "./Details";
-import moment from "moment/moment";
+import moment, { updateLocale } from "moment/moment";
 import { httpDelete, httpGet, httpPut, sendDelivery, sendNotificationBot } from "../http";
 import Swal from 'sweetalert2';
-
+import { AuthData } from "../ContextData";
 const Orders = () => {
+    const { shop } = useContext(AuthData);
     const token = localStorage.getItem("token");
     const [report, setReport] = useState([]);
     const [show, setShow] = useState(false);
@@ -161,13 +162,17 @@ const Orders = () => {
                                                 <Card.Body style={{ padding: '12px' }}>
 
                                                     <div className="text-center">
-                                                        <h5>ใบเสร็จรับเงิน</h5>  </div>
+                                                        <h5> {shop?.name} </h5>
+                                                        <h5>ใบเสร็จรับเงิน</h5>
+                                                       
+                                                    </div> 
+                                                    <b> คิวที่ {item.queueNumber} <br /> เลขออเดอร์ {item.bill_ID.slice(-5).toUpperCase()}</b>
                                                     <p>
-                                                        รหัสคำสั่งซื้อ {item.bill_ID.substr(0, 5)} <br />
-                                                        คิวที่ {item.queueNumber} <br />
+
+
                                                         เวลาสั่งซื้อ {moment(item.timeOrder).format('HH:mm')} น. &nbsp;<br />
                                                         วันที่ {moment(item.timeOrder).format('YYYY-MM-DD')}<br />
-                                                        {item?.printStatus !== null ? item?.printStatus + ' น.' : " "}
+                                                        {item?.printStatus !== null ? item?.printStatus : " "}
                                                     </p>
                                                     <div className="when-print mb-2">
 

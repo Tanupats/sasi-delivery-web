@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import { Row, Col, Table, Card, Image, Form, Container, Modal, Alert } from 'react-bootstrap';
+import { Row, Col, Table, Card,Form, Container, Modal } from 'react-bootstrap';
 import FoodComponent from './foodComponent';
 import Pagination from 'react-bootstrap/Pagination';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -29,7 +29,7 @@ for (let number = 1; number <= 5; number++) {
 const Pos = () => {
   const router = useNavigate()
   const {
-    addTocart,
+    addToCart,
     cart,
     sumPrice,
     removeCart,
@@ -41,7 +41,6 @@ const Pos = () => {
     updateQuantity,
     queueNumber,
     getQueueNumber,
-    getShop,
     shop,
     toTal,
     setStatusPrint,
@@ -62,13 +61,13 @@ const Pos = () => {
   const [newId, setNewId] = useState("")
 
   const token = localStorage.getItem("token");
-  const userId = localStorage.getItem("userId");
 
   const [phoneNumber, setPhoneNumber] = useState("0983460756");
   const [showQr, setShowQr] = useState(false);
   const [qrCode, setqrCode] = useState("sample");
   const [newPrice, setNewPrice] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [shopId, setShopId] = useState("");
 
   const printSlip = () => {
     setStatusPrint('พิมพ์เวลา ' + new Date().getHours() + ':' + new Date().getMinutes())
@@ -79,11 +78,10 @@ const Pos = () => {
     setqrCode(generatePayload(phoneNumber, { amount: sumPrice }));
   }
 
-
   const confirmMenu = async () => {
     let ID = nanoid(10)
     setNewId(ID)
-    addTocart({ ...defaultMenu, id: ID, quantity: quantity })
+    addToCart({ ...defaultMenu, id: ID, quantity: quantity })
     handleClose();
     setQuantity(1);
   }
@@ -96,20 +94,24 @@ const Pos = () => {
   }
 
   const getMenu = () => {
-    httpGet(`/foodmenu/getByShop/${shop.shop_id}`, { headers: { 'apikey': token } })
-      .then(res => {
-        if (res.status === 200) {
-          setMenu(res.data);
+    if (shop.shop_id !== undefined) {
+      httpGet(`/foodmenu/getByShop/${shop.shop_id}`, { headers: { 'apikey': token } })
+        .then(res => {
+          if (res.status === 200) {
+            setMenu(res.data);
+          }
         }
-      }
       )
+    }
   }
 
   const getMenuType = () => {
-    httpGet(`/menutype/${shop.shop_id}`, { headers: { 'apikey': token } })
-      .then(res => {
-        setMenuType(res.data);
-      })
+    if (shop.shop_id !== undefined) {
+      httpGet(`/menutype/${shop.shop_id}`, { headers: { 'apikey': token } })
+        .then(res => {
+          setMenuType(res.data);
+        })
+    }
   }
 
   const getMenuBytypeId = (id) => {
@@ -120,14 +122,11 @@ const Pos = () => {
   }
 
 
-
   useEffect(() => {
     const Time = new Date().getHours() + ':' + new Date().getMinutes() + " น.";
     const DateToday = new Date().toLocaleDateString()
-
     setTime(Time);
     setDate(DateToday)
-
     handleQR()
   }, [sumPrice])
 
@@ -139,20 +138,17 @@ const Pos = () => {
     }
   }, []);
 
-  useEffect(() => {
-    getShop(userId);
-
-  }, [])
-
 
   useEffect(() => {
-
-    getMenuType();
-    getMenu();
+    setShopId(shop.shop_id)
   }, [shop])
 
-
-
+  useEffect(() => {
+    if (shopId !== undefined) {
+      getMenuType();
+      getMenu();
+    }
+  }, [shopId])
 
   return (
     <>
@@ -169,7 +165,6 @@ const Pos = () => {
                         <Col md={12}>
                           <Button
                             className='w-100 mb-2'
-
                             onClick={() => getMenuBytypeId(item.id)}
                             style={{
                               backgroundColor:

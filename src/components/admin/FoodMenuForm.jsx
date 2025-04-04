@@ -1,9 +1,9 @@
-import axios from "axios";
 import React, { useState, useEffect, useContext } from "react";
 import { Row, Col, Card, Image, Button, Modal, Form } from "react-bootstrap";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { AuthData } from "../../ContextData";
 import Swal from 'sweetalert2';
+import { httpGet, httpPost } from "../../http";
 const FoodMenuForm = (props) => {
     const { shop } = useContext(AuthData);
     const [show, setShow] = useState(false);
@@ -24,7 +24,7 @@ const FoodMenuForm = (props) => {
     const handleShowType = () => setShowType(true);
 
     const getMenuType = async () => {
-        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/menutype/${shop?.shop_id}`, { headers: { 'apikey': token } })
+        await httpGet(`/menutype/${shop?.shop_id}`, { headers: { 'apikey': token } })
             .then(res => {
                 console.log(res.data)
                 setMenuType(res.data);
@@ -35,15 +35,14 @@ const FoodMenuForm = (props) => {
     const uploadFile = async () => {
         const formData = new FormData();
         formData.append('file', img);
-        await axios.post(`${import.meta.env.VITE_BAKUP_URL}/upload`, formData)
+        await httpPost(`/upload`, formData)
             .then(res => {
                 if (res.status === 200) {
                     console.log(res.data.filename)
                     filename = res.data.filename
                 }
             })
-
-        handleClose()
+        handleClose();
     }
 
     const postMenuType = async (e) => {
@@ -52,7 +51,7 @@ const FoodMenuForm = (props) => {
             name: typeName,
             shop_id: shop.shop_id
         };
-        await axios.post(`${import.meta.env.VITE_BAKUP_URL}/menutype`, body)
+        await httpPost(`/menutype`, body)
             .then(res => {
                 if (res.status === 200) {
                     Swal.fire({
@@ -79,16 +78,13 @@ const FoodMenuForm = (props) => {
                 status: parseInt(status),
                 shop_id: shop.shop_id
             };
-            await axios.post(`${import.meta.env.VITE_BAKUP_URL}/foodmenu`, body)
+            await httpPost(`/foodmenu`, body)
                 .then(res => {
                     if (res.status === 200) {
                         alert('created menu success');
-
                     }
                 })
-
         }
-
     }
 
     const [imgPreview, setImgPreview] = useState(null);
@@ -117,7 +113,7 @@ const FoodMenuForm = (props) => {
 
     return (<>
 
-        <Row className="mb-4">
+        <Row className="mb-3">
             <Col>
                 <Button onClick={() => handleShow()}>
                     <AddCircleIcon /> เพิ่มเมนู </Button>
