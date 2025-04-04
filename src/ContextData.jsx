@@ -267,7 +267,6 @@ function Context({ children }) {
                 sumAmount,
                 saveOrder,
                 updateNote,
-                name,
                 messangerId,
                 queue,
                 resetCart,
@@ -280,7 +279,6 @@ function Context({ children }) {
                 setMenuPichet,
                 setMenuNormal,
                 updateFoodName,
-
                 queueNumber,
                 getQueueNumber,
                 auth,
