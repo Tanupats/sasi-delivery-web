@@ -23,7 +23,6 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 const NavbarMenu = () => {
   const {
     staffName,
-    user,
     shop
   } =
     useContext(AuthData);
@@ -58,33 +57,31 @@ const NavbarMenu = () => {
 
         staffName !== null && (
 
-
-
-          <Navbar style={{ backgroundColor: '#FD720D' }} className='when-print ' sticky='top'>
+          <Navbar expand="lg" style={{ backgroundColor: '#FD720D' }} className='when-print ' sticky='top'>
             <Container fluid>
-              <Navbar.Brand href="/pos" style={{color:'#fff'}}>SASI POS</Navbar.Brand>
+              <Navbar.Brand href="/pos" style={{ color: '#fff' }}>SASI POS</Navbar.Brand>
 
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
               <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto text-center">
                   <>
-                    <Link to={'/pos'} style={{ textDecoration: 'none', color: '#fff' }}>
-                      &nbsp;  <ListAltIcon /> ขายอาหาร
-                    </Link>
+                    <Nav.Link as={Link} to={'/pos'} style={{ textDecoration: 'none', color: '#fff' }}>
+                      <ListAltIcon /> ขายอาหาร
+                    </Nav.Link>
 
-                    <Link to={'/report'} style={{ textDecoration: 'none', color: '#fff' }}>
-                      &nbsp;  <CurrencyBitcoinIcon /> ยอดขาย
-                    </Link>
-
-
-                    <Link to={'/orders'} style={{ textDecoration: 'none', color: '#fff' }}>
-                      &nbsp;   <DeliveryDiningIcon />  ออเดอร์
-                    </Link>
+                    <Nav.Link as={Link} to={'/report'} style={{ textDecoration: 'none', color: '#fff' }}>
+                      <CurrencyBitcoinIcon /> ยอดขาย
+                    </Nav.Link>
 
 
-                    <Link to={'/admin'} style={{ textDecoration: 'none', color: '#fff' }}>
-                      &nbsp; <StoreIcon />  {shop?.name}
-                    </Link>
+                    <Nav.Link as={Link} to={'/orders'} style={{ textDecoration: 'none', color: '#fff' }}>
+                      <DeliveryDiningIcon />  ออเดอร์
+                    </Nav.Link>
+
+
+                    <Nav.Link as={Link} to={'/admin'} style={{ textDecoration: 'none', color: '#fff' }}>
+                      <StoreIcon />  {shop?.name}
+                    </Nav.Link>
                     {/* <Link to={'/admin'} style={{ textDecoration: 'none', color: '#fff' }}>
                       &nbsp; <StoreIcon />  FaceBookPage
                     </Link> */}

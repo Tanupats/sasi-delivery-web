@@ -33,6 +33,7 @@ function Context({ children }) {
             } catch (error) {
                 console.log(error);
                 localStorage.clear();
+                window.location.href='/';
 
             }
         }

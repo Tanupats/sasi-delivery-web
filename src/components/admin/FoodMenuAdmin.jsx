@@ -51,7 +51,14 @@ const FoodMenuAdmin = () => {
     }
 
     const updateData = async () => {
-        const body = { foodname: data.foodname, status: data.status, Price: data.Price, stockId: parseInt(stockId), notes: data.notes };
+        const body = {
+            foodname: data.foodname, 
+            status: data.status, 
+            Price: data.Price, 
+            stockId: parseInt(stockId), 
+            notes: data.notes,
+            shop_id:data.shop_id
+         };
         const { id } = data;
         await httpPut(`/foodmenu/${id}`, body, { headers: { 'apikey': token } })
             .then(res => {
@@ -303,7 +310,7 @@ const FoodMenuAdmin = () => {
                                                         type="text"
                                                         defaultValue={data?.notes} />
                                                 </Form.Group>
-                                                <Form.Group>
+                                                {/* <Form.Group>
                                                     <Form.Label>เลือกสต็อกสินค้า </Form.Label>
 
                                                     <Form.Select
@@ -313,6 +320,15 @@ const FoodMenuAdmin = () => {
                                                             return (<option key={index} value={item.id}>{item.name}</option>)
                                                         })}
                                                     </Form.Select>
+                                                </Form.Group> */}
+                                                <Form.Group>
+                                                    <Form.Label>รหัสร้าน </Form.Label>
+
+                                                    <Form.Control
+                                                         value={data.shop_id}
+                                                        onChange={(e) => setData({ ...data, shop_id: e.target.value })}
+                                                       />
+                                                    
                                                 </Form.Group>
 
                                             </Col>

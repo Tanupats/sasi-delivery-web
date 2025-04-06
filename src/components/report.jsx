@@ -50,7 +50,7 @@ const Report = () => {
         await getOrderFood();
     }
 
-    const geReportByorder = async () => {
+    const geReport = async () => {
         await httpGet(`/report/count-order-type?startDate=${startDate}`)
             .then(res => {
                 setCounter(res.data)
@@ -76,7 +76,7 @@ const Report = () => {
 
     useEffect(() => {
         searchOrder()
-        geReportByorder();
+        geReport();
     }, [startDate])
 
     return (<>
@@ -91,7 +91,7 @@ const Report = () => {
 
                                         <Col md={6}>
                                             <Form.Label>
-                                                ค้นหาจากวันที่
+                                                เลือกวันที่แสดงยอดขาย
                                             </Form.Label>
                                             <Form.Control
                                                 onChange={(e) => setStartDate(e.target.value)}
@@ -114,23 +114,23 @@ const Report = () => {
 
                                                 <div className="text-center card-report-1">  <DeliveryDiningIcon style={{ fontSize: '30px' }} /> <br />
                                                     เดลิเวอรี่ จำนวน {counter.takeawayCount} บิล
-                                                    <p> ยอด = {new Intl.NumberFormat().format(counter.takeawayTotalAmount)} บาท</p>
-                                                    <p> {((counter.takeawayCount / counter.totalCount) * 100).toFixed(2)} %</p>
+                                                    <p> ยอดขาย = {new Intl.NumberFormat().format(counter.takeawayTotalAmount || 0)} บาท</p>
+                                                    <p> {counter.takeawayCount > 0 ? (counter.takeawayCount / counter.totalCount * 100).toFixed(2) : 0} %</p>
 
                                                 </div> </Col>
                                             <Col md={4}>
                                                 <div className="text-center card-report-2">
                                                     <RoomServiceIcon style={{ fontSize: '30px' }} />
                                                     <br /> ทานที่ร้าน จำนวน {counter.dineInCount} บิล
-                                                    <p> ยอด = {new Intl.NumberFormat().format(counter.dineInTotalAmount)} บาท</p>
-                                                    <p> {((counter.dineInCount / counter.totalCount) * 100).toFixed(2)} %</p>
+                                                    <p> ยอดขาย = {new Intl.NumberFormat().format(counter.dineInTotalAmount || 0)} บาท</p>
+                                                    <p> {counter.dineInCount > 0 ? ((counter?.dineInCount / counter.totalCount) * 100).toFixed(2) : 0} %</p>
                                                 </div>
                                             </Col>
                                             <Col md={4}>
                                                 <div className="text-center card-report-3">
-                                                    <RoomServiceIcon style={{ fontSize: '30px' }} />  <br />     รับเอง จำนวน {counter.pickupCount} บิล
-                                                    <p> ยอด = {new Intl.NumberFormat().format(counter.pickupTotalAmount)} บาท</p>
-                                                    <p>{((counter.pickupCount / counter.totalCount) * 100).toFixed(2)} %</p>
+                                                    <RoomServiceIcon style={{ fontSize: '30px' }} />  <br /> รับเองหน้าร้าน จำนวน {counter.pickupCount} บิล
+                                                    <p> ยอดขาย = {new Intl.NumberFormat().format(counter.pickupTotalAmount || 0)} บาท</p>
+                                                    <p>{counter.pickupCount > 0 ? ((counter?.pickupCount / counter.totalCount) * 100).toFixed(2) : 0} %</p>
                                                 </div>
                                             </Col>
 

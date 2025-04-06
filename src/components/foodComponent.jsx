@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Card, Row, Col, Image, Button } from "react-bootstrap"
+import { Card, Row, Col, Image } from "react-bootstrap"
 
 export default function FoodComponent({ data }) {
 
@@ -10,12 +10,12 @@ export default function FoodComponent({ data }) {
     )
     return <>
 
-        <Card style={{ padding: '0', marginBottom: '12px' }} key={code}>
+        <Card style={{ padding: '0', marginBottom: '12px',cursor:'pointer' }} key={code}>
 
             <Card.Body style={{ padding: '0px' }}>
                 <Row>
                     <Col md={5}>
-                        <Image style={{ width: '100%', height: '100px', objectFit: 'cover' }}
+                        <Image style={{ width: '100%', height: '100px', objectFit: 'cover',borderRadius:8 }}
                             src={import.meta.env.VITE_API_URL + '/images/' + img} />
                     </Col>
                     <Col md={7} >
