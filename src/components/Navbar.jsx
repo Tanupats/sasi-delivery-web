@@ -66,7 +66,7 @@ const NavbarMenu = () => {
 
 
                     <Link to={'/admin'} style={{ textDecoration: 'none', color: '#000' }}>
-                      <StoreIcon /> จัดการร้านค้า  {user?.shop?.name }
+                      <StoreIcon /> จัดการร้านค้า  {user?.shop?.name}
                     </Link>
 
                   </>
@@ -89,8 +89,8 @@ const NavbarMenu = () => {
         ) : ' '
       }
       <Routes>
-        <Route path="/" Component={Login}></Route>
-        <Route path="/orders" Component={Orders}></Route>     
+        <Route path="/" Component={FoodMenu}></Route>
+        <Route path="/orders" Component={Orders}></Route>
         <Route path="/queueNumber" Component={GetQueu}></Route>
         <Route path="/pos" Component={Pos}></Route>
         <Route path="/report" Component={Report}></Route>
