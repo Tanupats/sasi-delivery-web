@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Card, Row, Col, Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { httpPost } from "../http";
 const Register = () => {
     //user 
     const [name, setName] = useState("")
@@ -10,20 +11,15 @@ const Register = () => {
     let userId = ""
     const router = useNavigate();
     //shop
-    const [shopName, setshopName] = useState("")
-    const [photo, setPhoto] = useState("")
-
-
+    const [shopName, setshopName] = useState("");
+    const [photo, setPhoto] = useState("");
 
     const createUser = async () => {
-
         const bodyUser = { name: name, email: email, password: password, department: "admin" };
-
-        await axios.post(import.meta.env.VITE_BAKUP_URL + '/auth/sigup', bodyUser)
+        await httpPost('/auth/sigup', bodyUser)
             .then(res => {
                 if (res) {
                     if (res.status === 200) {
-                        console.log(res.data.id)
                         userId = res.data.id;
                     }
                 }
@@ -31,16 +27,12 @@ const Register = () => {
     }
 
     const createShop = async () => {
-
-        
         const bodyShop = { name: shopName, user_id: String(userId), photo: photo }
-        await axios.post(import.meta.env.VITE_BAKUP_URL + '/shop', bodyShop)
+        await httpPost('/shop', bodyShop)
             .then(res => {
                 if (res) {
                     if (res.status === 200) {
-
-                        router('/')
-
+                        router('/');
                     }
                 }
             })
@@ -49,10 +41,7 @@ const Register = () => {
     const saveRegister = async (e) => {
         e.preventDefault();
         await createUser()
-
         await createShop()
-
-
     }
 
     return (
@@ -65,7 +54,6 @@ const Register = () => {
                     <Card.Body>
 
                         <Form onSubmit={saveRegister}>
-
                             <Form.Group>
                                 <Form.Label> ชื่อ-นามสกุล</Form.Label>
                                 <Form.Control
@@ -92,7 +80,7 @@ const Register = () => {
                             </Form.Group>
 
                             <Form.Group className="mt-2">
-                                <Form.Label>ชื่อร้านค้า</Form.Label>
+                                <Form.Label>ชื่อร้านค้า (แบรนด์)</Form.Label>
                                 <Form.Control
                                     onChange={(e) => setshopName(e.target.value)}
                                     type="text"
@@ -100,7 +88,7 @@ const Register = () => {
 
                             </Form.Group>
                             <Form.Group className="mt-2">
-                                <Form.Label>โลโก้ร้าน</Form.Label>
+                                <Form.Label>โลโก้</Form.Label>
                                 <Form.Control type="file" placeholder="โลโก้" onChange={(e) => setPhoto(e.target.files[0].name)} />
 
                             </Form.Group>
@@ -111,21 +99,16 @@ const Register = () => {
                                         type="submit"
                                         variant="primary">
                                         ลงทะเบียน
-
                                     </Button>
-
                                 </Col>
                                 <Col md={6} xs={6}>
                                     <Button variant="danger">
                                         ยกเลิก
 
                                     </Button>
-
                                 </Col>
                             </Row>
                         </Form>
-
-
                     </Card.Body>
                 </Card>
             </Col>
