@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import { Row, Col, Table, Card,Form, Container, Modal } from 'react-bootstrap';
+import { Row, Col, Table, Card, Form, Container, Modal, Alert } from 'react-bootstrap';
 import FoodComponent from './foodComponent';
 import Pagination from 'react-bootstrap/Pagination';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -48,8 +48,8 @@ const Pos = () => {
   } =
     useContext(AuthData)
 
-  const [menu, setMenu] = useState([]);
-  const [menuType, setMenuType] = useState([]);
+  const [menu, setMenu] = useState(null);
+  const [menuType, setMenuType] = useState();
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -98,10 +98,14 @@ const Pos = () => {
       httpGet(`/foodmenu/getByShop/${shop.shop_id}`, { headers: { 'apikey': token } })
         .then(res => {
           if (res.status === 200) {
-            setMenu(res.data);
+            if (res.data.length > 0) {
+              setMenu(res.data);
+            } else {
+              setMenu(null);
+            }
           }
         }
-      )
+        )
     }
   }
 
@@ -109,7 +113,12 @@ const Pos = () => {
     if (shop.shop_id !== undefined) {
       httpGet(`/menutype/${shop.shop_id}`, { headers: { 'apikey': token } })
         .then(res => {
-          setMenuType(res.data);
+          if (res.data.length > 0) {
+            setMenuType(res.data);
+          } else {
+            setMenuType(null);
+          }
+
         })
     }
   }
@@ -154,11 +163,11 @@ const Pos = () => {
     <>
       <Container fluid style={{ height: '100vh' }}>
         <Row className='mt-3'>
-          <Col md={2} className='whenprint' >
+          <Col md={2} className='whenprint'>
             <div className='menu-type'>
               <Row>
                 {
-                  menuType.map((item, index) => {
+                  menuType?.map((item, index) => {
 
                     return (
                       <React.Fragment key={index} >
@@ -178,6 +187,12 @@ const Pos = () => {
                       </React.Fragment>)
                   })
                 }
+                {
+                  menuType === null && (
+                    <div className="text-center">
+                      <Alert variant='danger'>ยังไม่มีประเภทสินค้า</Alert>
+                    </div>)
+                }
               </Row>
 
             </div>
@@ -191,7 +206,7 @@ const Pos = () => {
                 <Row>
 
                   {
-                    menu.map((item, index) => {
+                    menu?.map((item, index) => {
                       return (
                         <React.Fragment key={index}>
                           <Col md={6} onClick={() => onSelectMenu(item)}>
@@ -199,6 +214,13 @@ const Pos = () => {
                           </Col>
                         </React.Fragment>)
                     })
+                  }
+                  {
+                    menu === null && (
+                      <>
+                        <Alert variant='danger'>ยังไม่มีรายการอาหาร สามารถเพิ่มได้ที่ เมนูจัดการร้านค้า</Alert>
+                      </>
+                    )
                   }
 
 

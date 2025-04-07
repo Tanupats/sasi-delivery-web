@@ -5,7 +5,6 @@ import Navbar from 'react-bootstrap/Navbar';
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import { AuthData } from "../ContextData";
 import FoodMenu from './FoodMenu';
-import Myorder from './Myorder';
 import Orders from './orders';
 import GetQueu from './GetQueu';
 import Pos from './Pos';
@@ -26,8 +25,6 @@ const NavbarMenu = () => {
     shop
   } =
     useContext(AuthData);
-
-
   const logout = () => {
     Swal.fire({
       title: 'Are you sure?',
@@ -46,21 +43,13 @@ const NavbarMenu = () => {
     });
   };
 
-
-
   return (
     <Router>
-
-
-
       {
-
         staffName !== null && (
-
           <Navbar expand="lg" style={{ backgroundColor: '#FD720D' }} className='when-print ' sticky='top'>
             <Container fluid>
               <Navbar.Brand href="/pos" style={{ color: '#fff' }}>SASI POS</Navbar.Brand>
-
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
               <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto text-center">
@@ -80,11 +69,8 @@ const NavbarMenu = () => {
 
 
                     <Nav.Link as={Link} to={'/admin'} style={{ textDecoration: 'none', color: '#fff' }}>
-                      <StoreIcon />  {shop?.name}
+                      <StoreIcon /> จัดการ {shop?.name}
                     </Nav.Link>
-                    {/* <Link to={'/admin'} style={{ textDecoration: 'none', color: '#fff' }}>
-                      &nbsp; <StoreIcon />  FaceBookPage
-                    </Link> */}
 
                   </>
 
@@ -108,7 +94,6 @@ const NavbarMenu = () => {
       <Routes>
         <Route path="/" Component={Login}></Route>
         <Route path="/orders" Component={Orders}></Route>
-        <Route path="/Myorder" Component={Myorder}></Route>
         <Route path="/queueNumber" Component={GetQueu}></Route>
         <Route path="/foodMenu/:userid/:username" Component={FoodMenu}></Route>
         <Route path="/pos" Component={Pos}></Route>
