@@ -22,6 +22,13 @@ function Context({ children }) {
             })
     }
 
+    const sendMessageToPage = async () => {
+        await fetch(`https://api.chatfuel.com/bots/5e102b272685af000183388a/users/${messangerId}/send?chatfuel_token=qwYLsCSz8hk4ytd6CPKP4C0oalstMnGdpDjF8YFHPHCieKNc0AfrnjVs91fGuH74&chatfuel_block_name=order`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" }
+        });
+    }
+
     const checkQueueNumber = async () => {
         await axios.get(`${import.meta.env.VITE_BAKUP_URL}/bills/queuenumber/${queueNumber}`)
             .then(res => {
@@ -104,9 +111,10 @@ function Context({ children }) {
     const messangerId = localStorage.getItem('messangerId');
     const username = localStorage.getItem('name');
     const dev = import.meta.env.VITE_BAKUP_URL;
-    
+
     const saveOrder = async () => {
         checkQueueNumber();
+        sendMessageToPage();
         if (username !== null && messangerId !== null) {
             const body = {
                 amount: sumPrice,
