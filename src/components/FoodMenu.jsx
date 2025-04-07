@@ -33,7 +33,7 @@ const FoodMenu = () => {
             })
     }
 
-    const getMenuBytypeId = async (id) => {
+    const getMenuByTypeId = async (id) => {
         setLoading(true)
         await axios.get(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/${id}`)
             .then(res => {
@@ -98,7 +98,7 @@ const FoodMenu = () => {
                                                 cursor: 'pointer',
                                                 backgroundColor: '#FD720D', marginBottom: '12px'
                                             }}
-                                            onClick={() => getMenuBytypeId(item.id)}
+                                            onClick={() => getMenuByTypeId(item.id)}
                                             pill bg="">
                                             {item.name}
                                         </Badge>
@@ -148,6 +148,7 @@ const FoodMenu = () => {
                                                             item.status === 0 && (<p style={{ color: 'red' }}> ** ของหมด   </p>)
                                                         }
                                                         <Button
+                                                            disabled={item.status === 0 ? true : false}
                                                             onClick={() => onSelectMenu(item)}
                                                             style={{ backgroundColor: '#FD720D', border: 'none' }}
                                                         >
@@ -166,14 +167,14 @@ const FoodMenu = () => {
                                 </React.Fragment>)
                             })
                         }
-   <button
-                        onClick={() => scrollToTop()}
-                        className={`scroll-to-top ${isVisible ? "show" : ""}`}
-                    >
-                        <KeyboardArrowUpIcon />
-                    </button>
+                        <button
+                            onClick={() => scrollToTop()}
+                            className={`scroll-to-top ${isVisible ? "show" : ""}`}
+                        >
+                            <KeyboardArrowUpIcon />
+                        </button>
                     </Row>
-                 
+
 
                 </Card.Body>
             </Card>
