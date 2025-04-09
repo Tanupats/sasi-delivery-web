@@ -19,9 +19,9 @@ export const httpPost = async (path, body, header) => {
   }
 };
 
-export const httpDelete = async (path) => {
+export const httpDelete = async (path,header) => {
   try {
-    const response = await axios.delete(`${baseURL + path}`);
+    const response = await axios.delete(`${baseURL + path}`,header);
     return response
   } catch (error) {
     console.log('error fetch')

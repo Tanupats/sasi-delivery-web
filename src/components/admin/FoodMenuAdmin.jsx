@@ -52,13 +52,13 @@ const FoodMenuAdmin = () => {
 
     const updateData = async () => {
         const body = {
-            foodname: data.foodname, 
-            status: data.status, 
-            Price: data.Price, 
-            stockId: parseInt(stockId), 
+            foodname: data.foodname,
+            status: data.status,
+            Price: data.Price,
+            stockId: parseInt(stockId),
             notes: data.notes,
-            shop_id:data.shop_id
-         };
+            shop_id: data.shop_id
+        };
         const { id } = data;
         await httpPut(`/foodmenu/${id}`, body, { headers: { 'apikey': token } })
             .then(res => {
@@ -325,10 +325,10 @@ const FoodMenuAdmin = () => {
                                                     <Form.Label>รหัสร้าน </Form.Label>
 
                                                     <Form.Control
-                                                         value={data.shop_id}
+                                                        value={data.shop_id}
                                                         onChange={(e) => setData({ ...data, shop_id: e.target.value })}
-                                                       />
-                                                    
+                                                    />
+
                                                 </Form.Group>
 
                                             </Col>
