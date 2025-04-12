@@ -19,6 +19,7 @@ import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
 import { ShoppingCart, Receipt, AccountCircle } from "@mui/icons-material";
 import Cart from './Cart';
 import Register from './Register';
+import Closed from './closed';
 
 const NavbarMenu = () => {
   const { toTal,
@@ -72,7 +73,7 @@ const NavbarMenu = () => {
         </Container>
       </Navbar>
 
-      <Paper sx={{
+      {/* <Paper sx={{
         position: "fixed",
         bottom: 0,
         left: 0,
@@ -83,7 +84,6 @@ const NavbarMenu = () => {
         <BottomNavigation
           showLabels
           value={value}
-
         >
           <BottomNavigation showLabels value={value}>
             <BottomNavigationAction onClick={() => setValue(0)} label="เมนู" icon={<MenuBookIcon />} component={Link} to={`/foodmenu/${id}/${name}`} />
@@ -92,18 +92,18 @@ const NavbarMenu = () => {
             <BottomNavigationAction onClick={() => setValue(3)} label="โปรไฟล์" icon={<AccountCircle />} component={Link} to="/profile" />
           </BottomNavigation>
         </BottomNavigation>
-      </Paper>
+      </Paper> */}
 
       <Routes>
-
-        <Route path="/orders" Component={Orders}></Route>
-        <Route path="/foodmenu/:userid/:name" Component={FoodMenu}></Route>
-        <Route path="/Myorder" Component={Myorder}></Route>
-        <Route path="/queueNumber" Component={GetQueu}></Route>
+        <Route path="/" Component={Closed}></Route>
+         <Route path="/orders" Component={Closed}></Route>
+        <Route path="/foodmenu/:userid/:name" Component={Closed}></Route>
+        <Route path="/Myorder" Component={Closed}></Route>
+        <Route path="/queueNumber" Component={Closed}></Route>
         <Route path="/report" Component={Report}></Route>
         <Route path="/admin" Component={Admin}></Route>
         <Route path="/register" Component={Register}></Route>
-        <Route path="/cart" Component={Cart}></Route>
+        <Route path="/cart" Component={Closed}></Route> 
       </Routes>
     </Router>
   );
