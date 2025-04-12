@@ -17,7 +17,7 @@ const Orders = () => {
 
     const getMenuReport = async (status) => {
         setReport([]);
-        await httpGet(`/bills?status=${status}`, { headers: { 'apikey': token } })
+        await httpGet(`/bills?status=${status}&shop_id=${shop?.shop_id}`, { headers: { 'apikey': token } })
             .then(res => { setReport(res.data) })
     }
 
@@ -146,8 +146,8 @@ const Orders = () => {
                         <Row className="when-print">
                             <ButtonGroup aria-label="Basic example">
                                 <Button variant="primary" onClick={() => { getMenuReport("รับออเดอร์แล้ว") }}>ออเดอร์ใหม่</Button>
-                                <Button variant="success" onClick={() => { getMenuFinish("ทำเสร็จแล้ว") }}>ทำเสร็จแล้ว</Button>
-                                <Button variant="warning" onClick={() => { getMenuFinish("กำลังส่ง") }}>กำลังส่ง</Button>
+                                <Button variant="success" onClick={() => { getMenuReport("ทำเสร็จแล้ว") }}>ทำเสร็จแล้ว</Button>
+                                <Button variant="warning" onClick={() => { getMenuReport("กำลังส่ง") }}>กำลังส่ง</Button>
                                 <Button variant="primary" onClick={() => { getMenuReport("ส่งสำเร็จ") }}>ส่งสำเร็จ</Button>
 
                             </ButtonGroup>
@@ -164,8 +164,8 @@ const Orders = () => {
                                                     <div className="text-center">
                                                         <h5> {shop?.name} </h5>
                                                         <h5>ใบเสร็จรับเงิน</h5>
-                                                       
-                                                    </div> 
+
+                                                    </div>
                                                     <b> คิวที่ {item.queueNumber} <br /> เลขออเดอร์ {item.bill_ID.slice(-5).toUpperCase()}</b>
                                                     <p>
 

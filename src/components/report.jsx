@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useContext } from "react"
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -12,8 +12,11 @@ import Detail from "./DetailReport";
 import { Card, Row, Col, Button, Form, Modal } from "react-bootstrap"
 import Swal from 'sweetalert2';
 import moment from "moment/moment";
+import { AuthData } from "../ContextData";
 import { httpDelete, httpGet, httpPost } from "../http";
 const Report = () => {
+    const { shop } = useContext(AuthData)
+
     const [totalToday, setTotalToday] = useState(0)
     const [data, setData] = useState([])
     const [counter, setCounter] = useState({});
@@ -24,26 +27,31 @@ const Report = () => {
     const handleClose = () => setShow(false);
 
     const getOrderFood = async () => {
-        let sumToday = 0;
-        await httpGet(`/bills`, { headers: { 'apikey': token } })
-            .then(res => {
-                setData(res.data)
-                res?.data?.map(item => {
-                    sumToday += (Number(item?.amount))
+        if (shop) {
+            let sumToday = 0;
+            await httpGet(`/bills?shop_id=${shop?.shop_id}`, { headers: { 'apikey': token } })
+                .then(res => {
+                    setData(res.data)
+                    res?.data?.map(item => {
+                        sumToday += (Number(item?.amount));
+                    })
+                    setTotalToday(sumToday);
                 })
-                setTotalToday(sumToday)
-            })
+        }
     }
 
     const searchOrder = async () => {
-        const body = { startDate: startDate }
-        await httpPost(`/bills/searchByDate`, body, { headers: { 'apikey': token } })
-            .then((res) => {
-                setData(res.data.data);
-                setTotalToday(res.data.total);
-            })
-    }
+        if (shop) {
+            const body = { startDate: startDate, shop_id: shop?.shop_id }
+            await httpPost(`/bills/searchByDate`,
+                body, { headers: { 'apikey': token } })
+                .then((res) => {
+                    setData(res.data.data);
+                    setTotalToday(res.data.total);
+                })
+        }
 
+    }
 
     const RemoveDetailsId = async (id) => {
         await httpDelete(`/bills/${id}`);
@@ -51,10 +59,10 @@ const Report = () => {
     }
 
     const geReport = async () => {
-        await httpGet(`/report/count-order-type?startDate=${startDate}`)
+        await httpGet(`/report/count-order-type?startDate=${startDate}&shop_id=${shop.shop_id}`)
             .then(res => {
-                setCounter(res.data)
-            })
+                setCounter(res.data);
+            });
     }
 
     const deleteBill = async (id) => {
@@ -69,15 +77,21 @@ const Report = () => {
             cancelButtonText: 'ยกเลิก'
         }).then((result) => {
             if (result.isConfirmed) {
-                RemoveDetailsId(id)
+                RemoveDetailsId(id);
             }
         });
     }
 
     useEffect(() => {
-        searchOrder()
+        
+            getOrderFood()
+      
+    }, [shop])
+
+    useEffect(() => {
+        searchOrder();
         geReport();
-    }, [startDate])
+    }, [startDate,shop])
 
     return (<>
         <Card>

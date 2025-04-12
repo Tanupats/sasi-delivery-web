@@ -27,6 +27,7 @@ const Login = () => {
                         localStorage.setItem("role", department);
                         localStorage.setItem("token", token);
                         localStorage.setItem("userId", id);
+                   
                         setUser(res.data);
                         getShop(id);
                         setStaffName(name);

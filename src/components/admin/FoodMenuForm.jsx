@@ -51,7 +51,7 @@ const FoodMenuForm = (props) => {
             name: typeName,
             shop_id: shop.shop_id
         };
-        await httpPost(`/menutype`, body)
+        await httpPost(`/menutype`, body, { headers: { 'apikey': token } })
             .then(res => {
                 if (res.status === 200) {
                     Swal.fire({
@@ -78,10 +78,15 @@ const FoodMenuForm = (props) => {
                 status: parseInt(status),
                 shop_id: shop.shop_id
             };
-            await httpPost(`/foodmenu`, body)
+            await httpPost(`/foodmenu`, body, { headers: { 'apikey': token } })
                 .then(res => {
                     if (res.status === 200) {
-                        alert('created menu success');
+                        Swal.fire({
+                            title: 'บันทึกข้อมูลสำเร็จ',
+                            icon: 'success',
+                            confirmButtonText: 'ยืนยัน',
+                            timer: 1300
+                        })
                     }
                 })
         }

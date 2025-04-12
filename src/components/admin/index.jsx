@@ -6,8 +6,6 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import DataThresholdingIcon from '@mui/icons-material/DataThresholding';
 import RecentActorsIcon from '@mui/icons-material/RecentActors';
-import { Modal } from "react-bootstrap";
-import { AuthData } from "../../ContextData";
 import Stock from "./stock";
 import Accounting from "./accounting";
 import ReportProduct from "./ReportProduct";
