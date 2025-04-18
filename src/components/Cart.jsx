@@ -38,7 +38,7 @@ const Cart = () => {
     return (<>
         <Card style={{ height: '100%', marginBottom: '120px' }}>
             <Card.Body style={{ height: '100%' }}>
-                <Card.Title className="mb-4" >สรุปรายการสั่งอาหาร</Card.Title>
+                <Card.Title className="mb-4" >สรุปรายการสั่งออเดอร์</Card.Title>
                 <Row>
                     {
                         cart.length !== 0 && cart?.map(item => {

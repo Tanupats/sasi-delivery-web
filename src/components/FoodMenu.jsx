@@ -11,9 +11,10 @@ import LinearProgress from '@mui/material/LinearProgress';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 const FoodMenu = () => {
 
-    const { userid, name } = useParams();
+    const { userid, name, shop_id } = useParams();
     localStorage.setItem("messangerId", userid);
     localStorage.setItem("name", name);
+    localStorage.setItem("shop_id", shop_id);
     const { addTocart } = useContext(AuthData)
 
     const [foods, setFoods] = useState([]);
@@ -27,7 +28,7 @@ const FoodMenu = () => {
     }
 
     const getMenuType = async () => {
-        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/menutype`)
+        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/menutype/shop/${shop_id}`)
             .then(res => {
                 setMenuType(res.data);
             })
@@ -43,13 +44,12 @@ const FoodMenu = () => {
     }
 
     const getFoodMenu = () => {
-        fetch(`${import.meta.env.VITE_BAKUP_URL}/foodmenu`)
+        fetch(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/shop/${shop_id}`)
             .then((res) => res.json())
             .then((data) => {
                 if (data) {
                     setFoods(data);
                 }
-
             })
     }
 
@@ -87,14 +87,12 @@ const FoodMenu = () => {
 
                                     return (<React.Fragment key={index}>
 
-
-
-
                                         <Badge
 
                                             style={{
                                                 marginRight: '12px',
-                                                fontSize: '18px',
+                                                fontSize: '17px',
+                                                fontWeight: 'normal',
                                                 cursor: 'pointer',
                                                 backgroundColor: '#FD720D', marginBottom: '12px'
                                             }}
@@ -115,6 +113,8 @@ const FoodMenu = () => {
                             </Box>
                         )
                         }
+
+                        
                         {
                             foods?.map((item, index) => {
                                 return (<React.Fragment key={index}>
@@ -134,9 +134,9 @@ const FoodMenu = () => {
                                                             src={`${import.meta.env.VITE_BAKUP_URL}/images/${item.img}`} />
                                                     </Col>
                                                     <Col md={9}
-                                                        xs={7}>
-                                                        <h5>{item.foodname}</h5>
-                                                        <h5>{item.Price}฿</h5>
+                                                        xs={7} className="p-4">
+                                                        <h6>{item.foodname}</h6>
+                                                        <h6>{item.Price}฿</h6>
                                                         {
 
                                                             item.notes ? (
