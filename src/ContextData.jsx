@@ -51,7 +51,6 @@ function Context({ children }) {
             title: 'เพิ่มรายการสำเร็จ',
             text: 'เพิ่มรายการลงตะกร้า',
             icon: 'success',
-
             timer: 1300
         })
         let itemCart = {
