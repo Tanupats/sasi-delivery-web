@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { Row, Col, Card, Button, Modal, Form, Alert } from "react-bootstrap";
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Details from "./Details";
-import moment, { updateLocale } from "moment/moment";
+import moment from "moment/moment";
 import { httpDelete, httpGet, httpPut, sendDelivery, sendNotificationBot } from "../http";
 import Swal from 'sweetalert2';
 import { AuthData } from "../ContextData";
@@ -14,7 +14,7 @@ const Orders = () => {
     const [price, setPrice] = useState(0);
     const [printBillId, setPrintBillId] = useState(null);
     const [id, setId] = useState(null);
-  
+
 
     const getMenuReport = async (status) => {
         setReport([]);
@@ -53,7 +53,7 @@ const Orders = () => {
 
     const handleClose = () => setShow(false);
 
-    const UpdateStatus = async (id, status, messageid,step) => {
+    const UpdateStatus = async (id, status, messageid, step) => {
         Swal.fire({
             title: 'คุณต้องการอัพเดต หรือไม่ ?',
             text: "กดยืนยันเพื่ออัพเดตสถานะ",
@@ -224,8 +224,8 @@ const Orders = () => {
                                                                     <Button
                                                                         className="when-print mt-4"
                                                                         onClick={() => {
-                                                                           
-                                                                            UpdateStatus(item.id, 'ทำเสร็จแล้ว', item.messengerId,2);
+
+                                                                            UpdateStatus(item.id, 'ทำเสร็จแล้ว', item.messengerId, 2);
 
                                                                         }}
                                                                         variant="success w-100"
@@ -243,8 +243,8 @@ const Orders = () => {
                                                                         className="when-print"
                                                                         onClick={() => {
 
-                                                                            UpdateStatus(item.id, 'กำลังส่ง', item.messengerId,3);
-                                                                          
+                                                                            UpdateStatus(item.id, 'กำลังส่ง', item.messengerId, 3);
+
 
                                                                         }}
                                                                         variant="success w-100"
@@ -262,8 +262,8 @@ const Orders = () => {
                                                                     <Button
                                                                         className="when-print"
                                                                         onClick={() => {
-                                                                            UpdateStatus(item.id, 'ส่งสำเร็จ',item.messengerId,4);
-                                                                            
+                                                                            UpdateStatus(item.id, 'ส่งสำเร็จ', item.messengerId, 4);
+
                                                                         }}
                                                                         variant="success w-100"
                                                                     >
