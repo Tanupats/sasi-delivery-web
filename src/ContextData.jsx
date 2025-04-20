@@ -23,7 +23,7 @@ function Context({ children }) {
             })
     }
 
-    const getCounterOrder = async (id) => {
+    const getCounterOrder = async () => {
         await axios.get(`${import.meta.env.VITE_BAKUP_URL}/bills/counter-myorder?messengerId=${messangerId}`)
             .then(res => {
                 setCounterOrder(res.data.count);
