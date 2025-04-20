@@ -74,7 +74,7 @@ const FoodMenu = () => {
 
     return (
         <>
-            <Card>
+            <Card style={{border:'none'}}>
                 <Card.Title className="text-center mt-3">  รายการอาหาร</Card.Title>
                 <Card.Body>
 
@@ -134,7 +134,7 @@ const FoodMenu = () => {
                                                             src={`${import.meta.env.VITE_BAKUP_URL}/images/${item.img}`} />
                                                     </Col>
                                                     <Col md={9}
-                                                        xs={7} className="p-4">
+                                                        xs={7} className="p-2">
                                                         <h6>{item.foodname}</h6>
                                                         <h6>{item.Price}฿</h6>
                                                         {

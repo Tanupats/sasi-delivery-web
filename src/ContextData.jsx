@@ -6,6 +6,7 @@ import Swal from 'sweetalert2'
 function Context({ children }) {
     const [cart, setCart] = useState([])
     const [toTal, setTotal] = useState(0);
+    const [counterOrder, setCounterOrder] = useState(0);
     const [sumPrice, setSumPrice] = useState(0);
     const [name, setName] = useState("");
     const [orderType, setOrderType] = useState("สั่งกลับบ้าน");
@@ -19,6 +20,13 @@ function Context({ children }) {
         await axios.get(`${import.meta.env.VITE_BAKUP_URL}/queueNumber`)
             .then(res => {
                 setQueueNumber(res.data.queueNumber);
+            })
+    }
+
+    const getCounterOrder = async () => {
+        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/bills/counter-myorder`)
+            .then(res => {
+                setCounterOrder(res.data.count);
             })
     }
 
@@ -250,13 +258,15 @@ function Context({ children }) {
     }, [queueNumber])
 
     useEffect(() => {
-        getQueue() // for delivery queue 
-        getQueueNumber()// for bill q1 q2 q3 
+        getQueue();
+        getQueueNumber();
+        getCounterOrder();
     }, [])
 
     useEffect(() => {
         const interval = setInterval(() => {
             getQueue();
+            getCounterOrder();
         }, 7000);
 
         return () => clearInterval(interval);
@@ -292,7 +302,8 @@ function Context({ children }) {
                 auth,
                 setAuth,
                 Address,
-                setAddress
+                setAddress,
+                counterOrder
             }}>
             {children}
         </AuthData.Provider>

@@ -18,7 +18,7 @@ import Cart from './Cart';
 
 const NavbarMenu = () => {
   const { toTal,
-    queue,
+    queue, counterOrder
   } =
     useContext(AuthData);
 
@@ -36,21 +36,21 @@ const NavbarMenu = () => {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto text-center">
               <Nav.Link>
-                <Link style={{ textDecoration: 'none', color: '#000' }} to={`/foodmenu/${id}/${name}/${shop_id}`}>
+                <Link style={{ textDecoration: 'none', color: '#000', fontSize: '16px', fontWeight: 300 }} to={`/foodmenu/${id}/${name}/${shop_id}`}>
                   <RestaurantMenuIcon style={{ color: '#FD720D' }} /> เมนู
                 </Link>
               </Nav.Link>
               <Nav.Link >
-                <Link style={{ textDecoration: 'none', color: '#000', }} to={'/cart'}>
+                <Link style={{ textDecoration: 'none', color: '#000', fontSize: '16px', fontWeight: 300 }} to={'/cart'}>
                   ตะกร้า  <LocalMallIcon style={{ color: '#FD720D' }} /> {toTal}  </Link>
               </Nav.Link>
               <Nav.Link>
-                <Link style={{ textDecoration: 'none', color: '#000' }} to={'/Myorder'}>
-                  <AccountBoxIcon style={{ color: '#FD720D' }} /> คำสั่งซื้อ
+                <Link style={{ textDecoration: 'none', color: '#000', fontSize: '16px', fontWeight: 300 }} to={'/Myorder'}>
+                  <Receipt style={{ color: '#FD720D' }} />  คำสั่งซื้อ {counterOrder}
                 </Link>
               </Nav.Link>
               <Nav.Link>
-                <Link style={{ textDecoration: 'none', color: '#000' }} to={'/queueNumber'}>
+                <Link style={{ textDecoration: 'none', color: '#000', fontSize: '16px', fontWeight: 300 }} to={'/queueNumber'}>
                   <AddToQueueIcon style={{ color: '#FD720D' }} /> คิวทั้งหมด {queue}
                 </Link>
               </Nav.Link>
@@ -58,8 +58,8 @@ const NavbarMenu = () => {
             {
               name !== null && (
                 <Nav className="ml-auto">
-                  <Nav.Link >
-                    {name}
+                  <Nav.Link style={{ fontSize: '18px', fontWeight: 300 }} >
+                    <AccountBoxIcon style={{ color: '#FD720D' }} />   {name}
                   </Nav.Link>
                 </Nav>
               )
@@ -86,7 +86,7 @@ const NavbarMenu = () => {
               onClick={() => setValue(0)}
               label="เมนู" icon={<MenuBookIcon />}
               component={Link} to={`/foodmenu/${id}/${name}/${shop_id}`} />
-            <BottomNavigationAction onClick={() => setValue(1)} label="คำสั่งซื้อ" icon={<Receipt />} component={Link} to="/Myorder" />
+            <BottomNavigationAction onClick={() => setValue(1)} label={"คำสั่งซื้อ " + counterOrder} icon={<Receipt />} component={Link} to="/Myorder" />
             <BottomNavigationAction onClick={() => setValue(2)} label={"ตะกร้า " + toTal} icon={<ShoppingCart />} component={Link} to="/cart" />
             <BottomNavigationAction onClick={() => setValue(3)} label="โปรไฟล์" icon={<AccountCircle />} component={Link} to="/profile" />
           </BottomNavigation>

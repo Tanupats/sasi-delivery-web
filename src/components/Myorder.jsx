@@ -8,27 +8,27 @@ import moment from "moment";
 const Myorder = () => {
 
     let messengerId = localStorage.getItem("messangerId");
-    const [myOrder, setMyorder] = useState([]);
-    const getMyorder = () => {
+    const [myOrder, setMyOrder] = useState([]);
+    const getMyOrder = () => {
 
         axios.get(`${import.meta.env.VITE_BAKUP_URL}/bills/myorder?messengerId=${messengerId}`)
             .then(res => {
-                if (res.status===200) {
-                    setMyorder(res.data);
+                if (res.status === 200) {
+                    setMyOrder(res.data);
                 }
 
             })
     }
 
     useEffect(() => {
-        getMyorder();
+        getMyOrder();
     }, [])
 
 
     useEffect(() => {
 
         const interval = setInterval(() => {
-            getMyorder();
+            getMyOrder();
         }, 5000); // ดึงข้อมูลจาก API ทุกๆ 5 วินาที
 
         return () => clearInterval(interval);
@@ -45,7 +45,7 @@ const Myorder = () => {
                     id="uncontrolled-tab-example"
                     className="mb-3"
                 >
-                    <Tab eventKey="home" title="ใหม่">
+                    <Tab eventKey="home" title="คำสั่งซื้อใหม่">
                         {
                             myOrder?.map(item => {
                                 if (item.statusOrder === "รับออเดอร์แล้ว") {
@@ -55,14 +55,14 @@ const Myorder = () => {
                                         <>
                                             <Card className="mb-4">
                                                 <Card.Body>
-                                                    <p>หมายเลขออเดอร์ {item.bill_ID.slice(-5).toUpperCase()} <br />  วันที่สั่งออเดอร์ { }
+                                                    <h6>หมายเลขออเดอร์ {item.bill_ID.slice(-5).toUpperCase()} <br />  วันที่สั่งออเดอร์ { }
                                                         {moment(item.Date_times).format('YYYY-MM-DD')}
-                                                      &nbsp;  เวลา {moment(item.Date_times).format('HH:mm')} น.
-                                                    </p>
-                                                    <Card.Title> รายการอาหาร</Card.Title>
+                                                        &nbsp;  เวลา {moment(item.Date_times).format('HH:mm')} น.
+                                                    </h6>
+                                                    {/* <Card.Title> รายการอาหาร</Card.Title> */}
                                                     <Details bill_ID={item.bill_ID} status={item.statusOrder} />
-                                                    <p style={{ fontSize: '18px' }}>รวมทั้งหมด {item.amount} บาท</p>
-                                                    <Alert> <h5> {item.statusOrder}</h5></Alert>
+                                                    <h5 style={{ fontSize: '18px' }}>รวมทั้งหมด {item.amount} บาท</h5>
+                                                    <Alert> <h6> {item.statusOrder}</h6></Alert>
                                                 </Card.Body>
 
                                             </Card>
@@ -72,24 +72,24 @@ const Myorder = () => {
                             })
                         }
                     </Tab>
-                    <Tab eventKey="profile" title="การจัดส่ง">
+                    <Tab eventKey="profile" title="ติดตามสถานะคำสั่งซื้อ">
                         {
                             myOrder.map(item => {
                                 if (item.statusOrder !== "รับออเดอร์แล้ว") {
                                     return (<>
-                                          <Card className="mb-4">
-                                                <Card.Body>
-                                                    <p> หมายเลขออเดอร์ {item.bill_ID.slice(-5).toUpperCase()} <br />  วันที่สั่งออเดอร์ { }
-                                                        {moment(item.Date_times).format('YYYY-MM-DD')}
-                                                      &nbsp;  เวลา {moment(item.Date_times).format('HH:mm')} น.
-                                                    </p>
-                                                  
-                                                    <Details bill_ID={item.bill_ID} status={item.statusOrder} />
-                                                    <p style={{ fontSize: '18px' }}>รวมทั้งหมด {item.amount} บาท</p>
-                                                    <Alert> <h5>  {item.statusOrder}</h5></Alert>
-                                                </Card.Body>
+                                        <Card className="mb-4">
+                                            <Card.Body>
+                                                <p> หมายเลขออเดอร์ {item.bill_ID.slice(-5).toUpperCase()} <br />  วันที่สั่งออเดอร์ { }
+                                                    {moment(item.Date_times).format('YYYY-MM-DD')}
+                                                    &nbsp;  เวลา {moment(item.Date_times).format('HH:mm')} น.
+                                                </p>
 
-                                            </Card>
+                                                <Details bill_ID={item.bill_ID} status={item.statusOrder} />
+                                                <p style={{ fontSize: '18px' }}>รวมทั้งหมด {item.amount} บาท</p>
+                                                <Alert> <h5>  {item.statusOrder}</h5></Alert>
+                                            </Card.Body>
+
+                                        </Card>
                                     </>)
                                 }
                             })
