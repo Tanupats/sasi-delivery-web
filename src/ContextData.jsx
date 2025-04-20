@@ -118,6 +118,7 @@ function Context({ children }) {
     const resetCart = () => setCart([]);
     const messangerId = localStorage.getItem('messangerId');
     const username = localStorage.getItem('name');
+    const shop_id = localStorage.getItem('shop_id');
     const dev = import.meta.env.VITE_BAKUP_URL;
 
     const saveOrder = async () => {
@@ -130,6 +131,7 @@ function Context({ children }) {
                 statusOrder: "รับออเดอร์แล้ว",
                 customerName: username,
                 queueNumber: String(queueNumber),
+                shop_id: shop_id,
                 messengerId: messangerId,
                 address: Address
             }

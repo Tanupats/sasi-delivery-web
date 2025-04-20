@@ -1,11 +1,63 @@
-import React, { useState, useEffect } from "react";
-import { Row, Col, Card, Image, Button, Modal, Alert } from "react-bootstrap";
+import React, { useState, useEffect, useContext } from "react";
+import { Row, Card, Image, Button, Modal, Alert } from "react-bootstrap";
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import axios from "axios";
 import Details from "./Details";
 import moment from "moment";
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+
 const Myorder = () => {
+    const steps = ['รับออเดอร์แล้ว', 'ทำอาหารเสร็จแล้ว', 'กำลังจัดส่ง', 'จัดส่งสำเร็จ'];
+    const [activeStep, setActiveStep] = React.useState(4);
+    const [skipped, setSkipped] = React.useState(new Set());
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const isStepOptional = (step) => {
+        return step === 1;
+    };
+
+    const isStepSkipped = (step) => {
+        return skipped.has(step);
+    };
+
+    const handleNext = () => {
+        let newSkipped = skipped;
+        if (isStepSkipped(activeStep)) {
+            newSkipped = new Set(newSkipped.values());
+            newSkipped.delete(activeStep);
+        }
+
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        setSkipped(newSkipped);
+    };
+
+    const handleBack = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    };
+
+    const handleSkip = () => {
+        if (!isStepOptional(activeStep)) {
+            // You probably want to guard against something like this,
+            // it should never occur unless someone's actively trying to break something.
+            throw new Error("You can't skip a step that isn't optional.");
+        }
+
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        setSkipped((prevSkipped) => {
+            const newSkipped = new Set(prevSkipped.values());
+            newSkipped.add(activeStep);
+            return newSkipped;
+        });
+    };
+
+    const handleReset = () => {
+        setActiveStep(0);
+    };
 
     let messengerId = localStorage.getItem("messangerId");
     const [myOrder, setMyOrder] = useState([]);
@@ -59,10 +111,31 @@ const Myorder = () => {
                                                         {moment(item.Date_times).format('YYYY-MM-DD')}
                                                         &nbsp;  เวลา {moment(item.Date_times).format('HH:mm')} น.
                                                     </h6>
-                                                    {/* <Card.Title> รายการอาหาร</Card.Title> */}
+                                                 
                                                     <Details bill_ID={item.bill_ID} status={item.statusOrder} />
                                                     <h5 style={{ fontSize: '18px' }}>รวมทั้งหมด {item.amount} บาท</h5>
-                                                    <Alert> <h6> {item.statusOrder}</h6></Alert>
+                                                  
+
+                                                    <Row>
+
+                                                        <Stepper activeStep={activeStep} orientation={isMobile ? 'vertical' : 'horizontal'}>
+                                                            {steps.map((label, index) => {
+                                                                const stepProps = {};
+                                                                const labelProps = {};
+
+                                                                if (isStepSkipped(index)) {
+                                                                    stepProps.completed = false;
+                                                                }
+                                                                return (
+                                                                    <Step key={label} {...stepProps}>
+                                                                        <StepLabel {...labelProps}>{label}</StepLabel>
+                                                                    </Step>
+                                                                );
+                                                            })}
+                                                        </Stepper>
+                                                    </Row>
+
+
                                                 </Card.Body>
 
                                             </Card>
