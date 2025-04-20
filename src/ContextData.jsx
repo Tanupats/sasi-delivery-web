@@ -133,7 +133,8 @@ function Context({ children }) {
                 queueNumber: String(queueNumber),
                 shop_id: shop_id,
                 messengerId: messangerId,
-                address: Address
+                address: Address,
+                step: 1
             }
 
             try {

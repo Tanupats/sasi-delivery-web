@@ -111,14 +111,14 @@ const Myorder = () => {
                                                         {moment(item.Date_times).format('YYYY-MM-DD')}
                                                         &nbsp;  เวลา {moment(item.Date_times).format('HH:mm')} น.
                                                     </h6>
-                                                 
+
                                                     <Details bill_ID={item.bill_ID} status={item.statusOrder} />
                                                     <h5 style={{ fontSize: '18px' }}>รวมทั้งหมด {item.amount} บาท</h5>
-                                                  
+
 
                                                     <Row>
 
-                                                        <Stepper activeStep={activeStep} orientation={isMobile ? 'vertical' : 'horizontal'}>
+                                                        <Stepper activeStep={item.step} orientation={isMobile ? 'vertical' : 'horizontal'}>
                                                             {steps.map((label, index) => {
                                                                 const stepProps = {};
                                                                 const labelProps = {};
@@ -159,7 +159,24 @@ const Myorder = () => {
 
                                                 <Details bill_ID={item.bill_ID} status={item.statusOrder} />
                                                 <p style={{ fontSize: '18px' }}>รวมทั้งหมด {item.amount} บาท</p>
-                                                <Alert> <h5>  {item.statusOrder}</h5></Alert>
+                                                <Row>
+
+                                                    <Stepper activeStep={item.step} orientation={isMobile ? 'vertical' : 'horizontal'}>
+                                                        {steps.map((label, index) => {
+                                                            const stepProps = {};
+                                                            const labelProps = {};
+
+                                                            if (isStepSkipped(index)) {
+                                                                stepProps.completed = false;
+                                                            }
+                                                            return (
+                                                                <Step key={label} {...stepProps}>
+                                                                    <StepLabel {...labelProps}>{label}</StepLabel>
+                                                                </Step>
+                                                            );
+                                                        })}
+                                                    </Stepper>
+                                                </Row>
                                             </Card.Body>
 
                                         </Card>
