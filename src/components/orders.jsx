@@ -14,6 +14,7 @@ const Orders = () => {
     const [price, setPrice] = useState(0);
     const [printBillId, setPrintBillId] = useState(null);
     const [id, setId] = useState(null);
+  
 
     const getMenuReport = async (status) => {
         setReport([]);
@@ -52,7 +53,7 @@ const Orders = () => {
 
     const handleClose = () => setShow(false);
 
-    const UpdateStatus = async (id, status, messageid) => {
+    const UpdateStatus = async (id, status, messageid,step) => {
         Swal.fire({
             title: 'คุณต้องการอัพเดต หรือไม่ ?',
             text: "กดยืนยันเพื่ออัพเดตสถานะ",
@@ -65,7 +66,8 @@ const Orders = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 const body = {
-                    statusOrder: status
+                    statusOrder: status,
+                    step: step
                 }
                 await httpPut(`/bills/${id}`, body)
 
@@ -221,7 +223,11 @@ const Orders = () => {
                                                                 <Col md={12}>
                                                                     <Button
                                                                         className="when-print mt-4"
-                                                                        onClick={() => UpdateStatus(item.id, 'ทำเสร็จแล้ว', item.messengerId)}
+                                                                        onClick={() => {
+                                                                           
+                                                                            UpdateStatus(item.id, 'ทำเสร็จแล้ว', item.messengerId,1);
+
+                                                                        }}
                                                                         variant="success w-100"
                                                                     >
                                                                         ทำอาหารเสร็จแล้ว
@@ -235,7 +241,12 @@ const Orders = () => {
                                                                 <Col md={12}>
                                                                     <Button
                                                                         className="when-print"
-                                                                        onClick={() => UpdateStatus(item.id, 'กำลังส่ง', item.messengerId)}
+                                                                        onClick={() => {
+
+                                                                            UpdateStatus(item.id, 'กำลังส่ง', item.messengerId,2);
+                                                                          
+
+                                                                        }}
                                                                         variant="success w-100"
                                                                     >
                                                                         กำลังส่ง
@@ -250,7 +261,10 @@ const Orders = () => {
                                                                 <Col md={12}>
                                                                     <Button
                                                                         className="when-print"
-                                                                        onClick={() => UpdateStatus(item.id, 'ส่งสำเร็จ')}
+                                                                        onClick={() => {
+                                                                            UpdateStatus(item.id, 'ส่งสำเร็จ',4);
+                                                                            
+                                                                        }}
                                                                         variant="success w-100"
                                                                     >
                                                                         ส่งสำเร็จ
