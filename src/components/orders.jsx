@@ -225,7 +225,7 @@ const Orders = () => {
                                                                         className="when-print mt-4"
                                                                         onClick={() => {
                                                                            
-                                                                            UpdateStatus(item.id, 'ทำเสร็จแล้ว', item.messengerId,1);
+                                                                            UpdateStatus(item.id, 'ทำเสร็จแล้ว', item.messengerId,2);
 
                                                                         }}
                                                                         variant="success w-100"
@@ -243,7 +243,7 @@ const Orders = () => {
                                                                         className="when-print"
                                                                         onClick={() => {
 
-                                                                            UpdateStatus(item.id, 'กำลังส่ง', item.messengerId,2);
+                                                                            UpdateStatus(item.id, 'กำลังส่ง', item.messengerId,3);
                                                                           
 
                                                                         }}
@@ -262,7 +262,7 @@ const Orders = () => {
                                                                     <Button
                                                                         className="when-print"
                                                                         onClick={() => {
-                                                                            UpdateStatus(item.id, 'ส่งสำเร็จ',4);
+                                                                            UpdateStatus(item.id, 'ส่งสำเร็จ',item.messengerId,4);
                                                                             
                                                                         }}
                                                                         variant="success w-100"
