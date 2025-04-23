@@ -1,11 +1,10 @@
 import axios from "axios";
 import React, { useState, useEffect, useContext } from "react";
-import { Row, Col, Card, Image, Button, Modal } from "react-bootstrap";
+import { Row, Col, Card, Image } from "react-bootstrap";
 import { useParams } from 'react-router-dom';
 import Badge from 'react-bootstrap/Badge';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { AuthData } from "../ContextData";
-import { nanoid } from 'nanoid'
+
+
 const FoodMenu = () => {
 
     const { userid, username } = useParams();
@@ -15,22 +14,15 @@ const FoodMenu = () => {
     localStorage.setItem("role", "user");
     localStorage.setItem("auth", "authenticated");
 
-    const { addTocart } = useContext(AuthData)
     const [foods, setFoods] = useState([]);
     const [menuType, setMenuType] = useState([]);
 
-    const onSelectMenu = (obj) => {
-        let ID = nanoid(10)
-        addTocart({ ...obj, id: ID,quantity:1 })
-    }
-
     const getMenuType = async () => {
-        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/menutype`)
+        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/menutype/shop/15b4e191-d125-4c18-bdd1-445091c349ff`)
             .then(res => {
                 setMenuType(res.data);
             })
     }
-
 
 
     const getMenuBytypeId = async (id) => {
@@ -41,21 +33,18 @@ const FoodMenu = () => {
     }
 
     const getFoodMenu = () => {
-        fetch(`${import.meta.env.VITE_BAKUP_URL}/foodmenu`)
+        fetch(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/shop/15b4e191-d125-4c18-bdd1-445091c349ff`)
             .then((res) => res.json())
             .then((data) => {
                 if (data) {
                     setFoods(data);
                 }
-
             })
     }
 
     useEffect(() => {
-
         getMenuType();
         getFoodMenu();
-
     }, [])
     return (
         <>
@@ -70,7 +59,7 @@ const FoodMenu = () => {
                             {
                                 menuType.length > 0 && menuType?.map((item, index) => {
 
-                                    return (<React.Fragment  key={index}>
+                                    return (<React.Fragment key={index}>
 
 
 
@@ -98,16 +87,16 @@ const FoodMenu = () => {
 
 
                                     <Col md={6} xs={12} key={index}>
-                                        <Card style={{ height: '180px', marginBottom: '12px' }}>
-                                            <Card.Body>
+                                        <Card style={{ height: 'auto', marginBottom: '12px',padding:0 }}>
+                                            <Card.Body style={{padding:12 }}>
                                                 <Row>
                                                     <Col md={4}
-                                                        xs={4}
+                                                        xs={12}
                                                     >
-                                                        <Image style={{ width: "100%", height: '150px', objectFit: 'cover' }}
+                                                        <Image style={{ width: "100%", height: '150px', objectFit: 'cover',marginBottom:'20px' }}
                                                             src={`${import.meta.env.VITE_BAKUP_URL}/images/${item.img}`} />
                                                     </Col>
-                                                    <Col md={4} xs={4}>
+                                                    <Col md={4} xs={12}>
 
                                                         <h5>{item.foodname}</h5>
                                                         <h5>{item.Price}฿</h5>
@@ -115,18 +104,17 @@ const FoodMenu = () => {
 
 
                                                     </Col>
-                                                    <Col md={4} xs={4} className="text-center">
+                                                    {/* <Col md={4} xs={4} className="text-center">
                                                         <Button
                                                             onClick={() => onSelectMenu(item)}
                                                             style={{ backgroundColor: '#FD720D', border: 'none' }}
                                                         >
                                                             <AddCircleIcon />
                                                         </Button>
-                                                    </Col>
+                                                    </Col> */}
                                                 </Row>
 
                                             </Card.Body>
-
 
                                         </Card>
 

@@ -20,82 +20,29 @@ import StoreIcon from '@mui/icons-material/Store';
 import Register from './Register';
 const NavbarMenu = () => {
   const {
-    auth,
-    staffName,
-    user
+    queue
   } =
     useContext(AuthData);
 
-  const logout = () => {
-    localStorage.clear()
-    window.location.href = '/';
-  }
-
-  useEffect(() => {
-    console.log(auth)
-  }, [auth, staffName])
 
   return (
     <Router>
+      <Navbar bg="light" data-bs-theme="light" className='when-print' sticky='top'>
+        <Container fluid>
+          <Navbar.Brand href="#home">SASI MENU  คิวทั้งหมด {queue}</Navbar.Brand>
 
-      {
-
-        staffName ? (
-
-
-          <Navbar bg="light" data-bs-theme="light" className='when-print' sticky='top'>
-            <Container fluid>
-              <Navbar.Brand href="#home">SASI POS</Navbar.Brand>
-
-              <Navbar.Toggle aria-controls="basic-navbar-nav" />
-              <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="me-auto text-center">
-                  <>
-                    <Link to={'/pos'} style={{ textDecoration: 'none', color: '#000' }}>
-                      <ListAltIcon /> ขายอาหาร
-                    </Link>
-
-                    <Link to={'/report'} style={{ textDecoration: 'none', color: '#000' }}>
-                      <CurrencyBitcoinIcon /> ยอดขาย
-                    </Link>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
 
 
-                    <Link to={'/orders'} style={{ textDecoration: 'none', color: '#000' }}>
-                      <DeliveryDiningIcon />  ออเดอร์
-                    </Link>
+
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
 
 
-                    <Link to={'/admin'} style={{ textDecoration: 'none', color: '#000' }}>
-                      <StoreIcon /> จัดการร้านค้า  {user?.shop?.name}
-                    </Link>
-
-                  </>
-
-                </Nav>
-
-                <Nav className="ml-auto">
-                  <Nav.Link >
-                    {staffName}
-                  </Nav.Link>
-                  <Nav.Link onClick={logout}>
-                    <LogoutIcon />  ออกจากระบบ
-                  </Nav.Link>
-                </Nav>
-
-              </Navbar.Collapse>
-            </Container>
-          </Navbar>
-
-        ) : ' '
-      }
       <Routes>
         <Route path="/" Component={FoodMenu}></Route>
-        <Route path="/orders" Component={Orders}></Route>
-        <Route path="/queueNumber" Component={GetQueu}></Route>
-        <Route path="/pos" Component={Pos}></Route>
-        <Route path="/report" Component={Report}></Route>
-        <Route path="/admin" Component={Admin}></Route>
-        <Route path="/register" Component={Register}></Route>
       </Routes>
     </Router>
   );

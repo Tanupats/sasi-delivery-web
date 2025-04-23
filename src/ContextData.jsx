@@ -10,7 +10,7 @@ function Context({ children }) {
     const [name, setName] = useState("");
     const [orderType, setOrderType] = useState("สั่งกลับบ้าน");
     const [role, setRole] = useState("");
-    const [queue, setQueu] = useState(0);
+    const [queue, setQueue] = useState(0);
     const [queueNumber, setQueueNumber] = useState(0);
     const [staffName, setStaffName] = useState("");
     const [user, setUser] = useState({ name: '' })
@@ -155,11 +155,11 @@ function Context({ children }) {
     }
 
 
-    const getQueu = async () => {
+    const getQueue = async () => {
         await axios.get(`${import.meta.env.VITE_BAKUP_URL}/queues`)
             .then(res => {
                 if (res.status === 200) {
-                    setQueu(res.data.queues)
+                    setQueue(res.data.queues)
                 }
             })
     }
@@ -213,7 +213,7 @@ function Context({ children }) {
     }, [])
 
     useEffect(()=>{
-        getUser();
+        getQueue();
     },[])
 
     return (<>
