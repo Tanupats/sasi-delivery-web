@@ -279,14 +279,7 @@ const Pos = () => {
                     </tr>
                   </tbody>
                 </Table>
-                {/* <Row>
-                  <Col md={12}>
-
-                    <div className="sum-price mb-2">
-                     
-                    </div>
-                  </Col>
-                </Row> */}
+              
                 {
 
                   cart?.length > 0 && (
@@ -303,8 +296,6 @@ const Pos = () => {
                     </Row>
                   )
                 }
-
-
 
 
                 <Form>
@@ -333,9 +324,9 @@ const Pos = () => {
                   </Row>
 
                 </Form>
-                <Row className='mt-4 when-print'>
+                <Row className='mt-4 mb-4 when-print'>
 
-                  <Col md={6}>
+                  <Col md={6} xs={6}>
                     <Button
                       style={{ height: '46px' }}
                       onClick={() => { printSlip() }}
@@ -343,7 +334,7 @@ const Pos = () => {
                       <LocalPrintshopIcon />  พิมพ์
                     </Button>
                   </Col>
-                  <Col md={6}>
+                  <Col md={6} xs={6}>
                     <Button
                       style={{ height: '46px' }}
                       onClick={() => { saveOrder() }}

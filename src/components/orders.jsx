@@ -15,12 +15,10 @@ const Orders = () => {
     const [printBillId, setPrintBillId] = useState(null);
     const [id, setId] = useState(null);
 
-    const [counterOrder, setCounterOrder] = useState({
-        orderReceived: 1,
-        orderCooking: 3,
-        delivery: 3,
-        delivered: 2
-    });
+    const [Delivered, setDelivered] = useState(0);
+    const [OrderNew, setOrderNew] = useState(0);
+    const [OrderCooking, setOrderCooking] = useState(0);
+    const [OrderCookingFinish, setOrderCookingFinish] = useState(0);
 
     const getMenuReport = async (status) => {
         setReport([]);
@@ -28,14 +26,41 @@ const Orders = () => {
             .then(res => { setReport(res.data) });
     }
 
-    const getOrderCounter = async () => {
-          if(shop?.shop_id){
+    const getOrderDelivery = async () => {
+        if (shop?.shop_id) {
             await httpGet(`/bills/counter-order-status/${shop?.shop_id}?statusOrder=ส่งสำเร็จ`, { headers: { 'apikey': token } })
-            .then(res => { setCounterOrder(res) })
-          }
-        
+                .then(res => {
+                    setDelivered(res.data.count);
+                })
+        }
     }
 
+    const getOrderNew = async () => {
+        if (shop?.shop_id) {
+            await httpGet(`/bills/counter-order-status/${shop?.shop_id}?statusOrder=รับออเดอร์แล้ว`, { headers: { 'apikey': token } })
+                .then(res => {
+                    setOrderNew(res.data.count);
+                })
+        }
+    }
+
+    const getOrderCooking = async () => {
+        if (shop?.shop_id) {
+            await httpGet(`/bills/counter-order-status/${shop?.shop_id}?statusOrder=กำลังส่ง`, { headers: { 'apikey': token } })
+                .then(res => {
+                    setOrderCooking(res.data.count);
+                })
+        }
+    }
+
+    const getOrderCookingFinish = async () => {
+        if (shop?.shop_id) {
+            await httpGet(`/bills/counter-order-status/${shop?.shop_id}?statusOrder=ทำเสร็จแล้ว`, { headers: { 'apikey': token } })
+                .then(res => {
+                    setOrderCookingFinish(res.data.count);
+                })
+        }
+    }
 
 
     const handlePrint = async (billId, id) => {
@@ -91,14 +116,9 @@ const Orders = () => {
                     if (messageid !== "pos") {
                         sendDelivery(messageid)
                     }
-
                 }
-
-
             }
-
         });
-
     }
 
     const UpdatePrice = async () => {
@@ -130,18 +150,16 @@ const Orders = () => {
 
     }
 
-
-
-    useEffect(() => { 
+    useEffect(() => {
         getMenuReport("รับออเดอร์แล้ว");
-       
     }, [])
 
     useEffect(() => {
-        getOrderCounter();
+        getOrderDelivery();
+        getOrderNew();
+        getOrderCooking();
+        getOrderCookingFinish();
     }, [shop])
-
-
 
     return (<>
         <Row className="mt-3">
@@ -156,10 +174,10 @@ const Orders = () => {
 
                         <Row className="when-print">
                             <ButtonGroup aria-label="Basic example">
-                                <Button variant="btn btn-outline-primary" style={{ fontSize: '18px' }} onClick={() => { getMenuReport("รับออเดอร์แล้ว") }}>ออเดอร์ใหม่ {counterOrder?.orderReceived} </Button>
-                                <Button variant="btn btn-outline-success" style={{ fontSize: '18px' }} onClick={() => { getMenuReport("ทำเสร็จแล้ว") }}>ทำเสร็จแล้ว {counterOrder?.orderCooking} </Button>
-                                <Button variant="btn btn-outline-danger" style={{ fontSize: '18px' }} onClick={() => { getMenuReport("กำลังส่ง") }}>กำลังส่ง {counterOrder?.delivery} </Button>
-                                <Button variant="btn btn-outline-primary" style={{ fontSize: '18px' }} onClick={() => { getMenuReport("ส่งสำเร็จ") }}>ส่งสำเร็จ {counterOrder?.delivered} </Button>
+                                <Button variant="btn btn-outline-primary" style={{ fontSize: '18px' }} onClick={() => { getMenuReport("รับออเดอร์แล้ว") }}>ออเดอร์ใหม่ {OrderNew}</Button>
+                                <Button variant="btn btn-outline-success" style={{ fontSize: '18px' }} onClick={() => { getMenuReport("ทำเสร็จแล้ว") }}>ทำเสร็จแล้ว {OrderCookingFinish}</Button>
+                                <Button variant="btn btn-outline-danger" style={{ fontSize: '18px' }} onClick={() => { getMenuReport("กำลังส่ง") }}>กำลังส่ง  {OrderCooking}</Button>
+                                <Button variant="btn btn-outline-primary" style={{ fontSize: '18px' }} onClick={() => { getMenuReport("ส่งสำเร็จ") }}>ส่งสำเร็จ {Delivered} </Button>
 
                             </ButtonGroup>
                         </Row>
