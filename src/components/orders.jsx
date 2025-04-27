@@ -3,7 +3,7 @@ import { Row, Col, Card, Button, Modal, Form, Alert } from "react-bootstrap";
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Details from "./Details";
 import moment from "moment/moment";
-import { httpDelete, httpGet, httpPut, sendDelivery, sendNotificationBot } from "../http";
+import { httpDelete, httpGet, httpPut, sendDelivery, sendNotificationBot, sendDeliverySuccess } from "../http";
 import Swal from 'sweetalert2';
 import { AuthData } from "../ContextData";
 const Orders = () => {
@@ -21,9 +21,11 @@ const Orders = () => {
     const [OrderCookingFinish, setOrderCookingFinish] = useState(0);
 
     const getMenuReport = async (status) => {
-        setReport([]);
-        await httpGet(`/bills?status=${status}&shop_id=${shop?.shop_id}`, { headers: { 'apikey': token } })
-            .then(res => { setReport(res.data) });
+        if (shop?.shop_id) {
+            setReport([]);
+            await httpGet(`/bills?status=${status}&shop_id=${shop?.shop_id}`, { headers: { 'apikey': token } })
+                .then(res => { setReport(res.data) });
+        }
     }
 
     const getOrderDelivery = async () => {
@@ -104,19 +106,32 @@ const Orders = () => {
                 }
                 await httpPut(`/bills/${id}`, body)
 
-                setReport([]);
-                await getMenuReport("รับออเดอร์แล้ว");
+
                 if (status === "ทำเสร็จแล้ว") {
                     if (messageid !== "pos") {
-                        sendNotificationBot(messageid)
+                        sendNotificationBot(messageid);
+
                     }
 
                 }
                 if (status === "กำลังส่ง") {
                     if (messageid !== "pos") {
-                        sendDelivery(messageid)
+                        sendDelivery(messageid);
+
                     }
                 }
+                if (status === "ส่งสำเร็จ") {
+                    if (messageid !== "pos") {
+                        sendDeliverySuccess(messageid);
+
+                    }
+                }
+                await getMenuReport("รับออเดอร์แล้ว");
+                getOrderNew();
+                getOrderDelivery();         
+                getOrderCooking();
+                getOrderCookingFinish();
+
             }
         });
     }
@@ -149,12 +164,8 @@ const Orders = () => {
         });
 
     }
-
     useEffect(() => {
         getMenuReport("รับออเดอร์แล้ว");
-    }, [])
-
-    useEffect(() => {
         getOrderDelivery();
         getOrderNew();
         getOrderCooking();

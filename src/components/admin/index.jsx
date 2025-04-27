@@ -10,17 +10,22 @@ import Stock from "./stock";
 import Accounting from "./accounting";
 import ReportProduct from "./ReportProduct";
 import { httpGet } from "../../http";
+import { AuthData } from "../../ContextData";
 const Admin = () => {
     const [openMenu, setOpenMenu] = useState("เมนูอาหาร");
     const [inComeNow, setIncomeNow] = useState(0);
     const [outComeNow, setOutcomeNow] = useState(0);
     const token = localStorage.getItem("token");
+    const { shop } = useContext(AuthData);
 
     const geIncomeNow = async () => {
-        await httpGet(`/bills/reportByMounth`, { headers: { 'apikey': token } })
-            .then(res => {
-                setIncomeNow(res.data.totalAmount);
-            })
+        if (shop) {
+            await httpGet(`/bills/reportByMounth/${shop.shop_id}`, { headers: { 'apikey': token } })
+                .then(res => {
+                    setIncomeNow(res.data.totalAmount);
+                })
+        }
+
     }
 
     const geOutcomeNow = async () => {
