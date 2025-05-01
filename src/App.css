@@ -1,8 +1,13 @@
 .header-pos{
   display: none;
 }
-
+.show-header{
+  display: none;
+}
 @media print {
+  .show-header{
+    display: block;
+  }
   .header-pos{
     display: block;
   }

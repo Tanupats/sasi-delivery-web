@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+     "deploy": "node deploy.js"
   },
   "homepage": "https://www.pos.sasirestuarant.com/",
   "dependencies": {
@@ -19,6 +20,7 @@
     "bootstrap": "^5.3.3",
     "core-js": "^3.36.1",
     "firebase": "^10.11.0",
+    "ftp-deploy": "^2.4.7",
     "moment": "^2.30.1",
     "nanoid": "^5.0.6",
     "promptpay-qr": "^0.5.0",

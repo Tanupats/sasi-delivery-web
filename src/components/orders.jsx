@@ -128,7 +128,7 @@ const Orders = () => {
                 }
                 await getMenuReport("รับออเดอร์แล้ว");
                 getOrderNew();
-                getOrderDelivery();         
+                getOrderDelivery();
                 getOrderCooking();
                 getOrderCookingFinish();
 
@@ -164,6 +164,15 @@ const Orders = () => {
         });
 
     }
+    const reset = () => {
+        setPrintBillId(null);
+        getMenuReport("รับออเดอร์แล้ว");
+        getOrderDelivery();
+        getOrderNew();
+        getOrderCooking();
+        getOrderCookingFinish();
+    }
+
     useEffect(() => {
         getMenuReport("รับออเดอร์แล้ว");
         getOrderDelivery();
@@ -178,9 +187,6 @@ const Orders = () => {
 
                 <Card style={{ border: 'none', marginTop: '12px' }}  >
 
-
-                    {/* <Card.Title className="text-center when-print" as={'h5'}>
-                        จัดการออเดอร์</Card.Title> */}
                     <Form>
 
                         <Row className="when-print">
@@ -192,7 +198,7 @@ const Orders = () => {
 
                             </ButtonGroup>
                         </Row>
-                        <Row className="mt-4 when-print"> <Col><Button onClick={() => { setPrintBillId(null), getMenuReport("รับออเดอร์แล้ว") }} >  REFRESH</Button></Col></Row>
+                        <Row className="mt-4 when-print"> <Col><Button onClick={() => { reset() }} >  REFRESH</Button></Col></Row>
                         <Row>
                             {report.map((item, index) => (
                                 <React.Fragment key={index}>
@@ -200,25 +206,35 @@ const Orders = () => {
                                         <Col md={4}>
                                             <Card className="mb-4 mt-4" id={item.id}>
                                                 <Card.Body style={{ padding: '12px' }}>
-
-                                                    <div className="text-center">
+                                                    <div className="text-center show-header">
                                                         <h5> {shop?.name} </h5>
                                                         <h5>ใบเสร็จรับเงิน</h5>
-
                                                     </div>
                                                     <b> คิวที่ {item.queueNumber} <br /> เลขออเดอร์ {item.bill_ID.slice(-5).toUpperCase()}</b>
                                                     <p>
-
-
-                                                        เวลาสั่งซื้อ {moment(item.timeOrder).format('HH:mm')} น. &nbsp;<br />
+                                                        เวลาสั่งซื้อ {moment(item.timeOrder).format('HH:mm')} น. &nbsp; <br />
                                                         วันที่ {moment(item.timeOrder).format('YYYY-MM-DD')}<br />
                                                         {item?.printStatus !== null ? item?.printStatus : " "}
                                                     </p>
-                                                    <div className="when-print mb-2">
+
+                                                    <Row>
+                                                        <Col md={6} xs={6}>
+                                                            <div className="when-print mb-2">
 
 
-                                                        <b  > สั่งจาก {item.messengerId === 'pos' ? 'Admin' : 'Page'} </b> <br />
-                                                    </div>
+                                                                <b  > สั่งจาก {item.messengerId === 'pos' ? 'Admin' : 'Page'} </b> <br />
+                                                            </div>
+                                                        </Col>
+                                                        <Col md={6} xs={6} className="mb-2">
+                                                            <Button
+                                                                className="when-print"
+                                                                onClick={() => handlePrint(item.bill_ID, item.id)}
+                                                                variant="primary w-100"
+                                                            >
+                                                                พิมพ์ใบเสร็จ
+                                                            </Button>
+                                                        </Col>
+                                                    </Row>
                                                     <Alert className="when-print bg-white">
                                                         <b>สถานะ : {item.statusOrder}</b>
                                                     </Alert>
@@ -230,37 +246,18 @@ const Orders = () => {
                                                             {item.address ? <h5>จัดส่งที่-{item.address}</h5> : " "}
                                                         </Col>
                                                         <Col md={4}>
-                                                            <Button className="when-print" variant="warning" onClick={() => { setPrice(item.amount), setShow(true), setId(item.id) }} > แก้ไขราคา </Button>
+                                                            <Button className="when-print" variant="warning" onClick={() => { setPrice(item.amount), setShow(true), setId(item.id) }} > แก้ไขยอดทั้งหมด </Button>
 
                                                         </Col>
                                                     </Row>
 
                                                     <Row className="mt-2">
-                                                        {item.statusOrder === 'รับออเดอร์แล้ว' && (<>
-                                                            <Col md={6}>
-                                                                <Button
-                                                                    className="when-print"
-                                                                    onClick={() => handlePrint(item.bill_ID, item.id)}
-                                                                    variant="primary w-100"
-                                                                >
-                                                                    พิมพ์
-                                                                </Button>
-                                                            </Col>
-                                                            <Col md={6}>
-                                                                <Button
-                                                                    className="when-print"
-                                                                    onClick={() => deleteBill(item.id, item.bill_ID)}
-                                                                    variant="danger w-100"
-                                                                >
-                                                                    ยกเลิก
-                                                                </Button>
-                                                            </Col></>
-                                                        )}
+
                                                         {
                                                             item.statusOrder === 'รับออเดอร์แล้ว' && (
-                                                                <Col md={12}>
+                                                                <Col md={6} xs={6} className="mb-2">
                                                                     <Button
-                                                                        className="when-print mt-4"
+                                                                        className="when-print"
                                                                         onClick={() => {
 
                                                                             UpdateStatus(item.id, 'ทำเสร็จแล้ว', item.messengerId, 2);
@@ -273,10 +270,21 @@ const Orders = () => {
                                                                 </Col>
                                                             )
                                                         }
+                                                        {item.statusOrder === 'รับออเดอร์แล้ว' && (<>
 
+                                                            <Col md={6} xs={6}  className="mb-2">
+                                                                <Button
+                                                                    className="when-print"
+                                                                    onClick={() => deleteBill(item.id, item.bill_ID)}
+                                                                    variant="danger w-100"
+                                                                >
+                                                                    ยกเลิกออเดอร์
+                                                                </Button>
+                                                            </Col></>
+                                                        )}
                                                         {
                                                             item.statusOrder === 'ทำเสร็จแล้ว' && (<>
-                                                                <Col md={12}>
+                                                                <Col md={6} xs={6}>
                                                                     <Button
                                                                         className="when-print"
                                                                         onClick={() => {
@@ -350,18 +358,18 @@ const Orders = () => {
                         </Col>
                         <Row>
 
-                            <Col md={6} className="text-center">
+                            <Col md={6} xs={6} className="text-center">
                                 <Button
-                                    className="mt-3"
+                                    className="mt-3 w-100"
                                     onClick={() => UpdatePrice()}
                                     style={{ float: 'left' }}
                                     variant="success">
-                                    แก้ไข
+                                    บึนทึก
                                 </Button>
                             </Col>
-                            <Col md={6}>
+                            <Col md={6} xs={6}>
                                 <Button
-                                    className="mt-3"
+                                    className="mt-3 w-100"
                                     onClick={handleClose}
                                     style={{ float: 'left' }}
                                     variant="danger">

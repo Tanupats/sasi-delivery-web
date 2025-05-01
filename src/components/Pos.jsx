@@ -48,7 +48,7 @@ const Pos = () => {
   } =
     useContext(AuthData)
 
-  const [menu, setMenu] = useState(null);
+  const [menu, setMenu] = useState();
   const [menuType, setMenuType] = useState();
   const [show, setShow] = useState(false);
 
@@ -97,13 +97,11 @@ const Pos = () => {
     if (shop.shop_id !== undefined) {
       httpGet(`/foodmenu/getByShop/${shop.shop_id}`, { headers: { 'apikey': token } })
         .then(res => {
-          if (res.status === 200) {
             if (res.data.length > 0) {
               setMenu(res.data);
             } else {
               setMenu(null);
             }
-          }
         }
         )
     }
@@ -154,14 +152,15 @@ const Pos = () => {
 
   useEffect(() => {
     if (shopId !== undefined) {
-      getMenuType();
       getMenu();
+      getMenuType();
+
     }
   }, [shopId])
 
   return (
     <>
-      <Container fluid style={{ height: '100vh' }}>
+      <Container fluid >
         <Row className='mt-3'>
           <Col md={2} className='whenprint'>
             <div className='menu-type'>
@@ -279,7 +278,7 @@ const Pos = () => {
                     </tr>
                   </tbody>
                 </Table>
-              
+
                 {
 
                   cart?.length > 0 && (
