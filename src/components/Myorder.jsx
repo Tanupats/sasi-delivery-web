@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Row, Card, Image, Button, Modal, Alert } from "react-bootstrap";
+import { Row, Card, Alert } from "react-bootstrap";
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import axios from "axios";
@@ -10,19 +10,15 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-
+import { AuthData } from "../ContextData";
 const Myorder = () => {
     const steps = ['รับออเดอร์แล้ว', 'กำลังทำอาหาร', 'กำลังจัดส่ง', 'จัดส่งสำเร็จ'];
-
-
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
-
+    const {counterOrder} = useContext(AuthData)
     let messengerId = localStorage.getItem("messangerId");
     const [myOrder, setMyOrder] = useState([]);
     const getMyOrder = () => {
-
         axios.get(`${import.meta.env.VITE_BAKUP_URL}/bills/myorder?messengerId=${messengerId}`)
             .then(res => {
                 if (res.status === 200) {
@@ -53,7 +49,7 @@ const Myorder = () => {
                     id="uncontrolled-tab-example"
                     className="mb-3"
                 >
-                    <Tab eventKey="home" title="คำสั่งซื้อใหม่">
+                   <Tab eventKey="home" title={<b className="custom-tab-title">คำสั่งซื้อใหม่ {counterOrder}</b>}>
                         {
                             myOrder?.map((item, index) => {
                                 if (item.statusOrder === "รับออเดอร์แล้ว") {
@@ -90,7 +86,7 @@ const Myorder = () => {
                             })
                         }
                     </Tab>
-                    <Tab eventKey="profile" title="ติดตามสถานะคำสั่งซื้อ">
+                    <Tab eventKey="profile"  title={<b className="custom-tab-title">ติดตามสถานะคำสั่งซื้อ</b>}>
                         {
                             myOrder.map((item, index) => {
                                 if (item.statusOrder !== "รับออเดอร์แล้ว") {
