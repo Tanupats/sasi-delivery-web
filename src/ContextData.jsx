@@ -31,7 +31,7 @@ function Context({ children }) {
                         }
                     })
             } catch (error) {
-                console.log(error);
+                console.log('error get me',error);
                 localStorage.clear();
                 window.location.href = '/';
 

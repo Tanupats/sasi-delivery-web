@@ -11,6 +11,7 @@ import Accounting from "./accounting";
 import ReportProduct from "./ReportProduct";
 import { httpGet } from "../../http";
 import { AuthData } from "../../ContextData";
+import MenuType from "./MenuType";
 const Admin = () => {
     const [openMenu, setOpenMenu] = useState("เมนูอาหาร");
     const [inComeNow, setIncomeNow] = useState(0);
@@ -53,6 +54,7 @@ const Admin = () => {
                 <Navbar expand="lg" className="d-flex flex-column vh-100" style={{ height: '100%' }}>
                     <Nav className="flex-column w-100" style={{ flex: 1 }}>
                         <Nav.Link onClick={() => handleNavClick("เมนูอาหาร")}><MenuBookIcon /> เมนูอาหาร</Nav.Link>
+                        <Nav.Link onClick={() => handleNavClick("ประเภทสินค้า")}><MenuBookIcon /> ประเภทสินค้า</Nav.Link>
                         <Nav.Link onClick={() => handleNavClick("บัญชี")}><CreditCardIcon /> บัญชี</Nav.Link>
                         <Nav.Link onClick={() => handleNavClick("สรุปยอดขาย")}><DataThresholdingIcon /> สรุปยอดขาย</Nav.Link>
                         <Nav.Link onClick={() => handleNavClick("พนักงาน")}> <RecentActorsIcon /> พนักงาน</Nav.Link>
@@ -99,6 +101,12 @@ const Admin = () => {
                     openMenu === "สรุปรายการสั่งซื้อ" && (
 
                         <ReportProduct />
+                    )
+                }
+                {
+                    openMenu === "ประเภทสินค้า" && (
+
+                        <MenuType />
                     )
                 }
             </Col>

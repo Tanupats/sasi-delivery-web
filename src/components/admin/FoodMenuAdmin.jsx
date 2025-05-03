@@ -139,9 +139,9 @@ const FoodMenuAdmin = () => {
     return (
         <>
             <Card style={{ width: '100%' }}>
-                <Card.Title className="text-center mt-3">  รายการอาหาร</Card.Title>
+                {/* <Card.Title className="text-center mt-3">  รายการอาหาร</Card.Title> */}
                 <Card.Body>
-                    <FoodMenuForm getMenuType={getMenuType} />
+
                     <Row>
 
                         <Col md={12} className="mb-2">
@@ -157,7 +157,9 @@ const FoodMenuAdmin = () => {
                                             style={{
                                                 marginRight: '12px',
                                                 fontSize: '18px',
-                                                backgroundColor: '#FD720D', marginBottom: '12px'
+                                                backgroundColor: '#FD720D',
+                                                marginBottom: '12px',
+                                                cursor: 'pointer'
                                             }}
                                             onClick={() => getMenuBytypeId(item.id)}
                                             pill bg="">
@@ -170,7 +172,7 @@ const FoodMenuAdmin = () => {
 
 
                         </Col>
-
+                        <FoodMenuForm getMenuType={getMenuType} getFoodMenu={getFoodMenu} />
 
 
                         <div className="menu-list" style={{ overflow: 'auto', height: '100vh' }}>
@@ -182,18 +184,20 @@ const FoodMenuAdmin = () => {
                                         return (<React.Fragment key={index}>
 
 
-                                            <Col md={6} xs={12} >
-                                                <Card style={{ height: 'auto', marginBottom: '12px', padding: 0 }}>
+                                            <Col md={4} xs={12} >
+                                                <Card style={{ height: 'auto', marginBottom: '12px', padding: 8 }}>
                                                     <Card.Body style={{ padding: 5 }}>
                                                         <Row>
-                                                            <Col md={4}
-                                                                xs={4}
+                                                            <Col md={12}
+                                                                xs={12}
                                                             >
-                                                                <Image style={{ width: "100%", height: '160px', objectFit: 'cover' }}
+                                                                <Image style={{ width: "100%", height: '200px', objectFit: 'cover' }}
                                                                     src={`${import.meta.env.VITE_API_URL}/images/${item.img}`} />
                                                             </Col>
-                                                            <Col md={6} xs={8}>
+                                                            <Col md={12} xs={12}>
+                                                                <div className="mt-3">
 
+                                                                </div>
                                                                 <h5>{item.foodname}</h5>
                                                                 <h5>{item.Price}฿</h5>
                                                                 {
@@ -234,7 +238,7 @@ const FoodMenuAdmin = () => {
                                                                     )}
 
                                                             </Col>
-                                                            <Col md={2} xs={4} className="text-center">
+                                                            <Col md={12} xs={12}>
                                                                 <Button
                                                                     onClick={() => onSelectMenu(item)}
                                                                     variant="light"
@@ -285,7 +289,7 @@ const FoodMenuAdmin = () => {
                                                 xs={5}
                                             >
                                                 <Image style={{ width: "100%", objectFit: 'cover' }}
-                                                    src={`${import.meta.env.VITE_BAKUP_URL}/images/${data.img}`} />
+                                                    src={`${import.meta.env.VITE_API_URL}/images/${data.img}`} />
                                             </Col>
                                             <Col md={5} xs={5}>
                                                 <Form.Group>
@@ -321,7 +325,7 @@ const FoodMenuAdmin = () => {
                                                         })}
                                                     </Form.Select>
                                                 </Form.Group> */}
-                                                <Form.Group>
+                                                {/* <Form.Group>
                                                     <Form.Label>รหัสร้าน </Form.Label>
 
                                                     <Form.Control
@@ -329,7 +333,7 @@ const FoodMenuAdmin = () => {
                                                         onChange={(e) => setData({ ...data, shop_id: e.target.value })}
                                                     />
 
-                                                </Form.Group>
+                                                </Form.Group> */}
 
                                             </Col>
 
@@ -348,12 +352,20 @@ const FoodMenuAdmin = () => {
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="success" onClick={() => updateData()}>
-                        แก้ไข
-                    </Button>
-                    <Button variant="danger" onClick={handleClose}>
-                        ยกเลิก
-                    </Button>
+                    <Row className="text-left">
+                        <Col md={6} xs={6}>
+                            <Button variant="success" onClick={() => updateData()}>
+                                แก้ไข
+                            </Button>
+                        </Col>
+                        <Col md={6} xs={6}>
+                            <Button variant="danger" onClick={handleClose}>
+                                ยกเลิก
+                            </Button>
+                        </Col> 
+                    </Row>
+
+
                 </Modal.Footer>
 
 

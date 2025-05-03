@@ -5,9 +5,10 @@ import { AuthData } from "../../ContextData";
 import Swal from 'sweetalert2';
 import { httpGet, httpPost } from "../../http";
 const FoodMenuForm = (props) => {
+    const { getFoodMenu } = props;
     const { shop } = useContext(AuthData);
     const [show, setShow] = useState(false);
-    const [showType, setShowType] = useState(false);
+    
     const [foodname, setFoodName] = useState("");
     const [price, setPrice] = useState(50);
     const [img, setImg] = useState("");
@@ -15,13 +16,13 @@ const FoodMenuForm = (props) => {
     const [status, setStatus] = useState("1");
     const [menuType, setMenuType] = useState([]);
     const [menuTypeId, setMenuTypeId] = useState("");
-    const [typeName, setTypeName] = useState("");
+   
     const token = localStorage.getItem("token");
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    const handleCloseType = () => setShowType(false);
-    const handleShowType = () => setShowType(true);
+    
+    
 
     const getMenuType = async () => {
         await httpGet(`/menutype/${shop?.shop_id}`, { headers: { 'apikey': token } })
@@ -45,26 +46,6 @@ const FoodMenuForm = (props) => {
         handleClose();
     }
 
-    const postMenuType = async (e) => {
-        e.preventDefault()
-        const body = {
-            name: typeName,
-            shop_id: shop.shop_id
-        };
-        await httpPost(`/menutype`, body, { headers: { 'apikey': token } })
-            .then(res => {
-                if (res.status === 200) {
-                    Swal.fire({
-                        title: 'บันทึกข้อมูลสำเร็จ',
-                        icon: 'success',
-                        confirmButtonText: 'ยืนยัน',
-                        timer: 1300
-                    })
-                    handleCloseType()
-                }
-            })
-        props.getMenuType();
-    }
 
     const postMenu = async (e) => {
         e.preventDefault()
@@ -87,6 +68,7 @@ const FoodMenuForm = (props) => {
                             confirmButtonText: 'ยืนยัน',
                             timer: 1300
                         })
+                        getFoodMenu();
                     }
                 })
         }
@@ -112,6 +94,9 @@ const FoodMenuForm = (props) => {
     }, [shop])
 
     useEffect(() => {
+        if (menuType?.length > 0) {
+            setMenuTypeId(menuType[0].id);
+        }
 
     }, [menuType])
 
@@ -120,13 +105,10 @@ const FoodMenuForm = (props) => {
 
         <Row className="mb-3">
             <Col>
-                <Button onClick={() => handleShow()}>
-                    <AddCircleIcon /> เพิ่มเมนู </Button>
+                <Button  variant="success" onClick={() => handleShow()}>
+                    <AddCircleIcon /> เพิ่มเมนูใหม่ </Button>
             </Col>
-            <Col>
-                <Button onClick={() => handleShowType()}>
-                    <AddCircleIcon /> เพิ่มประเภท </Button>
-            </Col>
+           
 
         </Row>
         <Modal size="lg" show={show} onHide={handleClose}>
@@ -231,62 +213,7 @@ const FoodMenuForm = (props) => {
 
 
         </Modal>
-        <Modal size="lg" show={showType} onHide={handleCloseType}>
-            <Modal.Header closeButton>
-                <Modal.Title>เพิ่มประเภท</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Form id="addmenu" onSubmit={(e) => postMenuType(e)}>
-                    <Row>
-                        <Col md={12} xs={12}>
-                            <Card style={{ height: 'auto', marginBottom: '10px', padding: '10px' }}>
-                                <Card.Body className='p-0'>
-                                    <Row>
-
-                                        <Col md={12} xs={12}>
-                                            <Form.Group className="mb-2">
-                                                <Form.Label>ประเภท </Form.Label>
-                                                <Form.Control
-                                                    type="text"
-                                                    placeholder="ชื่อประเภท"
-                                                    onChange={(e) => setTypeName(e.target.value)}
-                                                    value={typeName} />
-                                            </Form.Group>
-
-
-
-
-                                        </Col>
-
-                                    </Row>
-
-                                </Card.Body>
-
-
-                            </Card>
-
-                        </Col>
-
-
-                    </Row>
-                </Form>
-            </Modal.Body>
-
-            <Modal.Footer>
-                <Button
-                    form="addmenu"
-                    type="submit"
-                    variant="success"
-                >
-                    บันทึก
-                </Button>
-                <Button variant="danger" onClick={handleCloseType}>
-                    ยกเลิก
-                </Button>
-            </Modal.Footer>
-
-
-        </Modal>
+       
     </>
     )
 
