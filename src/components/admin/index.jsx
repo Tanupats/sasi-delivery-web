@@ -63,7 +63,7 @@ const Admin = () => {
                     </Nav>
                 </Navbar>
             </Col>
-            <Col md={9}>
+            <Col md={10} xs={12}>
 
                 {
                     openMenu === "สต๊อก" && (

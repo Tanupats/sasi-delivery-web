@@ -1,6 +1,5 @@
 import { createContext, useState, useEffect } from "react";
 export const AuthData = createContext();
-import axios from "axios";
 import Swal from 'sweetalert2'
 import { httpGet, httpPost } from "./http";
 function Context({ children }) {

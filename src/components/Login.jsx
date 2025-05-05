@@ -8,7 +8,7 @@ const Login = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const { setStaffName, setUser, setShop } = useContext(AuthData);
-
+    const [messageError,setMessageError] = useState(false);
     const getShop = (id) => {
         httpGet('/shop/shop-user/' + id).then((res) => {
             setShop({ ...res.data[0] });
@@ -32,6 +32,10 @@ const Login = () => {
                         getShop(id);
                         setStaffName(name);
                         router('/pos');
+                    }else{
+                          console.log('เข้าสู่ระบบไม่สำเร็จ')
+                          setMessageError(true);
+
                     }
                 }
             })
@@ -59,7 +63,7 @@ const Login = () => {
                             <Form onSubmit={login}>
                                 <Form.Group>
                                     <Form.Label>
-                                        email
+                                        username
                                     </Form.Label>
                                     <Form.Control
                                         required
@@ -82,6 +86,10 @@ const Login = () => {
                                     />
 
                                 </Form.Group>
+                                { 
+                                    messageError ?  (<p style={{color:'red',marginTop:'12px'}}> รหัสผ่าน หรือ ชื่อผู้ใช้ไม่ถูกต้อง </p>) : <> </>
+                                }
+
 
                                 <Button
                                     type="submit"

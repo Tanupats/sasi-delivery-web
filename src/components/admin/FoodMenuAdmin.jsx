@@ -185,7 +185,7 @@ const FoodMenuAdmin = () => {
 
 
                                             <Col md={4} xs={12} >
-                                                <Card style={{ height: 'auto', marginBottom: '12px', padding: 8 }}>
+                                                <Card style={{ height: 'auto', marginBottom: '12px', padding: 2 }}>
                                                     <Card.Body style={{ padding: 5 }}>
                                                         <Row>
                                                             <Col md={12}
@@ -196,10 +196,10 @@ const FoodMenuAdmin = () => {
                                                             </Col>
                                                             <Col md={12} xs={12}>
                                                                 <div className="mt-3">
-
+                                                                    <h5>{item.foodname}</h5>
+                                                                    <h5>{item.Price}฿</h5>
                                                                 </div>
-                                                                <h5>{item.foodname}</h5>
-                                                                <h5>{item.Price}฿</h5>
+
                                                                 {
 
                                                                     item.status === 1 && (
@@ -273,7 +273,7 @@ const FoodMenuAdmin = () => {
 
             <Modal size="lg" show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>แก้ไขเมนูอาหาร</Modal.Title>
+                    <Modal.Title>แก้ไขข้อมูลสินค้า</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
@@ -352,7 +352,7 @@ const FoodMenuAdmin = () => {
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Row className="text-left">
+                    <Row>
                         <Col md={6} xs={6}>
                             <Button variant="success" onClick={() => updateData()}>
                                 แก้ไข
@@ -362,7 +362,7 @@ const FoodMenuAdmin = () => {
                             <Button variant="danger" onClick={handleClose}>
                                 ยกเลิก
                             </Button>
-                        </Col> 
+                        </Col>
                     </Row>
 
 

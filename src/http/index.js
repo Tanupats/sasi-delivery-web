@@ -4,23 +4,20 @@ const baseURL = import.meta.env.VITE_API_URL;
 export const httpGet = async (path, params) => {
   try {
     const response = await axios.get(`${baseURL + path}`, params);
-    
+
     return response
   } catch (error) {
-    localStorage.clear();
-    window.location.href = '/';
-    console.log('error fetch'+path);
+    console.log('error fetch' + path);
   }
-};
+}
 
 export const httpPost = async (path, body, header) => {
   try {
     const response = await axios.post(`${baseURL + path}`, body, header);
     return response
   } catch (error) {
-    localStorage.clear();
-    window.location.href = '/';
-    console.log('error fetch'+path);
+    return error;
+    //console.log('error fetch' + path);
   }
 };
 
@@ -29,9 +26,7 @@ export const httpDelete = async (path, header) => {
     const response = await axios.delete(`${baseURL + path}`, header);
     return response
   } catch (error) {
-    localStorage.clear();
-    window.location.href = '/';
-    console.log('error fetch'+path);
+    console.log('error fetch' + path);
   }
 };
 
@@ -41,8 +36,6 @@ export const httpPut = async (path, params, header) => {
     const response = await axios.put(`${baseURL + path}`, params, header);
     return response
   } catch (error) {
-    localStorage.clear();
-    window.location.href = '/';
     console.log('error fetch')
   }
 };
