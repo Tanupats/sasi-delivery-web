@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Row, Col, Form, Button, Navbar, Nav, Card } from 'react-bootstrap'
+import { Row, Col,Navbar, Nav, Card } from 'react-bootstrap'
 import './index.scss';
 import FoodMenuAdmin from "./FoodMenuAdmin";
 import MenuBookIcon from '@mui/icons-material/MenuBook';
@@ -21,16 +21,15 @@ const Admin = () => {
 
     const geIncomeNow = async () => {
         if (shop) {
-            await httpGet(`/bills/reportByMounth/${shop.shop_id}`, { headers: { 'apikey': token } })
+            await httpGet(`/bills/reportByMounth/${shop?.shop_id}`, { headers: { 'apikey': token } })
                 .then(res => {
                     setIncomeNow(res.data.totalAmount);
                 })
         }
-
     }
 
     const geOutcomeNow = async () => {
-        await httpGet(`/account/outcome-mounth`)
+        await httpGet(`/account/outcome-mounth?shop_id=${shop?.shop_id}`)
             .then(res => {
                 setOutcomeNow(res.data._sum.total);
             })
@@ -53,9 +52,9 @@ const Admin = () => {
             <Col md={2} className="dash-board">
                 <Navbar expand="lg" className="d-flex flex-column vh-100" style={{ height: '100%' }}>
                     <Nav className="flex-column w-100" style={{ flex: 1 }}>
-                        <Nav.Link onClick={() => handleNavClick("เมนูอาหาร")}><MenuBookIcon /> เมนูอาหาร</Nav.Link>
+                        <Nav.Link onClick={() => handleNavClick("เมนูอาหาร")}><MenuBookIcon /> รายการสินค้า</Nav.Link>
                         <Nav.Link onClick={() => handleNavClick("ประเภทสินค้า")}><MenuBookIcon /> ประเภทสินค้า</Nav.Link>
-                        <Nav.Link onClick={() => handleNavClick("บัญชี")}><CreditCardIcon /> บัญชี</Nav.Link>
+                        <Nav.Link onClick={() => handleNavClick("บัญชี")}><CreditCardIcon /> บัญชีรายจ่าย</Nav.Link>
                         <Nav.Link onClick={() => handleNavClick("สรุปยอดขาย")}><DataThresholdingIcon /> สรุปยอดขาย</Nav.Link>
                         <Nav.Link onClick={() => handleNavClick("พนักงาน")}> <RecentActorsIcon /> พนักงาน</Nav.Link>
                         <Nav.Link onClick={() => handleNavClick("สต๊อก")}> <RecentActorsIcon /> สต๊อกสินค้า</Nav.Link>

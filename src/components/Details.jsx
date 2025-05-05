@@ -65,7 +65,7 @@ const Details = (props) => {
         handleClose()
     }
 
-    const updateAmount = async ()=>{
+    const updateAmount = async () => {
         const body = {};
         await httpPut(`/billsdetails/${bill_ID}`)
     }
@@ -131,7 +131,8 @@ const Details = (props) => {
 
     return (<>
 
-        <Row>
+
+        {status === "รับออเดอร์แล้ว" && (<Row>
 
 
             <Col md={6}>
@@ -140,7 +141,8 @@ const Details = (props) => {
             </Col>
 
 
-        </Row>
+        </Row>)
+        }
 
         <ListGroup className="mt-2">
 

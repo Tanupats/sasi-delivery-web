@@ -97,11 +97,11 @@ const Pos = () => {
     if (shop.shop_id !== undefined) {
       httpGet(`/foodmenu/getByShop/${shop.shop_id}`, { headers: { 'apikey': token } })
         .then(res => {
-            if (res.data.length > 0) {
-              setMenu(res.data);
-            } else {
-              setMenu(null);
-            }
+          if (res.data.length > 0) {
+            setMenu(res.data);
+          } else {
+            setMenu(null);
+          }
         }
         )
     }
@@ -232,119 +232,115 @@ const Pos = () => {
           </Col>
 
           <Col md={4}>
-
-            <div className='header-pos text-center mt-4'>
-
-              <h6> {shop?.name}</h6>
-              <h6>  ใบเสร็จรับเงิน</h6>
-              <h6> ลำดับคิว {queueNumber} </h6>
-              วันที่ {date} เวลา {time}  {statusPrint}
-            </div>
-            <Row>
-              <Col md={12}>
-                <div className='whenprint'> <h5>รายการอาหาร</h5></div>
-                <Table>
-                  <tbody>
-                    {
-                      cart.map((item, index) => {
-                        return (
-
-                          <tr style={{ padding: 0, margin: 0 }} key={index}>
-                            <td >{item.name} <br></br> {item.note}</td>
-                            <td colSpan={2}>{item.quantity}</td>
-                            <td colSpan={2}>{item.price}</td>
-                            <td>
-                              <div className='whenprint'>
-                                <CancelIcon onClick={() => removeCart(item.id)}
-                                  variant='light' style={{ color: 'red', }} /></div></td>
-                          </tr>
-                        )
-                      })
-                    }
-                    <tr >
-                      <td >รวมทั้งหมด {toTal} รายการ</td>
-                      <td ></td>
-                    </tr>
-                    <tr>
-                      <td colSpan={4}>การรับอาหาร-{orderType}</td>
-                    </tr>
-                    <tr>
-                      <td >{name}</td>
-
-
-                    </tr>
-                    <tr>
-                      <td colSpan={4}>รวมทั้งหมด {sumPrice} บาท</td>
-                    </tr>
-                  </tbody>
-                </Table>
-
-                {
-
-                  cart?.length > 0 && (
-                    <Row>
-
-                      <Col md={12}>
-                        <Button className='when-print mb-2 w-100' onClick={() => { handleQR(), setShowQr(!showQr) }}>Patment QR </Button>
-                      </Col>
-                      <Col md={12} className='text-center'>
+            <Card>
+              <Card.Body>
+                <div className='header-pos text-center mt-4'>
+                  <h6> {shop?.name}</h6>
+                  <h6>  ใบเสร็จรับเงิน</h6>
+                  <h6> ลำดับคิว {queueNumber} </h6>
+                  วันที่ {date} เวลา {time}  {statusPrint}
+                </div>
+                <Row>
+                  <Col md={12}>
+                    <div className='whenprint'> <h5>รายการอาหาร</h5></div>
+                    <Table>
+                      <tbody>
                         {
-                          showQr ? <center><QRCode value={qrCode} /></center> : <></>
+                          cart.map((item, index) => {
+                            return (
+                              <tr style={{ padding: 0, margin: 0 }} key={index}>
+                                <td >{item.name} <br></br> {item.note}</td>
+                                <td colSpan={2}>{item.quantity}</td>
+                                <td colSpan={2}>{item.price}</td>
+                                <td>
+                                  <div className='whenprint'>
+                                    <CancelIcon onClick={() => removeCart(item.id)}
+                                      variant='light' style={{ color: 'red', }} /></div></td>
+                              </tr>
+                            )
+                          })
                         }
+                        <tr >
+                          <td >รวมทั้งหมด {toTal} รายการ</td>
+                          <td ></td>
+                        </tr>
+                        <tr>
+                          <td colSpan={4}>การรับอาหาร-{orderType}</td>
+                        </tr>
+                        <tr>
+                          <td>{name}</td>
+                        </tr>
+                        <tr>
+                          <td colSpan={4}>รวมทั้งหมด {sumPrice} บาท</td>
+                        </tr>
+                      </tbody>
+                    </Table>
+
+                    {
+
+                      cart?.length > 0 && (
+                        <Row>
+
+                          <Col md={12}>
+                            <Button className='when-print mb-2 w-100' onClick={() => { handleQR(), setShowQr(!showQr) }}>Patment QR </Button>
+                          </Col>
+                          <Col md={12} className='text-center'>
+                            {
+                              showQr ? <center><QRCode value={qrCode} /></center> : <></>
+                            }
+                          </Col>
+                        </Row>
+                      )
+                    }
+
+                    <Form>
+                      <Row className='order-type when-print '>
+                        <ButtonGroup >
+                          <Button className='btn btn-primary w-100'
+                            onClick={() => { setOrderType("เสิร์ฟในร้าน"), setName("ทานที่ร้าน") }}
+                            style={{ border: 'none' }} >เสิร์ฟในร้าน</Button>
+                          <Button className='btn btn-success w-100'
+                            onClick={() => setOrderType("สั่งกลับบ้าน")}
+                            style={{ border: 'none' }} >สั่งกลับบ้าน</Button>
+                          <Button className='btn btn-danger w-100'
+                            onClick={() => { setOrderType("รับเอง"), setName("รับเองหน้าร้าน") }}
+                            style={{ border: 'none' }} >รับเอง</Button>
+                        </ButtonGroup>
+
+                        <Col md={12} className='mt-3'>
+
+                          <Form.Control
+                            type="text"
+                            placeholder='ข้อมูลติดต่อ'
+                            onChange={(e) => setName(e.target.value)} value={name} />
+                        </Col>
+                      </Row>
+
+                    </Form>
+                    <Row className='mt-4 mb-4 when-print'>
+
+                      <Col md={6} xs={6}>
+                        <Button
+                          style={{ height: '46px' }}
+                          onClick={() => { printSlip() }}
+                          variant='primary w-100'>
+                          <LocalPrintshopIcon />  พิมพ์
+                        </Button>
+                      </Col>
+                      <Col md={6} xs={6}>
+                        <Button
+                          style={{ height: '46px' }}
+                          onClick={() => { saveOrder() }}
+                          variant='success w-100'>
+                          <SaveIcon />  บันทึก
+                        </Button>
                       </Col>
                     </Row>
-                  )
-                }
 
-
-                <Form>
-                  <Row className='order-type when-print '>
-                    <ButtonGroup >
-                      <Button className='btn btn-primary w-100'
-                        onClick={() => { setOrderType("เสิร์ฟในร้าน"), setName("ทานที่ร้าน") }}
-                        style={{ border: 'none' }} >เสิร์ฟในร้าน</Button>
-                      <Button className='btn btn-success w-100'
-                        onClick={() => setOrderType("สั่งกลับบ้าน")}
-                        style={{ border: 'none' }} >สั่งกลับบ้าน</Button>
-                      <Button className='btn btn-danger w-100'
-                        onClick={() => { setOrderType("รับเอง"), setName("รับเองหน้าร้าน") }}
-                        style={{ border: 'none' }} >รับเอง</Button>
-                    </ButtonGroup>
-
-
-
-                    <Col md={12} className='mt-3'>
-
-                      <Form.Control
-                        type="text"
-                        placeholder='ข้อมูลติดต่อ'
-                        onChange={(e) => setName(e.target.value)} value={name} />
-                    </Col>
-                  </Row>
-
-                </Form>
-                <Row className='mt-4 mb-4 when-print'>
-
-                  <Col md={6} xs={6}>
-                    <Button
-                      style={{ height: '46px' }}
-                      onClick={() => { printSlip() }}
-                      variant='primary w-100'>
-                      <LocalPrintshopIcon />  พิมพ์
-                    </Button>
-                  </Col>
-                  <Col md={6} xs={6}>
-                    <Button
-                      style={{ height: '46px' }}
-                      onClick={() => { saveOrder() }}
-                      variant='success w-100'>
-                      <SaveIcon />  บันทึก
-                    </Button>
                   </Col>
                 </Row>
-
-              </Col>
-            </Row>
+              </Card.Body>
+            </Card>
           </Col>
         </Row>
 

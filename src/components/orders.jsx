@@ -245,10 +245,15 @@ const Orders = () => {
                                                             <h5>ลูกค้า-{item.customerName}</h5>
                                                             {item.address ? <h5>จัดส่งที่-{item.address}</h5> : " "}
                                                         </Col>
-                                                        <Col md={4}>
-                                                            <Button className="when-print" variant="warning" onClick={() => { setPrice(item.amount), setShow(true), setId(item.id) }} > แก้ไขยอดทั้งหมด </Button>
+                                                        {
+                                                            item.statusOrder === 'รับออเดอร์แล้ว' && (
+                                                                <Col md={4}>
+                                                                    <Button className="when-print" variant="warning" onClick={() => { setPrice(item.amount), setShow(true), setId(item.id) }} > แก้ไขยอดทั้งหมด </Button>
 
-                                                        </Col>
+                                                                </Col>
+                                                            )
+                                                        }
+
                                                     </Row>
 
                                                     <Row className="mt-2">
@@ -272,7 +277,7 @@ const Orders = () => {
                                                         }
                                                         {item.statusOrder === 'รับออเดอร์แล้ว' && (<>
 
-                                                            <Col md={6} xs={6}  className="mb-2">
+                                                            <Col md={6} xs={6} className="mb-2">
                                                                 <Button
                                                                     className="when-print"
                                                                     onClick={() => deleteBill(item.id, item.bill_ID)}
@@ -299,7 +304,19 @@ const Orders = () => {
                                                                     </Button>
 
                                                                 </Col>
+                                                                <Col md={6} xs={6}>
+                                                                    <Button
+                                                                        className="when-print"
+                                                                        onClick={() => {
+                                                                            UpdateStatus(item.id, 'ส่งสำเร็จ', item.messengerId, 4);
 
+                                                                        }}
+                                                                        variant="primary w-100"
+                                                                    >
+                                                                        ส่งสำเร็จ
+                                                                    </Button>
+
+                                                                </Col>
                                                             </>)
                                                         }
                                                         {
