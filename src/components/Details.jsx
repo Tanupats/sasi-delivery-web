@@ -1,19 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext } from "react";
 import { Row, Col, Card, Image, Button, Modal, ListGroup, Form } from "react-bootstrap";
 import Select from 'react-select'
 import { httpDelete, httpGet, httpPost, httpPut } from "../http";
+import { AuthData } from "../ContextData";
 const Details = (props) => {
     const token = localStorage.getItem("token");
-    let { bill_ID, status } = props;
+    let { bill_ID, status, id, reset } = props;
     const [detail, setDetail] = useState([]);
     const [show, setShow] = useState(false);
     const [dataMenus, setDataMenus] = useState("");
-
-    const [options, setOption] = useState([])
-    const [optionsFood, setOptionFood] = useState([])
+    const {shop} = useContext(AuthData);
+    const [options, setOption] = useState([]);
+    const [optionsFood, setOptionFood] = useState([]);
+    const [onUpdate, setOnupdate] = useState(false);
 
     //MENU LIST 
-    const [foodname, setFoodName] = useState("")
+    const [foodname, setFoodName] = useState("");
     const [price, setPrice] = useState(0);
     const [note, setNote] = useState("");
     const [quantity, setQuantity] = useState(1);
@@ -30,13 +32,13 @@ const Details = (props) => {
     }
 
     const getMenuType = async () => {
-        await httpGet(`/menutype`)
+        await httpGet(`/menutype/${shop?.shop_id}`,{ headers: { 'apikey': token } })
             .then(res => {
                 setMenuType(res.data);
             })
     }
 
-    const getMenuBytypeId = async (id) => {
+    const getMenuByTypeId = async (id) => {
         await httpGet(`/foodmenu/${id.value}`)
             .then(res => {
 
@@ -58,34 +60,35 @@ const Details = (props) => {
         await httpDelete(`/billsdetails/remove/${id}`)
             .then(res => {
                 if (res.status === 200) {
-                    getDetail()
+                    getDetail();
+                    setOnupdate(true);
                 }
             })
-
-        handleClose()
     }
 
-    const updateAmount = async () => {
-        const body = {};
-        await httpPut(`/billsdetails/${bill_ID}`)
+    const updateAmount = async (newPrice) => {
+        const body = { amount: newPrice };
+        await httpPut(`/bills/${id}`, body, { headers: { 'apikey': token } })
+        await  reset();
     }
 
 
     const UpdateDetailById = async () => {
-        let id = dataMenus.id;
-        let body = {
+        const id = dataMenus.id;
+        const body = {
             foodname: foodname ? foodname : dataMenus.foodname,
-            price: price ? price : dataMenus.price,
-            quantity: quantity ? quantity : dataMenus.quantity,
+            price: price ? parseInt(price) : parseInt(dataMenus.price),
+            quantity: quantity ? parseInt(quantity) : parseInt(dataMenus.quantity),
             note: note ? note : dataMenus.note
         }
         await httpPut(`/billsdetails/${id}`, body, { headers: { 'apikey': token } })
             .then(res => {
-                if (res.status === 200) {
-                    getDetail()
+                if (res) {
+                    getDetail();
+                    setOnupdate(true);
                 }
             })
-        handleClose()
+        handleClose();
     }
 
     const addNewMenu = async () => {
@@ -93,7 +96,7 @@ const Details = (props) => {
             bills_id: bill_ID
             , foodname: dataMenus.label
             , price: dataMenus.price
-            , quantity: quantity
+            , quantity: parseInt(quantity)
             , note: note
         };
         await httpPost(`/billsdetails`, body, { headers: { 'apikey': token } })
@@ -104,7 +107,9 @@ const Details = (props) => {
                 }
             })
 
-        await getDetail()
+        await getDetail();
+        setOnupdate(true);
+
     }
 
     useEffect(() => {
@@ -119,28 +124,24 @@ const Details = (props) => {
         setOption(newOption);
     }, [menuType])
 
-
-
     useEffect(() => {
-        console.log(dataMenus)
-    }, [dataMenus])
-
-    useEffect(() => {
-        console.log(detail)
+        if (onUpdate) {
+            console.log(detail);
+            let newPriceBeforeUpdate = 0;
+            detail.map((item) => {
+                newPriceBeforeUpdate += item.quantity * item.price;
+            })
+            updateAmount(newPriceBeforeUpdate);
+           
+        }
     }, [detail])
 
     return (<>
 
-
         {status === "รับออเดอร์แล้ว" && (<Row>
-
-
             <Col md={6}>
-
                 <Button className="when-print" variant="success" onClick={() => handleShow('', 'newMenu')}> เพิ่มเมนูใหม่</Button>
             </Col>
-
-
         </Row>)
         }
 
@@ -175,9 +176,6 @@ const Details = (props) => {
                 })
             }
 
-
-
-
         </ListGroup>
 
         <Modal show={show} onHide={handleClose}>
@@ -198,9 +196,9 @@ const Details = (props) => {
                                 </Form.Group>
                                 <Form.Group>
                                     <Form.Label>จำนวน</Form.Label>
-                                    <Form.Control type="text" placeholder='เมนู'
+                                    <Form.Control type="text" placeholder='จำนวน'
                                         onChange={(e) => setQuantity(e.target.value)}
-                                        defaultValue={dataMenus?.quantity} />
+                                        value={quantity} />
                                 </Form.Group>
                                 <Form.Group>
 
@@ -264,7 +262,7 @@ const Details = (props) => {
                                         <Select
                                             placeholder="เลือกประเภท"
                                             options={options}
-                                            onChange={(e) => getMenuBytypeId(e)} />
+                                            onChange={(e) => getMenuByTypeId(e)} />
                                     </Form.Group>
 
                                     <Form.Group className="mt-2">
