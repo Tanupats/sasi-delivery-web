@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Row, Col, Form, Button, Navbar, Nav, Card } from 'react-bootstrap'
+import { Row, Col,Navbar, Nav, Card } from 'react-bootstrap'
 import './index.scss';
 import FoodMenuAdmin from "./FoodMenuAdmin";
 import MenuBookIcon from '@mui/icons-material/MenuBook';
@@ -25,16 +25,15 @@ const Admin = () => {
 
     const geIncomeNow = async () => {
         if (shop) {
-            await httpGet(`/bills/reportByMounth/${shop.shop_id}`, { headers: { 'apikey': token } })
+            await httpGet(`/bills/reportByMounth/${shop?.shop_id}`, { headers: { 'apikey': token } })
                 .then(res => {
                     setIncomeNow(res.data.totalAmount);
                 })
         }
-
     }
 
     const geOutcomeNow = async () => {
-        await httpGet(`/account/outcome-mounth`)
+        await httpGet(`/account/outcome-mounth?shop_id=${shop?.shop_id}`)
             .then(res => {
                 setOutcomeNow(res.data._sum.total);
             })

@@ -133,13 +133,11 @@ const FoodMenuAdmin = () => {
         getFoodMenu();
         getStockProduct();
     }, [shop])
-    useEffect(() => {
-        console.log(data)
-    }, [data])
+  
     return (
         <>
             <Card style={{ width: '100%' }}>
-                {/* <Card.Title className="text-center mt-3">  รายการอาหาร</Card.Title> */}
+                <Card.Title className="text-center mt-3">  รายการอาหาร</Card.Title>
                 <Card.Body>
 
                     <Row>

@@ -97,11 +97,11 @@ const Pos = () => {
     if (shop.shop_id !== undefined) {
       httpGet(`/foodmenu/getByShop/${shop.shop_id}`, { headers: { 'apikey': token } })
         .then(res => {
-            if (res.data.length > 0) {
-              setMenu(res.data);
-            } else {
-              setMenu(null);
-            }
+          if (res.data.length > 0) {
+            setMenu(res.data);
+          } else {
+            setMenu(null);
+          }
         }
         )
     }
@@ -234,7 +234,6 @@ const Pos = () => {
           <Col md={4}>
 
             <div className='header-pos text-center mt-4'>
-
               <h6> {shop?.name}</h6>
               <h6>  ใบเสร็จรับเงิน</h6>
               <h6> ลำดับคิว {queueNumber} </h6>
@@ -248,7 +247,6 @@ const Pos = () => {
                     {
                       cart.map((item, index) => {
                         return (
-
                           <tr style={{ padding: 0, margin: 0 }} key={index}>
                             <td >{item.name} <br></br> {item.note}</td>
                             <td colSpan={2}>{item.quantity}</td>
@@ -269,9 +267,7 @@ const Pos = () => {
                       <td colSpan={4}>การรับอาหาร-{orderType}</td>
                     </tr>
                     <tr>
-                      <td >{name}</td>
-
-
+                      <td>{name}</td>
                     </tr>
                     <tr>
                       <td colSpan={4}>รวมทั้งหมด {sumPrice} บาท</td>
@@ -283,6 +279,13 @@ const Pos = () => {
 
                   cart?.length > 0 && (
                     <Row>
+                      <Col>
+                        <div className="total when-print mb-2 text-center">
+                          <h5> Total {sumPrice.toLocaleString('th-TH', { style: 'currency', currency: 'THB' })}</h5>
+
+                        </div>
+
+                      </Col>
 
                       <Col md={12}>
                         <Button className='when-print mb-2 w-100' onClick={() => { handleQR(), setShowQr(!showQr) }}>Patment QR </Button>
@@ -295,7 +298,6 @@ const Pos = () => {
                     </Row>
                   )
                 }
-
 
                 <Form>
                   <Row className='order-type when-print '>
@@ -311,8 +313,6 @@ const Pos = () => {
                         style={{ border: 'none' }} >รับเอง</Button>
                     </ButtonGroup>
 
-
-
                     <Col md={12} className='mt-3'>
 
                       <Form.Control
@@ -323,7 +323,7 @@ const Pos = () => {
                   </Row>
 
                 </Form>
-                <Row className='mt-4 mb-4 when-print'>
+                <Row className='mt-3 mb-2 when-print sticky-bottom-mobile'>
 
                   <Col md={6} xs={6}>
                     <Button
@@ -348,15 +348,10 @@ const Pos = () => {
           </Col>
         </Row>
 
-
-
-
-
       </Container>
-
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>รายการอาหาร</Modal.Title>
+          <Modal.Title>รายการ</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Row>
@@ -458,12 +453,12 @@ const Pos = () => {
 
             <Row>
 
-              <Col md={6}>
+              <Col md={6} xs={6}>
                 <Button variant="success w-100" onClick={() => { confirmMenu() }}>
                   ยืนยัน
                 </Button>
               </Col>
-              <Col md={6}>
+              <Col md={6} xs={6}>
                 <Button variant="danger w-100" onClick={handleClose}>
                   ยกเลิก
                 </Button>

@@ -105,27 +105,23 @@ const Orders = () => {
                     step: step
                 }
                 await httpPut(`/bills/${id}`, body)
-
-
                 if (status === "ทำเสร็จแล้ว") {
                     if (messageid !== "pos") {
                         sendNotificationBot(messageid);
-
-                    }
-
-                }
-                if (status === "กำลังส่ง") {
-                    if (messageid !== "pos") {
-                        sendDelivery(messageid);
-
                     }
                 }
-                if (status === "ส่งสำเร็จ") {
-                    if (messageid !== "pos") {
-                        sendDeliverySuccess(messageid);
+                // if (status === "กำลังส่ง") {
+                //     if (messageid !== "pos") {
+                //         sendDelivery(messageid);
 
-                    }
-                }
+                //     }
+                // }
+                // if (status === "ส่งสำเร็จ") {
+                //     if (messageid !== "pos") {
+                //         sendDeliverySuccess(messageid);
+
+                //     }
+                // }
                 await getMenuReport("รับออเดอร์แล้ว");
                 getOrderNew();
                 getOrderDelivery();
@@ -238,17 +234,26 @@ const Orders = () => {
                                                     <Alert className="when-print bg-white">
                                                         <b>สถานะ : {item.statusOrder}</b>
                                                     </Alert>
-                                                    <Details bill_ID={item.bill_ID} status={item.statusOrder} />
+                                                    <Details 
+                                                     reset={reset}
+                                                    id={item.id}
+                                                    bill_ID={item.bill_ID} 
+                                                    status={item.statusOrder} />
                                                     <Row>
                                                         <Col md={8}>
                                                             <h5>รวมทั้งหมด {item.amount} บาท</h5>
                                                             <h5>ลูกค้า-{item.customerName}</h5>
                                                             {item.address ? <h5>จัดส่งที่-{item.address}</h5> : " "}
                                                         </Col>
-                                                        <Col md={4}>
-                                                            <Button className="when-print" variant="warning" onClick={() => { setPrice(item.amount), setShow(true), setId(item.id) }} > แก้ไขยอดทั้งหมด </Button>
+                                                        {/* {
+                                                            item.statusOrder === 'รับออเดอร์แล้ว' && (
+                                                                <Col md={4}>
+                                                                    <Button className="when-print" variant="warning" onClick={() => { setPrice(item.amount), setShow(true), setId(item.id) }} > แก้ไขราคารวม </Button>
 
-                                                        </Col>
+                                                                </Col>
+                                                            )
+                                                        } */}
+
                                                     </Row>
 
                                                     <Row className="mt-2">
@@ -272,7 +277,7 @@ const Orders = () => {
                                                         }
                                                         {item.statusOrder === 'รับออเดอร์แล้ว' && (<>
 
-                                                            <Col md={6} xs={6}  className="mb-2">
+                                                            <Col md={6} xs={6} className="mb-2">
                                                                 <Button
                                                                     className="when-print"
                                                                     onClick={() => deleteBill(item.id, item.bill_ID)}
@@ -299,7 +304,19 @@ const Orders = () => {
                                                                     </Button>
 
                                                                 </Col>
+                                                                <Col md={6} xs={6}>
+                                                                    <Button
+                                                                        className="when-print"
+                                                                        onClick={() => {
+                                                                            UpdateStatus(item.id, 'ส่งสำเร็จ', item.messengerId, 4);
 
+                                                                        }}
+                                                                        variant="primary w-100"
+                                                                    >
+                                                                        ส่งสำเร็จ
+                                                                    </Button>
+
+                                                                </Col>
                                                             </>)
                                                         }
                                                         {
