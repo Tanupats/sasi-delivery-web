@@ -30,7 +30,7 @@ function Context({ children }) {
                         }
                     })
             } catch (error) {
-                console.log('error get me',error);
+                console.log('error get me', error);
                 localStorage.clear();
                 window.location.href = '/';
 
@@ -123,7 +123,8 @@ function Context({ children }) {
                 queueNumber: String(queueNumber),
                 messengerId: 'pos',
                 shop_id: shop_id,
-                printStatus: statusPrint
+                printStatus: statusPrint,
+                payment_type: "bank_transfer"
             }
             await httpPost(`/bills`, body, { headers: { 'apikey': token } })
                 .then(res => {

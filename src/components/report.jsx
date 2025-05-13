@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react"
+import { useState, useEffect, useContext } from "react"
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -13,10 +13,12 @@ import { Card, Row, Col, Button, Form, Modal } from "react-bootstrap"
 import Swal from 'sweetalert2';
 import moment from "moment/moment";
 import { AuthData } from "../ContextData";
-import { httpDelete, httpGet, httpPost } from "../http";
+import { httpDelete, httpGet, httpPost, httpPut } from "../http";
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 const Report = () => {
     const { shop } = useContext(AuthData)
-
     const [totalToday, setTotalToday] = useState(0)
     const [data, setData] = useState([])
     const [counter, setCounter] = useState({});
@@ -24,6 +26,7 @@ const Report = () => {
     const token = localStorage.getItem("token");
     const [show, setShow] = useState(false);
     const [id, setId] = useState("");
+    const [paymentType, setPaymentType] = useState("");
     const handleClose = () => setShow(false);
 
     const getOrderFood = async () => {
@@ -40,6 +43,12 @@ const Report = () => {
         }
     }
 
+    const handleSwitchChange = async (row) => {
+        const body = { payment_type: row.payment_type === 'bank_transfer' ? 'cash' : 'bank_transfer' }
+        await httpPut(`/bills/${row.id}`, body, { headers: { 'apikey': token } })
+        await searchOrder();
+    };
+
     const searchOrder = async () => {
         if (shop) {
             const body = { startDate: startDate, shop_id: shop?.shop_id }
@@ -50,7 +59,6 @@ const Report = () => {
                     setTotalToday(res.data.total);
                 })
         }
-
     }
 
     const RemoveDetailsId = async (id) => {
@@ -83,15 +91,15 @@ const Report = () => {
     }
 
     useEffect(() => {
-        
-            getOrderFood()
-      
+
+        getOrderFood()
+
     }, [shop])
 
     useEffect(() => {
         searchOrder();
         geReport();
-    }, [startDate,shop])
+    }, [startDate, shop])
 
     return (<>
         <Card>
@@ -168,7 +176,8 @@ const Report = () => {
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>ลำดับ</TableCell>
-                                        <TableCell align="left">ประเภท</TableCell>
+                                        <TableCell align="left">ประเภทการรับ</TableCell>
+                                        <TableCell align="left">ประเภทการชำระเงิน</TableCell>
                                         <TableCell align="left">ยอดรวม</TableCell>
                                         <TableCell align="left">ลูกค้า</TableCell>
                                         <TableCell align="left">เวลา</TableCell>
@@ -187,7 +196,13 @@ const Report = () => {
                                                 {row.queueNumber}
                                             </TableCell>
                                             <TableCell align="left">{row.ordertype}</TableCell>
-
+                                            <TableCell align="left">
+                                                <FormControlLabel
+                                                    control={
+                                                        <Switch checked={row.payment_type === "bank_transfer" ? true : false} onChange={() => handleSwitchChange(row)} />
+                                                    }
+                                                    label={row.payment_type === "bank_transfer" ? 'โอนจ่าย' : 'เงินสด'}
+                                                /></TableCell>
                                             <TableCell align="left">{row.amount}</TableCell>
                                             <TableCell align="left">{row.customerName}</TableCell>
                                             <TableCell align="left">{moment(row.timeOrder).format('HH:mm')} น.</TableCell>
