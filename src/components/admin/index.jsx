@@ -6,12 +6,16 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import DataThresholdingIcon from '@mui/icons-material/DataThresholding';
 import RecentActorsIcon from '@mui/icons-material/RecentActors';
+import PollIcon from '@mui/icons-material/Poll';
+import GroupIcon from '@mui/icons-material/Group';
 import Stock from "./stock";
 import Accounting from "./accounting";
 import ReportProduct from "./ReportProduct";
 import { httpGet } from "../../http";
 import { AuthData } from "../../ContextData";
 import MenuType from "./MenuType";
+import BallotIcon from '@mui/icons-material/Ballot';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 const Admin = () => {
     const [openMenu, setOpenMenu] = useState("เมนูอาหาร");
     const [inComeNow, setIncomeNow] = useState(0);
@@ -52,13 +56,13 @@ const Admin = () => {
             <Col md={2} className="dash-board">
                 <Navbar expand="lg" className="d-flex flex-column vh-100" style={{ height: '100%' }}>
                     <Nav className="flex-column w-100" style={{ flex: 1 }}>
-                        <Nav.Link onClick={() => handleNavClick("เมนูอาหาร")}><MenuBookIcon /> รายการสินค้า</Nav.Link>
-                        <Nav.Link onClick={() => handleNavClick("ประเภทสินค้า")}><MenuBookIcon /> ประเภทสินค้า</Nav.Link>
-                        <Nav.Link onClick={() => handleNavClick("บัญชี")}><CreditCardIcon /> บัญชีรายจ่าย</Nav.Link>
+                        <Nav.Link onClick={() => handleNavClick("เมนูอาหาร")}><MenuBookIcon /> เมนูอาหาร</Nav.Link>
+                        <Nav.Link onClick={() => handleNavClick("ประเภทสินค้า")}><PollIcon /> ประเภทสินค้า</Nav.Link>
+                        <Nav.Link onClick={() => handleNavClick("บัญชี")}><CreditCardIcon /> บัญชี</Nav.Link>
                         <Nav.Link onClick={() => handleNavClick("สรุปยอดขาย")}><DataThresholdingIcon /> สรุปยอดขาย</Nav.Link>
-                        <Nav.Link onClick={() => handleNavClick("พนักงาน")}> <RecentActorsIcon /> พนักงาน</Nav.Link>
-                        <Nav.Link onClick={() => handleNavClick("สต๊อก")}> <RecentActorsIcon /> สต๊อกสินค้า</Nav.Link>
-                        <Nav.Link onClick={() => handleNavClick("สรุปรายการสั่งซื้อ")}> <RecentActorsIcon /> สรุปรายการสั่งซื้อ</Nav.Link>
+                        <Nav.Link onClick={() => handleNavClick("พนักงาน")}> <GroupIcon /> พนักงาน</Nav.Link>
+                        <Nav.Link onClick={() => handleNavClick("สต๊อก")}> <BallotIcon /> สต๊อกสินค้า</Nav.Link>
+                        <Nav.Link onClick={() => handleNavClick("สรุปรายการสั่งซื้อ")}> <AssessmentIcon /> สรุปรายการสั่งซื้อ</Nav.Link>
                     </Nav>
                 </Navbar>
             </Col>

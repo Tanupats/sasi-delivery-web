@@ -208,7 +208,7 @@ const Pos = () => {
                     menu?.map((item, index) => {
                       return (
                         <React.Fragment key={index}>
-                          <Col md={6} onClick={() => onSelectMenu(item)}>
+                          <Col md={6} onClick={() => item.status === 1 && onSelectMenu(item)}>
                             <FoodComponent data={item} />
                           </Col>
                         </React.Fragment>)
