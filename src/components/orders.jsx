@@ -19,6 +19,7 @@ const Orders = () => {
     const [OrderNew, setOrderNew] = useState(0);
     const [OrderCooking, setOrderCooking] = useState(0);
     const [OrderCookingFinish, setOrderCookingFinish] = useState(0);
+    const [autoRefresh, setAutoRefresh] = useState(false);
 
     const getMenuReport = async (status) => {
         if (shop?.shop_id) {
@@ -66,6 +67,7 @@ const Orders = () => {
 
 
     const handlePrint = async (billId, id) => {
+        setAutoRefresh(false);
         const now = new Date();
         const hours = now.getHours().toString().padStart(2, '0');
         const minutes = now.getMinutes().toString().padStart(2, '0');
@@ -78,6 +80,7 @@ const Orders = () => {
             window.print();
 
         }, 2000);
+        setAutoRefresh(true);
     };
 
     const CancelOrder = async (id, bid) => {
@@ -113,7 +116,6 @@ const Orders = () => {
                 // if (status === "กำลังส่ง") {
                 //     if (messageid !== "pos") {
                 //         sendDelivery(messageid);
-
                 //     }
                 // }
                 // if (status === "ส่งสำเร็จ") {
@@ -169,6 +171,10 @@ const Orders = () => {
         getOrderCookingFinish();
     }
 
+    const autoReload = () => {
+        setAutoRefresh(!autoRefresh);
+    }
+
     useEffect(() => {
         getMenuReport("รับออเดอร์แล้ว");
         getOrderDelivery();
@@ -176,6 +182,19 @@ const Orders = () => {
         getOrderCooking();
         getOrderCookingFinish();
     }, [shop])
+
+    useEffect(() => {
+        if (autoRefresh) {
+            const interval = setInterval(() => {
+                getMenuReport("รับออเดอร์แล้ว");
+
+            }, 10000); // ทุก 5 วินาที
+
+            return () => clearInterval(interval); // ล้างตอน component หาย 
+
+        }
+    }, [autoRefresh]);
+
 
     return (<>
         <Row className="mt-3">
@@ -194,7 +213,12 @@ const Orders = () => {
 
                             </ButtonGroup>
                         </Row>
-                        <Row className="mt-4 when-print"> <Col><Button onClick={() => { reset() }} >  REFRESH</Button></Col></Row>
+                        <Row className="mt-4 when-print">
+                            <Col md={6} xs={6}><Button onClick={() => { reset() }} >  REFRESH</Button></Col>
+
+                            <Col md={6} xs={6}><Button variant="btn btn-success" onClick={() => { autoReload() }}>{autoRefresh ? " CLOSE" : "OPEN"} AUTO REFRESH</Button></Col>
+                        </Row>
+
                         <Row>
                             {report.map((item, index) => (
                                 <React.Fragment key={index}>
@@ -212,13 +236,10 @@ const Orders = () => {
                                                         วันที่ {moment(item.timeOrder).format('YYYY-MM-DD')}<br />
                                                         {item?.printStatus !== null ? item?.printStatus : " "}
                                                     </p>
-
                                                     <Row>
                                                         <Col md={6} xs={6}>
                                                             <div className="when-print mb-2">
-
-
-                                                                <b  > สั่งจาก {item.messengerId === 'pos' ? 'Admin' : 'Page'} </b> <br />
+                                                                <b> สั่งจาก {item.messengerId === 'pos' ? 'Admin' : 'Page'} </b> <br />
                                                             </div>
                                                         </Col>
                                                         <Col md={6} xs={6} className="mb-2">
@@ -234,11 +255,11 @@ const Orders = () => {
                                                     <Alert className="when-print bg-white">
                                                         <b>สถานะ : {item.statusOrder}</b>
                                                     </Alert>
-                                                    <Details 
-                                                     reset={reset}
-                                                    id={item.id}
-                                                    bill_ID={item.bill_ID} 
-                                                    status={item.statusOrder} />
+                                                    <Details
+                                                        reset={reset}
+                                                        id={item.id}
+                                                        bill_ID={item.bill_ID}
+                                                        status={item.statusOrder} />
                                                     <Row>
                                                         <Col md={8}>
                                                             <h5>รวมทั้งหมด {item.amount} บาท</h5>
