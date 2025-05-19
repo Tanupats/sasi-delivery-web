@@ -6,6 +6,9 @@ import moment from "moment/moment";
 import { httpDelete, httpGet, httpPut, sendDelivery, sendNotificationBot, sendDeliverySuccess } from "../http";
 import Swal from 'sweetalert2';
 import { AuthData } from "../ContextData";
+import CachedIcon from '@mui/icons-material/Cached';
+import SyncDisabledIcon from '@mui/icons-material/SyncDisabled';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 const Orders = () => {
     const { shop } = useContext(AuthData);
     const token = localStorage.getItem("token");
@@ -23,7 +26,7 @@ const Orders = () => {
 
     const getMenuReport = async (status) => {
         if (shop?.shop_id) {
-            setReport([]);
+
             await httpGet(`/bills?status=${status}&shop_id=${shop?.shop_id}`, { headers: { 'apikey': token } })
                 .then(res => { setReport(res.data) });
         }
@@ -188,7 +191,7 @@ const Orders = () => {
             const interval = setInterval(() => {
                 getMenuReport("รับออเดอร์แล้ว");
 
-            }, 10000); // ทุก 5 วินาที
+            }, 7000); // ทุก 5 วินาที
 
             return () => clearInterval(interval); // ล้างตอน component หาย 
 
@@ -214,9 +217,14 @@ const Orders = () => {
                             </ButtonGroup>
                         </Row>
                         <Row className="mt-4 when-print">
-                            <Col md={6} xs={6}><Button onClick={() => { reset() }} >  REFRESH</Button></Col>
+                            <Col md={2} xs={6}><Button
+                                onClick={() => { reset() }}
+                            > < RestartAltIcon /> RESET </Button></Col>
 
-                            <Col md={6} xs={6}><Button variant="btn btn-success" onClick={() => { autoReload() }}>{autoRefresh ? " CLOSE" : "OPEN"} AUTO REFRESH</Button></Col>
+                            <Col md={2} xs={6}><Button variant="btn btn-light"
+                                onClick={() => { autoReload() }}>
+                                {autoRefresh ?  <CachedIcon />:<SyncDisabledIcon /> }
+                                AUTO REFRESH</Button></Col>
                         </Row>
 
                         <Row>
