@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Row, Col,Navbar, Nav, Card } from 'react-bootstrap'
+import { Row, Col, Navbar, Nav, Card } from 'react-bootstrap'
 import './index.scss';
 import FoodMenuAdmin from "./FoodMenuAdmin";
 import MenuBookIcon from '@mui/icons-material/MenuBook';
@@ -85,14 +85,26 @@ const Admin = () => {
                 }
                 {
                     openMenu === "สรุปยอดขาย" && (<Row className="mt-3">
-                        <Col md={12}>
+                        <Col md={6}>
                             <Card>
                                 <Card.Body>
                                     <Card.Title>
 
                                         ยอดขายเดือนนี้   {inComeNow} บาท  <br />
+
+
+                                    </Card.Title>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                        <Col md={6}>
+                            <Card>
+                                <Card.Body>
+                                    <Card.Title>
+
+
                                         รายจ่ายเดือนนี้   {outComeNow} บาท  <br />
-                                        กำไรขั้นต้น {(inComeNow - outComeNow)} บาท
+
                                     </Card.Title>
                                 </Card.Body>
                             </Card>
