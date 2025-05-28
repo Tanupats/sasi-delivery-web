@@ -15,6 +15,7 @@ function Context({ children }) {
     const authCheck = localStorage.getItem("auth");
     const [auth, setAuth] = useState(authCheck || 'not_authenticated');
     const [Address, setAddress] = useState("");
+    const [paymentType, setPaymentType] = useState("bank_transfer");
 
     const getQueueNumber = async () => {
         await axios.get(`${import.meta.env.VITE_BAKUP_URL}/queueNumber`)
@@ -127,6 +128,7 @@ function Context({ children }) {
             const body = {
                 amount: sumPrice,
                 ordertype: orderType,
+                payment_type: paymentType,
                 statusOrder: "รับออเดอร์แล้ว",
                 customerName: username,
                 queueNumber: String(queueNumber),
@@ -305,7 +307,9 @@ function Context({ children }) {
                 setAuth,
                 Address,
                 setAddress,
-                counterOrder
+                counterOrder,
+                paymentType,
+                setPaymentType
             }}>
             {children}
         </AuthData.Provider>
