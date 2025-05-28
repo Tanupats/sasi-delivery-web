@@ -49,6 +49,7 @@ padding-top: 0;
       color: #fff;
       padding: 20px;
       background-color: rgb(4, 145, 63);
+      border-radius: 5px;
     }
 
     @media (max-width: 768px) {

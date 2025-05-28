@@ -59,13 +59,13 @@ const NavbarMenu = () => {
                     </Nav.Link>
 
                     <Nav.Link as={Link} to={'/report'} style={{ textDecoration: 'none', color: '#fff' }}>
-                      <CurrencyBitcoinIcon /> ยอดขาย
+                      <CurrencyBitcoinIcon /> สรุปยอดขาย
                     </Nav.Link>
 
 
-                    <Nav.Link as={Link} to={'/orders'} style={{ textDecoration: 'none', color: '#fff' }}>
+                    {/* <Nav.Link as={Link} to={'/orders'} style={{ textDecoration: 'none', color: '#fff' }}>
                       <DeliveryDiningIcon />  ออเดอร์
-                    </Nav.Link>
+                    </Nav.Link> */}
 
 
                     <Nav.Link as={Link} to={'/admin'} style={{ textDecoration: 'none', color: '#fff' }}>

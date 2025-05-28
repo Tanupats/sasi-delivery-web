@@ -25,6 +25,7 @@ const Orders = () => {
     const [autoRefresh, setAutoRefresh] = useState(false);
 
     const getMenuReport = async (status) => {
+        setReport([]);
         if (shop?.shop_id) {
 
             await httpGet(`/bills?status=${status}&shop_id=${shop?.shop_id}`, { headers: { 'apikey': token } })
@@ -127,6 +128,7 @@ const Orders = () => {
 
                 //     }
                 // }
+                setReport([]);
                 await getMenuReport("รับออเดอร์แล้ว");
                 getOrderNew();
                 getOrderDelivery();

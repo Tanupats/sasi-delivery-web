@@ -32,6 +32,9 @@ const Admin = () => {
         }
     }
 
+    const formatMoney = (val) => {
+        return new Intl.NumberFormat().format(val)
+    }
     const geOutcomeNow = async () => {
         await httpGet(`/account/outcome-mounth?shop_id=${shop?.shop_id}`)
             .then(res => {
@@ -56,13 +59,13 @@ const Admin = () => {
             <Col md={2} className="dash-board">
                 <Navbar expand="lg" className="d-flex flex-column vh-100" style={{ height: '100%' }}>
                     <Nav className="flex-column w-100" style={{ flex: 1 }}>
-                        <Nav.Link onClick={() => handleNavClick("เมนูอาหาร")}><MenuBookIcon /> เมนูอาหาร</Nav.Link>
+                        <Nav.Link onClick={() => handleNavClick("เมนูอาหาร")}><MenuBookIcon /> รายการสินค้า</Nav.Link>
                         <Nav.Link onClick={() => handleNavClick("ประเภทสินค้า")}><PollIcon /> ประเภทสินค้า</Nav.Link>
                         <Nav.Link onClick={() => handleNavClick("บัญชี")}><CreditCardIcon /> บัญชี</Nav.Link>
-                        <Nav.Link onClick={() => handleNavClick("สรุปยอดขาย")}><DataThresholdingIcon /> สรุปยอดขาย</Nav.Link>
-                        <Nav.Link onClick={() => handleNavClick("พนักงาน")}> <GroupIcon /> พนักงาน</Nav.Link>
+                        <Nav.Link onClick={() => handleNavClick("สรุปยอดขาย")}><DataThresholdingIcon /> รายงานยอดขาย</Nav.Link>
+                        {/* <Nav.Link onClick={() => handleNavClick("พนักงาน")}> <GroupIcon /> พนักงาน</Nav.Link>
                         <Nav.Link onClick={() => handleNavClick("สต๊อก")}> <BallotIcon /> สต๊อกสินค้า</Nav.Link>
-                        <Nav.Link onClick={() => handleNavClick("สรุปรายการสั่งซื้อ")}> <AssessmentIcon /> สรุปรายการสั่งซื้อ</Nav.Link>
+                        <Nav.Link onClick={() => handleNavClick("สรุปรายการสั่งซื้อ")}> <AssessmentIcon /> สรุปรายการสั่งซื้อ</Nav.Link> */}
                     </Nav>
                 </Navbar>
             </Col>
@@ -88,9 +91,9 @@ const Admin = () => {
                         <Col md={6}>
                             <Card>
                                 <Card.Body>
-                                    <Card.Title>
+                                    <Card.Title style={{color:'green'}}>
 
-                                        ยอดขายเดือนนี้   {inComeNow} บาท  <br />
+                                        ยอดขายเดือนนี้ +  {formatMoney(inComeNow)} บาท  <br />
 
 
                                     </Card.Title>
@@ -100,11 +103,32 @@ const Admin = () => {
                         <Col md={6}>
                             <Card>
                                 <Card.Body>
-                                    <Card.Title>
+                                    <Card.Title style={{color:'red'}}>
 
 
-                                        รายจ่ายเดือนนี้   {outComeNow} บาท  <br />
+                                        รายจ่ายเดือนนี้  - {formatMoney(outComeNow)} บาท  <br />
 
+                                    </Card.Title>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                        <Col md={6}>
+                            <Card>
+                                <Card.Body>
+                                    <Card.Title style={{color:'b'}}>
+
+
+                                        กำไร   {formatMoney(inComeNow-outComeNow)} บาท  <br />
+
+                                    </Card.Title>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                        <Col md={6}>
+                            <Card>
+                                <Card.Body>
+                                    <Card.Title style={{color:'blue'}}>
+                                        ออเดอร์  +3,590  <br />
                                     </Card.Title>
                                 </Card.Body>
                             </Card>

@@ -9,14 +9,15 @@ import Paper from '@mui/material/Paper';
 import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import RoomServiceIcon from '@mui/icons-material/RoomService';
 import Detail from "./DetailReport";
-import { Card, Row, Col, Button, Form, Modal } from "react-bootstrap"
+import { Card, Row, Col, Button, Form, Modal, Alert } from "react-bootstrap"
 import Swal from 'sweetalert2';
 import moment from "moment/moment";
 import { AuthData } from "../ContextData";
 import { httpDelete, httpGet, httpPost, httpPut } from "../http";
-import FormGroup from '@mui/material/FormGroup';
+import PaidIcon from '@mui/icons-material/Paid';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
+import PaymentIcon from '@mui/icons-material/Payment';
 const Report = () => {
     const { shop } = useContext(AuthData)
     const [totalToday, setTotalToday] = useState(0)
@@ -26,18 +27,30 @@ const Report = () => {
     const token = localStorage.getItem("token");
     const [show, setShow] = useState(false);
     const [id, setId] = useState("");
-    const [paymentType, setPaymentType] = useState("");
+    const [bank_transfer, setBank_transfer] = useState(0);
+    const [cash, setCash] = useState(0);
     const handleClose = () => setShow(false);
 
     const getOrderFood = async () => {
         if (shop) {
             let sumToday = 0;
+            let bank = 0;
+            let cashIn = 0;
             await httpGet(`/bills?shop_id=${shop?.shop_id}`, { headers: { 'apikey': token } })
                 .then(res => {
                     setData(res.data)
                     res?.data?.map(item => {
                         sumToday += (Number(item?.amount));
+                        if (item.payment_type === "bank_transfer") {
+
+                            bank += (Number(item?.amount));
+
+                        } else {
+                            cashIn += (Number(item?.amount));
+                        }
                     })
+                    setBank_transfer(bank);
+                    setCash(cashIn);
                     setTotalToday(sumToday);
                 })
         }
@@ -73,6 +86,10 @@ const Report = () => {
             });
     }
 
+    const formatMoney = (val) => {
+        return new Intl.NumberFormat().format(val)
+    }
+
     const deleteBill = async (id) => {
         Swal.fire({
             title: 'คุณต้องการยกเลิกออเดอร์หรือไม่ ?',
@@ -102,7 +119,7 @@ const Report = () => {
     }, [startDate, shop])
 
     return (<>
-        <Card>
+        <Card style={{borderRadius:0}}>
             <Card.Body>
                 <Row className="mt-4">
                     <Col md={12}>
@@ -113,7 +130,7 @@ const Report = () => {
 
                                         <Col md={6}>
                                             <Form.Label>
-                                                เลือกวันที่แสดงยอดขาย
+                                                แสดงยอดขาย
                                             </Form.Label>
                                             <Form.Control
                                                 onChange={(e) => setStartDate(e.target.value)}
@@ -126,22 +143,36 @@ const Report = () => {
 
 
                                 </Form>
-                                <Card.Title className="text-center" style={{ color: 'green' }}> ยอดขายวันนี้   {new Intl.NumberFormat().format(totalToday)} บาท
+                                <Card.Title className="text-center" style={{ color: 'green' }}>  ยอดขายวันนี้   {formatMoney(totalToday)} บาท
+
                                 </Card.Title>
+                                <Row mt={4}>
+                                    <Col md={6} xs={6}>
+                                        <Alert variant="primary" className="d-flex">
+                                            <PaymentIcon /> {' '} <h5> โอนจ่าย {formatMoney(bank_transfer)}</h5>
+                                        </Alert>
+                                    </Col>
+                                    <Col md={6} xs={6}>
+                                        <Alert variant="success" className="d-flex">
+                                            <PaidIcon />  {' '}   <h5 style={{ color: '#000' }}> เงินสด {formatMoney(cash)}</h5>
+                                        </Alert>
+                                    </Col>
+                                </Row>
+
                                 <Card className="mt-2">
                                     <Card.Body>
 
                                         <Row>
                                             <Col md={4}>
 
-                                                <div className="text-center card-report-1">  <DeliveryDiningIcon style={{ fontSize: '30px' }} /> <br />
+                                                <div className="text-center card-report-1 mb-2">  <DeliveryDiningIcon style={{ fontSize: '30px' }} /> <br />
                                                     เดลิเวอรี่ จำนวน {counter.takeawayCount} บิล
                                                     <p> ยอดขาย = {new Intl.NumberFormat().format(counter.takeawayTotalAmount || 0)} บาท</p>
                                                     <p> {counter.takeawayCount > 0 ? (counter.takeawayCount / counter.totalCount * 100).toFixed(2) : 0} %</p>
 
                                                 </div> </Col>
                                             <Col md={4}>
-                                                <div className="text-center card-report-2">
+                                                <div className="text-center card-report-2 mb-2">
                                                     <RoomServiceIcon style={{ fontSize: '30px' }} />
                                                     <br /> ทานที่ร้าน จำนวน {counter.dineInCount} บิล
                                                     <p> ยอดขาย = {new Intl.NumberFormat().format(counter.dineInTotalAmount || 0)} บาท</p>
@@ -149,7 +180,7 @@ const Report = () => {
                                                 </div>
                                             </Col>
                                             <Col md={4}>
-                                                <div className="text-center card-report-3">
+                                                <div className="text-center card-report-3 mb-2">
                                                     <RoomServiceIcon style={{ fontSize: '30px' }} />  <br /> รับเองหน้าร้าน จำนวน {counter.pickupCount} บิล
                                                     <p> ยอดขาย = {new Intl.NumberFormat().format(counter.pickupTotalAmount || 0)} บาท</p>
                                                     <p>{counter.pickupCount > 0 ? ((counter?.pickupCount / counter.totalCount) * 100).toFixed(2) : 0} %</p>

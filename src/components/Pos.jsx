@@ -16,7 +16,7 @@ import { httpGet } from '../http';
 import QRCode from 'qrcode.react';
 import generatePayload from 'promptpay-qr'
 import { useNavigate } from "react-router-dom";
-
+import Swal from 'sweetalert2';
 for (let number = 1; number <= 5; number++) {
   items.push(
     <Pagination.Item key={number} active={number === active}>
@@ -70,8 +70,17 @@ const Pos = () => {
   const [shopId, setShopId] = useState("");
 
   const printSlip = () => {
-    setStatusPrint('พิมพ์เวลา ' + new Date().getHours() + ':' + new Date().getMinutes())
-    window.print()
+    if (cart.length > 0) {
+      setStatusPrint('พิมพ์เวลา ' + new Date().getHours() + ':' + new Date().getMinutes())
+      window.print()
+    } else {
+      Swal.fire({
+        title: 'ไม่มีรายการอาหาร',
+        text: 'กรุณาเลือกรายการอาหารก่อนพิมพ์',
+        icon: 'error',
+        confirmButtonText: 'ยืนยัน'
+      })
+    }
   }
 
   function handleQR() {
@@ -281,7 +290,7 @@ const Pos = () => {
                     <Row>
                       <Col>
                         <div className="total when-print mb-2 text-center">
-                          <h5> Total {sumPrice.toLocaleString('th-TH', { style: 'currency', currency: 'THB' })}</h5>
+                          <h5> รวมทั้งหมด {sumPrice.toLocaleString('th-TH', { style: 'currency', currency: 'THB' })}</h5>
 
                         </div>
 
@@ -304,13 +313,13 @@ const Pos = () => {
                     <ButtonGroup >
                       <Button className='btn btn-primary w-100'
                         onClick={() => { setOrderType("เสิร์ฟในร้าน"), setName("ทานที่ร้าน") }}
-                        style={{ border: 'none' }} >เสิร์ฟในร้าน</Button>
-                      <Button className='btn btn-success w-100'
+                        style={{ border: 'none' }} >ทานที่ร้าน</Button>
+                      {/* <Button className='btn btn-success w-100'
                         onClick={() => setOrderType("สั่งกลับบ้าน")}
-                        style={{ border: 'none' }} >สั่งกลับบ้าน</Button>
-                      <Button className='btn btn-danger w-100'
+                        style={{ border: 'none' }} >สั่งกลับบ้าน</Button> */}
+                      <Button className='btn btn-success w-100'
                         onClick={() => { setOrderType("รับเอง"), setName("รับเองหน้าร้าน") }}
-                        style={{ border: 'none' }} >รับเอง</Button>
+                        style={{ border: 'none' }} >รับเองหน้าร้าน</Button>
                     </ButtonGroup>
 
                     <Col md={12} className='mt-3'>
