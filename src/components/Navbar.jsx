@@ -69,7 +69,7 @@ const NavbarMenu = () => {
 
 
                     <Nav.Link as={Link} to={'/admin'} style={{ textDecoration: 'none', color: '#fff' }}>
-                      <StoreIcon /> จัดการ {shop?.name}
+                      <StoreIcon /> {shop?.name}
                     </Nav.Link>
 
                   </>

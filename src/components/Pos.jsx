@@ -24,7 +24,7 @@ for (let number = 1; number <= 5; number++) {
     </Pagination.Item>,
   );
 }
-
+import DinnerDiningIcon from '@mui/icons-material/DinnerDining';
 
 const Pos = () => {
   const router = useNavigate()
@@ -170,27 +170,47 @@ const Pos = () => {
   return (
     <>
       <Container fluid >
-        <Row className='mt-3'>
+        <Row>
           <Col md={2} className='whenprint'>
-            <div className='menu-type'>
+
+          </Col>
+          <Col md={6} className='whenprint'>
+
+            <div className='menu-type mt-4'>
+              <div className="title">
+                <h5>category </h5>
+              </div>
               <Row>
                 {
                   menuType?.map((item, index) => {
 
                     return (
                       <React.Fragment key={index} >
-                        <Col md={12}>
-                          <Button
-                            className='w-100 mb-2'
+                        <Col md={3}>
+                          <Card
+                            className='category mb-2'
                             onClick={() => getMenuBytypeId(item.id)}
                             style={{
+                              cursor: 'pointer',
+                              textAlign: 'center',
+                              padding: 8,
                               backgroundColor:
+                                '#ffffff',
+                              border:
+                                '1px solid  #FD720D',
+                              fontSize: 16,
 
-                                '#FD720D',
-                              fontSize: 18,
-                              border: 'none'
                             }}
-                          >   {item.name}</Button>
+
+                          >
+                            <div className="text-center">
+                              <DinnerDiningIcon
+                                style={{ fontSize: '28px', color: '#0e0e0e' }} />
+                            </div>
+
+                            {item.name}
+
+                          </Card>
                         </Col>
                       </React.Fragment>)
                   })
@@ -204,53 +224,58 @@ const Pos = () => {
               </Row>
 
             </div>
-          </Col>
-          <Col md={6} className='whenprint'>
-            <div >
-
-
-              <div className='menu' >
-
-                <Row>
-
-                  {
-                    menu?.map((item, index) => {
-                      return (
-                        <React.Fragment key={index}>
-                          <Col md={6} onClick={() => item.status === 1 && onSelectMenu(item)}>
-                            <FoodComponent data={item} />
-                          </Col>
-                        </React.Fragment>)
-                    })
-                  }
-                  {
-                    menu === null && (
-                      <>
-                        <Alert variant='danger'>ยังไม่มีรายการอาหาร สามารถเพิ่มได้ที่ เมนูจัดการร้านค้า</Alert>
-                      </>
-                    )
-                  }
 
 
 
-                </Row>
-
+            <div className='menu mt-2' >
+              <div className="title">
+                <h5>menu </h5>
               </div>
+              <Row>
+
+                {
+                  menu?.map((item, index) => {
+                    return (
+                      <React.Fragment key={index}>
+                        <Col md={3}
+                          className='mb-2'
+                          onClick={() => item.status === 1 &&
+                            onSelectMenu(item)}>
+                          <FoodComponent data={item} />
+
+                        </Col>
+                      </React.Fragment>)
+                  })
+                }
+                {
+                  menu === null && (
+                    <>
+                      <Alert variant='danger'>ยังไม่มีรายการอาหาร สามารถเพิ่มได้ที่ เมนูจัดการร้านค้า</Alert>
+                    </>
+                  )
+                }
+
+
+
+              </Row>
 
             </div>
+
+
           </Col>
 
-          <Col md={4}>
+          <Col md={4} className="border-start shadow-sm bg-white">
 
-            <div className='header-pos text-center mt-4'>
+            <div className='header-pos text-center'>
               <h6> {shop?.name}</h6>
               <h6>  ใบเสร็จรับเงิน</h6>
               <h6> ลำดับคิว {queueNumber} </h6>
               วันที่ {date} เวลา {time}  {statusPrint}
             </div>
-            <Row>
+            <Row className='mt-4'>
               <Col md={12}>
-                <div className='whenprint'> <h5>รายการอาหาร</h5></div>
+                <div className='when-print'> 
+                  <h5>รายการอาหาร</h5></div>
                 <Table>
                   <tbody>
                     {
@@ -261,7 +286,7 @@ const Pos = () => {
                             <td colSpan={2}>{item.quantity}</td>
                             <td colSpan={2}>{item.price}</td>
                             <td>
-                              <div className='whenprint'>
+                              <div className='when-print'>
                                 <CancelIcon onClick={() => removeCart(item.id)}
                                   variant='light' style={{ color: 'red', }} /></div></td>
                           </tr>
@@ -309,7 +334,7 @@ const Pos = () => {
                 }
 
                 <Form>
-                  <Row className='order-type when-print '>
+                  <Row className='order-type when-print'>
                     <ButtonGroup >
                       <Button className='btn btn-primary w-100'
                         onClick={() => { setOrderType("เสิร์ฟในร้าน"), setName("ทานที่ร้าน") }}
