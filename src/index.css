@@ -1,6 +1,12 @@
 .title{
     color: rgb(46, 46, 46);
 }
+.total-tb{
+  display: none;
+}
+.get-order{
+  display: none;
+}
 @media print {
  
   @page {
@@ -11,7 +17,12 @@
   .when-print{
     display: none;
   }
-    
+  .get-order{
+    display: block;
+  }
+    .total-tb {
+      display: block;
+    }
   }
   .sum-price{
     width: 100%;
