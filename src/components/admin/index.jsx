@@ -20,6 +20,7 @@ const Admin = () => {
     const [openMenu, setOpenMenu] = useState("เมนูอาหาร");
     const [inComeNow, setIncomeNow] = useState(0);
     const [outComeNow, setOutcomeNow] = useState(0);
+    const [totalOrder, setTotalOrder] = useState(85);
     const token = localStorage.getItem("token");
     const { shop } = useContext(AuthData);
 
@@ -41,6 +42,8 @@ const Admin = () => {
                 setOutcomeNow(res.data._sum.total);
             })
     }
+
+  
 
     const handleNavClick = (event) => {
         setOpenMenu(event);
@@ -89,7 +92,7 @@ const Admin = () => {
                 {
                     openMenu === "สรุปยอดขาย" && (<Row className="mt-3">
                         <Col md={6}>
-                            <Card>
+                            <Card className="mt-2">
                                 <Card.Body>
                                     <Card.Title style={{color:'green'}}>
 
@@ -101,22 +104,21 @@ const Admin = () => {
                             </Card>
                         </Col>
                         <Col md={6}>
-                            <Card>
+                            <Card className="mt-2">
                                 <Card.Body>
                                     <Card.Title style={{color:'red'}}>
 
 
-                                        รายจ่ายเดือนนี้  - {formatMoney(outComeNow)} บาท  <br />
+                                        ค่าใช้จ่ายเดือนปัจจุบัน  - {formatMoney(outComeNow)} บาท  <br />
 
                                     </Card.Title>
                                 </Card.Body>
                             </Card>
                         </Col>
                         <Col md={6}>
-                            <Card>
+                            <Card className="mt-2">
                                 <Card.Body>
-                                    <Card.Title style={{color:'b'}}>
-
+                                    <Card.Title style={{color:'green'}}>
 
                                         กำไร   {formatMoney(inComeNow-outComeNow)} บาท  <br />
 
@@ -125,10 +127,10 @@ const Admin = () => {
                             </Card>
                         </Col>
                         <Col md={6}>
-                            <Card>
+                            <Card className="mt-2">
                                 <Card.Body>
                                     <Card.Title style={{color:'blue'}}>
-                                        ออเดอร์  +3,590  <br />
+                                        ออเดอร์  + {totalOrder}
                                     </Card.Title>
                                 </Card.Body>
                             </Card>

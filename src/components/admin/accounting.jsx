@@ -25,12 +25,9 @@ const Accounting = () => {
 
     const saveOutcome = async (e) => {
         e.preventDefault();
-        // แปลง quantity และ Price เป็นตัวเลขทศนิยม
         const quantityValue = parseFloat(quantity);
         const priceValue = parseFloat(Price);
-        // คำนวณผลรวมที่มีทศนิยม
         const sum = quantityValue * priceValue;
-        // สร้าง body ที่จะส่งไปยัง API
         const body = {
             date_account: new Date(date).toISOString(),
             listname: listname,
@@ -39,9 +36,13 @@ const Accounting = () => {
             shop_id: shop_id,
             total: parseFloat(sum),
         };
-        // ส่งข้อมูลไปยัง endpoint
+
         await httpPost('/account', body)
+        setListName("");
+        setQuantity(1);
+        setPrice(0);
         await getData();
+
     };
 
     const getData = async () => {
@@ -134,7 +135,7 @@ const Accounting = () => {
                 <Col md={12}>
                     <Form.Group className="mb-2 mt-2">
                         <Form.Label> รายการ </Form.Label>
-                        <Form.Control type="text" placeholder="รายการ" onChange={(e) => setListName(e.target.value)} />
+                        <Form.Control type="text" value={listname} placeholder="รายการ" onChange={(e) => setListName(e.target.value)} />
                     </Form.Group>
                 </Col>
                 <Col md={6}>
@@ -150,12 +151,13 @@ const Accounting = () => {
                     <Form.Group className="mb-2 mt-2">
                         <Form.Label> ราคาต่อหน่วย </Form.Label>
                         <Form.Control
+                            value={Price}
                             type="number"
                             step="0.01"
-                            pattern="^\d*\.?\d*$" 
+                            pattern="^\d*\.?\d*$"
                             placeholder="00.00"
                             onChange={(e) => {
-                                const value = e.target.value;                             
+                                const value = e.target.value;
                                 const numericValue = parseFloat(value);
                                 if (!isNaN(numericValue)) {
                                     setPrice(numericValue);
@@ -176,39 +178,39 @@ const Accounting = () => {
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                     <TableRow>
-                        <TableCell>รหัสรายการ</TableCell>
-                        <TableCell align="right">วันที่</TableCell>
-                        <TableCell align="right">รายการ</TableCell>
-                        <TableCell align="right">จำนวน</TableCell>
-                        <TableCell align="right">ราคา</TableCell>
-                        <TableCell align="right">รวมเป็นเงิน</TableCell>
-                        <TableCell align="right">จัดการ</TableCell>
+                        <TableCell>ลำดับ</TableCell>
+                        <TableCell align="left">วันที่</TableCell>
+                        <TableCell align="left">รายการ</TableCell>
+                        <TableCell align="left">จำนวน</TableCell>
+                        <TableCell align="left">ราคา</TableCell>
+                        <TableCell align="left">รวมเป็นเงิน</TableCell>
+                        <TableCell align="left">จัดการ</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {data?.length > 0 && data?.map((row) => (
+                    {data?.length > 0 && data?.map((row, index) => (
                         <TableRow
                             key={row.account_id}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
                             <TableCell component="th" scope="row">
-                                {row.account_id}
+                                {index + 1}
                             </TableCell>
-                            <TableCell align="right">{moment(row.date_account).format('YYYY-MM-DD')}</TableCell>
-                            <TableCell align="right"> <Form.Control
+                            <TableCell align="left">{moment(row.date_account).format('YYYY-MM-DD')}</TableCell>
+                            <TableCell align="left"> <Form.Control
                                 onChange={(e) => updateAccountId(row.account_id, e.target.value)}
                                 value={row.listname} />  </TableCell>
-                            <TableCell align="right">{row.quantity}</TableCell>
-                            <TableCell align="right">{row.Price}</TableCell>
-                            <TableCell align="right">{row.total}</TableCell>
-                            <TableCell align="right"><Button variant="danger" onClick={() => deleteOutcome(row.account_id)}> ลบ </Button></TableCell>
+                            <TableCell align="left">{row.quantity}</TableCell>
+                            <TableCell align="left">{row.Price}</TableCell>
+                            <TableCell align="left">{row.total}</TableCell>
+                            <TableCell align="left"><Button variant="danger" onClick={() => deleteOutcome(row.account_id)}> ลบ </Button></TableCell>
                         </TableRow>
 
                     ))}
                 </TableBody>
             </Table>
             <div className="mt-4 p-2">
-                <h5>รวมค่าใช้จ่ายทั้งหมด {outcome} บาท</h5>
+                <h5>ค่าใช้จ่ายทั้งหมด {outcome} บาท</h5>
             </div>
 
         </TableContainer>
