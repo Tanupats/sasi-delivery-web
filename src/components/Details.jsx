@@ -1,5 +1,5 @@
-import React, { useState, useEffect,useContext } from "react";
-import { Row, Col, Card, Image, Button, Modal, ListGroup, Form } from "react-bootstrap";
+import  { useState, useEffect,useContext } from "react";
+import { Row, Col, Button, Modal, ListGroup, Form } from "react-bootstrap";
 import Select from 'react-select'
 import { httpDelete, httpGet, httpPost, httpPut } from "../http";
 import { AuthData } from "../ContextData";
@@ -14,8 +14,7 @@ const Details = (props) => {
     const [optionsFood, setOptionFood] = useState([]);
     const [onUpdate, setOnupdate] = useState(false);
 
-    //MENU LIST 
-    const [foodname, setFoodName] = useState("");
+    const [name, setName] = useState("");
     const [price, setPrice] = useState(0);
     const [note, setNote] = useState("");
     const [quantity, setQuantity] = useState(1);
@@ -76,7 +75,7 @@ const Details = (props) => {
     const UpdateDetailById = async () => {
         const id = dataMenus.id;
         const body = {
-            foodname: foodname ? foodname : dataMenus.foodname,
+            foodname: name ? name : dataMenus.foodname,
             price: price ? parseInt(price) : parseInt(dataMenus.price),
             quantity: quantity ? parseInt(quantity) : parseInt(dataMenus.quantity),
             note: note ? note : dataMenus.note
@@ -191,7 +190,7 @@ const Details = (props) => {
                                 <Form.Group>
                                     <Form.Label>เมนู</Form.Label>
                                     <Form.Control type="text" placeholder='เมนู'
-                                        onChange={(e) => setFoodName(e.target.value)}
+                                        onChange={(e) => setName(e.target.value)}
                                         defaultValue={dataMenus?.foodname} />
                                 </Form.Group>
                                 <Form.Group>

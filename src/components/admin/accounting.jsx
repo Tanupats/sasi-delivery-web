@@ -131,15 +131,14 @@ const Accounting = () => {
                         value={date}
                         type="date" onChange={(e) => setDate(e.target.value)} />
                 </Col>
-                <Col md={9}>
-                    <Form.Group className="mb-2">
+                <Col md={12}>
+                    <Form.Group className="mb-2 mt-2">
                         <Form.Label> รายการ </Form.Label>
                         <Form.Control type="text" placeholder="รายการ" onChange={(e) => setListName(e.target.value)} />
-
                     </Form.Group>
                 </Col>
                 <Col md={6}>
-                    <Form.Group className="mb-2">
+                    <Form.Group className="mb-2 mt-2">
                         <Form.Label> จำนวน </Form.Label>
                         <Form.Control
                             value={quantity}
@@ -148,21 +147,20 @@ const Accounting = () => {
                     </Form.Group>
                 </Col>
                 <Col md={6}>
-                    <Form.Group className="mb-2">
-                        <Form.Label> ราคา </Form.Label>
+                    <Form.Group className="mb-2 mt-2">
+                        <Form.Label> ราคาต่อหน่วย </Form.Label>
                         <Form.Control
                             type="number"
                             step="0.01"
-                            pattern="^\d*\.?\d*$" // อนุญาตเฉพาะตัวเลขและจุดทศนิยม
+                            pattern="^\d*\.?\d*$" 
                             placeholder="00.00"
                             onChange={(e) => {
-                                const value = e.target.value;
-                                // แปลงค่าเป็นตัวเลขแบบทศนิยม
+                                const value = e.target.value;                             
                                 const numericValue = parseFloat(value);
                                 if (!isNaN(numericValue)) {
                                     setPrice(numericValue);
                                 } else {
-                                    setPrice(0); // กำหนดค่าเริ่มต้นหากป้อนไม่ถูกต้อง
+                                    setPrice(0);
                                 }
                             }}
                         />

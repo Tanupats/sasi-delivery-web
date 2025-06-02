@@ -134,7 +134,6 @@ const Orders = () => {
                 getOrderDelivery();
                 getOrderCooking();
                 getOrderCookingFinish();
-
             }
         });
     }

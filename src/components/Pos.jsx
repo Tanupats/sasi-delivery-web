@@ -25,7 +25,7 @@ for (let number = 1; number <= 5; number++) {
   );
 }
 import DinnerDiningIcon from '@mui/icons-material/DinnerDining';
-
+import CircularProgress from '@mui/material/CircularProgress';
 const Pos = () => {
   const router = useNavigate()
   const {
@@ -64,10 +64,13 @@ const Pos = () => {
 
   const [phoneNumber, setPhoneNumber] = useState("0983460756");
   const [showQr, setShowQr] = useState(false);
-  const [qrCode, setqrCode] = useState("sample");
+  const [qrCode, setQrCode] = useState("sample");
   const [newPrice, setNewPrice] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [shopId, setShopId] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [loadingMenu, setLoadingMenu] = useState(false);
+  const [loadingByeType, setLoadingByType] = useState(false);
 
   const printSlip = () => {
     if (cart.length > 0) {
@@ -84,7 +87,7 @@ const Pos = () => {
   }
 
   function handleQR() {
-    setqrCode(generatePayload(phoneNumber, { amount: sumPrice }));
+    setQrCode(generatePayload(phoneNumber, { amount: sumPrice }));
   }
 
   const confirmMenu = async () => {
@@ -103,11 +106,13 @@ const Pos = () => {
   }
 
   const getMenu = () => {
+    setLoadingMenu(true)
     if (shop.shop_id !== undefined) {
       httpGet(`/foodmenu/getByShop/${shop.shop_id}`, { headers: { 'apikey': token } })
         .then(res => {
           if (res.data.length > 0) {
             setMenu(res.data);
+            setLoadingMenu(false);
           } else {
             setMenu(null);
           }
@@ -118,25 +123,26 @@ const Pos = () => {
 
   const getMenuType = () => {
     if (shop.shop_id !== undefined) {
+      setLoading(true);
       httpGet(`/menutype/${shop.shop_id}`, { headers: { 'apikey': token } })
         .then(res => {
           if (res.data.length > 0) {
             setMenuType(res.data);
+            setLoading(false);
           } else {
             setMenuType(null);
           }
-
         })
     }
   }
 
   const getMenuBytypeId = (id) => {
+    setLoadingByType(true);
     httpGet(`/foodmenu/${id}`)
       .then(res => {
         setMenu(res.data);
       })
   }
-
 
   useEffect(() => {
     const Time = new Date().getHours() + ':' + new Date().getMinutes() + " น.";
@@ -191,39 +197,40 @@ const Pos = () => {
               </div>
               <Row>
                 {
-                  menuType?.map((item, index) => {
+                  loading ? <CircularProgress /> : (
+                    menuType?.map((item, index) => {
+                      return (
+                        <React.Fragment key={index} >
+                          <Col md={3}>
+                            <Card
+                              className='category mb-2'
+                              onClick={() => getMenuBytypeId(item.id)}
+                              style={{
+                                cursor: 'pointer',
+                                textAlign: 'center',
+                                padding: 8,
+                                backgroundColor:
+                                  '#ffffff',
+                                border:
+                                  '1px solid rgb(143, 143, 143)',
+                                fontSize: 16,
 
-                    return (
-                      <React.Fragment key={index} >
-                        <Col md={3}>
-                          <Card
-                            className='category mb-2'
-                            onClick={() => getMenuBytypeId(item.id)}
-                            style={{
-                              cursor: 'pointer',
-                              textAlign: 'center',
-                              padding: 8,
-                              backgroundColor:
-                                '#ffffff',
-                              border:
-                                '1px solid rgb(143, 143, 143)',
-                              fontSize: 16,
+                              }}
 
-                            }}
-
-                          >
-                            {/* <div className="text-center">
+                            >
+                              {/* <div className="text-center">
                               <DinnerDiningIcon
                                 style={{ fontSize: '28px', color: '#0e0e0e' }} />
                             </div> */}
 
-                            {item.name}
-
-                          </Card>
-                        </Col>
-                      </React.Fragment>)
-                  })
+                              {item.name}
+                            </Card>
+                          </Col>
+                        </React.Fragment>)
+                    })
+                  )
                 }
+
                 {
                   menuType === null && (
                     <div className="text-center">
@@ -241,21 +248,25 @@ const Pos = () => {
                 <h5>menu </h5>
               </div>
               <Row>
-
                 {
-                  menu?.map((item, index) => {
-                    return (
-                      <React.Fragment key={index}>
-                        <Col md={3}
-                          className='mb-2'
-                          onClick={() => item.status === 1 &&
-                            onSelectMenu(item)}>
-                          <FoodComponent data={item} />
-
-                        </Col>
-                      </React.Fragment>)
-                  })
+                  loadingMenu ? (
+                    <CircularProgress />
+                  ) :
+                    (
+                      menu?.map((item, index) => {
+                        return (
+                          <React.Fragment key={index}>
+                            <Col md={4} xl={3} xs={6}
+                              className='mb-2'
+                              onClick={() => item.status === 1 &&
+                                onSelectMenu(item)}>
+                              <FoodComponent data={item} />
+                            </Col>
+                          </React.Fragment>)
+                      })
+                    )
                 }
+
                 {
                   menu === null && (
                     <>
@@ -263,14 +274,8 @@ const Pos = () => {
                     </>
                   )
                 }
-
-
-
               </Row>
-
             </div>
-
-
           </Col>
 
           <Col md={4} className="border-start shadow-sm bg-white">
@@ -309,6 +314,9 @@ const Pos = () => {
                           <td className='get-order' colSpan={4}>การรับอาหาร-{orderType}</td>
                         </tr>
                         <tr>
+                          <td className='get-order' colSpan={4}>รวม {toTal} รายการ</td>
+                        </tr>
+                        <tr>
                           <td>{name}</td>
                         </tr>
                         <tr className='total-tb'>
@@ -337,7 +345,7 @@ const Pos = () => {
                                 handleQR(),
                                   setShowQr(!showQr)
                               }}>
-                              สร้าง qrcode  </Button>
+                              สร้าง qrcode จ่ายเงิน </Button>
                           </Col>
                           <Col md={12} className='text-center'>
                             {

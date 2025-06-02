@@ -137,7 +137,7 @@ const FoodMenuAdmin = () => {
     return (
         <>
             <Card style={{ width: '100%' }}>
-                <Card.Title className="text-center mt-3">  รายการอาหาร</Card.Title>
+                <Card.Title className="text-center mt-3">  รายการสินค้า</Card.Title>
                 <Card.Body>
 
                     <Row>
@@ -186,13 +186,13 @@ const FoodMenuAdmin = () => {
                                                 <Card style={{ height: 'auto', marginBottom: '12px', padding: 2 }}>
                                                     <Card.Body style={{ padding: 5 }}>
                                                         <Row>
-                                                            <Col md={12}
-                                                                xs={12}
+                                                            <Col md={4}
+                                                                xs={4}
                                                             >
-                                                                <Image style={{ width: "100%", height: '200px', objectFit: 'cover' }}
+                                                                <Image style={{ width: "100%", height: '160px', objectFit: 'cover' }}
                                                                     src={`${import.meta.env.VITE_API_URL}/images/${item.img}`} />
                                                             </Col>
-                                                            <Col md={12} xs={12}>
+                                                            <Col md={8} xs={8}>
                                                                 <div className="mt-3">
                                                                     <h5>{item.foodname}</h5>
                                                                     <h5>{item.Price}฿</h5>
@@ -234,12 +234,9 @@ const FoodMenuAdmin = () => {
 
                                                                         </Form.Group>
                                                                     )}
-
-                                                            </Col>
-                                                            <Col md={12} xs={12}>
-                                                                <Button
+  <Button
                                                                     onClick={() => onSelectMenu(item)}
-                                                                    variant="light"
+                                                                    variant="warning"
                                                                 >
                                                                     <EditIcon />
                                                                 </Button> {' '}
@@ -250,6 +247,7 @@ const FoodMenuAdmin = () => {
                                                                     <DeleteIcon />
                                                                 </Button>
                                                             </Col>
+                                                          
                                                         </Row>
 
                                                     </Card.Body>

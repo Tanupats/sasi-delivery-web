@@ -266,7 +266,7 @@ const Report = () => {
 
                         <Col md={12}>
                             <Detail
-
+getOrderFood={getOrderFood}
                                 id={id}
 
                             />
