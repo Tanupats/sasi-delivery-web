@@ -11,7 +11,21 @@ const Register = () => {
     const router = useNavigate();
     //shop
     const [shopName, setshopName] = useState("");
-    const [photo, setPhoto] = useState("");
+    const [file, setFile] = useState("");
+
+    let filename = "";
+    const uploadFile = async () => {
+        const formData = new FormData();
+        formData.append('file', file);
+        await httpPost(`/upload`, formData)
+            .then(res => {
+                if (res.status === 200) {
+
+                    filename = res.data.filename
+                }
+            })
+
+    }
 
     const createUser = async () => {
         const bodyUser = { name: name, email: email, password: password, department: "admin" };
@@ -26,7 +40,8 @@ const Register = () => {
     }
 
     const createShop = async () => {
-        const bodyShop = { name: shopName, user_id: String(userId), photo: photo }
+        await uploadFile()
+        const bodyShop = { name: shopName, user_id: String(userId), photo: filename }
         await httpPost('/shop', bodyShop)
             .then(res => {
                 if (res) {
@@ -87,8 +102,8 @@ const Register = () => {
 
                             </Form.Group>
                             <Form.Group className="mt-2">
-                                <Form.Label>โลโก้</Form.Label>
-                                <Form.Control type="file" placeholder="โลโก้" onChange={(e) => setPhoto(e.target.files[0].name)} />
+                                <Form.Label>โลโก้ หรือ แบรนด์</Form.Label>
+                                <Form.Control type="file" placeholder="โลโก้" onChange={(e) => setFile(e.target.files[0])} />
 
                             </Form.Group>
 

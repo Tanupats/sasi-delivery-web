@@ -11,6 +11,7 @@ import Pos from './Pos';
 import Report from './report';
 import Login from './Login';
 import Admin from './admin';
+import Profile from './profile';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import CurrencyBitcoinIcon from '@mui/icons-material/CurrencyBitcoin';
 import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
@@ -27,14 +28,14 @@ const NavbarMenu = () => {
     useContext(AuthData);
   const logout = () => {
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'You will be logged out of your account!',
+      title: 'ต้องการออกจากระบบหรือไม่ ?',
+      text: 'จะลงชื่ออกจากระบบ',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, logout!',
-      cancelButtonText: 'Cancel',
+      confirmButtonText: 'ตกลง',
+      cancelButtonText: 'ยกเลิก',
     }).then((result) => {
       if (result.isConfirmed) {
         localStorage.clear();
@@ -55,7 +56,7 @@ const NavbarMenu = () => {
                 <Nav className="me-auto text-center">
                   <>
                     <Nav.Link as={Link} to={'/pos'} style={{ textDecoration: 'none', color: '#fff' }}>
-                      <ListAltIcon /> ขายอาหาร
+                      <ListAltIcon /> ขายสินค้า
                     </Nav.Link>
 
                     <Nav.Link as={Link} to={'/report'} style={{ textDecoration: 'none', color: '#fff' }}>
@@ -77,7 +78,7 @@ const NavbarMenu = () => {
                 </Nav>
 
                 <Nav className="ml-auto" >
-                  <Nav.Link style={{ textDecoration: 'none', color: '#fff' }}>
+                  <Nav.Link  as={Link}   to={'/profile'}   style={{ textDecoration: 'none', color: '#fff' }}>
                     < AccountCircleIcon />  {staffName}
                   </Nav.Link>
                   <Nav.Link onClick={logout} style={{ textDecoration: 'none', color: '#fff' }}>
@@ -100,6 +101,7 @@ const NavbarMenu = () => {
         <Route path="/report" Component={Report}></Route>
         <Route path="/admin" Component={Admin}></Route>
         <Route path="/register" Component={Register}></Route>
+        <Route path="/profile" Component={Profile}></Route>
       </Routes>
     </Router>
   );

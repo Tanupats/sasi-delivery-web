@@ -24,6 +24,8 @@ for (let number = 1; number <= 5; number++) {
     </Pagination.Item>,
   );
 }
+import { InputGroup } from 'react-bootstrap';
+import SearchIcon from '@mui/icons-material/Search';
 import DinnerDiningIcon from '@mui/icons-material/DinnerDining';
 import CircularProgress from '@mui/material/CircularProgress';
 const Pos = () => {
@@ -71,6 +73,7 @@ const Pos = () => {
   const [loading, setLoading] = useState(false);
   const [loadingMenu, setLoadingMenu] = useState(false);
   const [loadingByeType, setLoadingByType] = useState(false);
+  const [search, setSearch] = useState("");
 
   const printSlip = () => {
     if (cart.length > 0) {
@@ -84,6 +87,10 @@ const Pos = () => {
         confirmButtonText: 'ยืนยัน'
       })
     }
+  }
+
+  const formatMoney = (val) => {
+    return new Intl.NumberFormat().format(val)
   }
 
   function handleQR() {
@@ -115,6 +122,7 @@ const Pos = () => {
             setLoadingMenu(false);
           } else {
             setMenu(null);
+            setLoadingMenu(false);
           }
         }
         )
@@ -131,12 +139,13 @@ const Pos = () => {
             setLoading(false);
           } else {
             setMenuType(null);
+            setLoading(false);
           }
         })
     }
   }
 
-  const getMenuBytypeId = (id) => {
+  const getMenuByTypeId = (id) => {
     setLoadingByType(true);
     httpGet(`/foodmenu/${id}`)
       .then(res => {
@@ -177,19 +186,31 @@ const Pos = () => {
     <>
       <Container fluid >
         <Row>
-          <Col md={2} className='whenprint bg-light border-end shadow-sm'>
+          <Col md={2} className='when-print bg-light border-end shadow-sm'>
             <div style={{ width: '200px', height: '100vh', backgroundColor: '#f8f9fa' }}>
               <h5 className="p-3"></h5>
               <Nav defaultActiveKey="/dashboard" className="flex-column px-3">
-                <Nav.Link href="/dashboard">📊 หน้าหลัก</Nav.Link>
-                <Nav.Link href="/sales">🛒 ขายสินค้า</Nav.Link>
-                <Nav.Link href="/products">📦 จัดการสินค้า</Nav.Link>
+                <Nav.Link href="/admin">📦 จัดการสินค้า</Nav.Link>
                 <Nav.Link href="/report">📈 รายงาน</Nav.Link>
-                <Nav.Link href="/settings">⚙️ ตั้งค่า</Nav.Link>
+                <Nav.Link href="/profile">⚙️ โปรไฟล์</Nav.Link>
               </Nav>
             </div>
           </Col>
-          <Col md={6} className='whenprint'>
+          <Col md={6} className='when-print'>
+            <div className="search mt-4 w-50">
+              <InputGroup>
+                <InputGroup.Text>
+                  <SearchIcon />
+                </InputGroup.Text>
+                <Form.Control
+                  placeholder="search"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+                <Button> ค้นหา </Button>
+              </InputGroup>
+
+            </div>
 
             <div className='menu-type mt-4'>
               <div className="title">
@@ -197,14 +218,14 @@ const Pos = () => {
               </div>
               <Row>
                 {
-                  loading ? <CircularProgress /> : (
+                  loading ? <center> <CircularProgress /></center> : (
                     menuType?.map((item, index) => {
                       return (
                         <React.Fragment key={index} >
-                          <Col md={3}>
+                          <Col md={3} xs={6}>
                             <Card
                               className='category mb-2'
-                              onClick={() => getMenuBytypeId(item.id)}
+                              onClick={() => getMenuByTypeId(item.id)}
                               style={{
                                 cursor: 'pointer',
                                 textAlign: 'center',
@@ -218,11 +239,6 @@ const Pos = () => {
                               }}
 
                             >
-                              {/* <div className="text-center">
-                              <DinnerDiningIcon
-                                style={{ fontSize: '28px', color: '#0e0e0e' }} />
-                            </div> */}
-
                               {item.name}
                             </Card>
                           </Col>
@@ -245,12 +261,12 @@ const Pos = () => {
 
             <div className='menu mt-2' >
               <div className="title">
-                <h5>menu </h5>
+                <h5>product </h5>
               </div>
               <Row>
                 {
                   loadingMenu ? (
-                    <CircularProgress />
+                    <center> <CircularProgress /></center>
                   ) :
                     (
                       menu?.map((item, index) => {
@@ -269,9 +285,9 @@ const Pos = () => {
 
                 {
                   menu === null && (
-                    <>
-                      <Alert variant='danger'>ยังไม่มีรายการอาหาร สามารถเพิ่มได้ที่ เมนูจัดการร้านค้า</Alert>
-                    </>
+                    <><div className="text-center">
+                      <Alert variant='danger'>ยังไม่มีรายการสินค้า สามารถเพิ่มได้ที่ เมนูจัดการร้านค้าของคุณ</Alert>
+                    </div> </>
                   )
                 }
               </Row>
@@ -283,10 +299,15 @@ const Pos = () => {
 
               cart.length > 0 && (<>
                 <div className='header-pos text-center'>
+
+                  <img style={{ width: '40%' }} src={`${import.meta.env.VITE_API_URL}/images/${shop?.photo}`} alt="" srcset="" />
                   <h6> {shop?.name}</h6>
                   <h6>  ใบเสร็จรับเงิน</h6>
-                  <h6> ลำดับคิว {queueNumber} </h6>
-                  วันที่ {date} เวลา {time}  {statusPrint}
+                  {/* <h6> ลำดับคิว {queueNumber} </h6> */}
+                  วันที่ซื้อสินค้า {date} เวลา {time}
+
+                  {/* {statusPrint} */}
+
                 </div>
                 <Row className='mt-4'>
                   <Col md={12}>
@@ -299,8 +320,8 @@ const Pos = () => {
                             return (
                               <tr style={{ padding: 0, margin: 0 }} key={index}>
                                 <td >{item.name} <br></br> {item.note}</td>
-                                <td colSpan={2}>{item.quantity}</td>
-                                <td colSpan={2}>{item.price}</td>
+                                <td colSpan={2}> X {item.quantity}</td>
+                                <td colSpan={2}>{formatMoney(item.price)}</td>
                                 <td>
                                   <div className='when-print'>
                                     <CancelIcon onClick={() => removeCart(item.id)}
@@ -310,19 +331,30 @@ const Pos = () => {
                           })
                         }
 
-                        <tr>
-                          <td className='get-order' colSpan={4}>การรับอาหาร-{orderType}</td>
-                        </tr>
+                        {/* <tr>
+                          <td className='get-order' colSpan={4}>การรับสินค้า-{orderType}</td>
+                        </tr> */}
                         <tr>
                           <td className='get-order' colSpan={4}>รวม {toTal} รายการ</td>
                         </tr>
+                        {
+                          name !== "" && (
+                            <tr>
+                              <td>{name}</td>
+                            </tr>
+                          )
+                        }
+
                         <tr>
-                          <td>{name}</td>
+                          <td>
+                            ยอดรวม {sumPrice.toLocaleString('th-TH', { style: 'currency', currency: 'THB' })} บาท
+                          </td>
+
                         </tr>
-                        <tr className='total-tb'>
-                          <td colSpan={4}>รวมทั้งหมด {sumPrice} บาท</td>
-                        </tr>
+
+
                       </tbody>
+
                     </Table>
 
                     {
@@ -345,7 +377,7 @@ const Pos = () => {
                                 handleQR(),
                                   setShowQr(!showQr)
                               }}>
-                              สร้าง qrcode จ่ายเงิน </Button>
+                              qrcode payment </Button>
                           </Col>
                           <Col md={12} className='text-center'>
                             {
@@ -359,22 +391,21 @@ const Pos = () => {
                     <Form>
                       <Row className='order-type when-print'>
                         <ButtonGroup >
-                          <Button className='btn btn-primary w-100'
+                          {/* <Button className='btn btn-primary w-100'
                             onClick={() => { setOrderType("เสิร์ฟในร้าน"), setName("ทานที่ร้าน") }}
-                            style={{ border: 'none' }} >ทานที่ร้าน</Button>
-                          <Button className='btn btn-success w-100'
-                            onClick={() => setOrderType("สั่งกลับบ้าน")}
-                            style={{ border: 'none' }} >สั่งกลับบ้าน</Button>
-                          <Button className='btn btn-success w-100'
-                            onClick={() => { setOrderType("รับเอง"), setName("รับเองหน้าร้าน") }}
-                            style={{ border: 'none' }} >รับเองหน้าร้าน</Button>
-                        </ButtonGroup>
+                            style={{ border: 'none' }} >ทานที่ร้าน</Button> */}
 
-                        <Col md={12} className='mt-3'>
+                          <Button className='btn btn-primary w-100'
+                            onClick={() => { setOrderType("รับเอง") }}
+                            style={{ border: 'none' }} >รับสินค้าหน้าร้าน</Button><Button className='btn btn-success w-100'
+                              onClick={() => setOrderType("สั่งกลับบ้าน")}
+                              style={{ border: 'none' }} >จัดส่งสินค้า</Button>
+                        </ButtonGroup>
+                        <Col md={12} className='mt-3 mb-4' style={{ marginBottom: '500px' }}>
 
                           <Form.Control
                             type="text"
-                            placeholder='ข้อมูลติดต่อ'
+                            placeholder='ข้อมูลติดต่อลูกค้า'
                             onChange={(e) => setName(e.target.value)} value={name} />
                         </Col>
                       </Row>

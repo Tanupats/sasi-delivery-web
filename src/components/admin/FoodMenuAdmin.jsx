@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Row, Col, Card, Image, Button, Modal, Form } from "react-bootstrap";
 import Badge from 'react-bootstrap/Badge';
 import EditIcon from '@mui/icons-material/Edit';
@@ -38,7 +38,7 @@ const FoodMenuAdmin = () => {
         }
     }
 
-    const getMenuBytypeId = async (id) => {
+    const getMenuByTypeId = async (id) => {
         await httpGet(`/foodmenu/${id}`)
             .then(res => {
                 setFoods(res.data);
@@ -47,7 +47,7 @@ const FoodMenuAdmin = () => {
 
     const onSelectMenu = async (obj) => {
         setData(obj);
-        handleShow()
+        handleShow();
     }
 
     const updateData = async () => {
@@ -81,7 +81,7 @@ const FoodMenuAdmin = () => {
         await httpPut(`/foodmenu/${id}`, body, { headers: { 'apikey': token } })
             .then(res => {
                 if (res.status === 200) {
-                    getMenuBytypeId(TypeID);
+                    getMenuByTypeId(TypeID);
                 }
             })
     }
@@ -102,7 +102,7 @@ const FoodMenuAdmin = () => {
                     .then(res => {
                         if (res.status === 200) {
                             Swal.fire(
-                                'ลบเมนูสำเร็จ!',
+                                'ลบข้อมูลสินค้าสำเร็จ!',
                                 'success'
                             );
                             getFoodMenu();
@@ -116,7 +116,6 @@ const FoodMenuAdmin = () => {
                     });
             }
         });
-
     }
 
     const getFoodMenu = () => {
@@ -133,23 +132,17 @@ const FoodMenuAdmin = () => {
         getFoodMenu();
         getStockProduct();
     }, [shop])
-  
+
     return (
         <>
-            <Card style={{ width: '100%' }}>
+            <Card style={{ width: '100%', borderRadius: 0 }}>
                 <Card.Title className="text-center mt-3">  รายการสินค้า</Card.Title>
                 <Card.Body>
-
                     <Row>
-
                         <Col md={12} className="mb-2">
-
                             {
                                 menuType.length > 0 && menuType?.map((item, index) => {
-
                                     return (
-
-
                                         <Badge
                                             key={index}
                                             style={{
@@ -159,29 +152,20 @@ const FoodMenuAdmin = () => {
                                                 marginBottom: '12px',
                                                 cursor: 'pointer'
                                             }}
-                                            onClick={() => getMenuBytypeId(item.id)}
+                                            onClick={() => getMenuByTypeId(item.id)}
                                             pill bg="">
                                             {item.name}
                                         </Badge>
-
                                     )
                                 })
                             }
-
-
                         </Col>
                         <FoodMenuForm getMenuType={getMenuType} getFoodMenu={getFoodMenu} />
-
-
                         <div className="menu-list" style={{ overflow: 'auto', height: '100vh' }}>
                             <Row>
-
-
                                 {
                                     foods?.map((item, index) => {
                                         return (<React.Fragment key={index}>
-
-
                                             <Col md={4} xs={12} >
                                                 <Card style={{ height: 'auto', marginBottom: '12px', padding: 2 }}>
                                                     <Card.Body style={{ padding: 5 }}>
@@ -197,32 +181,24 @@ const FoodMenuAdmin = () => {
                                                                     <h5>{item.foodname}</h5>
                                                                     <h5>{item.Price}฿</h5>
                                                                 </div>
-
                                                                 {
-
                                                                     item.status === 1 && (
-
                                                                         <Form.Group>
                                                                             <Row>
                                                                                 <Col md={6} xs={6} onClick={() => updateStatus(item.id, 0, item.TypeID)}>
                                                                                     <Form.Label> มีจำหน่าย</Form.Label>
                                                                                 </Col>
-
                                                                                 <Col md={6} xs={6}>
                                                                                     <Form.Check checked={item.status} onClick={() => updateStatus(item.id, 0, item.TypeID)} />
                                                                                 </Col>
                                                                             </Row>
-
-
                                                                         </Form.Group>
                                                                     )
                                                                 }
                                                                 {
-
                                                                     item.status === 0 && (
                                                                         <Form.Group>
                                                                             <Row>
-
                                                                                 <Col md={6} xs={6} onClick={() => updateStatus(item.id, 1, item.TypeID)}>
                                                                                     <Form.Label> สินค้าหมด</Form.Label>
                                                                                 </Col>
@@ -230,11 +206,9 @@ const FoodMenuAdmin = () => {
                                                                                     <Form.Check checked={item.status} onClick={() => updateStatus(item.id, 1, item.TypeID)} />
                                                                                 </Col>
                                                                             </Row>
-
-
                                                                         </Form.Group>
                                                                     )}
-  <Button
+                                                                <Button
                                                                     onClick={() => onSelectMenu(item)}
                                                                     variant="warning"
                                                                 >
@@ -247,14 +221,9 @@ const FoodMenuAdmin = () => {
                                                                     <DeleteIcon />
                                                                 </Button>
                                                             </Col>
-                                                          
                                                         </Row>
-
                                                     </Card.Body>
-
-
                                                 </Card>
-
                                             </Col>
                                         </React.Fragment>)
                                     })
@@ -262,8 +231,6 @@ const FoodMenuAdmin = () => {
                             </Row>
                         </div>
                     </Row>
-
-
                 </Card.Body>
             </Card>
 

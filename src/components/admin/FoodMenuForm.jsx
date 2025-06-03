@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Row, Col, Card, Image, Button, Modal, Form } from "react-bootstrap";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { AuthData } from "../../ContextData";
@@ -8,26 +8,21 @@ const FoodMenuForm = (props) => {
     const { getFoodMenu } = props;
     const { shop } = useContext(AuthData);
     const [show, setShow] = useState(false);
-    
     const [foodname, setFoodName] = useState("");
     const [price, setPrice] = useState(50);
     const [img, setImg] = useState("");
-    const [code, setCode] = useState("");
+    const code = Math.random().toString(36).substring(2, 8).toUpperCase();
     const [status, setStatus] = useState("1");
     const [menuType, setMenuType] = useState([]);
     const [menuTypeId, setMenuTypeId] = useState("");
-   
+
     const token = localStorage.getItem("token");
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    
-    
-
     const getMenuType = async () => {
         await httpGet(`/menutype/${shop?.shop_id}`, { headers: { 'apikey': token } })
             .then(res => {
-                console.log(res.data)
                 setMenuType(res.data);
             })
     }
@@ -39,13 +34,11 @@ const FoodMenuForm = (props) => {
         await httpPost(`/upload`, formData)
             .then(res => {
                 if (res.status === 200) {
-                    console.log(res.data.filename)
                     filename = res.data.filename
                 }
             })
         handleClose();
     }
-
 
     const postMenu = async (e) => {
         e.preventDefault()
@@ -55,7 +48,8 @@ const FoodMenuForm = (props) => {
                 foodname: foodname,
                 TypeID: parseInt(menuTypeId),
                 Price: parseInt(price),
-                img: filename, code: code,
+                img: filename,
+                code: code,
                 status: parseInt(status),
                 shop_id: shop.shop_id
             };
@@ -97,7 +91,6 @@ const FoodMenuForm = (props) => {
         if (menuType?.length > 0) {
             setMenuTypeId(menuType[0].id);
         }
-
     }, [menuType])
 
 
@@ -105,15 +98,13 @@ const FoodMenuForm = (props) => {
 
         <Row className="mb-3">
             <Col>
-                <Button  variant="success" onClick={() => handleShow()}>
-                    <AddCircleIcon /> เพิ่มเมนูใหม่ </Button>
+                <Button variant="primary" onClick={() => handleShow()}>
+                    <AddCircleIcon /> เพิ่มสินค้า </Button>
             </Col>
-           
-
         </Row>
         <Modal size="lg" show={show} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>เพิ่มเมนู</Modal.Title>
+                <Modal.Title>เพิ่มข้อมูลสินค้า</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form id="addmenu" onSubmit={(e) => postMenu(e)}>
@@ -126,10 +117,11 @@ const FoodMenuForm = (props) => {
                                             xs={5}
                                         >
                                             <Form.Group>
-                                                <Form.Label>รูปภาพ </Form.Label>
+                                                <Form.Label>รูปภาพสินค้า </Form.Label>
 
                                                 <Image src={imgPreview} style={{ width: '100%', height: '180px', objectFit: 'cover' }} />
                                                 <Form.Control
+                                                    className="mt-4"
                                                     required
                                                     type="file"
                                                     onChange={handleImageChange}
@@ -138,29 +130,20 @@ const FoodMenuForm = (props) => {
                                         </Col>
                                         <Col md={7} xs={7}>
                                             <Form.Group className="mb-2">
-                                                <Form.Label>เมนู </Form.Label>
+                                                <Form.Label>ชื่อสินค้า </Form.Label>
                                                 <Form.Control
                                                     type="text"
-                                                    placeholder="เมนู"
+                                                    placeholder="ชื่อสินค้า"
                                                     onChange={(e) => setFoodName(e.target.value)}
                                                     value={foodname} />
                                             </Form.Group>
                                             <Form.Group className="mb-2">
-                                                <Form.Label>ราคา </Form.Label>
+                                                <Form.Label>ราคาขาย </Form.Label>
 
                                                 <Form.Control type="text"
                                                     onChange={(e) => setPrice(e.target.value)}
                                                     value={price}
                                                     placeholder="ราคา"
-                                                />
-                                            </Form.Group>
-                                            <Form.Group className="mb-2">
-                                                <Form.Label>รหัสเมนู </Form.Label>
-
-                                                <Form.Control type="text"
-                                                    placeholder="รหัสเมนู"
-                                                    onChange={(e) => setCode(e.target.value)}
-                                                    value={code}
                                                 />
                                             </Form.Group>
                                             <Form.Group className="mb-2">
@@ -174,7 +157,7 @@ const FoodMenuForm = (props) => {
                                                 </Form.Select>
                                             </Form.Group>
                                             <Form.Group className="mb-2">
-                                                <Form.Label>สถานะ </Form.Label>
+                                                <Form.Label>สถานะสินค้า </Form.Label>
                                                 <Form.Select
                                                     onChange={(e) => setStatus(e.target.value)}
                                                     aria-label="Default select example">
@@ -199,21 +182,31 @@ const FoodMenuForm = (props) => {
             </Modal.Body>
 
             <Modal.Footer>
-                <Button
-                    form="addmenu"
-                    type="submit"
-                    variant="success"
-                >
-                    เพิ่มเมนู
-                </Button>
-                <Button variant="danger" onClick={handleClose}>
-                    ยกเลิก
-                </Button>
+                <Row>
+
+                    <Col md={6} xs={6}>
+                        <Button
+                            form="addmenu"
+                            type="submit"
+                            className="w-100"
+                            variant="success"
+                        >
+                            บันทึก
+                        </Button>
+                    </Col>
+                    <Col md={6} xs={6}>
+                        <Button variant="danger" onClick={handleClose}>
+                            ยกเลิก
+                        </Button>
+                    </Col>
+                </Row>
+
+
             </Modal.Footer>
 
 
         </Modal>
-       
+
     </>
     )
 
