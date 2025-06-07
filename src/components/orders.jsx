@@ -273,7 +273,8 @@ const Orders = () => {
                                                         <Col md={8}>
                                                             <h5>รวมทั้งหมด {item.amount} บาท</h5>
                                                             <h5>ลูกค้า-{item.customerName}</h5>
-                                                            {item.address ? <h5>จัดส่งที่-{item.address}</h5> : " "}
+                                                            {item.address ? <h5>จัดส่งที่-{item.address}</h5> : " "} 
+                                                            <h5>วิธีการรับอาหาร-{item.address}</h5> 
                                                         </Col>
                                                         {/* {
                                                             item.statusOrder === 'รับออเดอร์แล้ว' && (
