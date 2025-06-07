@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { AuthData } from "../ContextData";
-import { Row, Col, Card, Image, Button, Form, Alert } from "react-bootstrap";
+import { Row, Col, Card, Image, Button, Form, Alert, ButtonGroup } from "react-bootstrap";
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { useNavigate } from "react-router-dom";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -25,7 +25,9 @@ const Cart = () => {
         Address,
         setAddress,
         paymentType,
-        setPaymentType
+        setPaymentType,
+        setOrderType,
+        orderType
     } = useContext(AuthData);
 
     const [loading, setLoading] = useState(false);
@@ -42,7 +44,7 @@ const Cart = () => {
     return (<>
         <Card style={{ height: '100%', marginBottom: '120px' }}>
             <Card.Body style={{ height: '100%' }}>
-                <Card.Title className="mb-4" >สรุปรายการสั่งออเดอร์</Card.Title>
+                <Card.Title as={'h5'} className="mb-4" >สรุปรายการสั่งซื้อ</Card.Title>
                 <Row>
                     {
                         cart.length !== 0 && cart?.map(item => {
@@ -60,12 +62,12 @@ const Cart = () => {
                                                 <Col md={5} xs={5}>
                                                     <div className="menu-list mt-3">
                                                         <h6>{item?.name}</h6>
-                                                        <h6>{item?.price}฿</h6>
+                                                        <h6>{item?.price} ฿</h6>
                                                         <Form.Group>
                                                             <Row className="mt-2">
                                                                 <Col xs={4} md={2}>
                                                                     <Button
-                                                                        variant="success"
+                                                                        variant="primary"
                                                                         onClick={() => { updateQuantity(item.id, item.quantity + 1) }} >+</Button>
                                                                 </Col>
                                                                 <Col xs={4} md={2} className="text-center p-2">
@@ -74,7 +76,7 @@ const Cart = () => {
                                                                 </Col>
                                                                 <Col xs={4} md={2}>
                                                                     <Button
-                                                                        variant="success"
+                                                                        variant="primary"
                                                                         onClick={() => {
                                                                             if (item.quantity > 1) {
                                                                                 updateQuantity(item.id, item.quantity - 1);
@@ -138,23 +140,49 @@ const Cart = () => {
                     {
                         cart.length > 0 ? (
                             <>
-                                <h5>รวมทั้งหมด {sumPrice} บาท</h5>
-                                <h5>จำนวน {toTal} รายการ</h5>
-                                <h5 style={{ color: 'red' }}> จำนวนรอ {queue} คิว </h5>
+                                <h6>ยอดรวมทั้งหมด {sumPrice} บาท</h6>
+                                <h6>จำนวน {toTal} รายการ</h6>
+                                <h6 style={{ color: 'red' }}> คิวตอนนี้ {queue} คิว </h6>
 
                                 <Col md={12} xs={12} className="mt-2">
                                     <Form id="save" onSubmit={(e) => { onSave(e) }}>
-                                        <Form.Group>
-                                            <Form.Label style={{ fontWeight: 500 }}> ที่อยู่จัดส่ง    </Form.Label>
-                                            <Form.Control
-                                                value={Address}
-                                                type="text"
-                                                required
-                                                onChange={(e) => setAddress(e.target.value)}
-                                                placeholder="ระบุที่อยู่สำหรับจัดส่ง"
-                                                className="mb-2" />
-                                        </Form.Group>
-                                        <Form.Group>
+                                        <Row className='order-type when-print'>
+                                            <Form.Label style={{ fontWeight: 500 }}> เลือกการรับอาหาร</Form.Label>
+                                            <ButtonGroup >
+                                                <Button variant={orderType === 'สั่งกลับบ้าน' ? 'success w-100' : 'outline-success w-100'}
+                                                    onClick={() => setOrderType("สั่งกลับบ้าน")}
+                                                >จัดส่ง</Button>
+                                                <Button
+                                                    variant={orderType === 'เสิร์ฟในร้าน' ? 'warning w-100' : 'outline-warning w-100'}
+                                                    onClick={() => {
+                                                        setOrderType("เสิร์ฟในร้าน")
+
+                                                    }}
+                                                >ทานที่ร้าน</Button>
+
+                                                <Button variant={orderType === 'รับเอง' ? 'primary w-100' : 'outline-primary w-100'}
+                                                    onClick={() => { setOrderType("รับเอง") }}
+                                                >รับเองที่ร้าน</Button>
+                                            </ButtonGroup>
+
+                                            {
+                                                orderType === "สั่งกลับบ้าน" && (
+                                                    <Form.Group className="mt-2">
+                                                        <Form.Label style={{ fontWeight: 500 }}> ที่อยู่จัดส่ง    </Form.Label>
+                                                        <Form.Control
+                                                            value={Address}
+                                                            type="text"
+                                                            required
+                                                            onChange={(e) => setAddress(e.target.value)}
+                                                            placeholder="ระบุที่อยู่สำหรับจัดส่งอาหาร"
+                                                            className="mb-2" />
+                                                    </Form.Group>
+                                                )
+                                            }
+
+                                        </Row>
+
+                                        <Form.Group className="mt-2">
                                             <Form.Label style={{ fontWeight: 500 }}>  เลือกวิธีชำระเงิน </Form.Label>
                                             <Row>
                                                 <Col md={2} xs={6}>
@@ -181,7 +209,7 @@ const Cart = () => {
                                         variant="success"
 
                                         disabled={loading}>
-                                        {loading ? "กำลังบันทึก..." : <> <CheckCircleIcon /> ยืนยันสั่งออเดอร์</>}
+                                        {loading ? "กำลังบันทึก..." : <> <CheckCircleIcon /> ยืนยัน</>}
                                     </Button>
                                 </Col>
                                 <Col className="mt-3">
@@ -189,7 +217,7 @@ const Cart = () => {
                                         className="w-100"
                                         onClick={() => resetCart()}
                                         variant="danger" >
-                                        <CancelIcon />  ยกเลิกออเดอร์
+                                        <CancelIcon />  ยกเลิก
                                     </Button>
                                 </Col>
                             </>
