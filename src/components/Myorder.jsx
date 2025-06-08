@@ -15,7 +15,7 @@ const Myorder = () => {
     const steps = ['รับออเดอร์แล้ว', 'กำลังทำอาหาร', 'กำลังจัดส่ง', 'จัดส่งสำเร็จ'];
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-    const {counterOrder} = useContext(AuthData)
+    const { counterOrder } = useContext(AuthData)
     let messengerId = localStorage.getItem("messangerId");
     const [myOrder, setMyOrder] = useState([]);
     const getMyOrder = () => {
@@ -49,7 +49,7 @@ const Myorder = () => {
                     id="uncontrolled-tab-example"
                     className="mb-3"
                 >
-                   <Tab eventKey="home" title={<b className="custom-tab-title">คำสั่งซื้อใหม่ {counterOrder}</b>}>
+                    <Tab eventKey="home" title={<b className="custom-tab-title">คำสั่งซื้อใหม่ {counterOrder}</b>}>
                         {
                             myOrder?.map((item, index) => {
                                 if (item.statusOrder === "รับออเดอร์แล้ว") {
@@ -63,7 +63,8 @@ const Myorder = () => {
                                                     </h6>
 
                                                     <Details bill_ID={item.bill_ID} status={item.statusOrder} />
-                                                    <h5 style={{ fontSize: '18px' }}>รวมทั้งหมด {item.amount} บาท</h5>
+                                                    <h6 style={{ fontSize: '18px' }}>รวมทั้งหมด {item.amount} บาท</h6>
+                                                    <h6 style={{ fontSize: '18px' }}>วิธีการรับอาหาร - {item.ordertype === "สั่งกลับบ้าน" ? "จัดส่ง" : item.ordertype}</h6>
 
                                                     <Row>
                                                         <Stepper activeStep={item.step} orientation={isMobile ? 'vertical' : 'horizontal'}>
@@ -86,7 +87,7 @@ const Myorder = () => {
                             })
                         }
                     </Tab>
-                    <Tab eventKey="profile"  title={<b className="custom-tab-title">ติดตามสถานะคำสั่งซื้อ</b>}>
+                    <Tab eventKey="profile" title={<b className="custom-tab-title">ที่ต้องได้รับ</b>}>
                         {
                             myOrder.map((item, index) => {
                                 if (item.statusOrder !== "รับออเดอร์แล้ว") {
@@ -100,6 +101,8 @@ const Myorder = () => {
 
                                                 <Details bill_ID={item.bill_ID} status={item.statusOrder} />
                                                 <h6 style={{ fontSize: '18px' }}>รวมทั้งหมด {item.amount} บาท</h6>
+                                                <h6 style={{ fontSize: '18px' }}>วิธีการรับอาหาร - {item.ordertype === "สั่งกลับบ้าน" ? "จัดส่ง" : item.ordertype}</h6>
+
                                                 <Row>
                                                     <Stepper activeStep={item.step} orientation={isMobile ? 'vertical' : 'horizontal'}>
                                                         {steps.map((label) => {

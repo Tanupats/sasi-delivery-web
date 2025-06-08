@@ -130,14 +130,13 @@ function Context({ children }) {
                 ordertype: orderType,
                 payment_type: paymentType,
                 statusOrder: "รับออเดอร์แล้ว",
-                customerName: username,
+                customerName: username + '/' + orderType,
                 queueNumber: String(queueNumber),
                 shop_id: shop_id,
                 messengerId: messangerId,
                 address: Address,
                 step: 1
             }
-
             try {
                 const res = await axios.post(`${dev}/bills/order`, body);
 
