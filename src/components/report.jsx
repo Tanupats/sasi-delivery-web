@@ -32,7 +32,7 @@ const Report = () => {
     const handleClose = () => setShow(false);
 
     const getOrderFood = async () => {
-        if (shop) {
+        if (shop?.shop_id) {
             let sumToday = 0;
             let bank = 0;
             let cashIn = 0;
@@ -80,10 +80,12 @@ const Report = () => {
     }
 
     const geReport = async () => {
-        await httpGet(`/report/count-order-type?startDate=${startDate}&shop_id=${shop.shop_id}`)
-            .then(res => {
-                setCounter(res.data);
-            });
+        if (shop.shop_id) {
+            await httpGet(`/report/count-order-type?startDate=${startDate}&shop_id=${shop.shop_id}`)
+                .then(res => {
+                    setCounter(res.data);
+                });
+        }
     }
 
     const formatMoney = (val) => {
@@ -108,18 +110,22 @@ const Report = () => {
     }
 
     useEffect(() => {
+        if (shop) {
+            getOrderFood()
+        }
 
-        getOrderFood()
 
     }, [shop])
 
     useEffect(() => {
+        setData([]);
         searchOrder();
         geReport();
-    }, [startDate, shop])
+
+    }, [startDate])
 
     return (<>
-        <Card style={{borderRadius:0}}>
+        <Card style={{ borderRadius: 0 }}>
             <Card.Body>
                 <Row className="mt-4">
                     <Col md={12}>
@@ -143,22 +149,27 @@ const Report = () => {
 
 
                                 </Form>
-                                <Card.Title className="text-center" style={{ color: 'green' }}>  ยอดขายวันนี้   {formatMoney(totalToday)} บาท
+                                {
+                                    totalToday > 0 && (<>
+                                        <Card.Title className="text-center" style={{ color: 'green', marginBottom: '20px' }}>  ยอดขายวันนี้   {formatMoney(totalToday)} บาท
+                                        </Card.Title>
 
-                                </Card.Title>
-                                <Row mt={4}>
-                                    <Col md={6} xs={6}>
-                                        <Alert variant="primary" className="d-flex">
-                                            <PaymentIcon /> {' '} <h5> โอนจ่าย {formatMoney(bank_transfer)}</h5>
-                                        </Alert>
-                                    </Col>
-                                    <Col md={6} xs={6}>
-                                        <Alert variant="success" className="d-flex">
-                                            <PaidIcon />  {' '}   <h5 style={{ color: '#000' }}> เงินสด {formatMoney(cash)}</h5>
-                                        </Alert>
-                                    </Col>
-                                </Row>
 
+
+
+                                        <Row mt={4}>
+                                            <Col md={6} xs={6}>
+                                                <Alert variant="primary" className="d-flex">
+                                                    <PaymentIcon /> {' '} <h5> โอนจ่าย {formatMoney(bank_transfer)}</h5>
+                                                </Alert>
+                                            </Col>
+                                            <Col md={6} xs={6}>
+                                                <Alert variant="success" className="d-flex">
+                                                    <PaidIcon />  {' '}   <h5 style={{ color: '#000' }}> เงินสด {formatMoney(cash)}</h5>
+                                                </Alert>
+                                            </Col>
+                                        </Row>
+                                    </>)}
                                 <Card className="mt-2">
                                     <Card.Body>
 
@@ -266,7 +277,7 @@ const Report = () => {
 
                         <Col md={12}>
                             <Detail
-getOrderFood={getOrderFood}
+                                getOrderFood={getOrderFood}
                                 id={id}
 
                             />

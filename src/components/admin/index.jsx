@@ -118,7 +118,7 @@ const Admin = () => {
                         <Col md={6}>
                             <Card className="mt-2">
                                 <Card.Body>
-                                    <Card.Title style={{color:'green'}}>
+                                    <Card.Title style={{color:'#FD720D'}}>
 
                                         กำไร   {formatMoney(inComeNow-outComeNow)} บาท  <br />
 
