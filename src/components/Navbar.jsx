@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -8,14 +8,14 @@ import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import { AuthData } from "../ContextData";
 import FoodMenu from './FoodMenu';
 import Myorder from './Myorder';
-import GetQueu from './GetQueu';
+import GetQueue from './GetQueu';
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import AddToQueueIcon from '@mui/icons-material/AddToQueue';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
-import { ShoppingCart, Receipt, AccountCircle } from "@mui/icons-material";
+import { ShoppingCart, Receipt } from "@mui/icons-material";
 import Cart from './Cart';
-
+import HistoryIcon from '@mui/icons-material/History';
 const NavbarMenu = () => {
   const { toTal,
     queue, counterOrder
@@ -31,7 +31,7 @@ const NavbarMenu = () => {
     <Router>
       <Navbar bg="light" data-bs-theme="light" className='when-print' sticky='top' expand="lg">
         <Container fluid>
-          <Navbar.Brand href="#home" style={{ color: '#FD720D', fontWeight: 500 }}>SASI Delivery</Navbar.Brand>
+          <Navbar.Brand href="#home" style={{ color: '#FD720D', fontWeight: 500 }}>SASI Food</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto text-center">
@@ -88,7 +88,7 @@ const NavbarMenu = () => {
               component={Link} to={`/foodmenu/${id}/${name}/${shop_id}`} />
             <BottomNavigationAction onClick={() => setValue(1)} label={"คำสั่งซื้อ " + counterOrder} icon={<Receipt />} component={Link} to="/Myorder" />
             <BottomNavigationAction onClick={() => setValue(2)} label={"ตะกร้า " + toTal} icon={<ShoppingCart />} component={Link} to="/cart" />
-            <BottomNavigationAction onClick={() => setValue(3)} label="โปรไฟล์" icon={<AccountCircle />} component={Link} to="/profile" />
+            <BottomNavigationAction onClick={() => setValue(3)} label="ประวัติ" icon={<HistoryIcon />} component={Link} to="/profile" />
           </BottomNavigation>
         </BottomNavigation>
       </Paper>
@@ -96,7 +96,7 @@ const NavbarMenu = () => {
       <Routes>
         <Route path="/foodmenu/:userid/:name/:shop_id" Component={FoodMenu}></Route>
         <Route path="/Myorder" Component={Myorder}></Route>
-        <Route path="/queueNumber" Component={GetQueu}></Route>
+        <Route path="/queueNumber" Component={GetQueue}></Route>
         <Route path="/cart" Component={Cart}></Route>
       </Routes>
     </Router>

@@ -2,7 +2,7 @@ import React, { useState, useEffect,useContext } from 'react';
 import axios from 'axios';
 import { AuthData } from "../ContextData";
 import { Card } from 'react-bootstrap';
-const GetQueu = () => {
+const GetQueue = () => {
    
     const {queue} = useContext(AuthData)
     useEffect(() => {
@@ -24,4 +24,4 @@ const GetQueu = () => {
     )
 }
 
-export default GetQueu;
+export default GetQueue;

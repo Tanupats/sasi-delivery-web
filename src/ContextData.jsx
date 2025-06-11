@@ -32,7 +32,7 @@ function Context({ children }) {
     }
 
     const sendMessageToPage = async () => {
-        await fetch(`https://api.chatfuel.com/bots/5e102b272685af000183388a/users/${messangerId}/send?chatfuel_token=qwYLsCSz8hk4ytd6CPKP4C0oalstMnGdpDjF8YFHPHCieKNc0AfrnjVs91fGuH74&chatfuel_block_name=order`, {
+        await fetch(`https://api.chatfuel.com/bots/5e102b272685af000183388a/users/${messangerId}/send?chatfuel_token=qwYLsCSz8hk4ytd6CPKP4C0oalstMnGdpDjF8YFHPHCieKNc0AfrnjVs91fGuH74&chatfuel_block_name=order&message=${sumPrice}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" }
         });

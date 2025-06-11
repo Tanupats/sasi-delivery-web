@@ -41,7 +41,9 @@ const Myorder = () => {
     return (<>
         <Card>
             <Card.Body>
-                <Card.Title className="text-center mb-3">
+                <Card.Title
+
+                    className="text-center mb-3">
                     คำสั่งซื้อของฉัน
                 </Card.Title>
                 <Tabs
@@ -64,7 +66,11 @@ const Myorder = () => {
 
                                                     <Details bill_ID={item.bill_ID} status={item.statusOrder} />
                                                     <h6 style={{ fontSize: '18px' }}>รวมทั้งหมด {item.amount} บาท</h6>
-                                                    <h6 style={{ fontSize: '18px' }}>วิธีการรับอาหาร - {item.ordertype === "สั่งกลับบ้าน" ? "จัดส่ง" : item.ordertype}</h6>
+                                                    <h6 style={{ fontSize: '18px' }}>วิธีการรับอาหาร - {item.ordertype === "สั่งกลับบ้าน" ? "จัดส่งที่ "+item.address : item.ordertype}
+
+                                                        <br />
+                                                      
+                                                    </h6>
 
                                                     <Row>
                                                         <Stepper activeStep={item.step} orientation={isMobile ? 'vertical' : 'horizontal'}>
@@ -101,7 +107,10 @@ const Myorder = () => {
 
                                                 <Details bill_ID={item.bill_ID} status={item.statusOrder} />
                                                 <h6 style={{ fontSize: '18px' }}>รวมทั้งหมด {item.amount} บาท</h6>
-                                                <h6 style={{ fontSize: '18px' }}>วิธีการรับอาหาร - {item.ordertype === "สั่งกลับบ้าน" ? "จัดส่ง" : item.ordertype}</h6>
+                                                <h6 style={{ fontSize: '18px' }}>วิธีการรับอาหาร - {item.ordertype === "สั่งกลับบ้าน" ? "จัดส่งที่ "+item.address : item.ordertype}
+                                                   
+                                                
+                                                </h6>
 
                                                 <Row>
                                                     <Stepper activeStep={item.step} orientation={isMobile ? 'vertical' : 'horizontal'}>
