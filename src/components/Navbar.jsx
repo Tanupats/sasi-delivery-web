@@ -64,9 +64,9 @@ const NavbarMenu = () => {
                     </Nav.Link>
 
 
-                     <Nav.Link as={Link} to={'/orders'} style={{ textDecoration: 'none', color: '#fff' }}>
+                    <Nav.Link as={Link} to={'/orders'} style={{ textDecoration: 'none', color: '#fff' }}>
                       <DeliveryDiningIcon />  ออเดอร์
-                    </Nav.Link> 
+                    </Nav.Link>
 
 
                     <Nav.Link as={Link} to={'/admin'} style={{ textDecoration: 'none', color: '#fff' }}>
@@ -78,7 +78,7 @@ const NavbarMenu = () => {
                 </Nav>
 
                 <Nav className="ml-auto" >
-                  <Nav.Link  as={Link}   to={'/profile'}   style={{ textDecoration: 'none', color: '#fff' }}>
+                  <Nav.Link as={Link} to={'/profile'} style={{ textDecoration: 'none', color: '#fff' }}>
                     < AccountCircleIcon />  {staffName}
                   </Nav.Link>
                   <Nav.Link onClick={logout} style={{ textDecoration: 'none', color: '#fff' }}>

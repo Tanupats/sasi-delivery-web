@@ -9,6 +9,7 @@ import { AuthData } from "../ContextData";
 import CachedIcon from '@mui/icons-material/Cached';
 import SyncDisabledIcon from '@mui/icons-material/SyncDisabled';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
 const Orders = () => {
     const { shop } = useContext(AuthData);
     const token = localStorage.getItem("token");
@@ -111,25 +112,12 @@ const Orders = () => {
                     statusOrder: status,
                     step: step
                 }
-                await httpPut(`/bills/${id}`, body)
+                await httpPut(`/bills/${id}`, body).then
                 if (status === "ทำเสร็จแล้ว") {
                     if (messageid !== "pos") {
                         sendNotificationBot(messageid);
                     }
                 }
-                // if (status === "กำลังส่ง") {
-                //     if (messageid !== "pos") {
-                //         sendDelivery(messageid);
-                //     }
-                // }
-                // if (status === "ส่งสำเร็จ") {
-                //     if (messageid !== "pos") {
-                //         sendDeliverySuccess(messageid);
-
-                //     }
-                // }
-                setReport([]);
-                await getMenuReport("รับออเดอร์แล้ว");
                 getOrderNew();
                 getOrderDelivery();
                 getOrderCooking();
@@ -224,7 +212,7 @@ const Orders = () => {
 
                             <Col md={2} xs={6}><Button variant="btn btn-light"
                                 onClick={() => { autoReload() }}>
-                                {autoRefresh ?  <CachedIcon />:<SyncDisabledIcon /> }
+                                {autoRefresh ? <CachedIcon /> : <SyncDisabledIcon />}
                                 AUTO REFRESH</Button></Col>
                         </Row>
 
@@ -257,7 +245,7 @@ const Orders = () => {
                                                                 onClick={() => handlePrint(item.bill_ID, item.id)}
                                                                 variant="primary w-100"
                                                             >
-                                                                พิมพ์ใบเสร็จ
+                                                        <LocalPrintshopIcon  />  พิมพ์ใบเสร็จ
                                                             </Button>
                                                         </Col>
                                                     </Row>
@@ -273,8 +261,8 @@ const Orders = () => {
                                                         <Col md={8}>
                                                             <h5>รวมทั้งหมด {item.amount} บาท</h5>
                                                             <h5>ลูกค้า-{item.customerName}</h5>
-                                                            {item.address ? <h5>จัดส่งที่-{item.address}</h5> : " "} 
-                                                            <h5>วิธีการรับอาหาร-{item.address}</h5> 
+                                                            {item.address ? <h5>จัดส่งที่-{item.address}</h5> : " "}
+                                                            <h5>วิธีการรับอาหาร-{item.ordertype}</h5>
                                                         </Col>
                                                         {/* {
                                                             item.statusOrder === 'รับออเดอร์แล้ว' && (
@@ -319,7 +307,7 @@ const Orders = () => {
                                                             </Col></>
                                                         )}
                                                         {
-                                                            item.statusOrder === 'ทำเสร็จแล้ว' && (<>
+                                                            item.statusOrder === 'ทำเสร็จแล้ว' &&  item.ordertype === "สั่งกลับบ้าน" && (<>
                                                                 <Col md={6} xs={6}>
                                                                     <Button
                                                                         className="when-print"
