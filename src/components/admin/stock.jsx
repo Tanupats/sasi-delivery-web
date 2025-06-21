@@ -26,29 +26,39 @@ const Stock = () => {
     const [newStock, setNewStock] = useState(1);
     const [getStock, setGetStock] = useState(1);
 
-
+    const shopId = shop.shop_id
     const handleClose = () => setShow(false);
     const handleCloseAdd = () => setShowAdd(false);
 
     const getData = async () => {
-        await httpGet('/stock')
-            .then((data) => {
-                if (data) {
-                    setData(data.data);
-                }
-            })
+        if (shopId !== null) {
+            await httpGet(`/stock?shop_id=${shopId}`)
+                .then((data) => {
+                    if (data) {
+                        setData(data.data);
+                    }
+                })
+        }
+
     }
 
     const postData = async () => {
         const body = {
             name: name,
             product_id: "",
-            shop_id: "",
+            shop_id: shopId,
             stock_quantity: parseInt(item)
         }
         await httpPost('/stock', body)
             .then((res) => {
                 if (res.status === 200) {
+                    Swal.fire({
+                        title: 'บันทึกสำเร็จ',
+                        text: 'เพิ่มสต็อกสินค้า',
+                        icon: 'success',
+                        confirmButtonText: 'ยืนยัน',
+                        timer: 1300
+                    });
                     getData();
                 }
             })
@@ -168,6 +178,7 @@ const Stock = () => {
                                     รายการ
                                 </Form.Label>
                                 <Form.Control
+                                    required
                                     onChange={(e) => setName(e.target.value)}
                                     type="text" placeholder="ชื่อสินค้า" />
 
@@ -179,14 +190,21 @@ const Stock = () => {
                                     จำนวน
                                 </Form.Label>
                                 <Form.Control
+                                    required
                                     onChange={(e) => setIem(e.target.value)}
                                     type="text"
                                     placeholder="จำนวน" />
 
                             </Col>
+
+                        </Row>
+                        <Row>
+
+
                             <Col md={4} className="mt-3">
                                 <Button className="w-50" onClick={() => postData()}> บันทึก </Button>
                             </Col>
+
                         </Row>
                     </Form>
 

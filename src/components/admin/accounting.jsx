@@ -46,10 +46,16 @@ const Accounting = () => {
     };
 
     const getData = async () => {
+        let total = 0;
         await httpGet(`/account?date=${date}&shop_id=${shop_id}`)
             .then((data) => {
                 if (data) {
                     setData(data.data);
+                    data.data.map((item) => {
+
+                        total += parseFloat(item.total);
+                    })
+                    setOutcome(total);
                 }
             })
     }
@@ -111,18 +117,11 @@ const Accounting = () => {
     useEffect(() => {
         getData();
     }
-        , [date])
-
-    useEffect(() => {
-        getData();
-        geOutcome()
-    }
         , [])
 
-    useEffect(() => {
-        geOutcome()
-    }
-        , [data])
+
+
+
     return (<>
 
         <Form onSubmit={(e) => saveOutcome(e)} className="mt-4">

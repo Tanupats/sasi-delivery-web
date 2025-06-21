@@ -63,12 +63,26 @@ const Report = () => {
     };
 
     const searchOrder = async () => {
+        let bank = 0;
+        let cashIn = 0;
         if (shop) {
             const body = { startDate: startDate, shop_id: shop?.shop_id }
             await httpPost(`/bills/searchByDate`,
                 body, { headers: { 'apikey': token } })
                 .then((res) => {
                     setData(res.data.data);
+                    res?.data.data?.map(item => {
+
+                        if (item.payment_type === "bank_transfer") {
+
+                            bank += (Number(item?.amount));
+
+                        } else {
+                            cashIn += (Number(item?.amount));
+                        }
+                    })
+                    setBank_transfer(bank);
+                    setCash(cashIn);
                     setTotalToday(res.data.total);
                 })
         }
@@ -109,16 +123,15 @@ const Report = () => {
         });
     }
 
+    // useEffect(() => {
+    //     if (shop) {
+    //         getOrderFood()
+    //     }
+
+
+    // }, [shop])
+
     useEffect(() => {
-        if (shop) {
-            getOrderFood()
-        }
-
-
-    }, [shop])
-
-    useEffect(() => {
-        setData([]);
         searchOrder();
         geReport();
 
@@ -229,13 +242,13 @@ const Report = () => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {data?.map((row) => (
+                                    {data?.map((row, index) => (
                                         <TableRow
                                             key={row.queueNumber}
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                         >
                                             <TableCell component="th" scope="row">
-                                                {row.queueNumber}
+                                                {index + 1}
                                             </TableCell>
                                             <TableCell align="left">{row.ordertype}</TableCell>
                                             <TableCell align="left">

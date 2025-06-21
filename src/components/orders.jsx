@@ -245,7 +245,7 @@ const Orders = () => {
                                                                 onClick={() => handlePrint(item.bill_ID, item.id)}
                                                                 variant="primary w-100"
                                                             >
-                                                        <LocalPrintshopIcon  />  พิมพ์ใบเสร็จ
+                                                                <LocalPrintshopIcon />  พิมพ์ใบเสร็จ
                                                             </Button>
                                                         </Col>
                                                     </Row>
@@ -307,7 +307,7 @@ const Orders = () => {
                                                             </Col></>
                                                         )}
                                                         {
-                                                            item.statusOrder === 'ทำเสร็จแล้ว' &&  item.ordertype === "สั่งกลับบ้าน" && (<>
+                                                            item.statusOrder === 'ทำเสร็จแล้ว' && item.ordertype === "สั่งกลับบ้าน" && (<>
                                                                 <Col md={6} xs={6}>
                                                                     <Button
                                                                         className="when-print"

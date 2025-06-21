@@ -19,6 +19,7 @@ const FoodMenuAdmin = () => {
     const [stockId, setStockId] = useState(0);
     const token = localStorage.getItem("token");
 
+    const shopId = shop?.shop_id;
     const getStockProduct = async () => {
         await httpGet('/stock')
             .then((data) => {
@@ -29,9 +30,8 @@ const FoodMenuAdmin = () => {
     }
 
     const getMenuType = async () => {
-        const id = shop?.shop_id
-        if (id) {
-            await httpGet(`/menutype/${id}`, { headers: { 'apikey': token } })
+        if (shopId !== undefined) {
+            await httpGet(`/menutype/${shopId}`, { headers: { 'apikey': token } })
                 .then(res => {
                     setMenuType(res.data);
                 })
@@ -119,18 +119,23 @@ const FoodMenuAdmin = () => {
     }
 
     const getFoodMenu = () => {
-        httpGet(`/foodmenu/getByShop/${shop?.shop_id}`, { headers: { 'apikey': token } })
-            .then((res) => {
-                if (res.data) {
-                    setFoods(res.data);
-                }
-            })
+        if (shopId !== undefined) {
+            httpGet(`/foodmenu/getByShop/${shopId}`, { headers: { 'apikey': token } })
+                .then((res) => {
+                    if (res.data) {
+                        setFoods(res.data);
+                    }
+                })
+        }
     }
 
     useEffect(() => {
-        getMenuType();
-        getFoodMenu();
-        getStockProduct();
+        if (shopId) {
+            getFoodMenu();
+            getMenuType();
+        }
+
+        // getStockProduct();
     }, [shop])
 
     return (

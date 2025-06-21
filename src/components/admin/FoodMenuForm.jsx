@@ -15,16 +15,18 @@ const FoodMenuForm = (props) => {
     const [status, setStatus] = useState("1");
     const [menuType, setMenuType] = useState([]);
     const [menuTypeId, setMenuTypeId] = useState("");
-
+    const shopId = shop?.shop_id
     const token = localStorage.getItem("token");
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
     const getMenuType = async () => {
-        await httpGet(`/menutype/${shop?.shop_id}`, { headers: { 'apikey': token } })
-            .then(res => {
-                setMenuType(res.data);
-            })
+        if (shopId !== undefined) {
+            await httpGet(`/menutype/${shopId}`, { headers: { 'apikey': token } })
+                .then(res => {
+                    setMenuType(res.data);
+                })
+        }
     }
 
     let filename = "";
@@ -51,7 +53,7 @@ const FoodMenuForm = (props) => {
                 img: filename,
                 code: code,
                 status: parseInt(status),
-                shop_id: shop.shop_id
+                shop_id: shopId
             };
             await httpPost(`/foodmenu`, body, { headers: { 'apikey': token } })
                 .then(res => {

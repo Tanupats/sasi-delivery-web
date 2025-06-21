@@ -1,10 +1,11 @@
 import { useContext, useState } from "react";
 import { Card, Row, Col, Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { httpPost } from "../http";
+import { httpPut } from "../http";
 import { AuthData } from "../ContextData";
+import Swal from 'sweetalert2'
 const Profile = () => {
-    const { user, shop } = useContext(AuthData);
+    const { user, shop, getUser } = useContext(AuthData);
     //user 
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
@@ -12,7 +13,25 @@ const Profile = () => {
     const router = useNavigate();
     //shop
     const [shopName, setShopName] = useState("");
-    const [photo, setPhoto] = useState("");
+    const [phone, setPhone] = useState(user?.phone);
+
+    const updateData = async () => {
+        const body = {
+            phone: phone
+        }
+        await httpPut('/user/' + user?.id, body)
+            .then((res) => {
+                if (res) {
+                    getUser();
+                    Swal.fire({
+                        title: 'แก้ไขโปรไฟล์',
+                        text: 'บันทึกข้อมูลสำเร็จ',
+                        icon: 'success',
+                        confirmButtonText: 'ยืนยัน'
+                    })
+                }
+            })
+    }
 
     return (
         <Row className='mt-4'>
@@ -27,8 +46,9 @@ const Profile = () => {
                         <h5>ข้อมูลผู้ใช้</h5>
                         <p>    ชื่อ-นามสกุล :   {user.name}</p>
                         <p>    อีเมล :   {user.email}</p>
-                       
-                      <Button>แก้ไข</Button>          
+                        <p>    เบอร์  :    {user.phone}</p>
+                        <input type="text" value={phone}  placeholder="แก้ไขเบอร์" onChange={(e) => setPhone(e.target.value)} />
+                        <Button onClick={() => updateData()}>แก้ไข</Button>
                     </Card.Body>
                 </Card>
             </Col>

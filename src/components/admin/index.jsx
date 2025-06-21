@@ -43,7 +43,7 @@ const Admin = () => {
             })
     }
 
-  
+
 
     const handleNavClick = (event) => {
         setOpenMenu(event);
@@ -66,9 +66,8 @@ const Admin = () => {
                         <Nav.Link onClick={() => handleNavClick("ประเภทสินค้า")}><PollIcon /> ประเภทสินค้า</Nav.Link>
                         <Nav.Link onClick={() => handleNavClick("บัญชี")}><CreditCardIcon /> บัญชี</Nav.Link>
                         <Nav.Link onClick={() => handleNavClick("สรุปยอดขาย")}><DataThresholdingIcon /> รายงานยอดขาย</Nav.Link>
-                        {/* <Nav.Link onClick={() => handleNavClick("พนักงาน")}> <GroupIcon /> พนักงาน</Nav.Link>
                         <Nav.Link onClick={() => handleNavClick("สต๊อก")}> <BallotIcon /> สต๊อกสินค้า</Nav.Link>
-                        <Nav.Link onClick={() => handleNavClick("สรุปรายการสั่งซื้อ")}> <AssessmentIcon /> สรุปรายการสั่งซื้อ</Nav.Link> */}
+                        <Nav.Link onClick={() => handleNavClick("สรุปรายการสั่งซื้อ")}> <AssessmentIcon /> สรุปรายการสั่งซื้อ</Nav.Link>
                     </Nav>
                 </Navbar>
             </Col>
@@ -94,7 +93,7 @@ const Admin = () => {
                         <Col md={6}>
                             <Card className="mt-2">
                                 <Card.Body>
-                                    <Card.Title style={{color:'green'}}>
+                                    <Card.Title style={{ color: 'green' }}>
 
                                         ยอดขายเดือนนี้ +  {formatMoney(inComeNow)} บาท  <br />
 
@@ -106,7 +105,7 @@ const Admin = () => {
                         <Col md={6}>
                             <Card className="mt-2">
                                 <Card.Body>
-                                    <Card.Title style={{color:'red'}}>
+                                    <Card.Title style={{ color: 'red' }}>
 
 
                                         ค่าใช้จ่ายเดือนปัจจุบัน  - {formatMoney(outComeNow)} บาท  <br />
@@ -118,23 +117,23 @@ const Admin = () => {
                         <Col md={6}>
                             <Card className="mt-2">
                                 <Card.Body>
-                                    <Card.Title style={{color:'#FD720D'}}>
+                                    <Card.Title style={{ color: '#FD720D' }}>
 
-                                        กำไร   {formatMoney(inComeNow-outComeNow)} บาท  <br />
+                                        กำไร   {formatMoney(inComeNow - outComeNow)} บาท  <br />
 
                                     </Card.Title>
                                 </Card.Body>
                             </Card>
                         </Col>
-                        <Col md={6}>
+                        {/* <Col md={6}>
                             <Card className="mt-2">
                                 <Card.Body>
-                                    <Card.Title style={{color:'blue'}}>
+                                    <Card.Title style={{ color: 'blue' }}>
                                         ออเดอร์  + {totalOrder}
                                     </Card.Title>
                                 </Card.Body>
                             </Card>
-                        </Col>
+                        </Col> */}
                     </Row>
                     )
                 }

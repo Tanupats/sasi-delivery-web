@@ -26,7 +26,6 @@ for (let number = 1; number <= 5; number++) {
 }
 import { InputGroup } from 'react-bootstrap';
 import SearchIcon from '@mui/icons-material/Search';
-import DinnerDiningIcon from '@mui/icons-material/DinnerDining';
 import CircularProgress from '@mui/material/CircularProgress';
 const Pos = () => {
   const router = useNavigate()
@@ -46,7 +45,9 @@ const Pos = () => {
     shop,
     toTal,
     setStatusPrint,
-    statusPrint
+    statusPrint,
+    staffName,
+    user
   } =
     useContext(AuthData)
 
@@ -63,8 +64,8 @@ const Pos = () => {
   const [newId, setNewId] = useState("")
 
   const token = localStorage.getItem("token");
-
-  const [phoneNumber, setPhoneNumber] = useState("0983460756");
+  const phone = user?.phone;
+  const [phoneNumber, setPhoneNumber] = useState(String(phone));
   const [showQr, setShowQr] = useState(false);
   const [qrCode, setQrCode] = useState("sample");
   const [newPrice, setNewPrice] = useState(0);
@@ -331,9 +332,9 @@ const Pos = () => {
                           })
                         }
 
-                        {/* <tr>
+                        <tr>
                           <td className='get-order' colSpan={4}>การรับสินค้า-{orderType}</td>
-                        </tr> */}
+                        </tr>
                         <tr>
                           <td className='get-order' colSpan={4}>รวม {toTal} รายการ</td>
                         </tr>
@@ -381,7 +382,9 @@ const Pos = () => {
                           </Col>
                           <Col md={12} className='text-center'>
                             {
-                              showQr ? <center><QRCode value={qrCode} /></center> : <></>
+                              showQr ? <center><QRCode value={qrCode} />
+                                <h5>{staffName}</h5>
+                              </center> : <></>
                             }
                           </Col>
                         </Row>
@@ -391,25 +394,23 @@ const Pos = () => {
                     <Form>
                       <Row className='order-type when-print'>
                         <ButtonGroup >
-                          {/* <Button className='btn btn-primary w-100'
+                          <Button className='btn btn-danger w-100'
                             onClick={() => { setOrderType("เสิร์ฟในร้าน"), setName("ทานที่ร้าน") }}
-                            style={{ border: 'none' }} >ทานที่ร้าน</Button> */}
+                            style={{ border: 'none' }} >ทานที่ร้าน</Button>
 
                           <Button className='btn btn-primary w-100'
-                            onClick={() => { setOrderType("รับเอง") }}
-                            style={{ border: 'none' }} >รับสินค้าหน้าร้าน</Button><Button className='btn btn-success w-100'
-                              onClick={() => setOrderType("สั่งกลับบ้าน")}
-                              style={{ border: 'none' }} >จัดส่งสินค้า</Button>
+                            onClick={() => { setOrderType("รับเอง"), setName("รับเองหน้าร้าน") }}
+                            style={{ border: 'none' }} >รับหน้าร้าน</Button><Button className='btn btn-success w-100'
+                              onClick={() => { setOrderType("สั่งกลับบ้าน"), setName("จัดส่ง") }}
+                              style={{ border: 'none' }} >จัดส่ง</Button>
                         </ButtonGroup>
                         <Col md={12} className='mt-3 mb-4' style={{ marginBottom: '500px' }}>
-
                           <Form.Control
                             type="text"
-                            placeholder='ข้อมูลติดต่อลูกค้า'
+                            placeholder='ข้อมูลติดต่อ'
                             onChange={(e) => setName(e.target.value)} value={name} />
                         </Col>
                       </Row>
-
                     </Form>
                     <Row className='mt-3 mb-2 when-print sticky-bottom-mobile'>
 

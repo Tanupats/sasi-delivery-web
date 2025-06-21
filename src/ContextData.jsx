@@ -261,7 +261,8 @@ function Context({ children }) {
                 getShop,
                 setShop
                 , setStatusPrint,
-                statusPrint
+                statusPrint,
+                getUser
             }}>
             {children}
         </AuthData.Provider>
