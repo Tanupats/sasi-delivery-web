@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 export const AuthData = createContext();
 import axios from "axios";
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 
 function Context({ children }) {
     const [cart, setCart] = useState([])
@@ -16,20 +16,24 @@ function Context({ children }) {
     const [auth, setAuth] = useState(authCheck || 'not_authenticated');
     const [Address, setAddress] = useState("");
     const [paymentType, setPaymentType] = useState("bank_transfer");
+    const shop_id = localStorage.getItem('shop_id');
 
+    const dev = import.meta.env.VITE_BAKUP_URL;
     const getQueueNumber = async () => {
-        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/queueNumber`)
+        await axios.get(`${dev}/queueNumber?shop_id=${shop_id}`)
             .then(res => {
                 setQueueNumber(res.data.queueNumber);
             })
     }
 
+
     const getCounterOrder = async () => {
-        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/bills/counter-myorder?messengerId=${messangerId}`)
+        await axios.get(`${dev}/bills/counter-myorder?messengerId=${messangerId}`)
             .then(res => {
                 setCounterOrder(res.data.count);
             })
     }
+
 
     const sendMessageToPage = async () => {
         await fetch(`https://api.chatfuel.com/bots/5e102b272685af000183388a/users/${messangerId}/send?chatfuel_token=qwYLsCSz8hk4ytd6CPKP4C0oalstMnGdpDjF8YFHPHCieKNc0AfrnjVs91fGuH74&chatfuel_block_name=order&message=${sumPrice}`, {
@@ -38,8 +42,9 @@ function Context({ children }) {
         });
     }
 
+
     const checkQueueNumber = async () => {
-        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/bills/queuenumber/${queueNumber}`)
+        await axios.get(`${dev}/bills/queuenumber/${queueNumber}`)
             .then(res => {
                 if (res.data.length > 0) {
                     setQueueNumber(queueNumber + 1);
@@ -118,8 +123,8 @@ function Context({ children }) {
     const resetCart = () => setCart([]);
     const messangerId = localStorage.getItem('messangerId');
     const username = localStorage.getItem('name');
-    const shop_id = localStorage.getItem('shop_id');
-    const dev = import.meta.env.VITE_BAKUP_URL;
+
+
 
     const saveOrder = async () => {
         checkQueueNumber();
@@ -186,7 +191,7 @@ function Context({ children }) {
 
 
     const getQueue = async () => {
-        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/queues`)
+        await axios.get(`${dev}/queues?shop_id=${shop_id}`)
             .then(res => {
                 if (res.status === 200) {
                     setQueue(res.data.queues)
