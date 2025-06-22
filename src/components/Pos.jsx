@@ -304,7 +304,7 @@ const Pos = () => {
                   <img style={{ width: '40%' }} src={`${import.meta.env.VITE_API_URL}/images/${shop?.photo}`} alt="" srcset="" />
                   <h6> {shop?.name}</h6>
                   <h6>  ใบเสร็จรับเงิน</h6>
-                  {/* <h6> ลำดับคิว {queueNumber} </h6> */}
+                  <h6> ลำดับคิว {queueNumber} </h6>
                   วันที่ซื้อสินค้า {date} เวลา {time}
 
                   {/* {statusPrint} */}

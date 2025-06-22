@@ -7,8 +7,8 @@ function Context({ children }) {
     const [cart, setCart] = useState([])
     const [toTal, setTotal] = useState(0);
     const [sumPrice, setSumPrice] = useState(0);
-    const [name, setName] = useState("");
-    const [orderType, setOrderType] = useState("สั่งกลับบ้าน");
+    const [name, setName] = useState("เสิร์ฟในร้าน");
+    const [orderType, setOrderType] = useState("เสิร์ฟในร้าน");
     const [role, setRole] = useState("");
     const [queue, setQueu] = useState(0);
     const [queueNumber, setQueueNumber] = useState(0);
@@ -39,10 +39,12 @@ function Context({ children }) {
     }
 
     const getQueueNumber = async () => {
-        await httpGet(`/queueNumber`)
-            .then(res => {
-                setQueueNumber(res.data.queueNumber);
-            })
+        if (shop?.shop_id !== undefined) {
+            await httpGet(`/queueNumber?shop_id=${shop?.shop_id}`)
+                .then(res => {
+                    setQueueNumber(res.data.queueNumber);
+                })
+        }
     }
 
     const addToCart = (data) => {
