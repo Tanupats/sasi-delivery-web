@@ -19,9 +19,10 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import PaymentIcon from '@mui/icons-material/Payment';
 const Report = () => {
-    const { shop } = useContext(AuthData)
-    const [totalToday, setTotalToday] = useState(0)
-    const [data, setData] = useState([])
+    const { shop } = useContext(AuthData);
+    const shopID = shop?.shop_id;
+    const [totalToday, setTotalToday] = useState(0);
+    const [data, setData] = useState([]);
     const [counter, setCounter] = useState({});
     const [startDate, setStartDate] = useState(moment(new Date()).format('YYYY-MM-DD'));
     const token = localStorage.getItem("token");
@@ -62,29 +63,32 @@ const Report = () => {
         await searchOrder();
     };
 
+    console.log('รหัสร้าน =', shopID);
     const searchOrder = async () => {
-        let bank = 0;
-        let cashIn = 0;
-        if (shop) {
-            const body = { startDate: startDate, shop_id: shop?.shop_id }
-            await httpPost(`/bills/searchByDate`,
-                body, { headers: { 'apikey': token } })
-                .then((res) => {
-                    setData(res.data.data);
-                    res?.data.data?.map(item => {
+        if (shopID !== undefined && startDate) {
+            let bank = 0;
+            let cashIn = 0;
+            if (shopID) {
+                const body = { startDate: startDate, shop_id: shopID }
+                await httpPost(`/bills/searchByDate`,
+                    body, { headers: { 'apikey': token } })
+                    .then((res) => {
+                        setData(res.data.data);
+                        res?.data.data?.map(item => {
 
-                        if (item.payment_type === "bank_transfer") {
+                            if (item.payment_type === "bank_transfer") {
 
-                            bank += (Number(item?.amount));
+                                bank += (Number(item?.amount));
 
-                        } else {
-                            cashIn += (Number(item?.amount));
-                        }
+                            } else {
+                                cashIn += (Number(item?.amount));
+                            }
+                        })
+                        setBank_transfer(bank);
+                        setCash(cashIn);
+                        setTotalToday(res.data.total);
                     })
-                    setBank_transfer(bank);
-                    setCash(cashIn);
-                    setTotalToday(res.data.total);
-                })
+            }
         }
     }
 
@@ -103,7 +107,7 @@ const Report = () => {
     }
 
     const formatMoney = (val) => {
-        return new Intl.NumberFormat().format(val)
+        return new Intl.NumberFormat().format(val);
     }
 
     const deleteBill = async (id) => {
@@ -135,7 +139,7 @@ const Report = () => {
         searchOrder();
         geReport();
 
-    }, [startDate])
+    }, [startDate, shopID])
 
     return (<>
         <Card style={{ borderRadius: 0 }}>
