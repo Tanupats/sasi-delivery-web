@@ -55,13 +55,13 @@ const NavbarMenu = () => {
               <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto text-center">
                   <>
-                    <Nav.Link as={Link} to={'/pos'} style={{ textDecoration: 'none', color: '#fff' }}>
+                    {/* <Nav.Link as={Link} to={'/pos'} style={{ textDecoration: 'none', color: '#fff' }}>
                       <ListAltIcon /> ขายสินค้า
                     </Nav.Link>
 
                     <Nav.Link as={Link} to={'/report'} style={{ textDecoration: 'none', color: '#fff' }}>
                       <CurrencyBitcoinIcon /> สรุปยอดขาย
-                    </Nav.Link>
+                    </Nav.Link> */}
 
 
                     <Nav.Link as={Link} to={'/orders'} style={{ textDecoration: 'none', color: '#fff' }}>
@@ -69,9 +69,9 @@ const NavbarMenu = () => {
                     </Nav.Link>
 
 
-                    <Nav.Link as={Link} to={'/admin'} style={{ textDecoration: 'none', color: '#fff' }}>
+                    {/* <Nav.Link as={Link} to={'/admin'} style={{ textDecoration: 'none', color: '#fff' }}>
                       <StoreIcon /> {shop?.name}
-                    </Nav.Link>
+                    </Nav.Link> */}
 
                   </>
 

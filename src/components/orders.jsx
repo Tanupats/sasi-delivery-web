@@ -95,6 +95,14 @@ const Orders = () => {
     }
 
     const handleClose = () => setShow(false);
+    const reset = () => {
+        setPrintBillId(null);
+        getMenuReport("รับออเดอร์แล้ว");
+        getOrderDelivery();
+        getOrderNew();
+        getOrderCooking();
+        getOrderCookingFinish();
+    }
 
     const UpdateStatus = async (id, status, messageid, step) => {
         Swal.fire({
@@ -112,18 +120,17 @@ const Orders = () => {
                     statusOrder: status,
                     step: step
                 }
-                await httpPut(`/bills/${id}`, body).then
+                httpPut(`/bills/${id}`, body).then
                 if (status === "ทำเสร็จแล้ว") {
                     if (messageid !== "pos") {
                         sendNotificationBot(messageid);
-                    }
+                       
+                    } 
                 }
-                getOrderNew();
-                getOrderDelivery();
-                getOrderCooking();
-                getOrderCookingFinish();
+                await getMenuReport("รับออเดอร์แล้ว");
             }
         });
+           
     }
 
     const UpdatePrice = async () => {
@@ -154,14 +161,7 @@ const Orders = () => {
         });
 
     }
-    const reset = () => {
-        setPrintBillId(null);
-        getMenuReport("รับออเดอร์แล้ว");
-        getOrderDelivery();
-        getOrderNew();
-        getOrderCooking();
-        getOrderCookingFinish();
-    }
+
 
     const autoReload = () => {
         setAutoRefresh(!autoRefresh);
@@ -175,17 +175,7 @@ const Orders = () => {
         getOrderCookingFinish();
     }, [shop])
 
-    useEffect(() => {
-        if (autoRefresh) {
-            const interval = setInterval(() => {
-                getMenuReport("รับออเดอร์แล้ว");
 
-            }, 7000); // ทุก 5 วินาที
-
-            return () => clearInterval(interval); // ล้างตอน component หาย 
-
-        }
-    }, [autoRefresh]);
 
 
     return (<>
@@ -210,16 +200,13 @@ const Orders = () => {
                                 onClick={() => { reset() }}
                             > < RestartAltIcon /> RESET </Button></Col>
 
-                            <Col md={2} xs={6}><Button variant="btn btn-light"
-                                onClick={() => { autoReload() }}>
-                                {autoRefresh ? <CachedIcon /> : <SyncDisabledIcon />}
-                                AUTO REFRESH</Button></Col>
+
                         </Row>
 
                         <Row>
                             {report.map((item, index) => (
                                 <React.Fragment key={index}>
-                                    {(printBillId === null || printBillId === item.bill_ID) && (
+                                    {(printBillId === null || printBillId === item.bill_ID) && item.ordertype === 'สั่งกลับบ้าน' && (
                                         <Col md={4}>
                                             <Card className="mb-4 mt-4" id={item.id}>
                                                 <Card.Body style={{ padding: '12px' }}>
@@ -239,39 +226,24 @@ const Orders = () => {
                                                                 <b> สั่งจาก {item.messengerId === 'pos' ? 'Admin' : 'Page'} </b> <br />
                                                             </div>
                                                         </Col>
-                                                        <Col md={6} xs={6} className="mb-2">
-                                                            <Button
-                                                                className="when-print"
-                                                                onClick={() => handlePrint(item.bill_ID, item.id)}
-                                                                variant="primary w-100"
-                                                            >
-                                                                <LocalPrintshopIcon />  พิมพ์ใบเสร็จ
-                                                            </Button>
-                                                        </Col>
+
                                                     </Row>
                                                     <Alert className="when-print bg-white">
                                                         <b>สถานะ : {item.statusOrder}</b>
                                                     </Alert>
-                                                    <Details
+                                                    {/* <Details
                                                         reset={reset}
                                                         id={item.id}
                                                         bill_ID={item.bill_ID}
-                                                        status={item.statusOrder} />
+                                                        status={item.statusOrder} /> */}
                                                     <Row>
                                                         <Col md={8}>
                                                             <h5>รวมทั้งหมด {item.amount} บาท</h5>
                                                             <h5>ลูกค้า-{item.customerName}</h5>
                                                             {item.address ? <h5>จัดส่งที่-{item.address}</h5> : " "}
-                                                            <h5>วิธีการรับอาหาร-{item.ordertype}</h5>
+                                                            {/* <h5>วิธีการรับอาหาร-{item.ordertype}</h5> */}
                                                         </Col>
-                                                        {/* {
-                                                            item.statusOrder === 'รับออเดอร์แล้ว' && (
-                                                                <Col md={4}>
-                                                                    <Button className="when-print" variant="warning" onClick={() => { setPrice(item.amount), setShow(true), setId(item.id) }} > แก้ไขราคารวม </Button>
 
-                                                                </Col>
-                                                            )
-                                                        } */}
 
                                                     </Row>
 
@@ -308,7 +280,7 @@ const Orders = () => {
                                                         )}
                                                         {
                                                             item.statusOrder === 'ทำเสร็จแล้ว' && item.ordertype === "สั่งกลับบ้าน" && (<>
-                                                                <Col md={6} xs={6}>
+                                                                <Col md={12} xs={12}>
                                                                     <Button
                                                                         className="when-print"
                                                                         onClick={() => {
@@ -323,19 +295,7 @@ const Orders = () => {
                                                                     </Button>
 
                                                                 </Col>
-                                                                <Col md={6} xs={6}>
-                                                                    <Button
-                                                                        className="when-print"
-                                                                        onClick={() => {
-                                                                            UpdateStatus(item.id, 'ส่งสำเร็จ', item.messengerId, 4);
 
-                                                                        }}
-                                                                        variant="primary w-100"
-                                                                    >
-                                                                        ส่งสำเร็จ
-                                                                    </Button>
-
-                                                                </Col>
                                                             </>)
                                                         }
                                                         {
