@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Row, Col, Card, Button, Modal, Form, Alert } from "react-bootstrap";
+import { Row, Col, Card, Button, Modal, Form, Alert, Image } from "react-bootstrap";
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Details from "./Details";
 import moment from "moment/moment";
-import { httpDelete, httpGet, httpPut, sendDelivery, sendNotificationBot, sendDeliverySuccess } from "../http";
+import { httpDelete, httpGet, httpPut, sendDelivery, httpPost, sendNotificationBot, sendDeliverySuccess, sendImageToPage } from "../http";
 import Swal from 'sweetalert2';
 import { AuthData } from "../ContextData";
 import CachedIcon from '@mui/icons-material/Cached';
@@ -18,13 +18,13 @@ const Orders = () => {
     const [price, setPrice] = useState(0);
     const [printBillId, setPrintBillId] = useState(null);
     const [id, setId] = useState(null);
-
+    const [file, setFile] = useState("");
     const [Delivered, setDelivered] = useState(0);
     const [OrderNew, setOrderNew] = useState(0);
     const [OrderCooking, setOrderCooking] = useState(0);
     const [OrderCookingFinish, setOrderCookingFinish] = useState(0);
     const [autoRefresh, setAutoRefresh] = useState(false);
-
+    const [previewUrl, setPreviewUrl] = useState(null);
     const getMenuReport = async (status) => {
         setReport([]);
         if (shop?.shop_id) {
@@ -33,7 +33,13 @@ const Orders = () => {
                 .then(res => { setReport(res.data) });
         }
     }
-
+    const handleFileChange = (e) => {
+        const selectedFile = e.target.files[0];
+        setFile(selectedFile);
+        if (selectedFile) {
+            setPreviewUrl(URL.createObjectURL(selectedFile));
+        }
+    };
     const getOrderDelivery = async () => {
         if (shop?.shop_id) {
             await httpGet(`/bills/counter-order-status/${shop?.shop_id}?statusOrder=ส่งสำเร็จ`, { headers: { 'apikey': token } })
@@ -96,6 +102,18 @@ const Orders = () => {
 
     const handleClose = () => setShow(false);
 
+    let filename = "";
+    const uploadFile = async () => {
+        const formData = new FormData();
+        formData.append('file', file);
+        await httpPost(`/upload`, formData)
+            .then(res => {
+                if (res.status === 200) {
+                    filename = res.data.filename
+                }
+            })
+    }
+
     const UpdateStatus = async (id, status, messageid, step) => {
         Swal.fire({
             title: 'คุณต้องการอัพเดต หรือไม่ ?',
@@ -112,10 +130,18 @@ const Orders = () => {
                     statusOrder: status,
                     step: step
                 }
-                await httpPut(`/bills/${id}`, body).then
+                httpPut(`/bills/${id}`, body).then
                 if (status === "ทำเสร็จแล้ว") {
                     if (messageid !== "pos") {
                         sendNotificationBot(messageid);
+
+                    }
+                }
+                if (status === "ส่งสำเร็จ") {
+                    if (messageid !== "pos") {
+                        sendImageToPage(messageid, import.meta.env.VITE_API_URL + '/images/' + filename)
+                        sendDeliverySuccess(messageid);
+
                     }
                 }
                 getOrderNew();
@@ -239,7 +265,7 @@ const Orders = () => {
                                                                 <b> สั่งจาก {item.messengerId === 'pos' ? 'Admin' : 'Page'} </b> <br />
                                                             </div>
                                                         </Col>
-                                                        <Col md={6} xs={6} className="mb-2">
+                                                        {/* <Col md={6} xs={6} className="mb-2">
                                                             <Button
                                                                 className="when-print"
                                                                 onClick={() => handlePrint(item.bill_ID, item.id)}
@@ -247,7 +273,7 @@ const Orders = () => {
                                                             >
                                                                 <LocalPrintshopIcon />  พิมพ์ใบเสร็จ
                                                             </Button>
-                                                        </Col>
+                                                        </Col> */}
                                                     </Row>
                                                     <Alert className="when-print bg-white">
                                                         <b>สถานะ : {item.statusOrder}</b>
@@ -308,7 +334,7 @@ const Orders = () => {
                                                         )}
                                                         {
                                                             item.statusOrder === 'ทำเสร็จแล้ว' && item.ordertype === "สั่งกลับบ้าน" && (<>
-                                                                <Col md={6} xs={6}>
+                                                                <Col md={12} xs={12}>
                                                                     <Button
                                                                         className="when-print"
                                                                         onClick={() => {
@@ -323,24 +349,38 @@ const Orders = () => {
                                                                     </Button>
 
                                                                 </Col>
-                                                                <Col md={6} xs={6}>
-                                                                    <Button
-                                                                        className="when-print"
-                                                                        onClick={() => {
-                                                                            UpdateStatus(item.id, 'ส่งสำเร็จ', item.messengerId, 4);
 
-                                                                        }}
-                                                                        variant="primary w-100"
-                                                                    >
-                                                                        ส่งสำเร็จ
-                                                                    </Button>
-
-                                                                </Col>
                                                             </>)
                                                         }
                                                         {
                                                             item.statusOrder === 'กำลังส่ง' && (<>
                                                                 <Col md={12}>
+                                                                    <>
+                                                                        <Form.Group className="mt-2">
+                                                                            <Form.Label>หลักฐานการส่ง</Form.Label>
+                                                                            <Form.Control
+                                                                                type="file"
+                                                                                onChange={handleFileChange}
+                                                                            />
+                                                                        </Form.Group>
+
+
+                                                                        <div className="mt-3">
+                                                                            {
+                                                                                filename !== "" && (<>
+
+                                                                                    <Image src={import.meta.env.VITE_API_URL + '/images/' + filename} thumbnail width={200} height={200} />
+                                                                                </>)
+                                                                            }
+
+
+                                                                        </div>
+
+                                                                    </>
+                                                                    <Button variant="primary"
+                                                                        className="mb-3 w-100 mt-3"
+                                                                        onClick={() => uploadFile()}>
+                                                                        อัพโหลด </Button>
                                                                     <Button
                                                                         className="when-print"
                                                                         onClick={() => {

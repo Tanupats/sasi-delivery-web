@@ -50,28 +50,28 @@ const NavbarMenu = () => {
         staffName !== null && (
           <Navbar expand="lg" style={{ backgroundColor: '#FD720D' }} className='when-print ' sticky='top'>
             <Container fluid>
-              <Navbar.Brand href="/pos" style={{ color: '#fff' }}>SASI POS</Navbar.Brand>
+              <Navbar.Brand href="/pos" style={{ color: '#fff' }}>SASI Delivery</Navbar.Brand>
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
               <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto text-center">
                   <>
-                    <Nav.Link as={Link} to={'/pos'} style={{ textDecoration: 'none', color: '#fff' }}>
+                    {/* <Nav.Link as={Link} to={'/pos'} style={{ textDecoration: 'none', color: '#fff' }}>
                       <ListAltIcon /> ขายสินค้า
                     </Nav.Link>
 
                     <Nav.Link as={Link} to={'/report'} style={{ textDecoration: 'none', color: '#fff' }}>
                       <CurrencyBitcoinIcon /> สรุปยอดขาย
                     </Nav.Link>
-
+ */}
 
                     <Nav.Link as={Link} to={'/orders'} style={{ textDecoration: 'none', color: '#fff' }}>
                       <DeliveryDiningIcon />  ออเดอร์
                     </Nav.Link>
 
 
-                    <Nav.Link as={Link} to={'/admin'} style={{ textDecoration: 'none', color: '#fff' }}>
+                    {/* <Nav.Link as={Link} to={'/admin'} style={{ textDecoration: 'none', color: '#fff' }}>
                       <StoreIcon /> {shop?.name}
-                    </Nav.Link>
+                    </Nav.Link> */}
 
                   </>
 
