@@ -33,13 +33,8 @@ const Orders = () => {
                 .then(res => { setReport(res.data) });
         }
     }
-    const handleFileChange = (e) => {
-        const selectedFile = e.target.files[0];
-        setFile(selectedFile);
-        if (selectedFile) {
-            setPreviewUrl(URL.createObjectURL(selectedFile));
-        }
-    };
+
+
     const getOrderDelivery = async () => {
         if (shop?.shop_id) {
             await httpGet(`/bills/counter-order-status/${shop?.shop_id}?statusOrder=ส่งสำเร็จ`, { headers: { 'apikey': token } })
@@ -114,6 +109,22 @@ const Orders = () => {
             })
     }
 
+    const handleFileChange = (e) => {
+        const selectedFile = e.target.files[0];
+        setFile(selectedFile);
+    };
+
+    async function sendImage(psid) {
+        const formData = new FormData()
+        formData.append('image', file)
+        const res = await fetch(`/upload-image?psid=${psid}`, {
+            method: 'POST',
+            body: formData
+        })
+        const result = await res.json()
+        alert(result.message)
+    }
+
     const UpdateStatus = async (id, status, messageid, step) => {
         Swal.fire({
             title: 'คุณต้องการอัพเดต หรือไม่ ?',
@@ -136,10 +147,18 @@ const Orders = () => {
                         sendNotificationBot(messageid);
                     }
                 }
+                if (status === "ส่งสำเร็จ") {
+                    await uploadFile()
+                    if (messageid !== "pos") {
+
+                        sendDeliverySuccess(messageid);
+                        sendImageToPage(messageid, import.meta.env.VITE_API_URL + '/images/' + filename)
+                    }
+                }
                 await getMenuReport("รับออเดอร์แล้ว");
             }
         });
-           
+
     }
 
     const UpdatePrice = async () => {
@@ -322,7 +341,9 @@ const Orders = () => {
                                                                         <Form.Group className="mt-2">
                                                                             <Form.Label>หลักฐานการส่ง</Form.Label>
                                                                             <Form.Control
-                                                                                type="file"
+
+
+                                                                                   type="file" id="file" accept="image/*" capture="environment"
                                                                                 onChange={handleFileChange}
                                                                             />
                                                                         </Form.Group>
@@ -340,10 +361,10 @@ const Orders = () => {
                                                                         </div>
 
                                                                     </>
-                                                                    <Button variant="primary"
+                                                                    {/* <Button variant="primary"
                                                                         className="mb-3 w-100 mt-3"
                                                                         onClick={() => uploadFile()}>
-                                                                        อัพโหลด </Button>
+                                                                        อัพโหลด </Button> */}
                                                                     <Button
                                                                         className="when-print"
                                                                         onClick={() => {
