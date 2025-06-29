@@ -26,7 +26,7 @@ const Orders = () => {
     const [autoRefresh, setAutoRefresh] = useState(false);
 
     const getMenuReport = async (status) => {
-        setReport([]);
+
         if (shop?.shop_id) {
 
             await httpGet(`/bills?status=${status}&shop_id=${shop?.shop_id}`, { headers: { 'apikey': token } })
@@ -96,6 +96,16 @@ const Orders = () => {
 
     const handleClose = () => setShow(false);
 
+    const reset = async () => {
+        await setReport([]);
+        setPrintBillId(null);
+        getMenuReport("รับออเดอร์แล้ว");
+        getOrderDelivery();
+        getOrderNew();
+        getOrderCooking();
+        getOrderCookingFinish();
+    }
+
     const UpdateStatus = async (id, status, messageid, step) => {
         Swal.fire({
             title: 'คุณต้องการอัพเดต หรือไม่ ?',
@@ -112,18 +122,27 @@ const Orders = () => {
                     statusOrder: status,
                     step: step
                 }
-                await httpPut(`/bills/${id}`, body).then
-                if (status === "ทำเสร็จแล้ว") {
-                    if (messageid !== "pos") {
-                        sendNotificationBot(messageid);
+                httpPut(`/bills/${id}`, body).then((res) => {
+                    if (res) {
+                        if (status === "ทำเสร็จแล้ว") {
+                            if (messageid !== "pos") {
+                                sendNotificationBot(messageid);
+                            }
+                        }
+                        setReport([]);
+                        getMenuReport("รับออเดอร์แล้ว");
                     }
-                }
-                getOrderNew();
-                getOrderDelivery();
-                getOrderCooking();
-                getOrderCookingFinish();
+
+                })
+
+
             }
         });
+
+        getOrderDelivery();
+        getOrderNew();
+        getOrderCooking();
+        getOrderCookingFinish();
     }
 
     const UpdatePrice = async () => {
@@ -154,18 +173,8 @@ const Orders = () => {
         });
 
     }
-    const reset = () => {
-        setPrintBillId(null);
-        getMenuReport("รับออเดอร์แล้ว");
-        getOrderDelivery();
-        getOrderNew();
-        getOrderCooking();
-        getOrderCookingFinish();
-    }
 
-    const autoReload = () => {
-        setAutoRefresh(!autoRefresh);
-    }
+
 
     useEffect(() => {
         getMenuReport("รับออเดอร์แล้ว");
@@ -175,17 +184,6 @@ const Orders = () => {
         getOrderCookingFinish();
     }, [shop])
 
-    useEffect(() => {
-        if (autoRefresh) {
-            const interval = setInterval(() => {
-                getMenuReport("รับออเดอร์แล้ว");
-
-            }, 7000); // ทุก 5 วินาที
-
-            return () => clearInterval(interval); // ล้างตอน component หาย 
-
-        }
-    }, [autoRefresh]);
 
 
     return (<>
@@ -198,22 +196,19 @@ const Orders = () => {
 
                         <Row className="when-print">
                             <ButtonGroup aria-label="Basic example">
-                                <Button variant="btn btn-outline-primary" style={{ fontSize: '18px' }} onClick={() => { getMenuReport("รับออเดอร์แล้ว") }}>ออเดอร์ใหม่ {OrderNew}</Button>
-                                <Button variant="btn btn-outline-success" style={{ fontSize: '18px' }} onClick={() => { getMenuReport("ทำเสร็จแล้ว") }}>ทำเสร็จแล้ว {OrderCookingFinish}</Button>
-                                <Button variant="btn btn-outline-danger" style={{ fontSize: '18px' }} onClick={() => { getMenuReport("กำลังส่ง") }}>กำลังส่ง  {OrderCooking}</Button>
-                                <Button variant="btn btn-outline-primary" style={{ fontSize: '18px' }} onClick={() => { getMenuReport("ส่งสำเร็จ") }}>ส่งสำเร็จ {Delivered} </Button>
+                                <Button variant="btn btn-outline-primary" style={{ fontSize: '18px' }} onClick={() => { setReport([]), getMenuReport("รับออเดอร์แล้ว") }}>ออเดอร์ใหม่ {OrderNew}</Button>
+                                <Button variant="btn btn-outline-success" style={{ fontSize: '18px' }} onClick={() => { setReport([]), getMenuReport("ทำเสร็จแล้ว") }}>ทำเสร็จแล้ว {OrderCookingFinish}</Button>
+                                <Button variant="btn btn-outline-danger" style={{ fontSize: '18px' }} onClick={() => { setReport([]), getMenuReport("กำลังส่ง") }}>กำลังส่ง  {OrderCooking}</Button>
+                                <Button variant="btn btn-outline-primary" style={{ fontSize: '18px' }} onClick={() => { setReport([]), getMenuReport("ส่งสำเร็จ") }}>ส่งสำเร็จ {Delivered} </Button>
 
                             </ButtonGroup>
                         </Row>
                         <Row className="mt-4 when-print">
                             <Col md={2} xs={6}><Button
                                 onClick={() => { reset() }}
-                            > < RestartAltIcon /> RESET </Button></Col>
+                            > < RestartAltIcon /> REFRESH </Button></Col>
 
-                            <Col md={2} xs={6}><Button variant="btn btn-light"
-                                onClick={() => { autoReload() }}>
-                                {autoRefresh ? <CachedIcon /> : <SyncDisabledIcon />}
-                                AUTO REFRESH</Button></Col>
+
                         </Row>
 
                         <Row>
@@ -239,15 +234,22 @@ const Orders = () => {
                                                                 <b> สั่งจาก {item.messengerId === 'pos' ? 'Admin' : 'Page'} </b> <br />
                                                             </div>
                                                         </Col>
-                                                        <Col md={6} xs={6} className="mb-2">
-                                                            <Button
-                                                                className="when-print"
-                                                                onClick={() => handlePrint(item.bill_ID, item.id)}
-                                                                variant="primary w-100"
-                                                            >
-                                                                <LocalPrintshopIcon />  พิมพ์ใบเสร็จ
-                                                            </Button>
-                                                        </Col>
+                                                        {
+
+                                                            item.statusOrder === 'รับออเดอร์แล้ว' && (
+                                                                <Col md={6} xs={6} className="mb-2">
+                                                                    <Button
+                                                                        className="when-print"
+                                                                        onClick={() => handlePrint(item.bill_ID, item.id)}
+                                                                        variant="primary w-100"
+                                                                    >
+                                                                        <LocalPrintshopIcon />  พิมพ์ใบเสร็จ
+                                                                    </Button>
+                                                                </Col>
+
+                                                            )
+                                                        }
+
                                                     </Row>
                                                     <Alert className="when-print bg-white">
                                                         <b>สถานะ : {item.statusOrder}</b>
@@ -307,7 +309,7 @@ const Orders = () => {
                                                             </Col></>
                                                         )}
                                                         {
-                                                            item.statusOrder === 'ทำเสร็จแล้ว' && item.ordertype === "สั่งกลับบ้าน" && (<>
+                                                            item.statusOrder === 'ทำเสร็จแล้ว' && (<>
                                                                 <Col md={6} xs={6}>
                                                                     <Button
                                                                         className="when-print"

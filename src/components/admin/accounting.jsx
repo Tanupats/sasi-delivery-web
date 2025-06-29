@@ -117,7 +117,7 @@ const Accounting = () => {
     useEffect(() => {
         getData();
     }
-        , [])
+        , [date])
 
 
 

@@ -460,7 +460,7 @@ const Pos = () => {
                     <Col md={12}>
 
                       <Row>
-                        <Col md={8}>
+                        <Col md={12}>
                           <Form>
                             <Form.Label> รายการ</Form.Label>
                             <Form.Control
@@ -473,7 +473,7 @@ const Pos = () => {
 
                           </Form>
                         </Col>
-                        <Col md={4}>
+                        <Col md={12}>
                           <Button
                             style={{ height: '46px', border: 'none', marginTop: '30px' }}
                             className='btn btn-primary w-100'
