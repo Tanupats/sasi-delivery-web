@@ -193,7 +193,6 @@ const Orders = () => {
 
     }
 
-
     const UpdatePrice = async () => {
         const body = {
             amount: parseInt(price)
