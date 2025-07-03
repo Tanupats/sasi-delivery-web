@@ -190,7 +190,6 @@ const Orders = () => {
                 })
             }
         });
-
     }
 
     const UpdatePrice = async () => {
