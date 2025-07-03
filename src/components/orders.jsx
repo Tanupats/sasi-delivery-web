@@ -71,30 +71,6 @@ const Orders = () => {
         }
     }
 
-
-    const handlePrint = async (billId, id) => {
-        setAutoRefresh(false);
-        const now = new Date();
-        const hours = now.getHours().toString().padStart(2, '0');
-        const minutes = now.getMinutes().toString().padStart(2, '0');
-        const body = {
-            printStatus: `พิมพ์เวลา ${hours}:${minutes}`
-        }
-        await httpPut(`/bills/${id}`, body)
-        setPrintBillId(billId);
-        setTimeout(() => {
-            window.print();
-
-        }, 2000);
-        setAutoRefresh(true);
-    };
-
-    const CancelOrder = async (id, bid) => {
-        await httpDelete(`/bills/${id}`)
-        await httpDelete(`/billsdetails/${bid}`)
-        await getMenuReport("รับออเดอร์แล้ว")
-    }
-
     const handleClose = () => setShow(false);
 
     let filename = "";
@@ -104,27 +80,69 @@ const Orders = () => {
         await httpPost(`/upload`, formData)
             .then(res => {
                 if (res.status === 200) {
-                    filename = res.data.filename
+                    filename = res.data.filename;
+
                 }
             })
     }
+    function compressImage(file, maxWidth = 800, quality = 0.7) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
 
-    const handleFileChange = (e) => {
-        const selectedFile = e.target.files[0];
-        setFile(selectedFile);
-    };
+            reader.onload = (event) => {
+                const img = new window.Image(); // ✅ ใช้ window.Image แทน
 
-    async function sendImage(psid) {
-        const formData = new FormData()
-        formData.append('image', file)
-        const res = await fetch(`/upload-image?psid=${psid}`, {
-            method: 'POST',
-            body: formData
-        })
-        const result = await res.json()
-        alert(result.message)
+                img.onload = () => {
+                    const canvas = document.createElement("canvas");
+
+                    let scaleFactor = maxWidth / img.width;
+                    if (scaleFactor > 1) scaleFactor = 1;
+
+                    canvas.width = img.width * scaleFactor;
+                    canvas.height = img.height * scaleFactor;
+
+                    const ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                    canvas.toBlob(
+                        (blob) => {
+                            if (blob) {
+                                resolve(blob);
+                            } else {
+                                reject(new Error("Failed to compress image"));
+                            }
+                        },
+                        "image/jpeg",
+                        quality
+                    );
+                };
+
+                img.onerror = reject;
+                img.src = event.target.result;
+            };
+
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
     }
 
+
+    const handleFileChange = async (e) => {
+        const selectedFile = e.target.files[0];
+        if (selectedFile) {
+            const compressedBlob = await compressImage(selectedFile, 800, 0.6); // ย่อกว้างสุด 800px, คุณภาพ 60%
+            const compressedFile = new File([compressedBlob], file.name, {
+                type: "image/jpeg",
+            });
+            console.log("ขนาดเดิม:", (file.size / 1024 / 1024).toFixed(2), "MB");
+            console.log("ขนาดใหม่:", (compressedFile.size / 1024).toFixed(2), "KB");
+            // สามารถใช้ compressedFile ส่งไป server หรือแสดงในเว็บได้
+            setFile(compressedFile);
+        }
+    };
+
+
+    const dev = import.meta.env.VITE_API_URL;
     const UpdateStatus = async (id, status, messageid, step) => {
         Swal.fire({
             title: 'คุณต้องการอัพเดต หรือไม่ ?',
@@ -141,25 +159,40 @@ const Orders = () => {
                     statusOrder: status,
                     step: step
                 }
-                httpPut(`/bills/${id}`, body).then
-                if (status === "ทำเสร็จแล้ว") {
-                    if (messageid !== "pos") {
-                        sendNotificationBot(messageid);
-                    }
-                }
-                if (status === "ส่งสำเร็จ") {
-                    await uploadFile()
-                    if (messageid !== "pos") {
+                httpPut(`/bills/${id}`, body).then((res) => {
+                    if (res) {
+                        if (status === "ทำเสร็จแล้ว") {
+                            if (messageid !== "pos") {
+                                sendNotificationBot(messageid);
 
-                        sendDeliverySuccess(messageid);
-                        sendImageToPage(messageid, import.meta.env.VITE_API_URL + '/images/' + filename)
+                            }
+                            getMenuReport("รับออเดอร์แล้ว");
+
+                        }
+                        if (status === "กำลังส่ง") {
+                            if (messageid !== "pos") {
+                                sendDelivery();
+
+                            }
+
+                            getMenuReport("ทำเสร็จแล้ว");
+                        }
+                        if (status === "ส่งสำเร็จ") {
+                            if (messageid !== "pos") {
+                                uploadFile()
+                                sendDeliverySuccess(messageid);
+                                sendImageToPage(messageid, dev + '/images/' + filename);
+                            }
+                            getMenuReport("กำลังส่ง");
+                        }
+
                     }
-                }
-                await getMenuReport("รับออเดอร์แล้ว");
+                })
             }
         });
 
     }
+
 
     const UpdatePrice = async () => {
         const body = {
@@ -171,30 +204,6 @@ const Orders = () => {
         handleClose();
     }
 
-    const deleteBill = async (id, bid) => {
-        Swal.fire({
-            title: 'คุณต้องการยกเลิกออเดอร์หรือไม่ ?',
-            text: "กดยืนยันเพื่อยกเลิก",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'ยืนยันรายการ',
-            cancelButtonText: 'ยกเลิก'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                CancelOrder(id, bid)
-            }
-
-        });
-
-    }
-
-
-    const autoReload = () => {
-        setAutoRefresh(!autoRefresh);
-    }
-
     useEffect(() => {
         getMenuReport("รับออเดอร์แล้ว");
         getOrderDelivery();
@@ -202,9 +211,6 @@ const Orders = () => {
         getOrderCooking();
         getOrderCookingFinish();
     }, [shop])
-
-
-
 
     return (<>
         <Row className="mt-3">
@@ -222,13 +228,6 @@ const Orders = () => {
                                 <Button variant="btn btn-outline-primary" style={{ fontSize: '18px' }} onClick={() => { getMenuReport("ส่งสำเร็จ") }}>ส่งสำเร็จ {Delivered} </Button>
 
                             </ButtonGroup>
-                        </Row>
-                        <Row className="mt-4 when-print">
-                            <Col md={2} xs={6}><Button
-                                onClick={() => { reset() }}
-                            > < RestartAltIcon /> RESET </Button></Col>
-
-
                         </Row>
 
                         <Row>
@@ -254,7 +253,7 @@ const Orders = () => {
                                                                 <b> สั่งจาก {item.messengerId === 'pos' ? 'Admin' : 'Page'} </b> <br />
                                                             </div>
                                                         </Col>
-                                                        <Col md={6} xs={6} className="mb-2">
+                                                        {/* <Col md={6} xs={6} className="mb-2">
                                                             <Button
                                                                 className="when-print"
                                                                 onClick={() => handlePrint(item.bill_ID, item.id)}
@@ -262,7 +261,7 @@ const Orders = () => {
                                                             >
                                                                 <LocalPrintshopIcon />  พิมพ์ใบเสร็จ
                                                             </Button>
-                                                        </Col>
+                                                        </Col> */}
                                                     </Row>
                                                     <Alert className="when-print bg-white">
                                                         <b>สถานะ : {item.statusOrder}</b>
@@ -287,7 +286,7 @@ const Orders = () => {
 
                                                         {
                                                             item.statusOrder === 'รับออเดอร์แล้ว' && (
-                                                                <Col md={6} xs={6} className="mb-2">
+                                                                <Col md={12} xs={12} className="mb-2">
                                                                     <Button
                                                                         className="when-print"
                                                                         onClick={() => {
@@ -302,7 +301,7 @@ const Orders = () => {
                                                                 </Col>
                                                             )
                                                         }
-                                                        {item.statusOrder === 'รับออเดอร์แล้ว' && (<>
+                                                        {/* {item.statusOrder === 'รับออเดอร์แล้ว' && (<>
 
                                                             <Col md={6} xs={6} className="mb-2">
                                                                 <Button
@@ -313,7 +312,7 @@ const Orders = () => {
                                                                     ยกเลิกออเดอร์
                                                                 </Button>
                                                             </Col></>
-                                                        )}
+                                                        )} */}
                                                         {
                                                             item.statusOrder === 'ทำเสร็จแล้ว' && item.ordertype === "สั่งกลับบ้าน" && (<>
                                                                 <Col md={12} xs={12}>
@@ -341,9 +340,8 @@ const Orders = () => {
                                                                         <Form.Group className="mt-2">
                                                                             <Form.Label>หลักฐานการส่ง</Form.Label>
                                                                             <Form.Control
-
-
-                                                                                   type="file" id="file" accept="image/*" capture="environment"
+                                                                                type="file"
+                                                                                id="file" accept="image/*" capture="environment"
                                                                                 onChange={handleFileChange}
                                                                             />
                                                                         </Form.Group>

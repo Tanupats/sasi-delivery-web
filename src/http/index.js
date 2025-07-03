@@ -80,7 +80,7 @@ export const sendImageToPage = (userid, url) => {
         type: "image",
         payload: {
           url: url,
-          is_reusable: true
+          is_reusable: false
         }
       }
     }
