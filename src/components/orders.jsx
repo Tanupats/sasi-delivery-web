@@ -72,15 +72,18 @@ const Orders = () => {
     }
 
     const handleClose = () => setShow(false);
+    const dev = import.meta.env.VITE_API_URL;
 
-    let filename = "";
-    const uploadFile = async () => {
+    const uploadFile = async (messageid) => {
         const formData = new FormData();
         formData.append('file', file);
         await httpPost(`/upload`, formData)
             .then(res => {
                 if (res.status === 200) {
-                    filename = res.data.filename;
+                    const filename = dev + '/images/' + res.data.filename;
+                    if (filename) {
+                        sendImageToPage(messageid, filename);
+                    }
 
                 }
             })
@@ -142,7 +145,7 @@ const Orders = () => {
     };
 
 
-    const dev = import.meta.env.VITE_API_URL;
+
     const UpdateStatus = async (id, status, messageid, step) => {
         Swal.fire({
             title: 'คุณต้องการอัพเดต หรือไม่ ?',
@@ -171,7 +174,7 @@ const Orders = () => {
                         }
                         if (status === "กำลังส่ง") {
                             if (messageid !== "pos") {
-                                sendDelivery();
+                                sendDelivery(messageid);
 
                             }
 
@@ -179,9 +182,9 @@ const Orders = () => {
                         }
                         if (status === "ส่งสำเร็จ") {
                             if (messageid !== "pos") {
-                                uploadFile()
+                                uploadFile(messageid);
                                 sendDeliverySuccess(messageid);
-                                sendImageToPage(messageid, dev + '/images/' + filename);
+
                             }
                             getMenuReport("กำลังส่ง");
                         }
@@ -345,22 +348,9 @@ const Orders = () => {
                                                                         </Form.Group>
 
 
-                                                                        <div className="mt-3">
-                                                                            {
-                                                                                filename !== "" && (<>
-
-                                                                                    <Image src={import.meta.env.VITE_API_URL + '/images/' + filename} thumbnail width={200} height={200} />
-                                                                                </>)
-                                                                            }
-
-
-                                                                        </div>
 
                                                                     </>
-                                                                    {/* <Button variant="primary"
-                                                                        className="mb-3 w-100 mt-3"
-                                                                        onClick={() => uploadFile()}>
-                                                                        อัพโหลด </Button> */}
+
                                                                     <Button
                                                                         className="when-print"
                                                                         onClick={() => {
