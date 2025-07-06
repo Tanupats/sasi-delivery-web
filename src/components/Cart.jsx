@@ -7,6 +7,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import PaymentsIcon from '@mui/icons-material/Payments';
+import Swal from 'sweetalert2';
 const Cart = () => {
 
     const router = useNavigate()
@@ -35,10 +36,25 @@ const Cart = () => {
     const onSave = async (e) => {
         e.preventDefault();
         await getQueueNumber();
-        setLoading(true);
-        await saveOrder();
-        setLoading(false);
-        router('/Myorder');
+
+        const result = await Swal.fire({
+            title: 'ยืนยันการสั่งซื้อ?',
+            html: `จำนวนคิวที่รอ <h4>${queue}</h4>`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'ยืนยัน',
+            confirmButtonColor: 'green',
+            cancelButtonText: 'ยกเลิก',
+            cancelButtonColor: 'red'
+        });
+
+        if (result.isConfirmed) {
+            setLoading(true);
+            await saveOrder();
+            setLoading(false);
+            router('/Myorder');
+
+        }
     }
 
     return (<>
