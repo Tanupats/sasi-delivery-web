@@ -80,11 +80,11 @@ const Orders = () => {
         await httpPost(`/upload`, formData)
             .then(res => {
                 if (res.status === 200) {
-                    const filename = dev + '/images/' + res.data.filename;
+                    let filename = dev + '/images/' + res.data.filename;
                     if (filename) {
                         sendImageToPage(messageid, filename);
                     }
-
+                    setFile("");
                 }
             })
     }
@@ -184,11 +184,13 @@ const Orders = () => {
                             if (messageid !== "pos") {
                                 uploadFile(messageid);
                                 sendDeliverySuccess(messageid);
-
                             }
                             getMenuReport("กำลังส่ง");
                         }
-
+                        getOrderNew();
+                        getOrderDelivery();
+                        getOrderCookingFinish();
+                        getOrderCooking();
                     }
                 })
             }
@@ -207,10 +209,7 @@ const Orders = () => {
 
     useEffect(() => {
         getMenuReport("รับออเดอร์แล้ว");
-        getOrderDelivery();
-        getOrderNew();
-        getOrderCooking();
-        getOrderCookingFinish();
+ getOrderNew();
     }, [shop])
 
     return (<>

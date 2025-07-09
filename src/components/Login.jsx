@@ -31,7 +31,7 @@ const Login = () => {
                         setUser(res.data);
                         getShop(id);
                         setStaffName(name);
-                        router('/order');
+                        router('/orders');
                     } else {
                         console.log('เข้าสู่ระบบไม่สำเร็จ')
                         setMessageError(true);
