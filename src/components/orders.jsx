@@ -1,15 +1,12 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Row, Col, Card, Button, Modal, Form, Alert, Image } from "react-bootstrap";
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import Details from "./Details";
+//import Details from "./Details";
 import moment from "moment/moment";
-import { httpDelete, httpGet, httpPut, sendDelivery, httpPost, sendNotificationBot, sendDeliverySuccess, sendImageToPage } from "../http";
+import { httpGet, httpPut, sendDelivery, httpPost, sendNotificationBot, sendDeliverySuccess, sendImageToPage } from "../http";
 import Swal from 'sweetalert2';
 import { AuthData } from "../ContextData";
-import CachedIcon from '@mui/icons-material/Cached';
-import SyncDisabledIcon from '@mui/icons-material/SyncDisabled';
-import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
+
 const Orders = () => {
     const { shop } = useContext(AuthData);
     const token = localStorage.getItem("token");
@@ -23,8 +20,9 @@ const Orders = () => {
     const [OrderNew, setOrderNew] = useState(0);
     const [OrderCooking, setOrderCooking] = useState(0);
     const [OrderCookingFinish, setOrderCookingFinish] = useState(0);
-    const [autoRefresh, setAutoRefresh] = useState(false);
+    const [statusOrder, setstatusOrder] = useState("รับออเดอร์แล้ว");
     const [previewUrl, setPreviewUrl] = useState(null);
+
     const getMenuReport = async (status) => {
         setReport([]);
         if (shop?.shop_id) {
@@ -33,7 +31,6 @@ const Orders = () => {
                 .then(res => { setReport(res.data) });
         }
     }
-
 
     const getOrderDelivery = async () => {
         if (shop?.shop_id) {
@@ -88,6 +85,7 @@ const Orders = () => {
                 }
             })
     }
+    
     function compressImage(file, maxWidth = 800, quality = 0.7) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -186,6 +184,8 @@ const Orders = () => {
                                 sendDeliverySuccess(messageid);
                             }
                             getMenuReport("กำลังส่ง");
+                            setFile("");
+                            filename = '';
                         }
                         getOrderNew();
                         getOrderDelivery();
@@ -193,6 +193,7 @@ const Orders = () => {
                         getOrderCooking();
                     }
                 })
+                setstatusOrder(status)
             }
         });
     }
@@ -222,10 +223,18 @@ const Orders = () => {
 
                         <Row className="when-print">
                             <ButtonGroup aria-label="Basic example">
-                                <Button variant="btn btn-outline-primary" style={{ fontSize: '18px' }} onClick={() => { getMenuReport("รับออเดอร์แล้ว") }}>ออเดอร์ใหม่ {OrderNew}</Button>
-                                <Button variant="btn btn-outline-success" style={{ fontSize: '18px' }} onClick={() => { getMenuReport("ทำเสร็จแล้ว") }}>ทำเสร็จแล้ว {OrderCookingFinish}</Button>
-                                <Button variant="btn btn-outline-danger" style={{ fontSize: '18px' }} onClick={() => { getMenuReport("กำลังส่ง") }}>กำลังส่ง  {OrderCooking}</Button>
-                                <Button variant="btn btn-outline-primary" style={{ fontSize: '18px' }} onClick={() => { getMenuReport("ส่งสำเร็จ") }}>ส่งสำเร็จ {Delivered} </Button>
+                                <Button variant={statusOrder === "รับออเดอร์แล้ว" ? "btn btn-primary" : "btn btn-outline-primary"}
+                                    style={{ fontSize: '18px' }} onClick={() => { getMenuReport("รับออเดอร์แล้ว") }}>ออเดอร์ใหม่ {OrderNew}</Button>
+                                <Button
+                                    variant={statusOrder === "ทำเสร็จแล้ว" ? "btn btn-success" : "btn btn-outline-success"}
+
+                                    style={{ fontSize: '18px' }} onClick={() => { getMenuReport("ทำเสร็จแล้ว") }}>ทำเสร็จแล้ว {OrderCookingFinish}</Button>
+                                <Button
+                                    variant={statusOrder === "กำลังส่ง" ? "btn btn-danger" : "btn btn-outline-danger"}
+                                    style={{ fontSize: '18px' }} onClick={() => { getMenuReport("กำลังส่ง") }}>กำลังส่ง  {OrderCooking}</Button>
+                                <Button
+                                    variant={statusOrder === "ส่งสำเร็จ" ? "btn btn-primary" : "btn btn-outline-primary"}
+                                    style={{ fontSize: '18px' }} onClick={() => { getMenuReport("ส่งสำเร็จ") }}>ส่งสำเร็จ {Delivered} </Button>
 
                             </ButtonGroup>
                         </Row>
