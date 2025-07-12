@@ -43,7 +43,7 @@ const Login = () => {
 
     useEffect(() => {
         if (localStorage.getItem("token")) {
-            router('/pos');
+            router('/orders');
         }
     }, [])
     return (

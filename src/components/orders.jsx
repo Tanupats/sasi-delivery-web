@@ -20,7 +20,7 @@ const Orders = () => {
     const [OrderNew, setOrderNew] = useState(0);
     const [OrderCooking, setOrderCooking] = useState(0);
     const [OrderCookingFinish, setOrderCookingFinish] = useState(0);
-    const [statusOrder, setstatusOrder] = useState("รับออเดอร์แล้ว");
+    const [statusOrder, setStatusOrder] = useState("รับออเดอร์แล้ว");
     const [previewUrl, setPreviewUrl] = useState(null);
 
     const getMenuReport = async (status) => {
@@ -77,15 +77,19 @@ const Orders = () => {
         await httpPost(`/upload`, formData)
             .then(res => {
                 if (res.status === 200) {
-                    let filename = dev + '/images/' + res.data.filename;
+                    const filename = dev + '/images/' + res.data.filename;
                     if (filename) {
                         sendImageToPage(messageid, filename);
                     }
                     setFile("");
+
                 }
+
+
             })
+
     }
-    
+
     function compressImage(file, maxWidth = 800, quality = 0.7) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -132,17 +136,22 @@ const Orders = () => {
         const selectedFile = e.target.files[0];
         if (selectedFile) {
             const compressedBlob = await compressImage(selectedFile, 800, 0.6); // ย่อกว้างสุด 800px, คุณภาพ 60%
-            const compressedFile = new File([compressedBlob], file.name, {
+
+            // ดึงนามสกุลจากไฟล์เดิม หรือใช้ .jpg เป็นค่า default
+            const extension = selectedFile.name.split('.').pop() || 'jpg';
+            const fileName = selectedFile.name.split('.').slice(0, -1).join('.') || 'image';
+
+            const compressedFile = new File([compressedBlob], `${fileName}.${extension}`, {
                 type: "image/jpeg",
             });
-            console.log("ขนาดเดิม:", (file.size / 1024 / 1024).toFixed(2), "MB");
+
+            console.log("ขนาดเดิม:", (selectedFile.size / 1024 / 1024).toFixed(2), "MB");
             console.log("ขนาดใหม่:", (compressedFile.size / 1024).toFixed(2), "KB");
-            // สามารถใช้ compressedFile ส่งไป server หรือแสดงในเว็บได้
+
             setFile(compressedFile);
+            console.log(compressedFile);
         }
     };
-
-
 
     const UpdateStatus = async (id, status, messageid, step) => {
         Swal.fire({
@@ -165,18 +174,16 @@ const Orders = () => {
                         if (status === "ทำเสร็จแล้ว") {
                             if (messageid !== "pos") {
                                 sendNotificationBot(messageid);
-
                             }
                             getMenuReport("รับออเดอร์แล้ว");
-
+                            setStatusOrder("รับออเดอร์แล้ว");
                         }
                         if (status === "กำลังส่ง") {
                             if (messageid !== "pos") {
                                 sendDelivery(messageid);
-
                             }
-
                             getMenuReport("ทำเสร็จแล้ว");
+                            setStatusOrder("ทำเสร็จแล้ว");
                         }
                         if (status === "ส่งสำเร็จ") {
                             if (messageid !== "pos") {
@@ -184,8 +191,8 @@ const Orders = () => {
                                 sendDeliverySuccess(messageid);
                             }
                             getMenuReport("กำลังส่ง");
+                            setStatusOrder("กำลังส่ง");
                             setFile("");
-                            filename = '';
                         }
                         getOrderNew();
                         getOrderDelivery();
@@ -193,7 +200,7 @@ const Orders = () => {
                         getOrderCooking();
                     }
                 })
-                setstatusOrder(status)
+
             }
         });
     }
@@ -210,7 +217,10 @@ const Orders = () => {
 
     useEffect(() => {
         getMenuReport("รับออเดอร์แล้ว");
- getOrderNew();
+        getOrderNew();
+        getOrderDelivery();
+        getOrderCookingFinish();
+        getOrderCooking();
     }, [shop])
 
     return (<>
@@ -224,17 +234,17 @@ const Orders = () => {
                         <Row className="when-print">
                             <ButtonGroup aria-label="Basic example">
                                 <Button variant={statusOrder === "รับออเดอร์แล้ว" ? "btn btn-primary" : "btn btn-outline-primary"}
-                                    style={{ fontSize: '18px' }} onClick={() => { getMenuReport("รับออเดอร์แล้ว") }}>ออเดอร์ใหม่ {OrderNew}</Button>
+                                    style={{ fontSize: '18px' }} onClick={() => { getMenuReport("รับออเดอร์แล้ว"), setStatusOrder("รับออเดอร์แล้ว") }}>ออเดอร์ใหม่ {OrderNew}</Button>
                                 <Button
                                     variant={statusOrder === "ทำเสร็จแล้ว" ? "btn btn-success" : "btn btn-outline-success"}
 
-                                    style={{ fontSize: '18px' }} onClick={() => { getMenuReport("ทำเสร็จแล้ว") }}>ทำเสร็จแล้ว {OrderCookingFinish}</Button>
+                                    style={{ fontSize: '18px' }} onClick={() => { getMenuReport("ทำเสร็จแล้ว"), setStatusOrder("ทำเสร็จแล้ว") }}>ทำเสร็จแล้ว {OrderCookingFinish}</Button>
                                 <Button
                                     variant={statusOrder === "กำลังส่ง" ? "btn btn-danger" : "btn btn-outline-danger"}
-                                    style={{ fontSize: '18px' }} onClick={() => { getMenuReport("กำลังส่ง") }}>กำลังส่ง  {OrderCooking}</Button>
+                                    style={{ fontSize: '18px' }} onClick={() => { getMenuReport("กำลังส่ง"), setStatusOrder("กำลังส่ง") }}>กำลังส่ง  {OrderCooking}</Button>
                                 <Button
                                     variant={statusOrder === "ส่งสำเร็จ" ? "btn btn-primary" : "btn btn-outline-primary"}
-                                    style={{ fontSize: '18px' }} onClick={() => { getMenuReport("ส่งสำเร็จ") }}>ส่งสำเร็จ {Delivered} </Button>
+                                    style={{ fontSize: '18px' }} onClick={() => { getMenuReport("ส่งสำเร็จ"), setStatusOrder("ส่งสำเร็จ") }}>ส่งสำเร็จ {Delivered} </Button>
 
                             </ButtonGroup>
                         </Row>
@@ -250,30 +260,26 @@ const Orders = () => {
                                                         <h5> {shop?.name} </h5>
                                                         <h5>ใบเสร็จรับเงิน</h5>
                                                     </div>
-                                                    <b> คิวที่ {item.queueNumber} <br /> เลขออเดอร์ {item.bill_ID.slice(-5).toUpperCase()}</b>
+                                                    <b> คิวที่ {item.queueNumber} <br />
+                                                        เลขออเดอร์ {item.bill_ID.slice(-5).toUpperCase()}</b>
                                                     <p>
                                                         เวลาสั่งซื้อ {moment(item.timeOrder).format('HH:mm')} น. &nbsp; <br />
                                                         วันที่ {moment(item.timeOrder).format('YYYY-MM-DD')}<br />
-                                                        {item?.printStatus !== null ? item?.printStatus : " "}
+                                                        {/* {item?.printStatus !== null ? item?.printStatus : " "} */}
                                                     </p>
                                                     <Row>
                                                         <Col md={6} xs={6}>
+                                                            <div className="profile">
+
+                                                            </div>
                                                             <div className="when-print mb-2">
                                                                 <b> สั่งจาก {item.messengerId === 'pos' ? 'Admin' : 'Page'} </b> <br />
                                                             </div>
                                                         </Col>
-                                                        {/* <Col md={6} xs={6} className="mb-2">
-                                                            <Button
-                                                                className="when-print"
-                                                                onClick={() => handlePrint(item.bill_ID, item.id)}
-                                                                variant="primary w-100"
-                                                            >
-                                                                <LocalPrintshopIcon />  พิมพ์ใบเสร็จ
-                                                            </Button>
-                                                        </Col> */}
+
                                                     </Row>
                                                     <Alert className="when-print bg-white">
-                                                        <b>สถานะ : {item.statusOrder}</b>
+                                                        <b> {item.statusOrder}</b>
                                                     </Alert>
                                                     {/* <Details
                                                         reset={reset}
