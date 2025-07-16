@@ -31,7 +31,7 @@ const NavbarMenu = () => {
     <Router>
       <Navbar bg="light" data-bs-theme="light" className='when-print' sticky='top' expand="lg">
         <Container fluid>
-          <Navbar.Brand href="#home" style={{ color: '#FD720D', fontWeight: 500 }}>SASI Food</Navbar.Brand>
+          <Navbar.Brand href="#home" style={{ color: '#FD720D', fontWeight: 500 }}>SASI Food  คิว {queue > 0 ? queue : '..กำลังโหลด'}</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto text-center">
@@ -51,7 +51,7 @@ const NavbarMenu = () => {
               </Nav.Link>
               <Nav.Link>
                 <Link style={{ textDecoration: 'none', color: '#000', fontSize: '16px', fontWeight: 300 }} to={'/queueNumber'}>
-                  <AddToQueueIcon style={{ color: '#FD720D' }} /> คิวทั้งหมด {queue}
+                  <AddToQueueIcon style={{ color: '#FD720D' }} /> คิวทั้งหมด {queue > 0 ? queue : "... กำลังโหลด"}
                 </Link>
               </Nav.Link>
             </Nav>

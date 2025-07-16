@@ -36,10 +36,13 @@ const Cart = () => {
     const onSave = async (e) => {
         e.preventDefault();
         await getQueueNumber();
-
+        let queueMessage = `<h4 style="color: ${queue > 9 ? 'red' : 'black'}">${queue}</h4>`;
+        if (queue > 9) {
+            queueMessage += `<div style="color:red;">* รอประมาณ 40 น. - 1 ชั่วโมง </div>`;
+        }
         const result = await Swal.fire({
             title: 'ยืนยันการสั่งซื้อ?',
-            html: `จำนวนคิวที่รอ <h4>${queue}</h4>`,
+            html: `จำนวนคิวที่รอ ${queueMessage}`,
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'ยืนยัน',
@@ -158,7 +161,7 @@ const Cart = () => {
                             <>
                                 <h6>ยอดรวมทั้งหมด {sumPrice} บาท</h6>
                                 <h6>จำนวน {toTal} รายการ</h6>
-                                <h6 style={{ color: 'red' }}> คิวตอนนี้ {queue} คิว </h6>
+                                <h6 style={{ color: 'red' }}> คิวตอนนี้ {queue > 0 ? queue : "...กำลังโหลด"} คิว </h6>
 
                                 <Col md={12} xs={12} className="mt-2">
                                     <Form id="save" onSubmit={(e) => { onSave(e) }}>
