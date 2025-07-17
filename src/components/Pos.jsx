@@ -319,14 +319,21 @@ const Pos = () => {
                         {
                           cart.map((item, index) => {
                             return (
-                              <tr style={{ padding: 0, margin: 0 }} key={index}>
-                                <td >{item.name} <br></br> {item.note}</td>
-                                <td colSpan={2}> X {item.quantity}</td>
-                                <td colSpan={2}>{formatMoney(item.price)}</td>
-                                <td>
-                                  <div className='when-print'>
-                                    <CancelIcon onClick={() => removeCart(item.id)}
-                                      variant='light' style={{ color: 'red', }} /></div></td>
+                              <tr key={index} style={{ padding: 0, margin: 0 }}>
+                                <td style={{ padding: '2px 4px', lineHeight: '1.5' }}>
+                                  {item.name} <br /> {item.note}
+                                </td>
+                                <td style={{ padding: '2px 4px', lineHeight: '1.5' }}>{item.quantity}</td>
+                                <td style={{ padding: '2px 4px', lineHeight: '1.5' }}>{formatMoney(item.price)}</td>
+                                <td style={{ padding: '2px 4px', lineHeight: '1.5' }}>
+                                  <div className="when-print">
+                                    <CancelIcon
+                                      onClick={() => removeCart(item.id)}
+                                      variant="light"
+                                      style={{ color: 'red' }}
+                                    />
+                                  </div>
+                                </td>
                               </tr>
                             )
                           })
@@ -336,7 +343,7 @@ const Pos = () => {
                           <td className='get-order' colSpan={4}>การรับสินค้า-{orderType}</td>
                         </tr>
                         <tr>
-                          <td className='get-order' colSpan={4}>รวม {toTal} รายการ</td>
+                          <td className='get-order' style={{ padding: '2px 4px', lineHeight: '1.2' }} colSpan={4}>รวม {toTal} รายการ</td>
                         </tr>
                         {
                           name !== "" && (

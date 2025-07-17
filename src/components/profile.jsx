@@ -47,6 +47,7 @@ const Profile = () => {
                         <p>    ชื่อ-นามสกุล :   {user.name}</p>
                         <p>    อีเมล :   {user.email}</p>
                         <p>    เบอร์  :    {user.phone}</p>
+                        {/* <p>    สถานะเปิดร้าน  :    {user.status_shop}</p> */}
                         <input type="text" value={phone}  placeholder="แก้ไขเบอร์" onChange={(e) => setPhone(e.target.value)} />
                         <Button onClick={() => updateData()}>แก้ไข</Button>
                     </Card.Body>

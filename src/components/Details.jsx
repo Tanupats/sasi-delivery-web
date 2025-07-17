@@ -152,7 +152,7 @@ const Details = (props) => {
                     return (<>
                         <Row>
                             <Col md={8}>
-                                <ListGroup.Item style={{ border: 'none', margin: '0px', padding: '0px', fontSize: '18px' }}> X   {item.quantity}  {item.foodname}  {item.note}  {item.price}</ListGroup.Item>
+                                <ListGroup.Item style={{ border: 'none', margin: '0px', padding: '0px', fontSize: '18px' }}>   {item.foodname}  {item.note}  {item.price}   X    {item.quantity}</ListGroup.Item>
                             </Col>
 
                             {
