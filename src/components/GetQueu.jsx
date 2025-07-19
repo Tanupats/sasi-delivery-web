@@ -1,14 +1,11 @@
-import React, { useState, useEffect,useContext } from 'react';
-import axios from 'axios';
+import  {useContext } from 'react';
+
 import { AuthData } from "../ContextData";
 import { Card } from 'react-bootstrap';
 const GetQueue = () => {
    
     const {queue} = useContext(AuthData)
-    useEffect(() => {
-     
-
-    }, [])
+  
     return (
         <>
             <Card>

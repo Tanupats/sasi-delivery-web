@@ -9,6 +9,8 @@ import { nanoid } from 'nanoid'
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import Skeleton from '@mui/material/Skeleton';
+import Stack from '@mui/material/Stack';
 const FoodMenu = () => {
 
     const { userid, name, shop_id } = useParams();
@@ -21,6 +23,7 @@ const FoodMenu = () => {
     const [menuType, setMenuType] = useState([]);
     const [loading, setLoading] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
+    const [loadings, setLoadings] = useState(false);
 
     const onSelectMenu = (obj) => {
         let ID = nanoid(10)
@@ -39,18 +42,21 @@ const FoodMenu = () => {
         await axios.get(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/${id}`)
             .then(res => {
                 setFoods(res.data);
-                setLoading(false)
+                setLoading(false);
             })
     }
 
     const getFoodMenu = () => {
+        setLoadings(true)
         fetch(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/shop/${shop_id}`)
             .then((res) => res.json())
             .then((data) => {
                 if (data) {
                     setFoods(data);
+                    setLoadings(false);
                 }
             })
+
     }
 
     useEffect(() => {
@@ -74,7 +80,7 @@ const FoodMenu = () => {
 
     return (
         <>
-            <Card style={{border:'none'}}>
+            <Card style={{ border: 'none' }}>
                 <Card.Title className="text-center mt-3">  รายการอาหาร</Card.Title>
                 <Card.Body>
 
@@ -114,7 +120,56 @@ const FoodMenu = () => {
                         )
                         }
 
-                        
+
+                        {
+                            loadings && (<Row>
+                                <Col md={6} xs={12}>
+                                    <Stack spacing={1}>
+                                        <Skeleton variant="rectangular" width={160} height={130} />
+                                        <Skeleton variant="rounded" width={160} height={130} />
+
+                                    </Stack>
+
+                                </Col>
+                                <Col md={6} xs={12}>
+                                    <Stack spacing={1}>
+                                        <Skeleton variant="rectangular" width={160} height={130} />
+                                        <Skeleton variant="rounded" width={160} height={130} />
+
+                                    </Stack>
+
+                                </Col>
+                                <Col md={6} xs={12}>
+                                    <Stack spacing={1}>
+                                        <Skeleton variant="rectangular" width={160} height={130} />
+                                        <Skeleton variant="rounded" width={160} height={130} />
+
+                                    </Stack>
+
+                                </Col>
+                                <Col md={6} xs={12}>
+                                    <Stack spacing={1}>
+                                        <Skeleton variant="rectangular" width={160} height={130} />
+                                        <Skeleton variant="rounded" width={160} height={130} />
+
+                                    </Stack>
+
+                                </Col>
+                                <Col md={6} xs={12}>
+                                    <Stack spacing={1}>
+                                        <Skeleton variant="rectangular" width={160} height={130} />
+                                        <Skeleton variant="rounded" width={160} height={130} />
+                                    </Stack>
+
+                                </Col>
+
+
+
+
+                            </Row>)
+                        }
+
+
                         {
                             foods?.map((item, index) => {
                                 return (<React.Fragment key={index}>
@@ -130,31 +185,42 @@ const FoodMenu = () => {
                                                         md={3}
                                                         xs={5}
                                                     >
-                                                        <Image style={{ width: "100%", height: '170px', objectFit: 'cover' }}
-                                                            src={`${import.meta.env.VITE_BAKUP_URL}/images/${item.img}`} />
-                                                    </Col>
-                                                    <Col md={9}
-                                                        xs={7} className="p-2">
-                                                        <h6>{item.foodname}</h6>
-                                                        <h6>{item.Price}฿</h6>
                                                         {
 
-                                                            item.notes ? (
-                                                                <p style={{ color: 'red' }}> หมายเหตุ :  {item.notes} </p>
-                                                            ) : ""
+                                                            loading ? <Skeleton variant="rectangular" width={130} height={170} /> : <Image style={{ width: "100%", height: '170px', objectFit: 'cover' }}
+                                                                src={`${import.meta.env.VITE_BAKUP_URL}/images/${item.img}`} />
                                                         }
-
-                                                        {
-                                                            item.status === 0 && (<p style={{ color: 'red' }}> ** ของหมด   </p>)
-                                                        }
-                                                        <Button
-                                                            disabled={item.status === 0 ? true : false}
-                                                            onClick={() => onSelectMenu(item)}
-                                                            style={{ backgroundColor: '#FD720D', border: 'none' }}
-                                                        >
-                                                            <AddCircleIcon />
-                                                        </Button>
                                                     </Col>
+                                                    {
+
+                                                        loading ?
+                                                            <Stack spacing={1}>
+                                                                <Skeleton variant="rectangular" width={210} height={60} />
+                                                                <Skeleton variant="rounded" width={210} height={60} /> </Stack> :
+                                                            <Col md={9}
+                                                                xs={7} className="p-2">
+                                                                <h6>{item.foodname}</h6>
+                                                                <h6>{item.Price}฿</h6>
+                                                                {
+
+                                                                    item.notes ? (
+                                                                        <p style={{ color: 'red' }}> หมายเหตุ :  {item.notes} </p>
+                                                                    ) : ""
+                                                                }
+
+                                                                {
+                                                                    item.status === 0 && (<p style={{ color: 'red' }}> ** ของหมด   </p>)
+                                                                }
+                                                                <Button
+                                                                    disabled={item.status === 0 ? true : false}
+                                                                    onClick={() => onSelectMenu(item)}
+                                                                    style={{ backgroundColor: '#FD720D', border: 'none' }}
+                                                                >
+                                                                    <AddCircleIcon />
+                                                                </Button>
+                                                            </Col>
+                                                    }
+
 
                                                 </Row>
 
