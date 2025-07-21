@@ -179,7 +179,7 @@ const FoodMenu = () => {
                                                                 {
 
                                                                     item.notes ? (
-                                                                        <p style={{ color: 'red' }}> หมายเหตุ :  {item.notes} </p>
+                                                                        <b style={{ color: 'red' }}> หมายเหตุ :  {item.notes} </b>
                                                                     ) : ""
                                                                 }
                                                                 {
