@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState, useEffect, useContext } from "react";
-import { Row, Col, Card, Image, Button, Modal } from "react-bootstrap";
+import { Row, Col, Card, Image, Button } from "react-bootstrap";
 import { useParams } from 'react-router-dom';
 import Badge from 'react-bootstrap/Badge';
 import AddCircleIcon from '@mui/icons-material/AddCircle';

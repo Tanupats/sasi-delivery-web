@@ -34,7 +34,7 @@ function Context({ children }) {
             })
     }
 
-
+    const VITE_PAGE_ACCESS_TOKEN = 'EAAkMtjSMoDoBOZCGYSt499z6jgiiAjAicsajaOWhjqIxmHsl0asrAm61k6LgD1ifGXHzbDsHrJFCZASriCSyoPDpeqFh3ZBTrWC4ymdZCZBwcioKueKj31QK6w6GFHILPiJaZA8hgNHXtW5OqkRTZBzI0VFvIOoVhGdGq28DvOHGVSNEmPMJjkAOikE1thOaF3mzDg6dnjSyZBGpIY6mMZA1rWaIx';
     const sendMessageToPage = async () => {
         await fetch(`https://api.chatfuel.com/bots/5e102b272685af000183388a/users/${messangerId}/send?chatfuel_token=qwYLsCSz8hk4ytd6CPKP4C0oalstMnGdpDjF8YFHPHCieKNc0AfrnjVs91fGuH74&chatfuel_block_name=order&message=${sumPrice}`, {
             method: "POST",
@@ -42,7 +42,24 @@ function Context({ children }) {
         });
     }
 
-
+    const sendMessageToUser = async (userid, text) => {
+        axios.post(
+            `https://graph.facebook.com/v18.0/me/messages?access_token=${VITE_PAGE_ACCESS_TOKEN}`,
+            {
+                recipient: {
+                    id: userid
+                },
+                message: {
+                    text: text
+                }
+            }
+        ).then(response => {
+            console.log('Message sent:', response.data);
+        }).catch(error => {
+            console.error('Error sending message:', error.response?.data || error.message);
+        });
+    }
+    
     const checkQueueNumber = async () => {
         await axios.get(`${dev}/bills/queuenumber/${queueNumber}`)
             .then(res => {
@@ -120,22 +137,39 @@ function Context({ children }) {
         setCart(newCart);
     }
 
+    const trySendMessage = async (messengerId, username, sumPrice) => {
+        try {
+            // พยายามส่ง message แบบแรกก่อน
+            await sendMessageToPage(messengerId);
+            console.log("ส่งข้อความแบบ Page สำเร็จ");
+        } catch (error) {
+            console.warn("ส่งข้อความแบบ Page ไม่สำเร็จ:", error.response?.data || error.message);
+
+            // ถ้าไม่สำเร็จ ให้ส่งข้อความแบบผู้ใช้แทน
+            const text = `รับออเดอร์ ${username} เรียบร้อย ยอดรวม ${sumPrice} บาท`;
+            try {
+                await sendMessageToUser(messengerId, text);
+                console.log("ส่งข้อความแบบ User สำเร็จ");
+            } catch (err2) {
+                console.error("ส่งข้อความแบบ User ไม่สำเร็จ:", err2.response?.data || err2.message);
+            }
+        }
+    };
+
     const resetCart = () => setCart([]);
     const messangerId = localStorage.getItem('messangerId');
     const username = localStorage.getItem('name');
 
-
-
     const saveOrder = async () => {
         checkQueueNumber();
-        sendMessageToPage();
+
         if (username !== null && messangerId !== null) {
             const body = {
                 amount: sumPrice,
                 ordertype: orderType,
                 payment_type: paymentType,
                 statusOrder: "รับออเดอร์แล้ว",
-                customerName: username + '/' + orderType,
+                customerName: username,
                 queueNumber: String(queueNumber),
                 shop_id: shop_id,
                 messengerId: messangerId,
@@ -167,7 +201,7 @@ function Context({ children }) {
                         return axios.post(`${dev}/billsdetails`, bodyDetails);
                     }));
                 }
-
+                trySendMessage(messangerId, username, sumPrice)
             } catch (error) {
                 console.error("เกิดข้อผิดพลาดในการสั่งอาหาร: ", error);
                 Swal.fire({
@@ -178,7 +212,6 @@ function Context({ children }) {
                 });
             }
 
-
         } else {
             Swal.fire({
                 title: 'ไม่สามารถสั่งอาหารได้',
@@ -187,6 +220,7 @@ function Context({ children }) {
                 confirmButtonText: 'ยืนยัน'
             })
         }
+
     }
 
 
@@ -313,7 +347,8 @@ function Context({ children }) {
                 setAddress,
                 counterOrder,
                 paymentType,
-                setPaymentType
+                setPaymentType,
+
             }}>
             {children}
         </AuthData.Provider>
