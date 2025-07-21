@@ -59,7 +59,7 @@ function Context({ children }) {
             console.error('Error sending message:', error.response?.data || error.message);
         });
     }
-    
+
     const checkQueueNumber = async () => {
         await axios.get(`${dev}/bills/queuenumber/${queueNumber}`)
             .then(res => {
@@ -237,7 +237,7 @@ function Context({ children }) {
 
     const setMenuPichet = (id, data) => {
         setOldData(prevData => {
-            return [...prevData, data]; // ✅ ต้อง return ค่าใหม่
+            return [...prevData, data];
         });
 
         let newCart = cart.map(item => {
@@ -253,20 +253,15 @@ function Context({ children }) {
 
     const setMenuNormal = (id) => {
         let newCart = cart.map(item => {
-            const oldMenu = oldData.find(menu => menu.id === id); // ค้นหาเมนูเก่าจาก oldData
-
-            if (oldMenu) { // ถ้าพบเมนูเดิม
+            const oldMenu = oldData.find(menu => menu.id === id); 
+            if (oldMenu) { 
                 if (item.id === id) {
                     return { ...item, price: oldMenu.price, name: oldMenu.name };
-                }
-                // อัปเดตข้อมูล
+                }     
             }
             return item;
-            // ถ้าไม่เจอ ให้คืนค่าเดิม
         });
-
         setCart(newCart);
-
     }
 
 
