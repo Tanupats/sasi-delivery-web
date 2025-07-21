@@ -17,16 +17,11 @@ import { ShoppingCart, Receipt } from "@mui/icons-material";
 import Cart from './Cart';
 import HistoryIcon from '@mui/icons-material/History';
 const NavbarMenu = () => {
-  const { toTal,
-    queue, counterOrder
-  } =
-    useContext(AuthData);
-
+  const { toTal,queue, counterOrder} = useContext(AuthData);
   const [value, setValue] = useState(0);
-  const id = localStorage.getItem("messangerId")
-  const name = localStorage.getItem("name")
-  const shop_id = localStorage.getItem("shop_id")
-
+  const id = localStorage.getItem("messangerId");
+  const name = localStorage.getItem("name");
+  const shop_id = localStorage.getItem("shop_id");
   return (
     <Router>
       <Navbar bg="light" data-bs-theme="light" className='when-print' sticky='top' expand="lg">
@@ -51,7 +46,7 @@ const NavbarMenu = () => {
               </Nav.Link>
               <Nav.Link>
                 <Link style={{ textDecoration: 'none', color: '#000', fontSize: '16px', fontWeight: 300 }} to={'/queueNumber'}>
-                  <AddToQueueIcon style={{ color: '#FD720D' }} /> คิวทั้งหมด {queue > 0 ? queue : "... กำลังโหลด"}
+                  <AddToQueueIcon style={{ color: '#FD720D' }} /> คิวทั้งหมด {queue >= 0 ? queue : "... กำลังโหลด"}
                 </Link>
               </Nav.Link>
             </Nav>

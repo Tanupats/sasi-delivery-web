@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useState, useEffect, useContext } from "react";
 import { Row, Col, Card, Image, Button } from "react-bootstrap";
 import { useParams } from 'react-router-dom';
-import Badge from 'react-bootstrap/Badge';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { AuthData } from "../ContextData";
 import { nanoid } from 'nanoid'
@@ -11,6 +10,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
+import Badge from 'react-bootstrap/Badge';
 const FoodMenu = () => {
 
     const { userid, name, shop_id } = useParams();
@@ -80,21 +80,15 @@ const FoodMenu = () => {
 
     return (
         <>
-            <Card style={{ border: 'none' }}>
-                <Card.Title className="text-center mt-3">  รายการอาหาร</Card.Title>
+            <Card style={{ border: 'none', marginTop: '12px', marginBottom: '60px' }}>
+                {/* <Card.Title className="text-center mt-3">  รายการอาหาร</Card.Title> */}
                 <Card.Body>
-
                     <Row>
-
                         <Col md={12} className="mb-4">
-
                             {
                                 menuType.length > 0 && menuType?.map((item, index) => {
-
                                     return (<React.Fragment key={index}>
-
                                         <Badge
-
                                             style={{
                                                 marginRight: '12px',
                                                 fontSize: '17px',
@@ -110,7 +104,6 @@ const FoodMenu = () => {
                                     )
                                 })
                             }
-
                         </Col>
 
                         {loading === true && (
@@ -119,80 +112,62 @@ const FoodMenu = () => {
                             </Box>
                         )
                         }
-
-
                         {
                             loadings && (<Row>
                                 <Col md={6} xs={12}>
                                     <Stack spacing={1}>
                                         <Skeleton variant="rectangular" width={160} height={130} />
                                         <Skeleton variant="rounded" width={160} height={130} />
-
                                     </Stack>
-
-                                </Col>
-                                <Col md={6} xs={12}>
-                                    <Stack spacing={1}>
-                                        <Skeleton variant="rectangular" width={160} height={130} />
-                                        <Skeleton variant="rounded" width={160} height={130} />
-
-                                    </Stack>
-
-                                </Col>
-                                <Col md={6} xs={12}>
-                                    <Stack spacing={1}>
-                                        <Skeleton variant="rectangular" width={160} height={130} />
-                                        <Skeleton variant="rounded" width={160} height={130} />
-
-                                    </Stack>
-
-                                </Col>
-                                <Col md={6} xs={12}>
-                                    <Stack spacing={1}>
-                                        <Skeleton variant="rectangular" width={160} height={130} />
-                                        <Skeleton variant="rounded" width={160} height={130} />
-
-                                    </Stack>
-
                                 </Col>
                                 <Col md={6} xs={12}>
                                     <Stack spacing={1}>
                                         <Skeleton variant="rectangular" width={160} height={130} />
                                         <Skeleton variant="rounded" width={160} height={130} />
                                     </Stack>
-
                                 </Col>
-
-
-
-
+                                <Col md={6} xs={12}>
+                                    <Stack spacing={1}>
+                                        <Skeleton variant="rectangular" width={160} height={130} />
+                                        <Skeleton variant="rounded" width={160} height={130} />
+                                    </Stack>
+                                </Col>
+                                <Col md={6} xs={12}>
+                                    <Stack spacing={1}>
+                                        <Skeleton variant="rectangular" width={160} height={130} />
+                                        <Skeleton variant="rounded" width={160} height={130} />
+                                    </Stack>
+                                </Col>
+                                <Col md={6} xs={12}>
+                                    <Stack spacing={1}>
+                                        <Skeleton variant="rectangular" width={160} height={130} />
+                                        <Skeleton variant="rounded" width={160} height={130} />
+                                    </Stack>
+                                </Col>
                             </Row>)
                         }
-
 
                         {
                             foods?.map((item, index) => {
                                 return (<React.Fragment key={index}>
-
-
-                                    <Col className="mb-2"
+                                    <Col className="mb-4"
                                         md={6}
                                         xs={12}   >
-                                        <Card style={{ height: '183px', marginBottom: '12px', margin: 0, padding: 5 }}>
+                                        <Card style={{ height: '173px', marginBottom: '12px', margin: 0, padding: 0, borderRadius: '2px' }}>
                                             <Card.Body style={{ margin: 0, padding: 0 }}>
-                                                <Row >
+                                                <Row>
                                                     <Col
                                                         md={3}
                                                         xs={5}
                                                     >
                                                         {
 
-                                                            loading ? <Skeleton variant="rectangular" width={130} height={170} /> : <Image style={{ width: "100%", height: '170px', objectFit: 'cover' }}
-                                                                src={`${import.meta.env.VITE_BAKUP_URL}/images/${item.img}`} />
+                                                            loading ? <Skeleton variant="rectangular" width={130} height={170} /> :
+                                                                <Image style={{ width: "100%", height: '170px', objectFit: 'cover' }}
+                                                                    src={`${import.meta.env.VITE_BAKUP_URL}/images/${item.img}`} />
                                                         }
                                                     </Col>
                                                     {
-
                                                         loading ?
                                                             <Stack spacing={1}>
                                                                 <Skeleton variant="rectangular" width={210} height={60} />
@@ -200,16 +175,15 @@ const FoodMenu = () => {
                                                             <Col md={9}
                                                                 xs={7} className="p-2">
                                                                 <h6>{item.foodname}</h6>
-                                                                <h6>{item.Price}฿</h6>
+                                                                <h6>{item.Price} ฿</h6>
                                                                 {
 
                                                                     item.notes ? (
                                                                         <p style={{ color: 'red' }}> หมายเหตุ :  {item.notes} </p>
                                                                     ) : ""
                                                                 }
-
                                                                 {
-                                                                    item.status === 0 && (<p style={{ color: 'red' }}> ** ของหมด   </p>)
+                                                                    item.status === 0 && (<h6 style={{ color: 'red' }}>  <Badge bg="danger">ของหมด</Badge>   </h6>)
                                                                 }
                                                                 <Button
                                                                     disabled={item.status === 0 ? true : false}
@@ -220,15 +194,9 @@ const FoodMenu = () => {
                                                                 </Button>
                                                             </Col>
                                                     }
-
-
                                                 </Row>
-
                                             </Card.Body>
-
-
                                         </Card>
-
                                     </Col>
                                 </React.Fragment>)
                             })
@@ -240,11 +208,8 @@ const FoodMenu = () => {
                             <KeyboardArrowUpIcon />
                         </button>
                     </Row>
-
-
                 </Card.Body>
             </Card>
-
         </>)
 }
 
