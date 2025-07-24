@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
 import { Home, ShoppingCart, Receipt, AccountCircle } from "@mui/icons-material";
 
@@ -37,10 +37,10 @@ const BottomNav = () => {
           }
         }}
       >
-        <BottomNavigationAction label="เมนู" icon={<Home />} />
-        <BottomNavigationAction label="คำสั่งซื้อ" icon={<Receipt />} />
-        <BottomNavigationAction label="ตะกร้า" icon={<ShoppingCart />} />
-        <BottomNavigationAction label="โปรไฟล์" icon={<AccountCircle />} />
+        <BottomNavigationAction  icon={<Home />}   />
+        <BottomNavigationAction  icon={<Receipt    />}  />
+        <BottomNavigationAction  icon={<ShoppingCart   />}  />
+        <BottomNavigationAction  icon={<AccountCircle />  } />
       </BottomNavigation>
     </Paper>
   );

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Col, Row,ListGroup } from "react-bootstrap";
+import { Col, Row, ListGroup } from "react-bootstrap";
 import axios from "axios";
 
 const Details = (props) => {
@@ -21,16 +21,15 @@ const Details = (props) => {
 
         <ListGroup className="mt-2">
             <Row>
-
+              
+               
                 {
                     detail.map((item, index) => {
-
                         return (<React.Fragment key={index}>
-
                             <Col md={12}>
-                                <ListGroup.Item style={{ border: 'none', margin: '0px', padding: '0px', fontSize: '18px' }}>  <h6> {item.quantity} X {item.foodname} {item.note}   {item.price} </h6></ListGroup.Item>
+                                <ListGroup.Item style={{ border: 'none', margin: '0px', padding: '0px', fontSize: '18px' }}>
+                                      <h6> {item.foodname} {item.note}   {item.price} X {item.quantity}  </h6></ListGroup.Item>
                             </Col>
-
                         </React.Fragment>)
                     })
                 }

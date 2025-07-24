@@ -17,7 +17,7 @@ import { ShoppingCart, Receipt } from "@mui/icons-material";
 import Cart from './Cart';
 import HistoryIcon from '@mui/icons-material/History';
 const NavbarMenu = () => {
-  const { toTal,queue, counterOrder} = useContext(AuthData);
+  const { toTal, queue, counterOrder } = useContext(AuthData);
   const [value, setValue] = useState(0);
   const id = localStorage.getItem("messangerId");
   const name = localStorage.getItem("name");
@@ -30,25 +30,24 @@ const NavbarMenu = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto text-center">
-              <Nav.Link>
-                <Link style={{ textDecoration: 'none', color: '#000', fontSize: '16px', fontWeight: 300 }} to={`/foodmenu/${id}/${name}/${shop_id}`}>
-                  <RestaurantMenuIcon style={{ color: '#FD720D' }} /> เมนู
-                </Link>
+
+              <Nav.Link style={{ textDecoration: 'none', color: '#000', fontSize: '16px', fontWeight: 300 }} to={`/foodmenu/${id}/${name}/${shop_id}`}>
+                <RestaurantMenuIcon style={{ color: '#FD720D' }} /> เมนู
               </Nav.Link>
-              <Nav.Link >
-                <Link style={{ textDecoration: 'none', color: '#000', fontSize: '16px', fontWeight: 300 }} to={'/cart'}>
-                  ตะกร้า  <LocalMallIcon style={{ color: '#FD720D' }} /> {toTal}  </Link>
+
+              <Nav.Link style={{ textDecoration: 'none', color: '#000', fontSize: '16px', fontWeight: 300 }} to={'/cart'}>
+                ตะกร้า  <LocalMallIcon style={{ color: '#FD720D' }} /> {toTal}
               </Nav.Link>
-              <Nav.Link>
-                <Link style={{ textDecoration: 'none', color: '#000', fontSize: '16px', fontWeight: 300 }} to={'/Myorder'}>
-                  <Receipt style={{ color: '#FD720D' }} />  คำสั่งซื้อ {counterOrder}
-                </Link>
+
+
+              <Nav.Link style={{ textDecoration: 'none', color: '#000', fontSize: '16px', fontWeight: 300 }} to={'/Myorder'}>
+                <Receipt style={{ color: '#FD720D' }} />  คำสั่งซื้อ {counterOrder}
               </Nav.Link>
-              <Nav.Link>
-                <Link style={{ textDecoration: 'none', color: '#000', fontSize: '16px', fontWeight: 300 }} to={'/queueNumber'}>
-                  <AddToQueueIcon style={{ color: '#FD720D' }} /> คิวทั้งหมด {queue >= 0 ? queue : "... กำลังโหลด"}
-                </Link>
+
+              <Nav.Link style={{ textDecoration: 'none', color: '#000', fontSize: '16px', fontWeight: 300 }} to={'/queueNumber'}>
+                <AddToQueueIcon style={{ color: '#FD720D' }} /> คิวทั้งหมด {queue >= 0 ? queue : "... กำลังโหลด"}
               </Nav.Link>
+
             </Nav>
             {
               name !== null && (

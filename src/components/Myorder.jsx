@@ -42,7 +42,6 @@ const Myorder = () => {
         <Card>
             <Card.Body>
                 <Card.Title
-
                     className="text-center mb-3">
                     คำสั่งซื้อของฉัน
                 </Card.Title>
@@ -66,10 +65,10 @@ const Myorder = () => {
 
                                                     <Details bill_ID={item.bill_ID} status={item.statusOrder} />
                                                     <h6 style={{ fontSize: '18px' }}>รวมทั้งหมด {item.amount} บาท</h6>
-                                                    <h6 style={{ fontSize: '18px' }}>วิธีการรับอาหาร - {item.ordertype === "สั่งกลับบ้าน" ? "จัดส่งที่ "+item.address : item.ordertype}
+                                                    <h6 style={{ fontSize: '18px' }}>วิธีการรับอาหาร - {item.ordertype === "สั่งกลับบ้าน" ? "จัดส่งที่ " + item.address : item.ordertype}
 
                                                         <br />
-                                                      
+
                                                     </h6>
 
                                                     <Row>
@@ -103,13 +102,16 @@ const Myorder = () => {
                                                 <h6> หมายเลขออเดอร์ {item.bill_ID.slice(-5).toUpperCase()} <br />  วันที่สั่งออเดอร์ { }
                                                     {moment(item.Date_times).format('YYYY-MM-DD')}
                                                     &nbsp;  เวลา {moment(item.Date_times).format('HH:mm')} น.
-                                                </h6>
 
+                                                </h6>
+                                                <hr />
+                                                <br />
+                                                <b>รายการสั่งซื้อ</b>
                                                 <Details bill_ID={item.bill_ID} status={item.statusOrder} />
                                                 <h6 style={{ fontSize: '18px' }}>รวมทั้งหมด {item.amount} บาท</h6>
-                                                <h6 style={{ fontSize: '18px' }}>วิธีการรับอาหาร - {item.ordertype === "สั่งกลับบ้าน" ? "จัดส่งที่ "+item.address : item.ordertype}
-                                                   
-                                                
+                                                <h6 style={{ fontSize: '18px' }}>การรับอาหาร - {item.ordertype === "สั่งกลับบ้าน" ? "จัดส่งที่ " + item.address : item.ordertype}
+
+
                                                 </h6>
 
                                                 <Row>
