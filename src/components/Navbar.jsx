@@ -31,20 +31,20 @@ const NavbarMenu = () => {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto text-center">
 
-              <Nav.Link style={{ textDecoration: 'none', color: '#000', fontSize: '16px', fontWeight: 300 }} to={`/foodmenu/${id}/${name}/${shop_id}`}>
+              <Nav.Link style={{ textDecoration: 'none', color: '#000', fontSize: '16px', fontWeight: 300 }} as={Link} to={`/foodmenu/${id}/${name}/${shop_id}`}>
                 <RestaurantMenuIcon style={{ color: '#FD720D' }} /> เมนู
               </Nav.Link>
 
-              <Nav.Link style={{ textDecoration: 'none', color: '#000', fontSize: '16px', fontWeight: 300 }} to={'/cart'}>
+              <Nav.Link style={{ textDecoration: 'none', color: '#000', fontSize: '16px', fontWeight: 300 }} as={Link} to={'/cart'}>
                 ตะกร้า  <LocalMallIcon style={{ color: '#FD720D' }} /> {toTal}
               </Nav.Link>
 
 
-              <Nav.Link style={{ textDecoration: 'none', color: '#000', fontSize: '16px', fontWeight: 300 }} to={'/Myorder'}>
+              <Nav.Link style={{ textDecoration: 'none', color: '#000', fontSize: '16px', fontWeight: 300 }} as={Link} to={'/Myorder'}>
                 <Receipt style={{ color: '#FD720D' }} />  คำสั่งซื้อ {counterOrder}
               </Nav.Link>
 
-              <Nav.Link style={{ textDecoration: 'none', color: '#000', fontSize: '16px', fontWeight: 300 }} to={'/queueNumber'}>
+              <Nav.Link style={{ textDecoration: 'none', color: '#000', fontSize: '16px', fontWeight: 300 }} as={Link} to={'/queueNumber'}>
                 <AddToQueueIcon style={{ color: '#FD720D' }} /> คิวทั้งหมด {queue >= 0 ? queue : "... กำลังโหลด"}
               </Nav.Link>
 

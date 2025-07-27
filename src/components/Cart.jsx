@@ -21,7 +21,6 @@ const Cart = () => {
         setMenuPichet,
         setMenuNormal,
         updateQuantity,
-        getQueueNumber,
         resetCart,
         Address,
         setAddress,
@@ -35,14 +34,14 @@ const Cart = () => {
 
     const onSave = async (e) => {
         e.preventDefault();
-        await getQueueNumber();
         let queueMessage = `<h4 style="color: ${queue > 9 ? 'red' : 'black'}">${queue}</h4>`;
         if (queue > 9) {
             queueMessage += `<div style="color:red;">* รอประมาณ 40 น. - 1 ชั่วโมง </div>`;
         }
+       
         const result = await Swal.fire({
             title: 'ยืนยันการสั่งซื้อ?',
-            html: `จำนวนคิวที่รอ ${queueMessage}`,
+            html: `จำนวนคิวที่รอ ${queueMessage} คิว`,
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'ยืนยัน',

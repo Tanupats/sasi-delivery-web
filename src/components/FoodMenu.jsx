@@ -17,7 +17,7 @@ const FoodMenu = () => {
     localStorage.setItem("messangerId", userid);
     localStorage.setItem("name", name);
     localStorage.setItem("shop_id", shop_id);
-    const { addTocart } = useContext(AuthData)
+    const { addToCart } = useContext(AuthData)
 
     const [foods, setFoods] = useState([]);
     const [menuType, setMenuType] = useState([]);
@@ -27,7 +27,7 @@ const FoodMenu = () => {
 
     const onSelectMenu = (obj) => {
         let ID = nanoid(10)
-        addTocart({ ...obj, id: ID, quantity: 1 })
+        addToCart({ ...obj, id: ID, quantity: 1 })
     }
 
     const getMenuType = async () => {

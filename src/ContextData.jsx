@@ -11,7 +11,6 @@ function Context({ children }) {
     const [name, setName] = useState("");
     const [orderType, setOrderType] = useState("สั่งกลับบ้าน");
     const [queue, setQueue] = useState(0);
-    const [queueNumber, setQueueNumber] = useState(0);
     const authCheck = localStorage.getItem("auth");
     const [auth, setAuth] = useState(authCheck || 'not_authenticated');
     const [Address, setAddress] = useState("");
@@ -19,14 +18,7 @@ function Context({ children }) {
     const shop_id = localStorage.getItem('shop_id');
 
     const dev = import.meta.env.VITE_BAKUP_URL;
-    const getQueueNumber = async () => {
-        await axios.get(`${dev}/queueNumber?shop_id=${shop_id}`)
-            .then(res => {
-                setQueueNumber(res.data.queueNumber);
-            })
-    }
-
-
+    
     const getCounterOrder = async () => {
         await axios.get(`${dev}/bills/counter-myorder?messengerId=${messangerId}`)
             .then(res => {
@@ -60,16 +52,8 @@ function Context({ children }) {
         });
     }
 
-    const checkQueueNumber = async () => {
-        await axios.get(`${dev}/bills/queuenumber/${queueNumber}`)
-            .then(res => {
-                if (res.data.length > 0) {
-                    setQueueNumber(queueNumber + 1);
-                }
-            })
-    }
-
-    const addTocart = (data) => {
+  
+    const addToCart = (data) => {
         Swal.fire({
             title: 'เพิ่มรายการสำเร็จ',
             text: 'เพิ่มรายการลงตะกร้า',
@@ -144,15 +128,9 @@ function Context({ children }) {
             console.log("ส่งข้อความแบบ Page สำเร็จ");
         } catch (error) {
             console.warn("ส่งข้อความแบบ Page ไม่สำเร็จ:", error.response?.data || error.message);
-
             // ถ้าไม่สำเร็จ ให้ส่งข้อความแบบผู้ใช้แทน
-            const text = `รับออเดอร์ ${username} เรียบร้อย ยอดรวม ${sumPrice} บาท`;
-            try {
-                await sendMessageToUser(messengerId, text);
-                console.log("ส่งข้อความแบบ User สำเร็จ");
-            } catch (err2) {
-                console.error("ส่งข้อความแบบ User ไม่สำเร็จ:", err2.response?.data || err2.message);
-            }
+            const text = `รับออเดอร์ของคุณ ${username} แล้วนะครับ  ยอดรวม ${sumPrice} บาท`;  
+            await sendMessageToUser(messengerId, text);                 
         }
     };
 
@@ -161,8 +139,6 @@ function Context({ children }) {
     const username = localStorage.getItem('name');
 
     const saveOrder = async () => {
-        checkQueueNumber();
-
         if (username !== null && messangerId !== null) {
             const body = {
                 amount: sumPrice,
@@ -170,7 +146,6 @@ function Context({ children }) {
                 payment_type: paymentType,
                 statusOrder: "รับออเดอร์แล้ว",
                 customerName: username,
-                queueNumber: String(queueNumber),
                 shop_id: shop_id,
                 messengerId: messangerId,
                 address: Address,
@@ -201,7 +176,7 @@ function Context({ children }) {
                         return axios.post(`${dev}/billsdetails`, bodyDetails);
                     }));
                 }
-                trySendMessage(messangerId, username, sumPrice)
+                trySendMessage(messangerId, username, sumPrice);
             } catch (error) {
                 console.error("เกิดข้อผิดพลาดในการสั่งอาหาร: ", error);
                 Swal.fire({
@@ -283,20 +258,11 @@ function Context({ children }) {
 
     useEffect(() => {
         sumAmount();
-        if (queueNumber > 0) {
-            getQueueNumber();
-        }
     }, [cart])
 
-    useEffect(() => {
-        if (queueNumber > 0) {
-            checkQueueNumber();
-        }
-    }, [queueNumber])
 
     useEffect(() => {
         getQueue();
-        getQueueNumber();
         getCounterOrder();
     }, [])
 
@@ -315,7 +281,7 @@ function Context({ children }) {
         <AuthData.Provider
             value={{
                 toTal,
-                addTocart,
+                addToCart,
                 cart,
                 sumPrice,
                 removeCart,
@@ -334,8 +300,6 @@ function Context({ children }) {
                 setMenuPichet,
                 setMenuNormal,
                 updateFoodName,
-                queueNumber,
-                getQueueNumber,
                 auth,
                 setAuth,
                 Address,
@@ -343,7 +307,6 @@ function Context({ children }) {
                 counterOrder,
                 paymentType,
                 setPaymentType,
-
             }}>
             {children}
         </AuthData.Provider>
