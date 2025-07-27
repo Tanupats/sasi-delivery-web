@@ -38,15 +38,6 @@ function Context({ children }) {
         }
     }
 
-    const getQueueNumber = async () => {
-        if (shop?.shop_id !== undefined) {
-            await httpGet(`/queueNumber?shop_id=${shop?.shop_id}`)
-                .then(res => {
-                    setQueueNumber(res.data.queueNumber);
-                })
-        }
-    }
-
     const addToCart = (data) => {
         let itemCart = {
             id: data.id,
@@ -110,19 +101,43 @@ function Context({ children }) {
         setCart(newCart);
     }
 
+    const printSlip = () => {
+        if (cart.length > 0) {
+            setStatusPrint('พิมพ์เวลา ' + new Date().getHours() + ':' + new Date().getMinutes())
+            window.print();
+             Swal.fire({
+                            title: 'ทำรายการสำเร็จ',
+                            text: 'บันทึกข้อมูลสำเร็จ',
+                            icon: 'success',
+                            confirmButtonText: 'ยืนยัน',
+                            timer: 1300
+                        })
+            setCart([]);
+            setName("");
+        } else {
+            Swal.fire({
+                title: 'ไม่มีรายการอาหาร',
+                text: 'กรุณาเลือกรายการอาหารก่อนพิมพ์',
+                icon: 'error',
+                confirmButtonText: 'ยืนยัน'
+            })
+        }
+
+    }
+
+
     const resetCart = () => setCart([]);
 
     const saveOrder = async () => {
-        await getQueueNumber();
         const { shop_id } = shop;
         let id = '';
+        let queueId = '';
         if (sumPrice > 0) {
             const body = {
                 amount: parseInt(sumPrice),
                 ordertype: orderType,
                 statusOrder: "รับออเดอร์แล้ว",
                 customerName: name,
-                queueNumber: String(queueNumber),
                 messengerId: 'pos',
                 shop_id: shop_id,
                 printStatus: statusPrint,
@@ -132,13 +147,8 @@ function Context({ children }) {
                 .then(res => {
                     if (res.status === 200) {
                         id = res.data.bill_ID
-                        Swal.fire({
-                            title: 'ทำรายการสำเร็จ',
-                            text: 'บันทึกข้อมูลสำเร็จ',
-                            icon: 'success',
-                            confirmButtonText: 'ยืนยัน',
-                            timer: 1300
-                        })
+                        queueId = res.data.queueNumber
+
                     }
                 })
             cart.map(({ name, price, quantity, note }) => {
@@ -151,8 +161,8 @@ function Context({ children }) {
                 }
                 httpPost(`/billsdetails`, bodyDetails, { headers: { 'apikey': token } })
             })
-            setCart([]);
-            setName("");
+            setQueueNumber(queueId);
+
         } else {
             Swal.fire({
                 title: 'ไม่มีรายการอาหาร',
@@ -254,7 +264,6 @@ function Context({ children }) {
                 updateFoodName,
                 role,
                 queueNumber,
-                getQueueNumber,
                 staffName,
                 setStaffName,
                 user,
@@ -264,7 +273,8 @@ function Context({ children }) {
                 setShop
                 , setStatusPrint,
                 statusPrint,
-                getUser
+                getUser,
+                printSlip
             }}>
             {children}
         </AuthData.Provider>

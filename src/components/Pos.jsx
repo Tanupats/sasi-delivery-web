@@ -41,13 +41,11 @@ const Pos = () => {
     name,
     updateQuantity,
     queueNumber,
-    getQueueNumber,
     shop,
     toTal,
-    setStatusPrint,
-    statusPrint,
     staffName,
-    user
+    user,
+    printSlip
   } =
     useContext(AuthData)
 
@@ -76,20 +74,6 @@ const Pos = () => {
   const [loadingByeType, setLoadingByType] = useState(false);
   const [search, setSearch] = useState("");
 
-  const printSlip = () => {
-    if (cart.length > 0) {
-      setStatusPrint('พิมพ์เวลา ' + new Date().getHours() + ':' + new Date().getMinutes())
-      window.print()
-    } else {
-      Swal.fire({
-        title: 'ไม่มีรายการอาหาร',
-        text: 'กรุณาเลือกรายการอาหารก่อนพิมพ์',
-        icon: 'error',
-        confirmButtonText: 'ยืนยัน'
-      })
-    }
-  }
-
   const formatMoney = (val) => {
     return new Intl.NumberFormat().format(val)
   }
@@ -107,10 +91,9 @@ const Pos = () => {
   }
 
   const onSelectMenu = (obj) => {
-    setDefaultMenu(obj)
-    setNewPrice(obj.Price)
-    getQueueNumber()
-    handleShow()
+    setDefaultMenu(obj);
+    setNewPrice(obj.Price);
+    handleShow();
   }
 
   const getMenu = () => {
@@ -299,7 +282,7 @@ const Pos = () => {
             {
 
               cart.length > 0 && (<>
-                <div className='header-pos text-center'>
+                <div className='text-center'>
 
                   <img style={{ width: '40%' }} src={`${import.meta.env.VITE_API_URL}/images/${shop?.photo}`} alt="" srcset="" />
                   <h6> {shop?.name}</h6>
@@ -421,20 +404,22 @@ const Pos = () => {
                     </Form>
                     <Row className='mt-3 mb-2 when-print sticky-bottom-mobile'>
 
-                      <Col md={6} xs={6}>
-                        <Button
-                          style={{ height: '46px' }}
-                          onClick={() => { printSlip() }}
-                          variant='primary w-100'>
-                          <LocalPrintshopIcon />  พิมพ์
-                        </Button>
-                      </Col>
+                    
                       <Col md={6} xs={6}>
                         <Button
                           style={{ height: '46px' }}
                           onClick={() => { saveOrder() }}
                           variant='success w-100'>
                           <SaveIcon />  บันทึก
+                        </Button>
+                      </Col> 
+                      
+                       <Col md={6} xs={6}>
+                        <Button
+                          style={{ height: '46px' }}
+                          onClick={() => { printSlip() }}
+                          variant='primary w-100'>
+                          <LocalPrintshopIcon />  พิมพ์
                         </Button>
                       </Col>
                     </Row>

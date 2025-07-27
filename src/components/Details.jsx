@@ -1,8 +1,9 @@
-import  { useState, useEffect,useContext } from "react";
+import  React, { useState, useEffect,useContext } from "react";
 import { Row, Col, Button, Modal, ListGroup, Form } from "react-bootstrap";
 import Select from 'react-select'
 import { httpDelete, httpGet, httpPost, httpPut } from "../http";
 import { AuthData } from "../ContextData";
+import Swal from 'sweetalert2'
 const Details = (props) => {
     const token = localStorage.getItem("token");
     let { bill_ID, status, id, reset } = props;
@@ -55,15 +56,33 @@ const Details = (props) => {
             })
     }
 
-    const deleteById = async (id) => {
-        await httpDelete(`/billsdetails/remove/${id}`)
-            .then(res => {
-                if (res.status === 200) {
-                    getDetail();
-                    setOnupdate(true);
-                }
-            })
+   const deleteById = async (id) => {
+    const result = await Swal.fire({
+        title: 'คุณแน่ใจหรือไม่?',
+        text: 'คุณต้องการลบข้อมูลนี้ใช่หรือไม่',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'ใช่, ลบเลย!',
+        cancelButtonText: 'ยกเลิก'
+    });
+
+    if (result.isConfirmed) {
+        try {
+            const res = await httpDelete(`/billsdetails/remove/${id}`);
+            if (res.status === 200) {
+                Swal.fire('ลบแล้ว!', 'ข้อมูลถูกลบเรียบร้อยแล้ว', 'success');
+                getDetail();
+                setOnupdate(true);
+            }
+        } catch (error) {
+            Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถลบข้อมูลได้', 'error');
+            console.error(error);
+        }
     }
+}
+
 
     const updateAmount = async (newPrice) => {
         const body = { amount: newPrice };
@@ -149,7 +168,7 @@ const Details = (props) => {
             {
                 detail.map(item => {
 
-                    return (<>
+                    return (<React.Fragment key={item.id}>
                         <Row>
                             <Col md={8}>
                                 <ListGroup.Item style={{ border: 'none', margin: '0px', padding: '0px', fontSize: '18px' }}>   {item.foodname}  {item.note}  {item.price}   X    {item.quantity}</ListGroup.Item>
@@ -171,7 +190,7 @@ const Details = (props) => {
 
                         </Row>
 
-                    </>)
+                    </React.Fragment>)
                 })
             }
 

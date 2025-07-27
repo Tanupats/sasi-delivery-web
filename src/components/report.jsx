@@ -63,7 +63,6 @@ const Report = () => {
         await searchOrder();
     };
 
-    console.log('รหัสร้าน =', shopID);
     const searchOrder = async () => {
         if (shopID !== undefined && startDate) {
             let bank = 0;
