@@ -284,7 +284,7 @@ const Pos = () => {
               cart.length > 0 && (<>
                 <div className='text-center'>
 
-                  <img style={{ width: '40%' }} src={`${import.meta.env.VITE_API_URL}/images/${shop?.photo}`} alt="" srcset="" />
+                  {/* <img style={{ width: '40%' }} src={`${import.meta.env.VITE_API_URL}/images/${shop?.photo}`} alt="" srcset="" /> */}
                   <h6> {shop?.name}</h6>
                   <h6>  ใบเสร็จรับเงิน</h6>
                   <h6> ลำดับคิว {queueNumber} </h6>
@@ -404,7 +404,7 @@ const Pos = () => {
                     </Form>
                     <Row className='mt-3 mb-2 when-print sticky-bottom-mobile'>
 
-                    
+
                       <Col md={6} xs={6}>
                         <Button
                           style={{ height: '46px' }}
@@ -412,9 +412,9 @@ const Pos = () => {
                           variant='success w-100'>
                           <SaveIcon />  บันทึก
                         </Button>
-                      </Col> 
-                      
-                       <Col md={6} xs={6}>
+                      </Col>
+
+                      <Col md={6} xs={6}>
                         <Button
                           style={{ height: '46px' }}
                           onClick={() => { printSlip() }}
