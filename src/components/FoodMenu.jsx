@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState, useEffect, useContext } from "react";
 import { Row, Col, Card, Image, Button } from "react-bootstrap";
-import { useParams } from 'react-router-dom';
+
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { AuthData } from "../ContextData";
 import { nanoid } from 'nanoid'
@@ -11,14 +11,11 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import Badge from 'react-bootstrap/Badge';
+import { useParams } from 'react-router-dom';
 const FoodMenu = () => {
-
-    const { userid, name, shop_id } = useParams();
-    localStorage.setItem("messangerId", userid);
-    localStorage.setItem("name", name);
-    localStorage.setItem("shop_id", shop_id);
+    const { shop_id } = useParams();
     const { addToCart } = useContext(AuthData)
-
+    localStorage.setItem('shop_id', shop_id);
     const [foods, setFoods] = useState([]);
     const [menuType, setMenuType] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -56,14 +53,11 @@ const FoodMenu = () => {
                     setLoadings(false);
                 }
             })
-
     }
 
     useEffect(() => {
-
         getMenuType();
         getFoodMenu();
-
     }, [])
 
     useEffect(() => {

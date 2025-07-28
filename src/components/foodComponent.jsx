@@ -20,7 +20,7 @@ export default function FoodComponent({ data }) {
                     </Col>
                     <Col md={7} >
                         <div className="text-left p-2">
-                            <h6>{foodname} <br /> ฿{Price} </h6>
+                            <h6>{foodname} <br /> ฿ {Price} </h6>
                         </div>
                     </Col>
                 </Row>

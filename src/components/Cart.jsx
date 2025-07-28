@@ -104,20 +104,15 @@ const Cart = () => {
                                                                         -
                                                                     </Button>
                                                                 </Col>
-
                                                             </Row>
-
                                                         </Form.Group>
-
                                                     </div>
-
 
                                                 </Col>
                                                 <Col md={4} xs={2} className="text-center">
                                                     <Button
                                                         onClick={() => removeCart(item.id)}
                                                         style={{ float: 'right', color: 'red' }}
-
                                                         variant="light">
                                                         <RemoveCircleOutlineIcon />
                                                     </Button>
@@ -142,14 +137,9 @@ const Cart = () => {
                                                         defaultValue={item.note}
                                                     />
                                                 </Col>
-
                                             </Row>
-
                                         </Card.Body>
-
-
                                     </Card>
-
                                 </Col>
                             </>)
                         })
@@ -160,8 +150,7 @@ const Cart = () => {
                             <>
                                 <h6>ยอดรวมทั้งหมด {sumPrice} บาท</h6>
                                 <h6>จำนวน {toTal} รายการ</h6>
-                                <h6 style={{ color: 'red' }}> คิวตอนนี้ {queue > 0 ? queue : "...กำลังโหลด"} คิว </h6>
-
+                                <h6 style={{ color: 'red' }}> คิวตอนนี้ {queue} คิว </h6>
                                 <Col md={12} xs={12} className="mt-2">
                                     <Form id="save" onSubmit={(e) => { onSave(e) }}>
                                         <Row className='order-type when-print'>
@@ -177,12 +166,10 @@ const Cart = () => {
 
                                                     }}
                                                 >ทานที่ร้าน</Button>
-
                                                 <Button variant={orderType === 'รับเอง' ? 'primary w-100' : 'outline-primary w-100'}
                                                     onClick={() => { setOrderType("รับเอง") }}
                                                 >รับเองที่ร้าน</Button>
                                             </ButtonGroup>
-
                                             {
                                                 orderType === "สั่งกลับบ้าน" && (
                                                     <Form.Group className="mt-2">
@@ -197,16 +184,13 @@ const Cart = () => {
                                                     </Form.Group>
                                                 )
                                             }
-
                                         </Row>
-
                                         <Form.Group className="mt-2">
                                             <Form.Label style={{ fontWeight: 500 }}>  เลือกวิธีชำระเงิน </Form.Label>
                                             <Row>
                                                 <Col md={2} xs={6}>
                                                     <Button variant={paymentType === "bank_transfer" ? "primary" : "outline-primary"} className="w-100"
                                                         onClick={() => setPaymentType("bank_transfer")}
-
                                                     > <AccountBalanceIcon /> โอนจ่าย </Button>
                                                 </Col>
                                                 <Col md={2} xs={6}>
@@ -216,7 +200,6 @@ const Cart = () => {
                                                     >  <PaymentsIcon /> ชำระเงินสด  </Button>
                                                 </Col>
                                             </Row>
-
                                         </Form.Group>
                                     </Form>
                                 </Col>
@@ -225,7 +208,6 @@ const Cart = () => {
                                         className="w-100"
                                         form="save" type="submit"
                                         variant="success"
-
                                         disabled={loading}>
                                         {loading ? "กำลังบันทึก..." : <> <CheckCircleIcon /> ยืนยัน</>}
                                     </Button>
@@ -242,19 +224,10 @@ const Cart = () => {
                         ) : (
                             <Alert variant='danger' className='pd-3 text-center'>
                                 ยังไม่มีรายการสั่งอาหาร
-
                             </Alert>)
                     }
-
-
-
-
                 </Row>
             </Card.Body>
-
-
-
-
         </Card>
     </>)
 }

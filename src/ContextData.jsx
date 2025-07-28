@@ -18,7 +18,7 @@ function Context({ children }) {
     const shop_id = localStorage.getItem('shop_id');
 
     const dev = import.meta.env.VITE_BAKUP_URL;
-    
+
     const getCounterOrder = async () => {
         await axios.get(`${dev}/bills/counter-myorder?messengerId=${messangerId}`)
             .then(res => {
@@ -52,7 +52,7 @@ function Context({ children }) {
         });
     }
 
-  
+
     const addToCart = (data) => {
         Swal.fire({
             title: 'เพิ่มรายการสำเร็จ',
@@ -122,6 +122,7 @@ function Context({ children }) {
     }
 
     const trySendMessage = async (messengerId, username, sumPrice) => {
+        resetCart();
         try {
             // พยายามส่ง message แบบแรกก่อน
             await sendMessageToPage(messengerId);
@@ -129,8 +130,8 @@ function Context({ children }) {
         } catch (error) {
             console.warn("ส่งข้อความแบบ Page ไม่สำเร็จ:", error.response?.data || error.message);
             // ถ้าไม่สำเร็จ ให้ส่งข้อความแบบผู้ใช้แทน
-            const text = `รับออเดอร์ของคุณ ${username} แล้วนะครับ  ยอดรวม ${sumPrice} บาท`;  
-            await sendMessageToUser(messengerId, text);                 
+            const text = `รับออเดอร์ของคุณ ${username} แล้วนะครับ  ยอดรวม ${sumPrice} บาท`;
+            await sendMessageToUser(messengerId, text);
         }
     };
 
@@ -177,6 +178,7 @@ function Context({ children }) {
                     }));
                 }
                 trySendMessage(messangerId, username, sumPrice);
+                
             } catch (error) {
                 console.error("เกิดข้อผิดพลาดในการสั่งอาหาร: ", error);
                 Swal.fire({
@@ -195,7 +197,6 @@ function Context({ children }) {
                 confirmButtonText: 'ยืนยัน'
             })
         }
-
     }
 
 
@@ -228,11 +229,11 @@ function Context({ children }) {
 
     const setMenuNormal = (id) => {
         let newCart = cart.map(item => {
-            const oldMenu = oldData.find(menu => menu.id === id); 
-            if (oldMenu) { 
+            const oldMenu = oldData.find(menu => menu.id === id);
+            if (oldMenu) {
                 if (item.id === id) {
                     return { ...item, price: oldMenu.price, name: oldMenu.name };
-                }     
+                }
             }
             return item;
         });

@@ -62,7 +62,8 @@ const Myorder = () => {
                                                         {moment(item.Date_times).format('YYYY-MM-DD')}
                                                         &nbsp;  เวลา {moment(item.Date_times).format('HH:mm')} น.
                                                     </h6>
-
+                                                    <hr />
+                                                    <br />
                                                     <Details bill_ID={item.bill_ID} status={item.statusOrder} />
                                                     <h6 style={{ fontSize: '18px' }}>รวมทั้งหมด {item.amount} บาท</h6>
                                                     <h6 style={{ fontSize: '18px' }}>วิธีการรับอาหาร - {item.ordertype === "สั่งกลับบ้าน" ? "จัดส่งที่ " + item.address : item.ordertype}
