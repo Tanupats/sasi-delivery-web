@@ -17,6 +17,7 @@ import QRCode from 'qrcode.react';
 import generatePayload from 'promptpay-qr'
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
+
 for (let number = 1; number <= 5; number++) {
   items.push(
     <Pagination.Item key={number} active={number === active}>
@@ -45,7 +46,8 @@ const Pos = () => {
     toTal,
     staffName,
     user,
-    printSlip
+    printSlip,
+    resetCart
   } =
     useContext(AuthData)
 
@@ -420,6 +422,14 @@ const Pos = () => {
                           onClick={() => { printSlip() }}
                           variant='primary w-100'>
                           <LocalPrintshopIcon />  พิมพ์
+                        </Button>
+                      </Col>
+                      <Col md={12} xs={12} className='mt-3'>
+                        <Button
+                          style={{ height: '46px' }}
+                          onClick={() => { resetCart() }}
+                          variant='danger w-100'>
+                           ยกเลิก
                         </Button>
                       </Col>
                     </Row>

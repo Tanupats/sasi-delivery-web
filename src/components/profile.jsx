@@ -1,23 +1,17 @@
 import { useContext, useState } from "react";
-import { Card, Row, Col, Button, Form } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Card, Row, Col, Button } from "react-bootstrap";
 import { httpPut } from "../http";
 import { AuthData } from "../ContextData";
 import Swal from 'sweetalert2'
 const Profile = () => {
     const { user, shop, getUser } = useContext(AuthData);
-    //user 
-    const [name, setName] = useState("")
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const router = useNavigate();
-    //shop
-    const [shopName, setShopName] = useState("");
+    const [status, setStatus] = useState(shop?.is_open);
     const [phone, setPhone] = useState(user?.phone);
 
     const updateData = async () => {
         const body = {
             phone: phone
+
         }
         await httpPut('/user/' + user?.id, body)
             .then((res) => {
@@ -31,6 +25,14 @@ const Profile = () => {
                     })
                 }
             })
+        await updateIsOpen();
+    }
+
+    const updateIsOpen = async () => {
+        const body = {
+            is_open: status
+        }
+        await httpPut('/shop/' + shop?.id, body)
     }
 
     return (
@@ -47,9 +49,18 @@ const Profile = () => {
                         <p>    ชื่อ-นามสกุล :   {user.name}</p>
                         <p>    อีเมล :   {user.email}</p>
                         <p>    เบอร์  :    {user.phone}</p>
-                        {/* <p>    สถานะเปิดร้าน  :    {user.status_shop}</p> */}
-                        <input type="text" value={phone}  placeholder="แก้ไขเบอร์" onChange={(e) => setPhone(e.target.value)} />
-                        <Button onClick={() => updateData()}>แก้ไข</Button>
+                        <p>    สถานะเปิดร้าน  :    {status ?
+
+                            <Button onClick={() => {
+                                setStatus(false)
+                            }}> เปิดร้าน </Button> :
+                            <Button onClick={() => { setStatus(true) }}>ปิดร้าน</Button>}</p>
+                        <input type="text" value={phone}
+                            placeholder="แก้ไขเบอร์"
+                            onChange={(e) => setPhone(e.target.value)} />
+                        <br />
+
+                        <Button onClick={() => updateData()} className="mt-2">บันทึก</Button>
                     </Card.Body>
                 </Card>
             </Col>

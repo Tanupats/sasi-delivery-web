@@ -105,15 +105,8 @@ function Context({ children }) {
         if (cart.length > 0) {
             setStatusPrint('พิมพ์เวลา ' + new Date().getHours() + ':' + new Date().getMinutes())
             window.print();
-             Swal.fire({
-                            title: 'ทำรายการสำเร็จ',
-                            text: 'บันทึกข้อมูลสำเร็จ',
-                            icon: 'success',
-                            confirmButtonText: 'ยืนยัน',
-                            timer: 1300
-                        })
-            setCart([]);
-            setName("");
+
+
         } else {
             Swal.fire({
                 title: 'ไม่มีรายการอาหาร',
@@ -126,7 +119,10 @@ function Context({ children }) {
     }
 
 
-    const resetCart = () => setCart([]);
+    const resetCart = () => {
+        setName("");
+        setCart([]);
+    };
 
     const saveOrder = async () => {
         const { shop_id } = shop;
@@ -148,9 +144,16 @@ function Context({ children }) {
                     if (res.status === 200) {
                         id = res.data.bill_ID
                         queueId = res.data.queueNumber
-
+                        Swal.fire({
+                            title: 'ทำรายการสำเร็จ',
+                            text: 'บันทึกข้อมูลสำเร็จ',
+                            icon: 'success',
+                            confirmButtonText: 'ยืนยัน',
+                            timer: 1300
+                        })
                     }
                 })
+                
             cart.map(({ name, price, quantity, note }) => {
                 const bodyDetails = {
                     bills_id: id,
@@ -162,7 +165,6 @@ function Context({ children }) {
                 httpPost(`/billsdetails`, bodyDetails, { headers: { 'apikey': token } })
             })
             setQueueNumber(queueId);
-
         } else {
             Swal.fire({
                 title: 'ไม่มีรายการอาหาร',
