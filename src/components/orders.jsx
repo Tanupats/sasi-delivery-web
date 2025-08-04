@@ -3,13 +3,13 @@ import { Row, Col, Card, Button, Modal, Form, Alert } from "react-bootstrap";
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Details from "./Details";
 import moment from "moment/moment";
-import { httpDelete, httpGet, httpPut, sendDelivery, sendNotificationBot, sendDeliverySuccess } from "../http";
+import { httpDelete, httpGet, httpPut, sendNotificationBot } from "../http";
 import Swal from 'sweetalert2';
 import { AuthData } from "../ContextData";
-import CachedIcon from '@mui/icons-material/Cached';
-import SyncDisabledIcon from '@mui/icons-material/SyncDisabled';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
+import SendIcon from '@mui/icons-material/Send';
+import axios from "axios";
 const Orders = () => {
     const { shop } = useContext(AuthData);
     const token = localStorage.getItem("token");
@@ -145,6 +145,37 @@ const Orders = () => {
         getOrderCookingFinish();
     }
 
+
+    const PAGE_ACCESS_TOKEN = 'EAAkMtjSMoDoBOZCGYSt499z6jgiiAjAicsajaOWhjqIxmHsl0asrAm61k6LgD1ifGXHzbDsHrJFCZASriCSyoPDpeqFh3ZBTrWC4ymdZCZBwcioKueKj31QK6w6GFHILPiJaZA8hgNHXtW5OqkRTZBzI0VFvIOoVhGdGq28DvOHGVSNEmPMJjkAOikE1thOaF3mzDg6dnjSyZBGpIY6mMZA1rWaIx';
+    const sendMessageToPage = (userid, messageText) => {
+        axios.post(`https://graph.facebook.com/v18.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
+            recipient: {
+                id: userid
+            },
+            message: {
+                text: messageText
+            }
+        }).then(response => {
+            if (response) {
+                Swal.fire({
+                    title: 'ส่งข้อความรับออเดอร์สำเร็จแล้ว',
+                    icon: 'success',
+                })
+
+            }
+        }).catch(error => {
+            if (error) {
+                Swal.fire({
+                    title: 'ส่งข้อความไปยังลูกไม่สำเร็จ',
+                    icon: 'error',
+                })
+
+            }
+
+        });
+    }
+
+
     const UpdatePrice = async () => {
         const body = {
             amount: parseInt(price)
@@ -226,12 +257,25 @@ const Orders = () => {
                                                     <p>
                                                         เวลาสั่งซื้อ {moment(item.timeOrder).format('HH:mm')} น. &nbsp; <br />
                                                         วันที่ {moment(item.timeOrder).format('YYYY-MM-DD')}<br />
-                                                        {item?.printStatus !== null ? item?.printStatus : " "}
+                                                        {item?.printStatus !== null ? item?.printStatus : "ออเดอร์ใหม่"}
                                                     </p>
                                                     <Row>
                                                         <Col md={6} xs={6}>
                                                             <div className="when-print mb-2">
-                                                                <b> สั่งจาก {item.messengerId === 'pos' ? 'Admin' : 'Page'} </b> <br />
+                                                                {
+
+                                                                    item.messengerId !== "pos" && (
+
+                                                                        <Button
+                                                                            onClick={() => sendMessageToPage(item.messengerId, "ร้านรับออเดอร์แล้วครับ  ยอดรวม" + item.amount + "บาทครับ")}
+                                                                            variant="light w-100">
+                                                                            <SendIcon />  ส่งข้อความอีกครั้ง</Button>
+                                                                    )
+
+                                                                }
+
+                                                                <b> {item.messengerId === 'pos' ? " Admin" : "Page"} </b> <br />
+
                                                             </div>
                                                         </Col>
                                                         {
