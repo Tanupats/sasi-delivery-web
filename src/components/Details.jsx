@@ -1,4 +1,4 @@
-import  React, { useState, useEffect,useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Row, Col, Button, Modal, ListGroup, Form } from "react-bootstrap";
 import Select from 'react-select'
 import { httpDelete, httpGet, httpPost, httpPut } from "../http";
@@ -6,11 +6,11 @@ import { AuthData } from "../ContextData";
 import Swal from 'sweetalert2'
 const Details = (props) => {
     const token = localStorage.getItem("token");
-    let { bill_ID, status, id, reset } = props;
+    let { bill_ID, status, id, reset, userId, updateData } = props;
     const [detail, setDetail] = useState([]);
     const [show, setShow] = useState(false);
     const [dataMenus, setDataMenus] = useState("");
-    const {shop} = useContext(AuthData);
+    const { shop } = useContext(AuthData);
     const [options, setOption] = useState([]);
     const [optionsFood, setOptionFood] = useState([]);
     const [onUpdate, setOnupdate] = useState(false);
@@ -32,7 +32,7 @@ const Details = (props) => {
     }
 
     const getMenuType = async () => {
-        await httpGet(`/menutype/${shop?.shop_id}`,{ headers: { 'apikey': token } })
+        await httpGet(`/menutype/${shop?.shop_id}`, { headers: { 'apikey': token } })
             .then(res => {
                 setMenuType(res.data);
             })
@@ -56,38 +56,39 @@ const Details = (props) => {
             })
     }
 
-   const deleteById = async (id) => {
-    const result = await Swal.fire({
-        title: 'คุณแน่ใจหรือไม่?',
-        text: 'คุณต้องการลบข้อมูลนี้ใช่หรือไม่',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'ใช่, ลบเลย!',
-        cancelButtonText: 'ยกเลิก'
-    });
+    const deleteById = async (id) => {
+        const result = await Swal.fire({
+            title: 'คุณแน่ใจหรือไม่?',
+            text: 'คุณต้องการลบข้อมูลนี้ใช่หรือไม่',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'ใช่, ลบเลย!',
+            cancelButtonText: 'ยกเลิก'
+        });
 
-    if (result.isConfirmed) {
-        try {
-            const res = await httpDelete(`/billsdetails/remove/${id}`);
-            if (res.status === 200) {
-                Swal.fire('ลบแล้ว!', 'ข้อมูลถูกลบเรียบร้อยแล้ว', 'success');
-                getDetail();
-                setOnupdate(true);
+        if (result.isConfirmed) {
+            try {
+                const res = await httpDelete(`/billsdetails/remove/${id}`);
+                if (res.status === 200) {
+                    Swal.fire('ลบแล้ว!', 'ข้อมูลถูกลบเรียบร้อยแล้ว', 'success');
+                    getDetail();
+                    setOnupdate(true);
+                }
+            } catch (error) {
+                Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถลบข้อมูลได้', 'error');
+                console.error(error);
             }
-        } catch (error) {
-            Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถลบข้อมูลได้', 'error');
-            console.error(error);
         }
     }
-}
 
 
     const updateAmount = async (newPrice) => {
         const body = { amount: newPrice };
         await httpPut(`/bills/${id}`, body, { headers: { 'apikey': token } })
-        await  reset();
+        updateData(userId, "แจ้งอัพเดตยอดใหม่ครับเป็น" + newPrice + "บาท")
+        await reset();
     }
 
 
@@ -150,7 +151,7 @@ const Details = (props) => {
                 newPriceBeforeUpdate += item.quantity * item.price;
             })
             updateAmount(newPriceBeforeUpdate);
-           
+
         }
     }, [detail])
 

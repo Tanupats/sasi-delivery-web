@@ -302,7 +302,11 @@ const Orders = () => {
                                                         reset={reset}
                                                         id={item.id}
                                                         bill_ID={item.bill_ID}
-                                                        status={item.statusOrder} />
+                                                        status={item.statusOrder}
+                                                        userId={item.messengerId}
+                                                        updateData={sendMessageToPage}
+                                                        />
+
                                                     <Row>
                                                         <Col md={8}>
                                                             <h5>รวมทั้งหมด {item.amount} บาท</h5>
