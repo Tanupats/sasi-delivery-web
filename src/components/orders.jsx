@@ -6,7 +6,7 @@ import moment from "moment/moment";
 import { httpGet, httpPut, sendDelivery, httpPost, sendNotificationBot, sendDeliverySuccess, sendImageToPage } from "../http";
 import Swal from 'sweetalert2';
 import { AuthData } from "../ContextData";
-
+import axios from "axios";
 const Orders = () => {
     const { shop } = useContext(AuthData);
     const token = localStorage.getItem("token");
@@ -219,7 +219,7 @@ const Orders = () => {
                         if (status === "ส่งสำเร็จ") {
                             if (messageid !== "pos") {
                                 uploadFile(messageid);
-                                //sendDeliverySuccess(messageid)
+                                // sendDeliverySuccess(messageid)
                                 sendMessageToPage(messageid,"มาส่งแล้วนะครับ")
                             }
                             getMenuReport("กำลังส่ง");
