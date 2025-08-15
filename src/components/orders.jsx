@@ -131,6 +131,35 @@ const Orders = () => {
         });
     }
 
+    const PAGE_ACCESS_TOKEN = 'EAAkMtjSMoDoBOZCGYSt499z6jgiiAjAicsajaOWhjqIxmHsl0asrAm61k6LgD1ifGXHzbDsHrJFCZASriCSyoPDpeqFh3ZBTrWC4ymdZCZBwcioKueKj31QK6w6GFHILPiJaZA8hgNHXtW5OqkRTZBzI0VFvIOoVhGdGq28DvOHGVSNEmPMJjkAOikE1thOaF3mzDg6dnjSyZBGpIY6mMZA1rWaIx';
+    const sendMessageToPage = (userid, messageText) => {
+        axios.post(`https://graph.facebook.com/v18.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
+            recipient: {
+                id: userid
+            },
+            message: {
+                text: messageText
+            }
+        }).then(response => {
+            if (response) {
+                Swal.fire({
+                    title: 'ส่งข้อความรับออเดอร์สำเร็จแล้ว',
+                    icon: 'success',
+                })
+
+            }
+        }).catch(error => {
+            if (error) {
+                Swal.fire({
+                    title: 'ส่งข้อความไปยังลูกไม่สำเร็จ',
+                    icon: 'error',
+                })
+
+            }
+
+        });
+    }
+
 
     const handleFileChange = async (e) => {
         const selectedFile = e.target.files[0];
@@ -173,14 +202,16 @@ const Orders = () => {
                     if (res) {
                         if (status === "ทำเสร็จแล้ว") {
                             if (messageid !== "pos") {
-                                sendNotificationBot(messageid);
+                                //sendNotificationBot(messageid);
+                                sendMessageToPage(messageid,"ออเดอร์ทำเสร็จแล้ว รอส่งนะครับ")
                             }
                             getMenuReport("รับออเดอร์แล้ว");
                             setStatusOrder("รับออเดอร์แล้ว");
                         }
                         if (status === "กำลังส่ง") {
                             if (messageid !== "pos") {
-                                sendDelivery(messageid);
+                                //sendDelivery(messageid);
+                                sendMessageToPage(messageid,"กำลังไปส่งนะครับ")
                             }
                             getMenuReport("ทำเสร็จแล้ว");
                             setStatusOrder("ทำเสร็จแล้ว");
@@ -188,7 +219,8 @@ const Orders = () => {
                         if (status === "ส่งสำเร็จ") {
                             if (messageid !== "pos") {
                                 uploadFile(messageid);
-                                sendDeliverySuccess(messageid);
+                                //sendDeliverySuccess(messageid)
+                                sendMessageToPage(messageid,"มาส่งแล้วนะครับ")
                             }
                             getMenuReport("กำลังส่ง");
                             setStatusOrder("กำลังส่ง");
