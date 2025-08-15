@@ -126,7 +126,8 @@ const Orders = () => {
                     if (res) {
                         if (status === "ทำเสร็จแล้ว") {
                             if (messageid !== "pos") {
-                                sendNotificationBot(messageid);
+                                sendMessageToPage(messageid,"ออเดอร์ทำเสร็จแล้วครับ รอจัดส่งนะครับ");
+                                //sendNotificationBot(messageid);
                             }
                         }
                         setReport([]);
