@@ -183,7 +183,7 @@ function Context({ children }) {
                 console.error("เกิดข้อผิดพลาดในการสั่งอาหาร: ", error);
                 Swal.fire({
                     title: 'เกิดข้อผิดพลาด',
-                    text: 'ไม่สามารถสั่งอาหารได้ กรุณาลองใหม่',
+                    text: 'ไม่สามารถสั่งอาหารได้ กรุณาลองใหม่ หรือสอบถามร้านค้า',
                     icon: 'error',
                     confirmButtonText: 'ตกลง'
                 });
