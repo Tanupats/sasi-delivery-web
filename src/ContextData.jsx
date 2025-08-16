@@ -26,32 +26,14 @@ function Context({ children }) {
             })
     }
 
-    const VITE_PAGE_ACCESS_TOKEN = 'EAAkMtjSMoDoBOZCGYSt499z6jgiiAjAicsajaOWhjqIxmHsl0asrAm61k6LgD1ifGXHzbDsHrJFCZASriCSyoPDpeqFh3ZBTrWC4ymdZCZBwcioKueKj31QK6w6GFHILPiJaZA8hgNHXtW5OqkRTZBzI0VFvIOoVhGdGq28DvOHGVSNEmPMJjkAOikE1thOaF3mzDg6dnjSyZBGpIY6mMZA1rWaIx';
+
     const sendMessageToPage = async () => {
-        await fetch(`https://api.chatfuel.com/bots/5e102b272685af000183388a/users/${messangerId}/send?chatfuel_token=qwYLsCSz8hk4ytd6CPKP4C0oalstMnGdpDjF8YFHPHCieKNc0AfrnjVs91fGuH74&chatfuel_block_name=order&message=${sumPrice}`, {
+        let message = paymentType === 'cash' ? 'รวมทั้งหมด' + sumPrice + " บาท ครับ" : "รวมทั้งหมด " + sumPrice + " บาท \n" + "พร้อมเพย์ 0983460756 นายตนุภัทร สิทธิวงศ์  \n  โอนแล้วส่งสลิปมาด้วยนะครับ ขอบคุณครับ"
+        await fetch(`https://api.chatfuel.com/bots/5e102b272685af000183388a/users/${messangerId}/send?chatfuel_token=qwYLsCSz8hk4ytd6CPKP4C0oalstMnGdpDjF8YFHPHCieKNc0AfrnjVs91fGuH74&chatfuel_block_name=order&message=${message}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" }
         });
     }
-
-    const sendMessageToUser = async (userid, text) => {
-        axios.post(
-            `https://graph.facebook.com/v18.0/me/messages?access_token=${VITE_PAGE_ACCESS_TOKEN}`,
-            {
-                recipient: {
-                    id: userid
-                },
-                message: {
-                    text: text
-                }
-            }
-        ).then(response => {
-            console.log('Message sent:', response.data);
-        }).catch(error => {
-            console.error('Error sending message:', error.response?.data || error.message);
-        });
-    }
-
 
     const addToCart = (data) => {
         Swal.fire({
@@ -121,19 +103,12 @@ function Context({ children }) {
         setCart(newCart);
     }
 
-    const trySendMessage = async (messengerId, username, sumPrice) => {
-        resetCart();
-        try {
-            // พยายามส่ง message แบบแรกก่อน
-            await sendMessageToPage(messengerId);
-            console.log("ส่งข้อความแบบ Page สำเร็จ");
-        } catch (error) {
-            console.warn("ส่งข้อความแบบ Page ไม่สำเร็จ:", error.response?.data || error.message);
-            // ถ้าไม่สำเร็จ ให้ส่งข้อความแบบผู้ใช้แทน
-            const text = `รับออเดอร์ของคุณ ${username} แล้วนะครับ  ยอดรวม ${sumPrice} บาท`;
-            await sendMessageToUser(messengerId, text);
-        }
-    };
+
+
+
+
+
+
 
     const resetCart = () => setCart([]);
     const messangerId = localStorage.getItem('messangerId');
@@ -177,8 +152,9 @@ function Context({ children }) {
                         return axios.post(`${dev}/billsdetails`, bodyDetails);
                     }));
                 }
-                trySendMessage(messangerId, username, sumPrice);
-                
+
+                sendMessageToPage(messangerId);
+
             } catch (error) {
                 console.error("เกิดข้อผิดพลาดในการสั่งอาหาร: ", error);
                 Swal.fire({
@@ -210,22 +186,25 @@ function Context({ children }) {
     }
 
     const [oldData, setOldData] = useState([]);
-
     const setMenuPichet = (id, data) => {
-        setOldData(prevData => {
-            return [...prevData, data];
-        });
+        setOldData(prevData => [...prevData, data]);
 
         let newCart = cart.map(item => {
-
-            let newPrice = parseInt(item.price) + 10;
             if (item.id === id) {
-                return { ...item, price: newPrice, name: item.name + "พิเศษ" }
+                let newPrice = parseInt(item.price) + 10;
+
+                return {
+                    ...item,
+                    price: newPrice,
+                    name: item.name.includes("พิเศษ") ? item.name : item.name + "พิเศษ"
+                };
             }
             return item;
         });
+
         setCart(newCart);
-    }
+    };
+
 
     const setMenuNormal = (id) => {
         let newCart = cart.map(item => {

@@ -79,22 +79,12 @@ const Cart = () => {
                                                 </Col>
                                                 <Col md={5} xs={5}>
                                                     <div className="menu-list mt-3">
-                                                        <h6>{item?.name}</h6>
-                                                        <h6>{item?.price} ฿</h6>
+                                                        <h6>{item?.name} {item?.price} ฿</h6>
+                                                        <h6></h6>
                                                         <Form.Group>
-                                                            <Row className="mt-2">
-                                                                <Col xs={4} md={2}>
+                                                            <Row className="mt-2"><Col xs={4} md={2}>
                                                                     <Button
-                                                                        variant="primary"
-                                                                        onClick={() => { updateQuantity(item.id, item.quantity + 1) }} >+</Button>
-                                                                </Col>
-                                                                <Col xs={4} md={2} className="text-center p-2">
-                                                                    <h6>{item.quantity}</h6>
-
-                                                                </Col>
-                                                                <Col xs={4} md={2}>
-                                                                    <Button
-                                                                        variant="primary"
+                                                                          style={ { backgroundColor: '#FD720D',border:'none'}}
                                                                         onClick={() => {
                                                                             if (item.quantity > 1) {
                                                                                 updateQuantity(item.id, item.quantity - 1);
@@ -103,6 +93,18 @@ const Cart = () => {
                                                                     >
                                                                         -
                                                                     </Button>
+                                                                </Col>
+                                                               
+                                                                <Col xs={4} md={2} className="text-center p-2">
+                                                                    <h6>{item.quantity}</h6>
+
+                                                                </Col>
+                                                                 <Col xs={4} md={2}>
+                                                                    <Button
+                                                                    style={ { backgroundColor: '#FD720D',border:'none'}}
+                                                                  
+                                                                      
+                                                                        onClick={() => { updateQuantity(item.id, item.quantity + 1) }} >+</Button>
                                                                 </Col>
                                                             </Row>
                                                         </Form.Group>
@@ -118,7 +120,7 @@ const Cart = () => {
                                                     </Button>
                                                 </Col>
                                                 {
-                                                    item.name !== 'ไข่ดาว' && item.name !== 'ข้าวสวย' && (
+                                                    item.name !== 'ไข่ดาว' && item.name !== 'ข้าวสวย' &&  item.name !== 'ไข่เจียว' && (
 
                                                         <Col md={4} className="mt-3">
                                                             <div class="btn-group" role="group" aria-label="Basic outlined example">
@@ -154,13 +156,13 @@ const Cart = () => {
                                 <Col md={12} xs={12} className="mt-2">
                                     <Form id="save" onSubmit={(e) => { onSave(e) }}>
                                         <Row className='order-type when-print'>
-                                            <Form.Label style={{ fontWeight: 500 }}> เลือกการรับอาหาร</Form.Label>
+                                            <Form.Label style={{ fontWeight: 500 }}> การรับอาหาร</Form.Label>
                                             <ButtonGroup >
                                                 <Button variant={orderType === 'สั่งกลับบ้าน' ? 'success w-100' : 'outline-success w-100'}
                                                     onClick={() => setOrderType("สั่งกลับบ้าน")}
                                                 >จัดส่ง</Button>
                                                 <Button
-                                                    variant={orderType === 'เสิร์ฟในร้าน' ? 'warning w-100' : 'outline-warning w-100'}
+                                                    variant={orderType === 'เสิร์ฟในร้าน' ? 'danger w-100' : 'outline-danger w-100'}
                                                     onClick={() => {
                                                         setOrderType("เสิร์ฟในร้าน")
 
