@@ -1,29 +1,18 @@
-import React, { useContext, useEffect } from 'react';
+import  { useContext } from 'react';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import { AuthData } from "../ContextData";
-import FoodMenu from './FoodMenu';
 import Orders from './orders';
-import GetQueu from './GetQueu';
-import Pos from './Pos';
-import Report from './report';
 import Login from './Login';
-import Admin from './admin';
-import Profile from './profile';
-import ListAltIcon from '@mui/icons-material/ListAlt';
-import CurrencyBitcoinIcon from '@mui/icons-material/CurrencyBitcoin';
 import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import LogoutIcon from '@mui/icons-material/Logout';
-import StoreIcon from '@mui/icons-material/Store';
-import Register from './Register';
 import Swal from 'sweetalert2';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 const NavbarMenu = () => {
   const {
-    staffName,
-    shop
+    staffName
   } =
     useContext(AuthData);
   const logout = () => {
@@ -54,29 +43,12 @@ const NavbarMenu = () => {
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
               <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto text-center">
-                  <>
-                    {/* <Nav.Link as={Link} to={'/pos'} style={{ textDecoration: 'none', color: '#fff' }}>
-                      <ListAltIcon /> ขายสินค้า
-                    </Nav.Link>
-
-                    <Nav.Link as={Link} to={'/report'} style={{ textDecoration: 'none', color: '#fff' }}>
-                      <CurrencyBitcoinIcon /> สรุปยอดขาย
-                    </Nav.Link> */}
-
-
+                  <>            
                     <Nav.Link as={Link} to={'/orders'} style={{ textDecoration: 'none', color: '#fff' }}>
-                      <DeliveryDiningIcon />  ออเดอร์
+                      <DeliveryDiningIcon />  ออเดอร์จัดส่ง
                     </Nav.Link>
-
-
-                    {/* <Nav.Link as={Link} to={'/admin'} style={{ textDecoration: 'none', color: '#fff' }}>
-                      <StoreIcon /> {shop?.name}
-                    </Nav.Link> */}
-
                   </>
-
                 </Nav>
-
                 <Nav className="ml-auto" >
                   <Nav.Link as={Link} to={'/profile'} style={{ textDecoration: 'none', color: '#fff' }}>
                     < AccountCircleIcon />  {staffName}
@@ -95,13 +67,6 @@ const NavbarMenu = () => {
       <Routes>
         <Route path="/" Component={Login}></Route>
         <Route path="/orders" Component={Orders}></Route>
-        <Route path="/queueNumber" Component={GetQueu}></Route>
-        <Route path="/foodMenu/:userid/:username" Component={FoodMenu}></Route>
-        <Route path="/pos" Component={Pos}></Route>
-        <Route path="/report" Component={Report}></Route>
-        <Route path="/admin" Component={Admin}></Route>
-        <Route path="/register" Component={Register}></Route>
-        <Route path="/profile" Component={Profile}></Route>
       </Routes>
     </Router>
   );

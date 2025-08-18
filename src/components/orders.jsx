@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Row, Col, Card, Button, Modal, Form, Alert, Image } from "react-bootstrap";
+import { Row, Col, Card, Button, Form, Alert } from "react-bootstrap";
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
-//import Details from "./Details";
+import Details from "./Details";
 import moment from "moment/moment";
-import { httpGet, httpPut, sendDelivery, httpPost, sendNotificationBot, sendDeliverySuccess, sendImageToPage } from "../http";
+import { httpGet, httpPut, httpPost, sendImageToPage } from "../http";
 import Swal from 'sweetalert2';
 import { AuthData } from "../ContextData";
 import axios from "axios";
@@ -11,30 +11,25 @@ const Orders = () => {
     const { shop } = useContext(AuthData);
     const token = localStorage.getItem("token");
     const [report, setReport] = useState([]);
-    const [show, setShow] = useState(false);
-    const [price, setPrice] = useState(0);
-    const [printBillId, setPrintBillId] = useState(null);
-    const [id, setId] = useState(null);
     const [file, setFile] = useState("");
     const [Delivered, setDelivered] = useState(0);
     const [OrderNew, setOrderNew] = useState(0);
     const [OrderCooking, setOrderCooking] = useState(0);
     const [OrderCookingFinish, setOrderCookingFinish] = useState(0);
     const [statusOrder, setStatusOrder] = useState("รับออเดอร์แล้ว");
-    const [previewUrl, setPreviewUrl] = useState(null);
+    const [shopId, setShopId] = useState("15b4e191-d125-4c18-bdd1-445091c349ff");
 
     const getMenuReport = async (status) => {
         setReport([]);
-        if (shop?.shop_id) {
-
-            await httpGet(`/bills?status=${status}&shop_id=${shop?.shop_id}`, { headers: { 'apikey': token } })
+        if (shopId) {
+            await httpGet(`/bills?status=${status}&shop_id=${shopId}`, { headers: { 'apikey': token } })
                 .then(res => { setReport(res.data) });
         }
     }
 
     const getOrderDelivery = async () => {
-        if (shop?.shop_id) {
-            await httpGet(`/bills/counter-order-status/${shop?.shop_id}?statusOrder=ส่งสำเร็จ`, { headers: { 'apikey': token } })
+        if (shopId) {
+            await httpGet(`/bills/counter-order-status/${shopId}?statusOrder=ส่งสำเร็จ`, { headers: { 'apikey': token } })
                 .then(res => {
                     setDelivered(res.data.count);
                 })
@@ -42,8 +37,8 @@ const Orders = () => {
     }
 
     const getOrderNew = async () => {
-        if (shop?.shop_id) {
-            await httpGet(`/bills/counter-order-status/${shop?.shop_id}?statusOrder=รับออเดอร์แล้ว`, { headers: { 'apikey': token } })
+        if (shopId) {
+            await httpGet(`/bills/counter-order-status/${shopId}?statusOrder=รับออเดอร์แล้ว`, { headers: { 'apikey': token } })
                 .then(res => {
                     setOrderNew(res.data.count);
                 })
@@ -51,8 +46,8 @@ const Orders = () => {
     }
 
     const getOrderCooking = async () => {
-        if (shop?.shop_id) {
-            await httpGet(`/bills/counter-order-status/${shop?.shop_id}?statusOrder=กำลังส่ง`, { headers: { 'apikey': token } })
+        if (shopId) {
+            await httpGet(`/bills/counter-order-status/${shopId}?statusOrder=กำลังส่ง`, { headers: { 'apikey': token } })
                 .then(res => {
                     setOrderCooking(res.data.count);
                 })
@@ -60,15 +55,14 @@ const Orders = () => {
     }
 
     const getOrderCookingFinish = async () => {
-        if (shop?.shop_id) {
-            await httpGet(`/bills/counter-order-status/${shop?.shop_id}?statusOrder=ทำเสร็จแล้ว`, { headers: { 'apikey': token } })
+        if (shopId) {
+            await httpGet(`/bills/counter-order-status/${shopId}?statusOrder=ทำเสร็จแล้ว`, { headers: { 'apikey': token } })
                 .then(res => {
                     setOrderCookingFinish(res.data.count);
                 })
         }
     }
 
-    const handleClose = () => setShow(false);
     const dev = import.meta.env.VITE_API_URL;
 
     const uploadFile = async (messageid) => {
@@ -82,33 +76,23 @@ const Orders = () => {
                         sendImageToPage(messageid, filename);
                     }
                     setFile("");
-
                 }
-
-
             })
-
     }
 
     function compressImage(file, maxWidth = 800, quality = 0.7) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
-
             reader.onload = (event) => {
                 const img = new window.Image(); // ✅ ใช้ window.Image แทน
-
                 img.onload = () => {
                     const canvas = document.createElement("canvas");
-
                     let scaleFactor = maxWidth / img.width;
                     if (scaleFactor > 1) scaleFactor = 1;
-
                     canvas.width = img.width * scaleFactor;
                     canvas.height = img.height * scaleFactor;
-
                     const ctx = canvas.getContext("2d");
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
                     canvas.toBlob(
                         (blob) => {
                             if (blob) {
@@ -203,7 +187,7 @@ const Orders = () => {
                         if (status === "ทำเสร็จแล้ว") {
                             if (messageid !== "pos") {
                                 //sendNotificationBot(messageid);
-                                sendMessageToPage(messageid,"ออเดอร์ทำเสร็จแล้ว รอส่งนะครับ")
+                                sendMessageToPage(messageid, "ออเดอร์ทำเสร็จแล้ว รอส่งนะครับ")
                             }
                             getMenuReport("รับออเดอร์แล้ว");
                             setStatusOrder("รับออเดอร์แล้ว");
@@ -211,7 +195,7 @@ const Orders = () => {
                         if (status === "กำลังส่ง") {
                             if (messageid !== "pos") {
                                 //sendDelivery(messageid);
-                                sendMessageToPage(messageid,"กำลังไปส่งนะครับ")
+                                sendMessageToPage(messageid, "กำลังไปส่งนะครับ")
                             }
                             getMenuReport("ทำเสร็จแล้ว");
                             setStatusOrder("ทำเสร็จแล้ว");
@@ -220,7 +204,7 @@ const Orders = () => {
                             if (messageid !== "pos") {
                                 uploadFile(messageid);
                                 // sendDeliverySuccess(messageid)
-                                sendMessageToPage(messageid,"มาส่งแล้วนะครับ")
+                                sendMessageToPage(messageid, "มาส่งแล้วนะครับ")
                             }
                             getMenuReport("กำลังส่ง");
                             setStatusOrder("กำลังส่ง");
@@ -237,33 +221,31 @@ const Orders = () => {
         });
     }
 
-    const UpdatePrice = async () => {
-        const body = {
-            amount: parseInt(price)
-        }
-        await httpPut(`/bills/${id}`, body)
-        setReport([]);
-        await getMenuReport("รับออเดอร์แล้ว");
-        handleClose();
-    }
-
     useEffect(() => {
         getMenuReport("รับออเดอร์แล้ว");
         getOrderNew();
         getOrderDelivery();
         getOrderCookingFinish();
         getOrderCooking();
-    }, [shop])
+    }, [shopId])
 
     return (<>
         <Row className="mt-3">
             <Col md={12}>
 
                 <Card style={{ border: 'none', marginTop: '12px' }}  >
-
                     <Form>
-
                         <Row className="when-print">
+
+                            <Col md={6} xs={6} className="mb-3">
+                                <Button variant="warning" className="w-75" onClick={() => setShopId("15b4e191-d125-4c18-bdd1-445091c349ff")}> ร้านศศิ </Button>
+
+                            </Col>
+                            <Col md={6} xs={6}>
+                                <Button variant="primary" className="w-75" onClick={() => setShopId("a9c9cac7-fa2f-4f19-bdc8-016e9a0a0cda")}> ร้านเตี๋ยวซา </Button>
+
+                            </Col>
+
                             <ButtonGroup aria-label="Basic example">
                                 <Button variant={statusOrder === "รับออเดอร์แล้ว" ? "btn btn-primary" : "btn btn-outline-primary"}
                                     style={{ fontSize: '18px' }} onClick={() => { getMenuReport("รับออเดอร์แล้ว"), setStatusOrder("รับออเดอร์แล้ว") }}>ออเดอร์ใหม่ {OrderNew}</Button>
@@ -284,7 +266,7 @@ const Orders = () => {
                         <Row>
                             {report.map((item, index) => (
                                 <React.Fragment key={index}>
-                                    {(printBillId === null || printBillId === item.bill_ID) && item.ordertype === 'สั่งกลับบ้าน' && (
+                                    {item.ordertype === 'สั่งกลับบ้าน' && (
                                         <Col md={4}>
                                             <Card className="mb-4 mt-4" id={item.id}>
                                                 <Card.Body style={{ padding: '12px' }}>
@@ -297,7 +279,6 @@ const Orders = () => {
                                                     <p>
                                                         เวลาสั่งซื้อ {moment(item.timeOrder).format('HH:mm')} น. &nbsp; <br />
                                                         วันที่ {moment(item.timeOrder).format('YYYY-MM-DD')}<br />
-                                                        {/* {item?.printStatus !== null ? item?.printStatus : " "} */}
                                                     </p>
                                                     <Row>
                                                         <Col md={6} xs={6}>
@@ -313,20 +294,17 @@ const Orders = () => {
                                                     <Alert className="when-print bg-white">
                                                         <b> {item.statusOrder}</b>
                                                     </Alert>
-                                                    {/* <Details
-                                                        reset={reset}
+                                                    <Details
+
                                                         id={item.id}
                                                         bill_ID={item.bill_ID}
-                                                        status={item.statusOrder} /> */}
+                                                        status={item.statusOrder} />
                                                     <Row>
                                                         <Col md={8}>
                                                             <h5>รวมทั้งหมด {item.amount} บาท</h5>
                                                             <h5>ลูกค้า-{item.customerName}</h5>
                                                             {item.address ? <h5>จัดส่งที่-{item.address}</h5> : " "}
-                                                            {/* <h5>วิธีการรับอาหาร-{item.ordertype}</h5> */}
                                                         </Col>
-
-
                                                     </Row>
 
                                                     <Row className="mt-2">
@@ -348,18 +326,7 @@ const Orders = () => {
                                                                 </Col>
                                                             )
                                                         }
-                                                        {/* {item.statusOrder === 'รับออเดอร์แล้ว' && (<>
 
-                                                            <Col md={6} xs={6} className="mb-2">
-                                                                <Button
-                                                                    className="when-print"
-                                                                    onClick={() => deleteBill(item.id, item.bill_ID)}
-                                                                    variant="danger w-100"
-                                                                >
-                                                                    ยกเลิกออเดอร์
-                                                                </Button>
-                                                            </Col></>
-                                                        )} */}
                                                         {
                                                             item.statusOrder === 'ทำเสร็จแล้ว' && item.ordertype === "สั่งกลับบ้าน" && (<>
                                                                 <Col md={12} xs={12}>
@@ -426,63 +393,6 @@ const Orders = () => {
                 </Card>
             </Col>
         </Row>
-        <Modal show={show} onHide={handleClose}>
-            <Modal.Header closeButton>
-                <Modal.Title> แก้ไขราคา  </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-
-                <Form>
-
-                    <Row>
-                        <Col md={12} xs={12}>
-
-                            <Form.Group>
-
-                                <Form.Label>ราคา</Form.Label>
-                                <Form.Control type="text"
-                                    onChange={(e) => setPrice(e.target.value)}
-                                    placeholder='ราคา'
-                                    defaultValue={price} />
-
-                            </Form.Group>
-
-                        </Col>
-                        <Row>
-
-                            <Col md={6} xs={6} className="text-center">
-                                <Button
-                                    className="mt-3 w-100"
-                                    onClick={() => UpdatePrice()}
-                                    style={{ float: 'left' }}
-                                    variant="success">
-                                    บึนทึก
-                                </Button>
-                            </Col>
-                            <Col md={6} xs={6}>
-                                <Button
-                                    className="mt-3 w-100"
-                                    onClick={handleClose}
-                                    style={{ float: 'left' }}
-                                    variant="danger">
-                                    ยกเลิก
-                                </Button>
-                            </Col>
-                        </Row>
-
-                    </Row>
-                </Form>
-
-
-
-
-
-
-
-
-            </Modal.Body>
-
-        </Modal>
     </>)
 }
 export default Orders;
