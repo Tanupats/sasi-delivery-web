@@ -177,12 +177,15 @@ function Context({ children }) {
 
 
     const getQueue = async () => {
-        await axios.get(`${dev}/queues?shop_id=${shop_id}`)
-            .then(res => {
-                if (res.status === 200) {
-                    setQueue(res.data.queues)
-                }
-            })
+        if (shop_id) {
+            await axios.get(`${dev}/queues?shop_id=${shop_id}`)
+                .then(res => {
+                    if (res.status === 200) {
+                        setQueue(res.data.queues)
+                    }
+                })
+        }
+
     }
 
     const [oldData, setOldData] = useState([]);
@@ -242,7 +245,7 @@ function Context({ children }) {
 
 
     useEffect(() => {
-        getQueue();
+
         getCounterOrder();
     }, [])
 
@@ -287,6 +290,7 @@ function Context({ children }) {
                 counterOrder,
                 paymentType,
                 setPaymentType,
+                getQueue
             }}>
             {children}
         </AuthData.Provider>

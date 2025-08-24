@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { AuthData } from "../ContextData";
 import { Row, Col, Card, Image, Button, Form, Alert, ButtonGroup } from "react-bootstrap";
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
@@ -8,6 +8,9 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import Swal from 'sweetalert2';
+import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
+import LocalDiningIcon from '@mui/icons-material/LocalDining';
+import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 const Cart = () => {
 
     const router = useNavigate()
@@ -18,6 +21,7 @@ const Cart = () => {
         saveOrder,
         updateNote,
         queue,
+        getQueue,
         setMenuPichet,
         setMenuNormal,
         updateQuantity,
@@ -38,7 +42,7 @@ const Cart = () => {
         if (queue > 9) {
             queueMessage += `<div style="color:red;">* รอประมาณ 40 น. - 1 ชั่วโมง </div>`;
         }
-       
+
         const result = await Swal.fire({
             title: 'ยืนยันการสั่งซื้อ?',
             html: `จำนวนคิวที่รอ ${queueMessage} คิว`,
@@ -58,6 +62,10 @@ const Cart = () => {
 
         }
     }
+
+    useEffect(() => {
+        getQueue();
+    }, [])
 
     return (<>
         <Card style={{ height: '100%', marginBottom: '120px' }}>
@@ -83,27 +91,27 @@ const Cart = () => {
                                                         <h6></h6>
                                                         <Form.Group>
                                                             <Row className="mt-2"><Col xs={4} md={2}>
-                                                                    <Button
-                                                                          style={ { backgroundColor: '#FD720D',border:'none'}}
-                                                                        onClick={() => {
-                                                                            if (item.quantity > 1) {
-                                                                                updateQuantity(item.id, item.quantity - 1);
-                                                                            }
-                                                                        }}
-                                                                    >
-                                                                        -
-                                                                    </Button>
-                                                                </Col>
-                                                               
+                                                                <Button
+                                                                    style={{ backgroundColor: '#FD720D', border: 'none' }}
+                                                                    onClick={() => {
+                                                                        if (item.quantity > 1) {
+                                                                            updateQuantity(item.id, item.quantity - 1);
+                                                                        }
+                                                                    }}
+                                                                >
+                                                                    -
+                                                                </Button>
+                                                            </Col>
+
                                                                 <Col xs={4} md={2} className="text-center p-2">
                                                                     <h6>{item.quantity}</h6>
 
                                                                 </Col>
-                                                                 <Col xs={4} md={2}>
+                                                                <Col xs={4} md={2}>
                                                                     <Button
-                                                                    style={ { backgroundColor: '#FD720D',border:'none'}}
-                                                                  
-                                                                      
+                                                                        style={{ backgroundColor: '#FD720D', border: 'none' }}
+
+
                                                                         onClick={() => { updateQuantity(item.id, item.quantity + 1) }} >+</Button>
                                                                 </Col>
                                                             </Row>
@@ -120,7 +128,7 @@ const Cart = () => {
                                                     </Button>
                                                 </Col>
                                                 {
-                                                    item.name !== 'ไข่ดาว' && item.name !== 'ข้าวสวย' &&  item.name !== 'ไข่เจียว' && (
+                                                    item.name !== 'ไข่ดาว' && item.name !== 'ข้าวสวย' && item.name !== 'ไข่เจียว' && (
 
                                                         <Col md={4} className="mt-3">
                                                             <div class="btn-group" role="group" aria-label="Basic outlined example">
@@ -152,25 +160,30 @@ const Cart = () => {
                             <>
                                 <h6>ยอดรวมทั้งหมด {sumPrice} บาท</h6>
                                 <h6>จำนวน {toTal} รายการ</h6>
-                                <h6 style={{ color: 'red' }}> คิวตอนนี้ {queue} คิว </h6>
+
                                 <Col md={12} xs={12} className="mt-2">
                                     <Form id="save" onSubmit={(e) => { onSave(e) }}>
                                         <Row className='order-type when-print'>
                                             <Form.Label style={{ fontWeight: 500 }}> การรับอาหาร</Form.Label>
                                             <ButtonGroup >
-                                                <Button variant={orderType === 'สั่งกลับบ้าน' ? 'success w-100' : 'outline-success w-100'}
+                                                <Button style={{
+                                                    backgroundColor: orderType === "สั่งกลับบ้าน" ? "#FD720D" : "white",
+                                                    color: orderType === "สั่งกลับบ้าน" ? "white" : "#FD720D",
+                                                    border: "1px solid #FD720D",
+                                                    width: "100%"
+                                                }}
                                                     onClick={() => setOrderType("สั่งกลับบ้าน")}
-                                                >จัดส่ง</Button>
+                                                > <DeliveryDiningIcon />  จัดส่ง</Button>
                                                 <Button
                                                     variant={orderType === 'เสิร์ฟในร้าน' ? 'danger w-100' : 'outline-danger w-100'}
                                                     onClick={() => {
                                                         setOrderType("เสิร์ฟในร้าน")
 
                                                     }}
-                                                >ทานที่ร้าน</Button>
+                                                > <LocalDiningIcon />  ทานที่ร้าน</Button>
                                                 <Button variant={orderType === 'รับเอง' ? 'primary w-100' : 'outline-primary w-100'}
                                                     onClick={() => { setOrderType("รับเอง") }}
-                                                >รับเองที่ร้าน</Button>
+                                                > <ShoppingBagIcon />  รับที่ร้าน</Button>
                                             </ButtonGroup>
                                             {
                                                 orderType === "สั่งกลับบ้าน" && (
@@ -205,7 +218,9 @@ const Cart = () => {
                                         </Form.Group>
                                     </Form>
                                 </Col>
+                                <Col md={12} className="mt-3"><h5 style={{ color: 'red' }}> รอคิวตอนนี้ {queue} คิว </h5></Col>
                                 <Col className="mt-3">
+
                                     <Button
                                         className="w-100"
                                         form="save" type="submit"
