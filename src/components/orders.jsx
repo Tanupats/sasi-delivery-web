@@ -293,6 +293,8 @@ const Orders = () => {
                                                     </Row>
                                                     <Alert className="when-print bg-white">
                                                         <b> {item.statusOrder}</b>
+
+                                                      
                                                     </Alert>
                                                     <Details
 
