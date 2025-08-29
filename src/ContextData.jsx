@@ -4,6 +4,10 @@ import axios from "axios";
 import Swal from 'sweetalert2';
 
 function Context({ children }) {
+
+    const messangerId = localStorage.getItem('messangerId');
+    const username = localStorage.getItem('name');
+
     const [cart, setCart] = useState([])
     const [toTal, setTotal] = useState(0);
     const [counterOrder, setCounterOrder] = useState(0);
@@ -11,8 +15,6 @@ function Context({ children }) {
     const [name, setName] = useState("");
     const [orderType, setOrderType] = useState("สั่งกลับบ้าน");
     const [queue, setQueue] = useState(0);
-    const authCheck = localStorage.getItem("auth");
-    const [auth, setAuth] = useState(authCheck || 'not_authenticated');
     const [Address, setAddress] = useState("");
     const [paymentType, setPaymentType] = useState("bank_transfer");
     const shop_id = localStorage.getItem('shop_id');
@@ -111,8 +113,6 @@ function Context({ children }) {
 
 
     const resetCart = () => setCart([]);
-    const messangerId = localStorage.getItem('messangerId');
-    const username = localStorage.getItem('name');
 
     const saveOrder = async () => {
         if (username !== null && messangerId !== null) {
@@ -185,10 +185,10 @@ function Context({ children }) {
                     }
                 })
         }
-
     }
 
     const [oldData, setOldData] = useState([]);
+    
     const setMenuPichet = (id, data) => {
         setOldData(prevData => [...prevData, data]);
 
@@ -283,8 +283,6 @@ function Context({ children }) {
                 setMenuPichet,
                 setMenuNormal,
                 updateFoodName,
-                auth,
-                setAuth,
                 Address,
                 setAddress,
                 counterOrder,

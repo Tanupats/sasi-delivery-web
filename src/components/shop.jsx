@@ -5,8 +5,10 @@ import Badge from 'react-bootstrap/Badge';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import QueueComponent from "./queueComponent";
 const ShopData = () => {
     const { userid, name } = useParams();
+ 
     localStorage.setItem("messangerId", userid);
     localStorage.setItem("name", name);
     const router = useNavigate();
@@ -19,6 +21,7 @@ const ShopData = () => {
             }
         })
     }, [])
+
 
     return (<>
         <Card style={{ marginBottom: '120px' }}>
@@ -44,19 +47,19 @@ const ShopData = () => {
                                                     <div className="mb-2">
                                                         <b> <AccessTimeIcon />  10:00 น - 22:00 น.</b>
                                                     </div>
-
-
-
                                                     <Image
                                                         style={{ width: "100%", height: "360px", objectFit: "cover" }}
                                                         src={`${import.meta.env.VITE_BAKUP_URL}/images/${item.photo}`}
                                                     />
-                                                    <div className="mt-3">
+                                                    <div className="row mt-3">
+                                                        
                                                         <h4>
                                                             <Badge bg="success" style={{ fontWeight: 500 }}>
-                                                                เปิดอยู่
+                                                                เปิดอยู่ตอนนี้  
                                                             </Badge>
+                                                           
                                                         </h4>
+                                                                <QueueComponent shop_id={item.shop_id} />
                                                     </div>
                                                 </Card.Body>
                                             </Card>
