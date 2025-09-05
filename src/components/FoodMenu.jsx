@@ -14,7 +14,7 @@ import Badge from 'react-bootstrap/Badge';
 import { useParams } from 'react-router-dom';
 const FoodMenu = () => {
     const { shop_id } = useParams();
-    const { addToCart } = useContext(AuthData)
+    const { addToCart,dev } = useContext(AuthData)
     localStorage.setItem('shop_id', shop_id);
     const [foods, setFoods] = useState([]);
     const [menuType, setMenuType] = useState([]);
@@ -28,7 +28,7 @@ const FoodMenu = () => {
     }
 
     const getMenuType = async () => {
-        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/menutype/shop/${shop_id}`)
+        await axios.get(`${dev}/menutype/shop/${shop_id}`)
             .then(res => {
                 setMenuType(res.data);
             })
@@ -36,7 +36,7 @@ const FoodMenu = () => {
 
     const getMenuByTypeId = async (id) => {
         setLoading(true)
-        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/${id}`)
+        await axios.get(`${dev}/foodmenu/${id}`)
             .then(res => {
                 setFoods(res.data);
                 setLoading(false);
@@ -45,7 +45,7 @@ const FoodMenu = () => {
 
     const getFoodMenu = () => {
         setLoadings(true)
-        fetch(`${import.meta.env.VITE_BAKUP_URL}/foodmenu/shop/${shop_id}`)
+        fetch(`${dev}/foodmenu/shop/${shop_id}`)
             .then((res) => res.json())
             .then((data) => {
                 if (data) {
@@ -56,8 +56,10 @@ const FoodMenu = () => {
     }
 
     useEffect(() => {
-        getMenuType();
-        getFoodMenu();
+        if (shop_id) {
+            getMenuType();
+            getFoodMenu();
+        }
     }, [])
 
     useEffect(() => {
@@ -196,6 +198,7 @@ const FoodMenu = () => {
                             })
                         }
                         <button
+                        style={{backgroundColor: '#FD720D'}}
                             onClick={() => scrollToTop()}
                             className={`scroll-to-top ${isVisible ? "show" : ""}`}
                         >

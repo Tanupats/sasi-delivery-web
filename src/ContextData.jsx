@@ -288,7 +288,8 @@ function Context({ children }) {
                 counterOrder,
                 paymentType,
                 setPaymentType,
-                getQueue
+                getQueue,
+                dev
             }}>
             {children}
         </AuthData.Provider>

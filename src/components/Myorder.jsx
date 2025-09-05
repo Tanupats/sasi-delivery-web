@@ -72,7 +72,7 @@ const Myorder = () => {
 
                                                     </h6>
 
-                                                    <Row>
+                                                    <Row> 
                                                         <Stepper activeStep={item.step} orientation={isMobile ? 'vertical' : 'horizontal'}>
                                                             {steps.map((label) => {
 
@@ -84,6 +84,7 @@ const Myorder = () => {
                                                             })}
                                                         </Stepper>
                                                     </Row>
+                                                    <></>
                                                 </Card.Body>
 
                                             </Card>
