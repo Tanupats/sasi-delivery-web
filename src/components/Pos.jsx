@@ -16,7 +16,7 @@ import { httpGet } from '../http';
 import QRCode from 'qrcode.react';
 import generatePayload from 'promptpay-qr'
 import { useNavigate } from "react-router-dom";
-import Swal from 'sweetalert2';
+
 
 for (let number = 1; number <= 5; number++) {
   items.push(
