@@ -127,8 +127,9 @@ const Orders = () => {
         }).then(response => {
             if (response) {
                 Swal.fire({
-                    title: 'ส่งข้อความรับออเดอร์สำเร็จแล้ว',
+                    title: 'ดำเนินการสำเร็จ',
                     icon: 'success',
+                    timer: 1300
                 })
 
             }
@@ -277,34 +278,30 @@ const Orders = () => {
                                                     <b> คิวที่ {item.queueNumber} <br />
                                                         เลขออเดอร์ {item.bill_ID.slice(-5).toUpperCase()}</b>
                                                     <p>
-                                                        เวลาสั่งซื้อ {moment(item.timeOrder).format('HH:mm')} น. &nbsp; <br />
-                                                        วันที่ {moment(item.timeOrder).format('YYYY-MM-DD')}<br />
+                                                        เวลาสั่งซื้อ {moment(item.timeOrder).format('HH:mm')} น. &nbsp;  วันที่ {moment(item.timeOrder).format('YYYY-MM-DD')}
+
                                                     </p>
                                                     <Row>
                                                         <Col md={6} xs={6}>
-                                                            <div className="profile">
-
-                                                            </div>
+                                                            <h5>ผู้สั่งซื้อ - {item.customerName}</h5>                                                  
                                                             <div className="when-print mb-2">
                                                                 <b> สั่งจาก {item.messengerId === 'pos' ? 'Admin' : 'Page'} </b> <br />
                                                             </div>
                                                         </Col>
 
                                                     </Row>
-                                                    <Alert className="when-print bg-white">
-                                                        <b> {item.statusOrder}</b>
-
-                                                      
+                                                    <Alert className="when-print bg-white p-2">
+                                                        <h5>สถานะ :  {item.statusOrder}</h5>
+                                                        <h5>รวมทั้งหมด {item.amount} บาท</h5>
                                                     </Alert>
                                                     <Details
-
                                                         id={item.id}
                                                         bill_ID={item.bill_ID}
                                                         status={item.statusOrder} />
                                                     <Row>
                                                         <Col md={8}>
-                                                            <h5>รวมทั้งหมด {item.amount} บาท</h5>
-                                                            <h5>ลูกค้า-{item.customerName}</h5>
+
+
                                                             {item.address ? <h5>จัดส่งที่-{item.address}</h5> : " "}
                                                         </Col>
                                                     </Row>
@@ -323,7 +320,7 @@ const Orders = () => {
                                                                         }}
                                                                         variant="success w-100"
                                                                     >
-                                                                        ทำอาหารเสร็จแล้ว
+                                                                        เปลี่ยนเป็นทำอาหารเสร็จแล้ว
                                                                     </Button>
                                                                 </Col>
                                                             )
@@ -342,7 +339,7 @@ const Orders = () => {
                                                                         }}
                                                                         variant="success w-100"
                                                                     >
-                                                                        กำลังส่ง
+                                                                        เปลี่ยนเป็นกำลังส่ง
                                                                     </Button>
 
                                                                 </Col>
@@ -361,9 +358,6 @@ const Orders = () => {
                                                                                 onChange={handleFileChange}
                                                                             />
                                                                         </Form.Group>
-
-
-
                                                                     </>
 
                                                                     <Button
@@ -374,7 +368,7 @@ const Orders = () => {
                                                                         }}
                                                                         variant="success w-100"
                                                                     >
-                                                                        ส่งสำเร็จ
+                                                                        จบงาน
                                                                     </Button>
 
                                                                 </Col>
