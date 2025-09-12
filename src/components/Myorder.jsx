@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Row, Card, Alert } from "react-bootstrap";
+import { Row, Card, Alert, Col, Button } from "react-bootstrap";
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import axios from "axios";
@@ -11,6 +11,9 @@ import StepLabel from '@mui/material/StepLabel';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { AuthData } from "../ContextData";
+import QRCode from 'qrcode.react';
+import generatePayload from 'promptpay-qr'
+
 const Myorder = () => {
     const steps = ['รับออเดอร์แล้ว', 'กำลังทำอาหาร', 'กำลังจัดส่ง', 'จัดส่งสำเร็จ'];
     const theme = useTheme();
@@ -25,6 +28,13 @@ const Myorder = () => {
                     setMyOrder(res.data);
                 }
             })
+    }
+
+    const [showQr, setShowQr] = useState(false);
+    const [qrCode, setQrCode] = useState("sample");
+
+    function handleQR(amount) {
+        setQrCode(generatePayload("0983460756", { amount: Number(amount) }));
     }
 
     useEffect(() => {
@@ -72,7 +82,7 @@ const Myorder = () => {
 
                                                     </h6>
 
-                                                    <Row> 
+                                                    <Row>
                                                         <Stepper activeStep={item.step} orientation={isMobile ? 'vertical' : 'horizontal'}>
                                                             {steps.map((label) => {
 
@@ -83,6 +93,23 @@ const Myorder = () => {
                                                                 );
                                                             })}
                                                         </Stepper>
+                                                        <Col md={12} className="mt-3 mb-3" >
+                                                            <Button
+                                                                variant='primary'
+
+                                                                onClick={() => {
+                                                                    handleQR(item.amount),
+                                                                        setShowQr(!showQr)
+                                                                }}>
+                                                                จ่ายด้วย qrcode พร้อมเพย์ </Button>
+                                                            {
+                                                                showQr ? <center><QRCode value={qrCode} className="mt-3" />
+                                                                    <h5>นายตนุภัทร สิทธิวงศ์  <br /> ยอดรวมทั้งหมด {item.amount} บาท </h5>
+                                                                </center> : <></>
+                                                            }
+                                                        </Col>
+
+
                                                     </Row>
                                                     <></>
                                                 </Card.Body>
