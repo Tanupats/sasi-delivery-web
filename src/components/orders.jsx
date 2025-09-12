@@ -7,6 +7,7 @@ import { httpGet, httpPut, httpPost, sendImageToPage } from "../http";
 import Swal from 'sweetalert2';
 import { AuthData } from "../ContextData";
 import axios from "axios";
+import Spinner from 'react-bootstrap/Spinner';
 const Orders = () => {
     const { shop } = useContext(AuthData);
     const token = localStorage.getItem("token");
@@ -18,16 +19,21 @@ const Orders = () => {
     const [OrderCookingFinish, setOrderCookingFinish] = useState(0);
     const [statusOrder, setStatusOrder] = useState("รับออเดอร์แล้ว");
     const [shopId, setShopId] = useState("15b4e191-d125-4c18-bdd1-445091c349ff");
+    const [loading, setLoading] = useState(false);
 
     const getMenuReport = async (status) => {
         setReport([]);
+
         if (shopId) {
+            setLoading(true);
             await httpGet(`/bills?status=${status}&shop_id=${shopId}`, { headers: { 'apikey': token } })
                 .then(res => { setReport(res.data) });
-        }
+
+        } setLoading(false);
     }
 
     const getOrderDelivery = async () => {
+
         if (shopId) {
             await httpGet(`/bills/counter-order-status/${shopId}?statusOrder=ส่งสำเร็จ`, { headers: { 'apikey': token } })
                 .then(res => {
@@ -129,7 +135,7 @@ const Orders = () => {
                 Swal.fire({
                     title: 'ดำเนินการสำเร็จ',
                     icon: 'success',
-                    timer: 1300
+                    timer: 500
                 })
 
             }
@@ -150,20 +156,12 @@ const Orders = () => {
         const selectedFile = e.target.files[0];
         if (selectedFile) {
             const compressedBlob = await compressImage(selectedFile, 800, 0.6); // ย่อกว้างสุด 800px, คุณภาพ 60%
-
-            // ดึงนามสกุลจากไฟล์เดิม หรือใช้ .jpg เป็นค่า default
             const extension = selectedFile.name.split('.').pop() || 'jpg';
             const fileName = selectedFile.name.split('.').slice(0, -1).join('.') || 'image';
-
             const compressedFile = new File([compressedBlob], `${fileName}.${extension}`, {
                 type: "image/jpeg",
             });
-
-            console.log("ขนาดเดิม:", (selectedFile.size / 1024 / 1024).toFixed(2), "MB");
-            console.log("ขนาดใหม่:", (compressedFile.size / 1024).toFixed(2), "KB");
-
             setFile(compressedFile);
-            console.log(compressedFile);
         }
     };
 
@@ -247,13 +245,13 @@ const Orders = () => {
 
                             </Col>
 
-                            <ButtonGroup aria-label="Basic example">
+                            <ButtonGroup aria-label="Basic example" style={{height:60}}>
                                 <Button variant={statusOrder === "รับออเดอร์แล้ว" ? "btn btn-primary" : "btn btn-outline-primary"}
-                                    style={{ fontSize: '18px' }} onClick={() => { getMenuReport("รับออเดอร์แล้ว"), setStatusOrder("รับออเดอร์แล้ว") }}>ออเดอร์ใหม่ {OrderNew}</Button>
+                                    style={{ fontSize: '18px' }} onClick={() => { getMenuReport("รับออเดอร์แล้ว"), setStatusOrder("รับออเดอร์แล้ว") }}>ใหม่ {OrderNew}</Button>
                                 <Button
                                     variant={statusOrder === "ทำเสร็จแล้ว" ? "btn btn-success" : "btn btn-outline-success"}
 
-                                    style={{ fontSize: '18px' }} onClick={() => { getMenuReport("ทำเสร็จแล้ว"), setStatusOrder("ทำเสร็จแล้ว") }}>ทำเสร็จแล้ว {OrderCookingFinish}</Button>
+                                    style={{ fontSize: '18px' }} onClick={() => { getMenuReport("ทำเสร็จแล้ว"), setStatusOrder("ทำเสร็จแล้ว") }}>พร้อมส่ง {OrderCookingFinish}</Button>
                                 <Button
                                     variant={statusOrder === "กำลังส่ง" ? "btn btn-danger" : "btn btn-outline-danger"}
                                     style={{ fontSize: '18px' }} onClick={() => { getMenuReport("กำลังส่ง"), setStatusOrder("กำลังส่ง") }}>กำลังส่ง  {OrderCooking}</Button>
@@ -265,6 +263,25 @@ const Orders = () => {
                         </Row>
 
                         <Row>
+                            <div className="mt-3 text-center">
+
+
+                                {
+
+                                    loading ? (<>
+
+                                        <Spinner animation="border" role="status" variant="primary">  </Spinner>
+                                    </>) : (
+
+                                        <>
+
+
+                                        </>
+                                    )
+                                }
+
+                            </div>
+
                             {report.map((item, index) => (
                                 <React.Fragment key={index}>
                                     {item.ordertype === 'สั่งกลับบ้าน' && (
@@ -275,33 +292,36 @@ const Orders = () => {
                                                         <h5> {shop?.name} </h5>
                                                         <h5>ใบเสร็จรับเงิน</h5>
                                                     </div>
-                                                    <b> คิวที่ {item.queueNumber} <br />
-                                                        เลขออเดอร์ {item.bill_ID.slice(-5).toUpperCase()}</b>
+                                                    {/*  คิวที่ {item.queueNumber} <br /> */}
+                                                    <b> เลขออเดอร์ {item.bill_ID.slice(-5).toUpperCase()}</b>
                                                     <p>
-                                                        เวลาสั่งซื้อ {moment(item.timeOrder).format('HH:mm')} น. &nbsp;  วันที่ {moment(item.timeOrder).format('YYYY-MM-DD')}
+                                                        เวลาสั่งซื้อ {moment(item.timeOrder).format('HH:mm')} น. &nbsp;  วันที่สั่ง {moment(item.timeOrder).format('YYYY-MM-DD')}
 
                                                     </p>
                                                     <Row>
-                                                        <Col md={6} xs={6}>
-                                                            <h5>ผู้สั่งซื้อ - {item.customerName}</h5>                                                  
-                                                            <div className="when-print mb-2">
-                                                                <b> สั่งจาก {item.messengerId === 'pos' ? 'Admin' : 'Page'} </b> <br />
-                                                            </div>
+                                                        <Col md={12} xs={12}>
+                                                            <h5>ลูกค้า - {item.customerName}</h5>
                                                         </Col>
-
                                                     </Row>
-                                                    <Alert className="when-print bg-white p-2">
-                                                        <h5>สถานะ :  {item.statusOrder}</h5>
-                                                        <h5>รวมทั้งหมด {item.amount} บาท</h5>
+                                                    <Alert className="bg-white p-2 text-center">
+                                                        <Row>
+                                                            <Col md={6} xs={6}>
+                                                                <h5>สถานะ :  {item.statusOrder}</h5>
+                                                            </Col>
+                                                            <Col md={6} xs={6}>
+                                                                <h5> {item.amount} บาท</h5>
+                                                            </Col>
+                                                        </Row>
+
+
                                                     </Alert>
                                                     <Details
+
                                                         id={item.id}
                                                         bill_ID={item.bill_ID}
                                                         status={item.statusOrder} />
-                                                    <Row>
+                                                    <Row className="mt-2">
                                                         <Col md={8}>
-
-
                                                             {item.address ? <h5>จัดส่งที่-{item.address}</h5> : " "}
                                                         </Col>
                                                     </Row>
@@ -312,15 +332,14 @@ const Orders = () => {
                                                             item.statusOrder === 'รับออเดอร์แล้ว' && (
                                                                 <Col md={12} xs={12} className="mb-2">
                                                                     <Button
-                                                                        className="when-print"
+                                                                        style={{ fontSize: 20 }}
+                                                                        className="mb-2"
                                                                         onClick={() => {
-
                                                                             UpdateStatus(item.id, 'ทำเสร็จแล้ว', item.messengerId, 2);
-
                                                                         }}
                                                                         variant="success w-100"
                                                                     >
-                                                                        เปลี่ยนเป็นทำอาหารเสร็จแล้ว
+                                                                        ทำอาหารเสร็จแล้ว
                                                                     </Button>
                                                                 </Col>
                                                             )
@@ -330,7 +349,8 @@ const Orders = () => {
                                                             item.statusOrder === 'ทำเสร็จแล้ว' && item.ordertype === "สั่งกลับบ้าน" && (<>
                                                                 <Col md={12} xs={12}>
                                                                     <Button
-                                                                        className="when-print"
+                                                                        style={{ fontSize: 20 }}
+                                                                        className="mb-2"
                                                                         onClick={() => {
 
                                                                             UpdateStatus(item.id, 'กำลังส่ง', item.messengerId, 3);
@@ -350,9 +370,10 @@ const Orders = () => {
                                                             item.statusOrder === 'กำลังส่ง' && (<>
                                                                 <Col md={12}>
                                                                     <>
-                                                                        <Form.Group className="mt-2">
-                                                                            <Form.Label>หลักฐานการส่ง</Form.Label>
+                                                                        <Form.Group>
+                                                                            <Form.Label>* ถ่ายรูปหลักฐานการส่ง</Form.Label>
                                                                             <Form.Control
+                                                                                className="mt-2 mb-4"
                                                                                 type="file"
                                                                                 id="file" accept="image/*" capture="environment"
                                                                                 onChange={handleFileChange}
@@ -361,16 +382,15 @@ const Orders = () => {
                                                                     </>
 
                                                                     <Button
-                                                                        className="when-print"
+                                                                        style={{ fontSize: 20 }}
+                                                                        className="mb-2"
                                                                         onClick={() => {
                                                                             UpdateStatus(item.id, 'ส่งสำเร็จ', item.messengerId, 4);
-
                                                                         }}
                                                                         variant="success w-100"
                                                                     >
-                                                                        จบงาน
+                                                                        ส่งสำเร็จ
                                                                     </Button>
-
                                                                 </Col>
 
                                                             </>)
