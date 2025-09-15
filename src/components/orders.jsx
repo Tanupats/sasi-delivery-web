@@ -245,7 +245,7 @@ const Orders = () => {
 
                             </Col>
 
-                            <ButtonGroup aria-label="Basic example" style={{height:60}}>
+                            <ButtonGroup aria-label="Basic example" style={{ height: 60 }}>
                                 <Button variant={statusOrder === "รับออเดอร์แล้ว" ? "btn btn-primary" : "btn btn-outline-primary"}
                                     style={{ fontSize: '18px' }} onClick={() => { getMenuReport("รับออเดอร์แล้ว"), setStatusOrder("รับออเดอร์แล้ว") }}>ใหม่ {OrderNew}</Button>
                                 <Button
