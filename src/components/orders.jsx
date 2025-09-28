@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Row, Col, Card, Button, Form, Alert } from "react-bootstrap";
+import { Row, Col, Card, Button, Form, Alert, Modal, ModalHeader } from "react-bootstrap";
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Details from "./Details";
 import moment from "moment/moment";
@@ -20,6 +20,10 @@ const Orders = () => {
     const [statusOrder, setStatusOrder] = useState("รับออเดอร์แล้ว");
     const [shopId, setShopId] = useState("15b4e191-d125-4c18-bdd1-445091c349ff");
     const [loading, setLoading] = useState(false);
+    const [open, setOpen] = useState(false);
+    const [preview, setPreview] = useState("");
+    const [id, setId] = useState("");
+    const [userid, setUserId] = useState("");
 
     const getMenuReport = async (status) => {
         setReport([]);
@@ -152,7 +156,10 @@ const Orders = () => {
     }
 
 
-    const handleFileChange = async (e) => {
+    const handleFileChange = async (e, bill, userid) => {
+        setOpen(true);
+        setUserId(userid);
+        setId(bill);
         const selectedFile = e.target.files[0];
         if (selectedFile) {
             const compressedBlob = await compressImage(selectedFile, 800, 0.6); // ย่อกว้างสุด 800px, คุณภาพ 60%
@@ -162,62 +169,48 @@ const Orders = () => {
                 type: "image/jpeg",
             });
             setFile(compressedFile);
+            const previewUrl = URL.createObjectURL(compressedFile);
+            setPreview(previewUrl);
         }
     };
 
     const UpdateStatus = async (id, status, messageid, step) => {
-        Swal.fire({
-            title: 'คุณต้องการอัพเดต หรือไม่ ?',
-            text: "กดยืนยันเพื่ออัพเดตสถานะ",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'ยืนยันรายการ',
-            cancelButtonText: 'ยกเลิก'
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                const body = {
-                    statusOrder: status,
-                    step: step
-                }
-                httpPut(`/bills/${id}`, body).then((res) => {
-                    if (res) {
-                        if (status === "ทำเสร็จแล้ว") {
-                            if (messageid !== "pos") {
-                                //sendNotificationBot(messageid);
-                                sendMessageToPage(messageid, "ออเดอร์ทำเสร็จแล้ว รอส่งนะครับ")
-                            }
-                            getMenuReport("รับออเดอร์แล้ว");
-                            setStatusOrder("รับออเดอร์แล้ว");
-                        }
-                        if (status === "กำลังส่ง") {
-                            if (messageid !== "pos") {
-                                //sendDelivery(messageid);
-                                sendMessageToPage(messageid, "กำลังไปส่งนะครับ")
-                            }
-                            getMenuReport("ทำเสร็จแล้ว");
-                            setStatusOrder("ทำเสร็จแล้ว");
-                        }
-                        if (status === "ส่งสำเร็จ") {
-                            if (messageid !== "pos") {
-                                uploadFile(messageid);
-                                // sendDeliverySuccess(messageid)
-                                sendMessageToPage(messageid, "มาส่งแล้วนะครับ")
-                            }
-                            getMenuReport("กำลังส่ง");
-                            setStatusOrder("กำลังส่ง");
-                            setFile("");
-                        }
-                        getOrderNew();
-                        getOrderDelivery();
-                        getOrderCookingFinish();
-                        getOrderCooking();
+        const body = {
+            statusOrder: status,
+            step: step
+        }
+        httpPut(`/bills/${id}`, body).then((res) => {
+            if (res) {
+                if (status === "ทำเสร็จแล้ว") {
+                    if (messageid !== "pos") {
+                        sendMessageToPage(messageid, "ออเดอร์ทำเสร็จแล้ว รอส่งนะครับ")
                     }
-                })
-
+                    getMenuReport("รับออเดอร์แล้ว");
+                    setStatusOrder("รับออเดอร์แล้ว");
+                }
+                if (status === "กำลังส่ง") {
+                    if (messageid !== "pos") {
+                        sendMessageToPage(messageid, "กำลังไปส่งนะครับ")
+                    }
+                    getMenuReport("ทำเสร็จแล้ว");
+                    setStatusOrder("ทำเสร็จแล้ว");
+                }
+                if (status === "ส่งสำเร็จ") {
+                    if (messageid !== "pos") {
+                        uploadFile(messageid);
+                        sendMessageToPage(messageid, "มาส่งแล้วนะครับ")
+                    }
+                    getMenuReport("กำลังส่ง");
+                    setStatusOrder("กำลังส่ง");
+                    setFile("");
+                    setOpen(false);
+                }
+                getOrderNew();
+                getOrderDelivery();
+                getOrderCookingFinish();
+                getOrderCooking();
             }
-        });
+        })
     }
 
     useEffect(() => {
@@ -229,6 +222,41 @@ const Orders = () => {
     }, [shopId])
 
     return (<>
+
+        <Modal show={open}>
+            <ModalHeader>
+                <Modal.Title >
+                    ยืนยันส่งออเดอร์
+                </Modal.Title>
+
+            </ModalHeader>
+
+            <Modal.Body>
+                <img style={{ width: '100%', height: 300, objectFit: 'cover' }} src={preview} />
+                <Row className="mt-3">
+
+                    <Col md={6} xs={6}>
+                        <Button
+                            style={{ fontSize: 18 }}
+                            className="mb-2"
+                            onClick={() => {
+                                UpdateStatus(id, 'ส่งสำเร็จ', userid, 4);
+                            }}
+                            variant="success w-100"
+                        >
+                            ส่งสำเร็จ
+                        </Button>
+                    </Col>
+                    <Col md={6} xs={6}>
+                        <Button  
+                         variant="danger w-100"
+                        style={{ fontSize: 18 }} onClick={() => setOpen(false)}> ยกเลิก</Button>
+                    </Col>
+                </Row>
+
+
+            </Modal.Body>
+        </Modal>
         <Row className="mt-3">
             <Col md={12}>
 
@@ -376,21 +404,11 @@ const Orders = () => {
                                                                                 className="mt-2 mb-4"
                                                                                 type="file"
                                                                                 id="file" accept="image/*" capture="environment"
-                                                                                onChange={handleFileChange}
+                                                                                onChange={(e) => handleFileChange(e, item.id, item.messengerId)}
                                                                             />
                                                                         </Form.Group>
                                                                     </>
 
-                                                                    <Button
-                                                                        style={{ fontSize: 20 }}
-                                                                        className="mb-2"
-                                                                        onClick={() => {
-                                                                            UpdateStatus(item.id, 'ส่งสำเร็จ', item.messengerId, 4);
-                                                                        }}
-                                                                        variant="success w-100"
-                                                                    >
-                                                                        ส่งสำเร็จ
-                                                                    </Button>
                                                                 </Col>
 
                                                             </>)
