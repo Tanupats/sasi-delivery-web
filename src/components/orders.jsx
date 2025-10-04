@@ -248,9 +248,9 @@ const Orders = () => {
                         </Button>
                     </Col>
                     <Col md={6} xs={6}>
-                        <Button  
-                         variant="danger w-100"
-                        style={{ fontSize: 18 }} onClick={() => setOpen(false)}> ยกเลิก</Button>
+                        <Button
+                            variant="danger w-100"
+                            style={{ fontSize: 18 }} onClick={() => setOpen(false)}> ยกเลิก</Button>
                     </Col>
                 </Row>
 
@@ -396,7 +396,7 @@ const Orders = () => {
                                                         }
                                                         {
                                                             item.statusOrder === 'กำลังส่ง' && (<>
-                                                                <Col md={12}>
+                                                                <Col md={6} xs={6}>
                                                                     <>
                                                                         <Form.Group>
                                                                             <Form.Label>* ถ่ายรูปหลักฐานการส่ง</Form.Label>
@@ -410,7 +410,18 @@ const Orders = () => {
                                                                     </>
 
                                                                 </Col>
-
+                                                                <Col md={6} xs={12}>
+                                                                    <Button
+                                                                        style={{ fontSize: 18 }}
+                                                                        className="mb-2"
+                                                                        onClick={() => {
+                                                                            UpdateStatus(item.id, 'ส่งสำเร็จ', item.messengerId, 4);
+                                                                        }}
+                                                                        variant="success w-100"
+                                                                    >
+                                                                        จัดส่งสำเร็จ
+                                                                    </Button>
+                                                                </Col>
                                                             </>)
                                                         }
 
