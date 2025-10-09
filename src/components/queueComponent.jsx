@@ -25,7 +25,7 @@ const QueueComponent = ({ shop_id }) => {
 
   return (
     <h5>
-      <Badge bg="primary">คิวทั้งหมด: {queue}</Badge>
+      <h5 bg="primary">คิวทั้งหมด : {queue}</h5>
     </h5>
   );
 };

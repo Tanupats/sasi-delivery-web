@@ -70,10 +70,10 @@ const NavbarMenu = () => {
         >
           <BottomNavigation showLabels value={value}>          
              <BottomNavigationAction onClick={() => setValue(3)} label="ร้านค้า" icon={<StorefrontIcon />} component={Link} to={`/shop/${id}/${name}`} />
-            <BottomNavigationAction
+            {/* <BottomNavigationAction
               onClick={() => setValue(0)}
               label="เมนู" icon={<MenuBookIcon />}
-              component={Link} to={`/foodmenu/${shop_id}`} />
+              component={Link} to={`/foodmenu/${shop_id}`} /> */}
                   <BottomNavigationAction onClick={() => setValue(2)} label={"ตะกร้า " + toTal} icon={<ShoppingCart />} component={Link} to="/cart" />
             <BottomNavigationAction onClick={() => setValue(1)} label={"ออเดอร์ " + counterOrder} icon={<Receipt />} component={Link} to="/Myorder" />
           </BottomNavigation>

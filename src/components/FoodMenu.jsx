@@ -14,8 +14,9 @@ import Badge from 'react-bootstrap/Badge';
 import { useParams } from 'react-router-dom';
 const FoodMenu = () => {
     const { shop_id } = useParams();
-    const { addToCart,dev } = useContext(AuthData)
-    localStorage.setItem('shop_id', shop_id);
+
+    const { addToCart, dev } = useContext(AuthData)
+
     const [foods, setFoods] = useState([]);
     const [menuType, setMenuType] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -57,6 +58,7 @@ const FoodMenu = () => {
 
     useEffect(() => {
         if (shop_id) {
+            localStorage.setItem('shop_id', shop_id);
             getMenuType();
             getFoodMenu();
         }
@@ -198,7 +200,7 @@ const FoodMenu = () => {
                             })
                         }
                         <button
-                        style={{backgroundColor: '#FD720D'}}
+                            style={{ backgroundColor: '#FD720D' }}
                             onClick={() => scrollToTop()}
                             className={`scroll-to-top ${isVisible ? "show" : ""}`}
                         >
