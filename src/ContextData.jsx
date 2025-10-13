@@ -17,7 +17,7 @@ function Context({ children }) {
     const [queue, setQueue] = useState(0);
     const [Address, setAddress] = useState("");
     const [paymentType, setPaymentType] = useState("bank_transfer");
-    const shop_id = localStorage.getItem('shop_id');
+    const [shopId, setShopId] = useState("")
 
     const dev = import.meta.env.VITE_BAKUP_URL;
 
@@ -38,26 +38,52 @@ function Context({ children }) {
     }
 
     const addToCart = (data) => {
-        Swal.fire({
-            title: 'เพิ่มรายการสำเร็จ',
-            text: 'เพิ่มรายการลงตะกร้า',
-            icon: 'success',
-            timer: 1300
-        })
-        let itemCart = {
+        const itemCart = {
             id: data.id,
             name: data.foodname,
             price: data.Price,
             quantity: data.quantity,
             photo: data.img,
-            note: data.note
-        }
+            note: data.note,
+            shop_id: data.shop_id // เก็บร้านไว้ด้วย
+        };
+
+        // ถ้ายังไม่มีของในตะกร้า → เพิ่มได้เลย
         if (cart.length === 0) {
             setCart([itemCart]);
-        } else {
-            setCart([...cart, itemCart]);
+            Swal.fire({
+                title: 'เพิ่มรายการสำเร็จ',
+                text: 'เพิ่มรายการลงตะกร้าแล้ว',
+                icon: 'success',
+                timer: 1200,
+                showConfirmButton: false
+            });
+            return;
         }
-    }
+
+        // ถ้ามีของในตะกร้าแล้ว → เช็กร้านของชิ้นแรกกับร้านใหม่
+        const firstShopId = cart[0].shop_id;
+
+        if (firstShopId === data.shop_id) {
+            // ร้านเดียวกัน เพิ่มได้
+            setCart([...cart, itemCart]);
+            Swal.fire({
+                title: 'เพิ่มรายการสำเร็จ',
+                text: 'เพิ่มรายการลงตะกร้าแล้ว',
+                icon: 'success',
+                timer: 1200,
+                showConfirmButton: false
+            });
+        } else {
+            // ร้านไม่ตรงกัน
+            Swal.fire({
+                title: 'สินค้าเป็นของร้านอื่น',
+                text: 'ไม่สามารถสั่งอาหารข้ามร้านได้ กรุณาล้างตะกร้าก่อน',
+                icon: 'error',
+                confirmButtonText: 'ตกลง'
+            });
+        }
+    };
 
     const removeCart = (id) => {
         let newCart = cart.filter(item => item.id !== id);
@@ -106,12 +132,6 @@ function Context({ children }) {
     }
 
 
-
-
-
-
-
-
     const resetCart = () => setCart([]);
 
     const saveOrder = async () => {
@@ -122,7 +142,7 @@ function Context({ children }) {
                 payment_type: paymentType,
                 statusOrder: "รับออเดอร์แล้ว",
                 customerName: username,
-                shop_id: shop_id,
+                shop_id: shopId,
                 messengerId: messangerId,
                 address: Address,
                 step: 1
@@ -177,8 +197,8 @@ function Context({ children }) {
 
 
     const getQueue = async () => {
-        if (shop_id) {
-            await axios.get(`${dev}/queues?shop_id=${shop_id}`)
+        if (shopId) {
+            await axios.get(`${dev}/queues?shop_id=${shopId}`)
                 .then(res => {
                     if (res.status === 200) {
                         setQueue(res.data.queues)
@@ -188,7 +208,7 @@ function Context({ children }) {
     }
 
     const [oldData, setOldData] = useState([]);
-    
+
     const setMenuPichet = (id, data) => {
         setOldData(prevData => [...prevData, data]);
 
@@ -245,7 +265,6 @@ function Context({ children }) {
 
 
     useEffect(() => {
-
         getCounterOrder();
     }, [])
 
@@ -289,7 +308,8 @@ function Context({ children }) {
                 paymentType,
                 setPaymentType,
                 getQueue,
-                dev
+                dev,
+                setShopId
             }}>
             {children}
         </AuthData.Provider>

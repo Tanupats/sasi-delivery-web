@@ -15,7 +15,7 @@ import { useParams } from 'react-router-dom';
 const FoodMenu = () => {
     const { shop_id } = useParams();
 
-    const { addToCart, dev } = useContext(AuthData)
+    const { addToCart, dev, setShopId } = useContext(AuthData)
 
     const [foods, setFoods] = useState([]);
     const [menuType, setMenuType] = useState([]);
@@ -58,7 +58,7 @@ const FoodMenu = () => {
 
     useEffect(() => {
         if (shop_id) {
-            localStorage.setItem('shop_id', shop_id);
+            setShopId(shop_id);
             getMenuType();
             getFoodMenu();
         }
