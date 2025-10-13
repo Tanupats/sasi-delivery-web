@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Row, Col, Card, Button, Alert,Form } from "react-bootstrap";
+import { Row, Col, Card, Button, Alert, Form } from "react-bootstrap";
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Details from "./Details";
 import moment from "moment/moment";
@@ -219,10 +219,10 @@ const Orders = () => {
                         </Row>
                         <Row className="mt-4 when-print">
                             <Col md={6} xs={6}>
-                            <Button
-                            className="w-100"
-                                onClick={() => { reset() }}
-                            > < RestartAltIcon /> โหลดข้อมูลใหม่ </Button></Col>
+                                <Button
+                                    className="w-100"
+                                    onClick={() => { reset() }}
+                                > < RestartAltIcon /> โหลดข้อมูลใหม่ </Button></Col>
 
 
                         </Row>
@@ -249,7 +249,7 @@ const Orders = () => {
                                                             <div className="when-print mb-2">
                                                                 {
 
-                                                                    item.messengerId !== "pos" && (
+                                                                    item.messengerId !== "pos" && item.statusOrder === "รับออเดอร์แล้ว" && (
 
                                                                         <Button
                                                                             onClick={() => sendMessageToPage(item.messengerId, "ร้านรับออเดอร์แล้วครับ  ยอดรวม" + item.amount + "บาทครับ")}
@@ -259,7 +259,7 @@ const Orders = () => {
 
                                                                 }
 
-                                                                <b> {item.messengerId === 'pos' ? " Admin" : "Page"} </b> <br />
+                                                              
 
                                                             </div>
                                                         </Col>

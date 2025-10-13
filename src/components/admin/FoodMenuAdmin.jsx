@@ -186,33 +186,22 @@ const FoodMenuAdmin = () => {
                                                                     <h5>{item.foodname}</h5>
                                                                     <h5>{item.Price}฿</h5>
                                                                 </div>
+
                                                                 {
-                                                                    item.status === 1 && (
-                                                                        <Form.Group>
-                                                                            <Row>
-                                                                                <Col md={6} xs={6} onClick={() => updateStatus(item.id, 0, item.TypeID)}>
-                                                                                    <Form.Label> มีจำหน่าย</Form.Label>
-                                                                                </Col>
-                                                                                <Col md={6} xs={6}>
-                                                                                    <Form.Check checked={item.status} onClick={() => updateStatus(item.id, 0, item.TypeID)} />
-                                                                                </Col>
-                                                                            </Row>
-                                                                        </Form.Group>
-                                                                    )
+                                                                    item.status === 1 && (<>
+                                                                        <Button variant="success"
+                                                                            onClick={() => updateStatus(item.id, 0, item.TypeID)}
+                                                                        >มีจำหน่าย</Button>{' '}</>)
+
                                                                 }
                                                                 {
-                                                                    item.status === 0 && (
-                                                                        <Form.Group>
-                                                                            <Row>
-                                                                                <Col md={6} xs={6} onClick={() => updateStatus(item.id, 1, item.TypeID)}>
-                                                                                    <Form.Label> สินค้าหมด</Form.Label>
-                                                                                </Col>
-                                                                                <Col md={6} xs={6}>
-                                                                                    <Form.Check checked={item.status} onClick={() => updateStatus(item.id, 1, item.TypeID)} />
-                                                                                </Col>
-                                                                            </Row>
-                                                                        </Form.Group>
-                                                                    )}
+                                                                    item.status === 0 && (<>
+                                                                        <Button variant="danger"
+                                                                            onClick={() => updateStatus(item.id, 1, item.TypeID)}
+                                                                        >ของหมด</Button>{' '}</>)
+
+                                                                }
+
                                                                 <Button
                                                                     onClick={() => onSelectMenu(item)}
                                                                     variant="warning"
