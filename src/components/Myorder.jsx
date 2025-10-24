@@ -13,6 +13,7 @@ import { useTheme } from '@mui/material/styles';
 import { AuthData } from "../ContextData";
 import QRCode from 'qrcode.react';
 import generatePayload from 'promptpay-qr'
+import GetQueueComponent from './queueComponent';
 
 const Myorder = () => {
     const steps = ['รับออเดอร์แล้ว', 'กำลังทำอาหาร', 'กำลังจัดส่ง', 'จัดส่งสำเร็จ'];
@@ -82,6 +83,8 @@ const Myorder = () => {
 
                                                     </h6>
 
+
+
                                                     <Row>
                                                         <Stepper activeStep={item.step} orientation={isMobile ? 'vertical' : 'horizontal'}>
                                                             {steps.map((label) => {
@@ -142,7 +145,7 @@ const Myorder = () => {
 
 
                                                 </h6>
-
+                                                <GetQueueComponent rider_id={item.rider_id} />
                                                 <Row>
                                                     <Stepper activeStep={item.step} orientation={isMobile ? 'vertical' : 'horizontal'}>
                                                         {steps.map((label) => {

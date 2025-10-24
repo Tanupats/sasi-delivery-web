@@ -1,31 +1,26 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Badge from "react-bootstrap/Badge";
 
-const QueueComponent = ({ shop_id }) => {
-  const [queue, setQueue] = useState(null);
+const QueueComponent = ({ rider_id }) => {
+  const [data, setData] = useState(null);
 
   useEffect(() => {
-    if (!shop_id) return;
+    if (!rider_id) return;
     axios
-      .get(`${import.meta.env.VITE_BAKUP_URL}/queues?shop_id=${shop_id}`)
+      .get(`${import.meta.env.VITE_BAKUP_URL}/user/${rider_id}`)
       .then((res) => {
         if (res.status === 200) {
-          setQueue(res.data.queues);
+          setData(res.data);
         }
       })
       .catch((err) => {
         console.error("Error fetching queue:", err);
       });
-  }, [shop_id]);
-
-  if (queue === null) {
-    return <Badge bg="secondary">กำลังโหลดคิว...</Badge>;
-  }
+  }, [rider_id]);
 
   return (
     <h5>
-      <h5 bg="primary">คิวทั้งหมด : {queue}</h5>
+      <h5 bg="primary">ข้อมูลไรเดอร์ : {data?.name}</h5>
     </h5>
   );
 };
