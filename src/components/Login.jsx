@@ -7,14 +7,9 @@ const Login = () => {
     const router = useNavigate()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const { setStaffName, setUser, setShop } = useContext(AuthData);
+    const { setStaffName, setUser } = useContext(AuthData);
     const [messageError, setMessageError] = useState(false);
-    const getShop = (id) => {
-        httpGet('/shop/shop-user/' + id).then((res) => {
-            setShop({ ...res.data[0] });
-        })
-    }
-
+   
     const login = async (e) => {
         e.preventDefault();
         const body = { email: email, password: password };
@@ -27,9 +22,7 @@ const Login = () => {
                         localStorage.setItem("role", department);
                         localStorage.setItem("token", token);
                         localStorage.setItem("userId", id);
-
                         setUser(res.data);
-                        getShop(id);
                         setStaffName(name);
                         router('/orders');
                     } else {

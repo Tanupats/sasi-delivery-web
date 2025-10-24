@@ -9,7 +9,7 @@ import { AuthData } from "../ContextData";
 import axios from "axios";
 import Spinner from 'react-bootstrap/Spinner';
 const Orders = () => {
-    const { shop } = useContext(AuthData);
+    const { shop, user } = useContext(AuthData);
     const token = localStorage.getItem("token");
     const [report, setReport] = useState([]);
     const [file, setFile] = useState("");
@@ -27,12 +27,10 @@ const Orders = () => {
 
     const getMenuReport = async (status) => {
         setReport([]);
-
         if (shopId) {
             setLoading(true);
             await httpGet(`/bills?status=${status}&shop_id=${shopId}`, { headers: { 'apikey': token } })
                 .then(res => { setReport(res.data) });
-
         } setLoading(false);
     }
 
@@ -174,10 +172,13 @@ const Orders = () => {
         }
     };
 
+    console.log(user.id);
+
     const UpdateStatus = async (id, status, messageid, step) => {
         const body = {
             statusOrder: status,
-            step: step
+            step: step,
+            rider_id: user.id
         }
         httpPut(`/bills/${id}`, body).then((res) => {
             if (res) {
