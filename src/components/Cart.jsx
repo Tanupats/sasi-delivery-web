@@ -11,6 +11,7 @@ import Swal from 'sweetalert2';
 import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import LocalDiningIcon from '@mui/icons-material/LocalDining';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
+import axios from "axios";
 const Cart = () => {
 
     const router = useNavigate()
@@ -31,10 +32,20 @@ const Cart = () => {
         paymentType,
         setPaymentType,
         setOrderType,
-        orderType
+        orderType,
+        dev,
+        messangerId
     } = useContext(AuthData);
 
     const [loading, setLoading] = useState(false);
+
+
+    const getProfile = async () => {
+        const res = await axios.get(`${dev}/bills/profile/${messangerId}`).then((data) => data);
+        if (res.status === 200) {
+            setAddress(res.data?.address);
+        }
+    }
 
     const onSave = async (e) => {
         e.preventDefault();
@@ -42,7 +53,6 @@ const Cart = () => {
         if (queue > 9) {
             queueMessage += `<div style="color:red;">* รอประมาณ 40 น. - 1 ชั่วโมง </div>`;
         }
-
         const result = await Swal.fire({
             title: 'ยืนยันการสั่งซื้อ?',
             html: `จำนวนคิวที่รอ ${queueMessage} คิว`,
@@ -63,9 +73,11 @@ const Cart = () => {
         }
     }
 
+
     useEffect(() => {
+        getProfile();
         getQueue();
-    }, [])
+    }, [cart])
 
     return (<>
         <Card style={{ height: '100%', marginBottom: '120px' }}>
@@ -83,7 +95,7 @@ const Cart = () => {
                                                     xs={5}
                                                 >
                                                     <Image style={{ width: "100%", height: '130px', objectFit: 'cover', borderRadius: '8px' }}
-                                                        src={`${import.meta.env.VITE_BAKUP_URL}/images/${item.photo}`} />
+                                                        src={`${dev}/images/${item.photo}`} />
                                                 </Col>
                                                 <Col md={5} xs={5}>
                                                     <div className="menu-list mt-3">
@@ -110,8 +122,6 @@ const Cart = () => {
                                                                 <Col xs={4} md={2}>
                                                                     <Button
                                                                         style={{ backgroundColor: '#FD720D', border: 'none' }}
-
-
                                                                         onClick={() => { updateQuantity(item.id, item.quantity + 1) }} >+</Button>
                                                                 </Col>
                                                             </Row>
@@ -129,7 +139,6 @@ const Cart = () => {
                                                 </Col>
                                                 {
                                                     item.name !== 'ไข่ดาว' && item.name !== 'ข้าวสวย' && item.name !== 'ไข่เจียว' && (
-
                                                         <Col md={4} className="mt-3">
                                                             <div class="btn-group" role="group" aria-label="Basic outlined example">
                                                                 <button type="button" className="btn btn-outline-primary" onClick={() => setMenuNormal(item.id)}>ธรรมดา </button>
@@ -154,13 +163,11 @@ const Cart = () => {
                             </>)
                         })
                     }
-
                     {
                         cart.length > 0 ? (
                             <>
                                 <h6>ยอดรวมทั้งหมด {sumPrice} บาท</h6>
                                 <h6>จำนวน {toTal} รายการ</h6>
-
                                 <Col md={12} xs={12} className="mt-2">
                                     <Form id="save" onSubmit={(e) => { onSave(e) }}>
                                         <Row className='order-type when-print'>
@@ -172,20 +179,25 @@ const Cart = () => {
                                                     border: "1px solid #FD720D",
                                                     width: "100%"
                                                 }}
-                                                    onClick={() => setOrderType("สั่งกลับบ้าน")}
+                                                    onClick={() => {
+                                                        setOrderType("สั่งกลับบ้าน");
+                                                        getProfile();
+                                                    }}
                                                 > <DeliveryDiningIcon />  จัดส่ง</Button>
                                                 <Button
                                                     variant={orderType === 'เสิร์ฟในร้าน' ? 'danger w-100' : 'outline-danger w-100'}
                                                     onClick={() => {
-                                                        setOrderType("เสิร์ฟในร้าน")
-
+                                                        setOrderType("เสิร์ฟในร้าน");
+                                                        setAddress("");
                                                     }}
                                                 > <LocalDiningIcon />  ทานที่ร้าน</Button>
                                                 <Button variant={orderType === 'รับเอง' ? 'primary w-100' : 'outline-primary w-100'}
-                                                    onClick={() => { setOrderType("รับเอง") }}
-                                                > <ShoppingBagIcon />  รับที่ร้าน</Button>
+                                                    onClick={() => {
+                                                        setOrderType("รับเอง");
+                                                        setAddress("");
+                                                    }}                                            > <ShoppingBagIcon />  รับที่ร้าน</Button>
                                             </ButtonGroup>
-                                            {
+                                         {
                                                 orderType === "สั่งกลับบ้าน" && (
                                                     <Form.Group className="mt-2">
                                                         <Form.Label style={{ fontWeight: 500 }}> ที่อยู่จัดส่ง    </Form.Label>

@@ -45,22 +45,23 @@ function Context({ children }) {
             quantity: data.quantity,
             photo: data.img,
             note: data.note,
-            shop_id: data.shop_id // เก็บร้านไว้ด้วย
+            shop_id: data.shop_id
         };
 
         // ถ้ายังไม่มีของในตะกร้า → เพิ่มได้เลย
         if (cart.length === 0) {
-            setCart([itemCart]);
-            Swal.fire({
-                title: 'เพิ่มรายการสำเร็จ',
-                text: 'เพิ่มรายการลงตะกร้าแล้ว',
-                icon: 'success',
-                timer: 1200,
-                showConfirmButton: false
-            });
-            return;
+            if (data.shop_id === shopId) {
+                setCart([itemCart]);
+                Swal.fire({
+                    title: 'เพิ่มรายการสำเร็จ',
+                    text: 'เพิ่มรายการลงตะกร้าแล้ว',
+                    icon: 'success',
+                    timer: 1200,
+                    showConfirmButton: false
+                });
+            }
         }
-
+        
         // ถ้ามีของในตะกร้าแล้ว → เช็กร้านของชิ้นแรกกับร้านใหม่
         const firstShopId = cart[0].shop_id;
 
