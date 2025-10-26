@@ -21,7 +21,7 @@ function Context({ children }) {
     const getUser = async () => {
         if (token) {
             try {
-                await httpGet('/user/me', { headers: { 'apikey': token } })
+                await httpGet('/me', { headers: { 'apikey': token } })
                     .then(res => {
                         if (res) {
                             if (res.status === 200) {
@@ -153,7 +153,7 @@ function Context({ children }) {
                         })
                     }
                 })
-                
+
             cart.map(({ name, price, quantity, note }) => {
                 const bodyDetails = {
                     bills_id: id,
