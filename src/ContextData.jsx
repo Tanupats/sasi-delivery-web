@@ -21,7 +21,7 @@ function Context({ children }) {
     const getUser = async () => {
         if (token) {
             try {
-                await httpGet('/user/me', { headers: { 'apikey': token } })
+                await httpGet('/me', { headers: { 'apikey': token } })
                     .then(res => {
                         if (res) {
                             if (res.status === 200) {
