@@ -183,7 +183,7 @@ const Pos = () => {
             </div>
           </Col>
           <Col md={6} className='when-print'>
-            <div className="search mt-4 w-50">
+            {/* <div className="search mt-4 w-50">
               <InputGroup>
                 <InputGroup.Text>
                   <SearchIcon />
@@ -196,11 +196,11 @@ const Pos = () => {
                 <Button> ค้นหา </Button>
               </InputGroup>
 
-            </div>
+            </div> */}
 
             <div className='menu-type mt-4'>
               <div className="title">
-                <h5>category </h5>
+                <h5>ประเภท </h5>
               </div>
               <Row>
                 {
@@ -247,7 +247,7 @@ const Pos = () => {
 
             <div className='menu mt-2' >
               <div className="title">
-                <h5>product </h5>
+                <h5>รายการ </h5>
               </div>
               <Row>
                 {
