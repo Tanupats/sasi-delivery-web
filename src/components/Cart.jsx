@@ -34,14 +34,13 @@ const Cart = () => {
         setOrderType,
         orderType,
         dev,
-        messangerId
+        messengerId
     } = useContext(AuthData);
 
     const [loading, setLoading] = useState(false);
 
-
     const getProfile = async () => {
-        const res = await axios.get(`${dev}/bills/profile/${messangerId}`).then((data) => data);
+        const res = await axios.get(`${dev}/bills/profile/${messengerId}`).then((data) => data);
         if (res.status === 200) {
             setAddress(res.data?.address);
         }
@@ -50,11 +49,14 @@ const Cart = () => {
     const onSave = async (e) => {
         e.preventDefault();
         let queueMessage = `<h4 style="color: ${queue > 9 ? 'red' : 'black'}">${queue}</h4>`;
-        if (queue > 9) {
+        if (queue > 10) {
+            queueMessage += `<div style="color:red;">* รอประมาณ 1.30 ชม ขึ้นไป</div>`;
+        } else if (queue >= 9) {
             queueMessage += `<div style="color:red;">* รอประมาณ 40 น. - 1 ชั่วโมง </div>`;
         }
+
         const result = await Swal.fire({
-            title: 'ยืนยันการสั่งซื้อ?',
+            title: 'ยืนยันการสั่งซื้อ ?',
             html: `จำนวนคิวที่รอ ${queueMessage} คิว`,
             icon: 'question',
             showCancelButton: true,
@@ -69,11 +71,8 @@ const Cart = () => {
             await saveOrder();
             setLoading(false);
             router('/Myorder');
-
         }
     }
-
-
     useEffect(() => {
         getProfile();
         getQueue();
@@ -86,7 +85,7 @@ const Cart = () => {
                 <Row>
                     {
                         cart.length !== 0 && cart?.map(item => {
-                            return (<>
+                            return (<React.Fragment key={item.id}>
                                 <Col md={6} xs={12} style={{ marginBottom: '12px' }} key={item.id}>
                                     <Card style={{ height: '100%', marginBottom: '10px', padding: '6px' }}>
                                         <Card.Body className='p-0'>
@@ -160,7 +159,7 @@ const Cart = () => {
                                         </Card.Body>
                                     </Card>
                                 </Col>
-                            </>)
+                            </React.Fragment>)
                         })
                     }
                     {
@@ -197,7 +196,7 @@ const Cart = () => {
                                                         setAddress("");
                                                     }}                                            > <ShoppingBagIcon />  รับที่ร้าน</Button>
                                             </ButtonGroup>
-                                         {
+                                            {
                                                 orderType === "สั่งกลับบ้าน" && (
                                                     <Form.Group className="mt-2">
                                                         <Form.Label style={{ fontWeight: 500 }}> ที่อยู่จัดส่ง    </Form.Label>
@@ -230,7 +229,7 @@ const Cart = () => {
                                         </Form.Group>
                                     </Form>
                                 </Col>
-                                <Col md={12} className="mt-3"><h5 style={{ color: 'red' }}> รอคิวตอนนี้ {queue} คิว </h5></Col>
+                                {/* <Col md={12} className="mt-3"><h5 style={{ color: 'red' }}> รอคิวตอนนี้ {queue} คิว </h5></Col> */}
                                 <Col className="mt-3">
 
                                     <Button
@@ -246,7 +245,7 @@ const Cart = () => {
                                         className="w-100"
                                         onClick={() => resetCart()}
                                         variant="danger" >
-                                        <CancelIcon />  ยกเลิก
+                                        <CancelIcon />  ล้างตะกร้า
                                     </Button>
                                 </Col>
                             </>

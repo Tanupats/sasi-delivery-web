@@ -11,8 +11,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Context>
       <Container fluid>
-
-         
         <App />
       </Container>
     </Context>

@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 
 function Context({ children }) {
 
-    const messangerId = localStorage.getItem('messangerId');
+    const messengerId = localStorage.getItem('messangerId');
     const username = localStorage.getItem('name');
 
     const [cart, setCart] = useState([])
@@ -22,12 +22,11 @@ function Context({ children }) {
     const dev = import.meta.env.VITE_BAKUP_URL;
 
     const getCounterOrder = async () => {
-        await axios.get(`${dev}/bills/counter-myorder?messengerId=${messangerId}`)
+        await axios.get(`${dev}/bills/counter-myorder?messengerId=${messengerId}`)
             .then(res => {
                 setCounterOrder(res.data.count);
             })
     }
-
 
     const sendMessageToPage = async () => {
         let message = paymentType === 'cash' ? 'รวมทั้งหมด' + sumPrice + " บาท ครับ" : "รวมทั้งหมด " + sumPrice + " บาท \n" + "พร้อมเพย์ 0983460756 นายตนุภัทร สิทธิวงศ์  \n  โอนแล้วส่งสลิปมาด้วยนะครับ ขอบคุณครับ"
@@ -47,43 +46,14 @@ function Context({ children }) {
             note: data.note,
             shop_id: data.shop_id
         };
-
-        // ถ้ายังไม่มีของในตะกร้า → เพิ่มได้เลย
-        if (cart.length === 0) {
-            if (data.shop_id === shopId) {
-                setCart([itemCart]);
-                Swal.fire({
-                    title: 'เพิ่มรายการสำเร็จ',
-                    text: 'เพิ่มรายการลงตะกร้าแล้ว',
-                    icon: 'success',
-                    timer: 1200,
-                    showConfirmButton: false
-                });
-            }
-        }
-        
-        // ถ้ามีของในตะกร้าแล้ว → เช็กร้านของชิ้นแรกกับร้านใหม่
-        const firstShopId = cart[0].shop_id;
-
-        if (firstShopId === data.shop_id) {
-            // ร้านเดียวกัน เพิ่มได้
-            setCart([...cart, itemCart]);
-            Swal.fire({
-                title: 'เพิ่มรายการสำเร็จ',
-                text: 'เพิ่มรายการลงตะกร้าแล้ว',
-                icon: 'success',
-                timer: 1200,
-                showConfirmButton: false
-            });
-        } else {
-            // ร้านไม่ตรงกัน
-            Swal.fire({
-                title: 'สินค้าเป็นของร้านอื่น',
-                text: 'ไม่สามารถสั่งอาหารข้ามร้านได้ กรุณาล้างตะกร้าก่อน',
-                icon: 'error',
-                confirmButtonText: 'ตกลง'
-            });
-        }
+        setCart((prevCart) => [...prevCart, itemCart]);
+        Swal.fire({
+            title: 'เพิ่มรายการสำเร็จ',
+            text: 'เพิ่มรายการลงตะกร้าแล้ว',
+            icon: 'success',
+            timer: 1200,
+            showConfirmButton: false
+        });
     };
 
     const removeCart = (id) => {
@@ -136,7 +106,7 @@ function Context({ children }) {
     const resetCart = () => setCart([]);
 
     const saveOrder = async () => {
-        if (username !== null && messangerId !== null) {
+        if (username !== null && messengerId !== null) {
             const body = {
                 amount: sumPrice,
                 ordertype: orderType,
@@ -144,7 +114,7 @@ function Context({ children }) {
                 statusOrder: "รับออเดอร์แล้ว",
                 customerName: username,
                 shop_id: shopId,
-                messengerId: messangerId,
+                messengerId: messengerId,
                 address: Address,
                 step: 1
             }
@@ -174,7 +144,7 @@ function Context({ children }) {
                     }));
                 }
 
-                sendMessageToPage(messangerId);
+                sendMessageToPage(messengerId);
 
             } catch (error) {
                 console.error("เกิดข้อผิดพลาดในการสั่งอาหาร: ", error);
@@ -278,6 +248,9 @@ function Context({ children }) {
         return () => clearInterval(interval);
     }, [])
 
+    useEffect(() => {
+        setCart([]);
+    }, [shopId])
 
     return (<>
 
@@ -291,7 +264,7 @@ function Context({ children }) {
                 sumAmount,
                 saveOrder,
                 updateNote,
-                messangerId,
+                messengerId,
                 queue,
                 resetCart,
                 setOrderType,

@@ -10,18 +10,18 @@ import FoodMenu from './FoodMenu';
 import Myorder from './Myorder';
 import GetQueue from './GetQueu';
 import AddToQueueIcon from '@mui/icons-material/AddToQueue';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
 import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
 import { ShoppingCart, Receipt } from "@mui/icons-material";
 import Cart from './Cart';
 import ShopData from './shop';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 const NavbarMenu = () => {
+
   const { toTal, queue, counterOrder } = useContext(AuthData);
   const [value, setValue] = useState(0);
   const id = localStorage.getItem("messangerId");
   const name = localStorage.getItem("name");
-  const shop_id = localStorage.getItem("shop_id");
+
   return (
     <Router>
       <Navbar bg="light" data-bs-theme="light" className='when-print' sticky='top' expand="lg">
@@ -32,7 +32,7 @@ const NavbarMenu = () => {
             <Nav className="me-auto text-center">
               <Nav.Link style={{ textDecoration: 'none', color: '#000', fontSize: '16px', fontWeight: 300 }} as={Link} to={`/shop/${id}/${name}`}>
                 <StorefrontIcon style={{ color: '#FD720D' }} /> ร้านค้า
-              </Nav.Link>            
+              </Nav.Link>
               <Nav.Link style={{ textDecoration: 'none', color: '#000', fontSize: '16px', fontWeight: 300 }} as={Link} to={'/cart'}>
                 ตะกร้า  <LocalMallIcon style={{ color: '#FD720D' }} /> {toTal}
               </Nav.Link>
@@ -68,20 +68,20 @@ const NavbarMenu = () => {
           showLabels
           value={value}
         >
-          <BottomNavigation showLabels value={value}>          
-             <BottomNavigationAction onClick={() => setValue(3)} label="ร้านค้า" icon={<StorefrontIcon />} component={Link} to={`/shop/${id}/${name}`} />
+          <BottomNavigation showLabels value={value}>
+            <BottomNavigationAction onClick={() => setValue(3)} label="ร้านค้า" icon={<StorefrontIcon />} component={Link} to={`/shop/${id}/${name}`} />
             {/* <BottomNavigationAction
               onClick={() => setValue(0)}
               label="เมนู" icon={<MenuBookIcon />}
               component={Link} to={`/foodmenu/${shop_id}`} /> */}
-                  <BottomNavigationAction onClick={() => setValue(2)} label={"ตะกร้า " + toTal} icon={<ShoppingCart />} component={Link} to="/cart" />
+            <BottomNavigationAction onClick={() => setValue(2)} label={"ตะกร้า " + toTal} icon={<ShoppingCart />} component={Link} to="/cart" />
             <BottomNavigationAction onClick={() => setValue(1)} label={"ออเดอร์ " + counterOrder} icon={<Receipt />} component={Link} to="/Myorder" />
           </BottomNavigation>
         </BottomNavigation>
       </Paper>
 
       <Routes>
-        <Route path="/foodmenu/:shop_id/"  Component={FoodMenu}></Route>
+        <Route path="/foodmenu/:shop_id/" Component={FoodMenu}></Route>
         <Route path="/shop/:userid/:name" Component={ShopData}></Route>
         <Route path="/Myorder" Component={Myorder}></Route>
         <Route path="/queueNumber" Component={GetQueue}></Route>
