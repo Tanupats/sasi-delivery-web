@@ -17,6 +17,7 @@ function Context({ children }) {
     const [shop, setShop] = useState({})
     const [statusPrint, setStatusPrint] = useState("");
     const token = localStorage.getItem("token");
+    const [Id,setId] = useState(null);
 
     const getUser = async () => {
         if (token) {
@@ -142,8 +143,9 @@ function Context({ children }) {
             await httpPost(`/bills`, body, { headers: { 'apikey': token } })
                 .then(res => {
                     if (res.status === 200) {
-                        id = res.data.bill_ID
-                        queueId = res.data.queueNumber
+                        setId(res.data.id);
+                        id = res.data.bill_ID;
+                        queueId = res.data.queueNumber;
                         Swal.fire({
                             title: 'ทำรายการสำเร็จ',
                             text: 'บันทึกข้อมูลสำเร็จ',
@@ -274,6 +276,7 @@ function Context({ children }) {
                 getShop,
                 setShop
                 , setStatusPrint,
+                Id,
                 statusPrint,
                 getUser,
                 printSlip

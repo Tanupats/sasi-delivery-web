@@ -20,6 +20,7 @@ import StoreIcon from '@mui/icons-material/Store';
 import Register from './Register';
 import Swal from 'sweetalert2';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import QRScanner from './update-bill-scanner';
 const NavbarMenu = () => {
   const {
     staffName,
@@ -73,6 +74,10 @@ const NavbarMenu = () => {
                       <StoreIcon /> {shop?.name}
                     </Nav.Link>
 
+                    <Nav.Link as={Link} to={'/scan-bill'} style={{ textDecoration: 'none', color: '#fff' }}>
+                    สแกนงาน
+                    </Nav.Link>
+
                   </>
 
                 </Nav>
@@ -102,6 +107,7 @@ const NavbarMenu = () => {
         <Route path="/admin" Component={Admin}></Route>
         <Route path="/register" Component={Register}></Route>
         <Route path="/profile" Component={Profile}></Route>
+        <Route path="/scan-bill" Component={QRScanner}></Route>
       </Routes>
     </Router>
   );

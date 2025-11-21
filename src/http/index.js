@@ -67,3 +67,29 @@ export const sendDeliverySuccess = async (userid) => {
   }
 };
 
+const page_token = import.meta.env.VITE_PAGE_ACCESS_TOKEN;
+export const sendMessageToPage = (userid, messageText) => {
+  axios.post(`https://graph.facebook.com/v18.0/me/messages?access_token=${page_token}`, {
+    recipient: {
+      id: userid
+    },
+    message: {
+      text: messageText
+    }
+  }).then(response => {
+    if (response) {
+      Swal.fire({
+        title: 'ส่งข้อความรับออเดอร์สำเร็จแล้ว',
+        icon: 'success',
+      })
+
+    }
+  }).catch(error => {
+    if (error) {
+      Swal.fire({
+        title: 'ส่งข้อความไปยังลูกไม่สำเร็จ',
+        icon: 'error',
+      })
+    }
+  });
+}

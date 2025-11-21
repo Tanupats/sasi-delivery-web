@@ -25,9 +25,10 @@ for (let number = 1; number <= 5; number++) {
     </Pagination.Item>,
   );
 }
-import { InputGroup } from 'react-bootstrap';
-import SearchIcon from '@mui/icons-material/Search';
+
 import CircularProgress from '@mui/material/CircularProgress';
+import QRCodeBill from './qr-code-bill';
+
 const Pos = () => {
   const router = useNavigate()
   const {
@@ -47,7 +48,8 @@ const Pos = () => {
     staffName,
     user,
     printSlip,
-    resetCart
+    resetCart,
+    Id
   } =
     useContext(AuthData)
 
@@ -74,7 +76,6 @@ const Pos = () => {
   const [loading, setLoading] = useState(false);
   const [loadingMenu, setLoadingMenu] = useState(false);
   const [loadingByeType, setLoadingByType] = useState(false);
-  const [search, setSearch] = useState("");
 
   const formatMoney = (val) => {
     return new Intl.NumberFormat().format(val)
@@ -284,17 +285,18 @@ const Pos = () => {
             {
 
               cart.length > 0 && (<>
-                <div className='text-center'>
 
-                  {/* <img style={{ width: '40%' }} src={`${import.meta.env.VITE_API_URL}/images/${shop?.photo}`} alt="" srcset="" /> */}
-                  <h6> {shop?.name}</h6>
-                  <h6>  ใบเสร็จรับเงิน</h6>
-                  <h6> ลำดับคิว {queueNumber} </h6>
-                  วันที่ซื้อสินค้า {date} เวลา {time}
+                {
+                  queueNumber > 0 && (
+                    <div className='text-center'>
+                      <h6> {shop?.name}</h6>
+                      <h6>  ใบเสร็จรับเงิน</h6>
+                      <h6> ลำดับคิว {queueNumber} </h6>
+                      วันที่ {date} เวลา {time}
+                    </div>
+                  )
+                }
 
-                  {/* {statusPrint} */}
-
-                </div>
                 <Row className='mt-4'>
                   <Col md={12}>
                     <div className='when-print'>
@@ -370,15 +372,19 @@ const Pos = () => {
                                 handleQR(),
                                   setShowQr(!showQr)
                               }}>
-                              qrcode payment </Button>
+                              qr code payment </Button>
+
+                           
                           </Col>
+
                           <Col md={12} className='text-center'>
                             {
                               showQr ? <center><QRCode value={qrCode} />
                                 <h5>{staffName}</h5>
                               </center> : <></>
                             }
-                          </Col>
+                          </Col> 
+                            {   Id && <QRCodeBill Id={Id} /> } 
                         </Row>
                       )
                     }
@@ -429,7 +435,7 @@ const Pos = () => {
                           style={{ height: '46px' }}
                           onClick={() => { resetCart() }}
                           variant='danger w-100'>
-                           ยกเลิก
+                          ยกเลิก
                         </Button>
                       </Col>
                     </Row>

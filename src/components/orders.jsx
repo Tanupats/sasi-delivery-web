@@ -9,7 +9,8 @@ import { AuthData } from "../ContextData";
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
 import SendIcon from '@mui/icons-material/Send';
-import axios from "axios";
+import { sendMessageToPage } from "../http";
+import QRCodeBill from "./qr-code-bill";
 
 const Orders = () => {
     const { shop } = useContext(AuthData);
@@ -64,7 +65,6 @@ const Orders = () => {
                 })
         }
     }
-
 
     const handlePrint = async (billId, id) => {
         const now = new Date();
@@ -121,8 +121,7 @@ const Orders = () => {
                                     sendMessageToPage(messageid, "ออเดอร์ทำเสร็จแล้วครับเข้ามาที่ร้านได้เลยนะครับ");
                                 } else {
                                     sendMessageToPage(messageid, "ออเดอร์ทำเสร็จแล้วครับ รอจัดส่งนะครับ");
-                                }
-                                //sendNotificationBot(messageid);
+                                }                           
                             }
                         }
                         setReport([]);
@@ -138,37 +137,7 @@ const Orders = () => {
         getOrderCookingFinish();
     }
 
-
-    const PAGE_ACCESS_TOKEN = 'EAAkMtjSMoDoBOZCGYSt499z6jgiiAjAicsajaOWhjqIxmHsl0asrAm61k6LgD1ifGXHzbDsHrJFCZASriCSyoPDpeqFh3ZBTrWC4ymdZCZBwcioKueKj31QK6w6GFHILPiJaZA8hgNHXtW5OqkRTZBzI0VFvIOoVhGdGq28DvOHGVSNEmPMJjkAOikE1thOaF3mzDg6dnjSyZBGpIY6mMZA1rWaIx';
-    const sendMessageToPage = (userid, messageText) => {
-        axios.post(`https://graph.facebook.com/v18.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
-            recipient: {
-                id: userid
-            },
-            message: {
-                text: messageText
-            }
-        }).then(response => {
-            if (response) {
-                Swal.fire({
-                    title: 'ส่งข้อความรับออเดอร์สำเร็จแล้ว',
-                    icon: 'success',
-                })
-
-            }
-        }).catch(error => {
-            if (error) {
-                Swal.fire({
-                    title: 'ส่งข้อความไปยังลูกไม่สำเร็จ',
-                    icon: 'error',
-                })
-
-            }
-
-        });
-    }
-
-
+   
     const deleteBill = async (id, bid) => {
         Swal.fire({
             title: 'คุณต้องการยกเลิกออเดอร์หรือไม่ ?',
@@ -183,9 +152,7 @@ const Orders = () => {
             if (result.isConfirmed) {
                 CancelOrder(id, bid)
             }
-
         });
-
     }
 
 
@@ -259,7 +226,7 @@ const Orders = () => {
 
                                                                 }
 
-                                                              
+
 
                                                             </div>
                                                         </Col>
@@ -299,10 +266,8 @@ const Orders = () => {
                                                             {item.address ? <h5>จัดส่งที่-{item.address}</h5> : " "}
                                                             <h5>วิธีการรับอาหาร-{item.ordertype}</h5>
                                                         </Col>
-
-
                                                     </Row>
-
+                                                    <QRCodeBill Id={item.id} />
                                                     <Row className="mt-2">
 
                                                         {
