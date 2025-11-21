@@ -230,6 +230,7 @@ const Cart = () => {
                                     </Form>
                                 </Col>
                                 {/* <Col md={12} className="mt-3"><h5 style={{ color: 'red' }}> รอคิวตอนนี้ {queue} คิว </h5></Col> */}
+                                <Col md={12} className="mt-3">  <h6 style={{ color: 'red' }}> * สำหรับลูกค้าที่จ่ายคนละครึ่ง จ่ายได้ที่หน้าร้านเท่านั้นครับ </h6>  </Col>
                                 <Col className="mt-3">
 
                                     <Button
