@@ -172,15 +172,13 @@ const Orders = () => {
         }
     };
 
-    console.log(user.id);
-
     const UpdateStatus = async (id, status, messageid, step) => {
         const body = {
             statusOrder: status,
             step: step,
             rider_id: user.id
         }
-        httpPut(`/bills/${id}`, body).then((res) => {
+        httpPut(`/bills/${id}`, body).then(async (res) => {
             if (res) {
                 if (status === "ทำเสร็จแล้ว") {
                     if (messageid !== "pos") {
@@ -198,8 +196,12 @@ const Orders = () => {
                 }
                 if (status === "ส่งสำเร็จ") {
                     if (messageid !== "pos") {
-                        uploadFile(messageid);
-                        sendMessageToPage(messageid, "มาส่งแล้วนะครับ")
+                        const res = await httpGet(`/bills/${id}`).then((res) => res)
+                        console.log(res);
+                        if (res.data.statusOrder !== "ส่งสำเร็จ") {
+                            uploadFile(messageid);
+                            sendMessageToPage(messageid, "มาส่งแล้วนะครับ");
+                        }
                     }
                     getMenuReport("กำลังส่ง");
                     setStatusOrder("กำลังส่ง");
@@ -412,11 +414,23 @@ const Orders = () => {
 
                                                                 </Col>
                                                                 <Col md={6} xs={12}>
+
                                                                     <Button
                                                                         style={{ fontSize: 18 }}
                                                                         className="mb-2"
                                                                         onClick={() => {
-                                                                            UpdateStatus(item.id, 'ส่งสำเร็จ', item.messengerId, 4);
+                                                                            Swal.fire({
+                                                                                title: "ยืนยันการจัดส่ง?",
+                                                                                text: "คุณต้องการเปลี่ยนสถานะเป็น 'จัดส่งสำเร็จ' หรือไม่",
+                                                                                icon: "question",
+                                                                                showCancelButton: true,
+                                                                                confirmButtonText: "ยืนยัน",
+                                                                                cancelButtonText: "ยกเลิก",
+                                                                            }).then((result) => {
+                                                                                if (result.isConfirmed) {
+                                                                                    UpdateStatus(item.id, "ส่งสำเร็จ", item.messengerId, 4);
+                                                                                }
+                                                                            });
                                                                         }}
                                                                         variant="success w-100"
                                                                     >
