@@ -131,17 +131,17 @@ function Context({ children }) {
                         timer: 1200
                     });
 
-                    await Promise.all(cart.map(({ name, price, quantity, note }) => {
-                        const bodyDetails = {
+                    const  bodyDetails = cart.map(({ name, price, quantity, note }) => {
+                        return {
                             bills_id: id,
                             foodname: name,
                             price: parseFloat(price),
                             quantity: quantity,
                             note: note
-                        };
+                        }
+                    });
 
-                        return axios.post(`${dev}/billsdetails`, bodyDetails);
-                    }));
+                    return axios.post(`${dev}/billsdetails`, bodyDetails);
                 }
 
                 sendMessageToPage(messengerId);
