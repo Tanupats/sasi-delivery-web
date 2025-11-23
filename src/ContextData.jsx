@@ -131,7 +131,7 @@ function Context({ children }) {
                         timer: 1200
                     });
 
-                    const  bodyDetails = cart.map(({ name, price, quantity, note }) => {
+                    const bodyDetails = cart.map(({ name, price, quantity, note }) => {
                         return {
                             bills_id: id,
                             foodname: name,
@@ -141,7 +141,7 @@ function Context({ children }) {
                         }
                     });
 
-                    return axios.post(`${dev}/billsdetails`, bodyDetails);
+                    axios.post(`${dev}/billsdetails`, bodyDetails);
                 }
 
                 sendMessageToPage(messengerId);
