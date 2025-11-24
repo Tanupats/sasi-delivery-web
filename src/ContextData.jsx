@@ -17,7 +17,7 @@ function Context({ children }) {
     const [shop, setShop] = useState({})
     const [statusPrint, setStatusPrint] = useState("");
     const token = localStorage.getItem("token");
-    const [Id,setId] = useState(null);
+    const [Id, setId] = useState(null);
 
     const getUser = async () => {
         if (token) {
@@ -156,16 +156,17 @@ function Context({ children }) {
                     }
                 })
 
-            cart.map(({ name, price, quantity, note }) => {
-                const bodyDetails = {
+            const bodyDetails = cart.map(({ name, price, quantity, note }) => {
+                return {
                     bills_id: id,
                     foodname: name,
                     price: parseInt(price),
                     quantity: quantity,
                     note: note,
                 }
-                httpPost(`/billsdetails`, bodyDetails, { headers: { 'apikey': token } })
+
             })
+            httpPost(`/billsdetails`, bodyDetails, { headers: { 'apikey': token } })
             setQueueNumber(queueId);
         } else {
             Swal.fire({
