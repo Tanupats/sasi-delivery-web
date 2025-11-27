@@ -29,12 +29,20 @@ function Context({ children }) {
     }
 
     const sendMessageToPage = async () => {
-        let message = paymentType === 'cash' ? 'รวมทั้งหมด' + sumPrice + " บาท ครับ" : "รวมทั้งหมด " + sumPrice + " บาท \n" + "พร้อมเพย์ 0983460756 นายตนุภัทร สิทธิวงศ์  \n  โอนแล้วส่งสลิปมาด้วยนะครับ ขอบคุณครับ"
-        await fetch(`https://api.chatfuel.com/bots/5e102b272685af000183388a/users/${messengerId}/send?chatfuel_token=qwYLsCSz8hk4ytd6CPKP4C0oalstMnGdpDjF8YFHPHCieKNc0AfrnjVs91fGuH74&chatfuel_block_name=order&message=${message}`, {
+        const reportMenu = cart
+            .map(item => `${item.name} X ${item.quantity} ราคา ${item.price * item.quantity} บาท`)
+            .join("\n");
+
+        const message = paymentType === 'cash'
+            ? `${reportMenu}\nรวมทั้งหมด ${sumPrice} บาท ครับ`
+            : `${reportMenu}\nรวมทั้งหมด ${sumPrice} บาท\nพร้อมเพย์ 0983460756 นายตนุภัทร สิทธิวงศ์\nโอนแล้วส่งสลิปมาด้วยนะครับ ขอบคุณครับ`;
+
+        await fetch(`https://api.chatfuel.com/bots/5e102b272685af000183388a/users/${messengerId}/send?chatfuel_token=qwYLsCSz8hk4ytd6CPKP4C0oalstMnGdpDjF8YFHPHCieKNc0AfrnjVs91fGuH74&chatfuel_block_name=order&message=${encodeURIComponent(message)}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" }
         });
     }
+
 
     const addToCart = (data) => {
         const itemCart = {
