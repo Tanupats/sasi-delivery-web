@@ -177,10 +177,10 @@ const Orders = () => {
 
                         <Row className="when-print">
                             <ButtonGroup aria-label="Basic example">
-                                <Button variant="btn btn-outline-primary" style={{ fontSize: '18px' }} onClick={() => { setReport([]), getMenuReport("รับออเดอร์แล้ว") }}>ออเดอร์ใหม่ {OrderNew}</Button>
-                                <Button variant="btn btn-outline-success" style={{ fontSize: '18px' }} onClick={() => { setReport([]), getMenuReport("ทำเสร็จแล้ว") }}>ทำเสร็จแล้ว {OrderCookingFinish}</Button>
-                                <Button variant="btn btn-outline-danger" style={{ fontSize: '18px' }} onClick={() => { setReport([]), getMenuReport("กำลังส่ง") }}>กำลังส่ง  {OrderCooking}</Button>
-                                <Button variant="btn btn-outline-primary" style={{ fontSize: '18px' }} onClick={() => { setReport([]), getMenuReport("ส่งสำเร็จ") }}>ส่งสำเร็จ {Delivered} </Button>
+                                <Button variant="btn btn-outline-primary" style={{ fontSize: '18px' }} onClick={() => { setReport([]), getMenuReport("รับออเดอร์แล้ว") }}>ใหม่ {OrderNew}</Button>
+                                <Button variant="btn btn-outline-success" style={{ fontSize: '18px' }} onClick={() => { setReport([]), getMenuReport("ทำเสร็จแล้ว") }}>เสร็จแล้ว {OrderCookingFinish}</Button>
+                                <Button variant="btn btn-outline-danger" style={{ fontSize: '18px' }} onClick={() => { setReport([]), getMenuReport("กำลังส่ง") }}>รอดำเนินการ  {OrderCooking}</Button>
+                                <Button variant="btn btn-outline-primary" style={{ fontSize: '18px' }} onClick={() => { setReport([]), getMenuReport("ส่งสำเร็จ") }}>สำเร็จ {Delivered} </Button>
 
                             </ButtonGroup>
                         </Row>
