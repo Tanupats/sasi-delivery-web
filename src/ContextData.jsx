@@ -30,7 +30,7 @@ function Context({ children }) {
 
     const sendMessageToPage = async () => {
         const reportMenu = cart
-            .map(item => `${item.name} X ${item.quantity} ราคา ${item.price * item.quantity} บาท`)
+            .map(item => `${item.name}    ${item.note !== null ? item.note : ' '} X ${item.quantity} ราคา ${item.price * item.quantity} บาท`)
             .join("\n");
 
         const message = paymentType === 'cash'
