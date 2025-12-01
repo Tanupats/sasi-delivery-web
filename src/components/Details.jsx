@@ -6,7 +6,7 @@ import { AuthData } from "../ContextData";
 import Swal from 'sweetalert2'
 const Details = (props) => {
     const token = localStorage.getItem("token");
-    let { bill_ID, status, id, reset, userId, updateData } = props;
+    let { bill_ID, status, id, reset } = props;
     const [detail, setDetail] = useState([]);
     const [show, setShow] = useState(false);
     const [dataMenus, setDataMenus] = useState("");
@@ -87,7 +87,6 @@ const Details = (props) => {
     const updateAmount = async (newPrice) => {
         const body = { amount: newPrice };
         await httpPut(`/bills/${id}`, body, { headers: { 'apikey': token } })
-        updateData(userId, "แจ้งอัพเดตยอดใหม่ครับเป็น" + newPrice + "บาท")
         await reset();
     }
 
@@ -128,7 +127,6 @@ const Details = (props) => {
 
         await getDetail();
         setOnupdate(true);
-
     }
 
     useEffect(() => {

@@ -255,8 +255,7 @@ const Orders = () => {
                                                         id={item.id}
                                                         bill_ID={item.bill_ID}
                                                         status={item.statusOrder}
-                                                        userId={item.messengerId}
-                                                        updateData={sendMessageToPage}
+                                                        userId={item.messengerId}                                                    
                                                     />
 
                                                     <Row>
