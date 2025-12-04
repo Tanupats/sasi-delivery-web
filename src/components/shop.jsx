@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { Row, Col, Card, Image, Button } from "react-bootstrap";
+import { Row, Col, Card, Image } from "react-bootstrap";
 import Badge from 'react-bootstrap/Badge';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
@@ -22,7 +22,7 @@ const ShopData = () => {
     }, [])
 
     return (<>
-        <Card style={{ marginBottom: '120px',border:'none' }}>
+        <Card style={{ marginBottom: '120px', border: 'none' }}>
             <Card.Body>
                 <Row>
                     {
@@ -39,7 +39,7 @@ const ShopData = () => {
 
                                         >
                                             <Card>
-                                                <Card.Body style={{padding:10}}>
+                                                <Card.Body style={{ padding: 10 }}>
 
                                                     <Card.Title>{item.name}</Card.Title>
                                                     <div className="mb-2">
@@ -72,7 +72,7 @@ const ShopData = () => {
                                                         }}
                                                     />
 
-                                                 
+
 
 
 
