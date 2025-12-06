@@ -37,8 +37,13 @@ function Context({ children }) {
             ? `${reportMenu}\nรวมทั้งหมด ${sumPrice} บาท ครับ`
             : `${reportMenu}\nรวมทั้งหมด ${sumPrice} บาท\nพร้อมเพย์ 0983460756 นายตนุภัทร สิทธิวงศ์\nโอนแล้วส่งสลิปมาด้วยนะครับ ขอบคุณครับ`;
 
-        await fetch(`https://api.chatfuel.com/bots/5e102b272685af000183388a/users/${messengerId}/send?chatfuel_token=qwYLsCSz8hk4ytd6CPKP4C0oalstMnGdpDjF8YFHPHCieKNc0AfrnjVs91fGuH74&chatfuel_block_name=order&message=${encodeURIComponent(message)}`, {
+        await fetch(`https://graph.facebook.com/v19.0/me/messages?access_token=EAAkMtjSMoDoBP2ZBpjFfUkDPLxnI287AsbcZB3H7TQUz1WhHFJlg0wY88e2hRglCAgHx4KSTtN9j1Rg81rl2Ncc7fzoVcME2MWvwMStz05pLk5WNRC7nLlVGUXmZCjLQDclL6ccFxAy17UraJfXTHZAjqvyZBX0oLzQ4HuTs62HyuEt3d1G8rOahziMDQ048dRqbm4jwLEbsUZC2dHRZBZAINywJ
+`, {
             method: "POST",
+            body: JSON.stringify({
+                recipient: { id: messengerId },
+                message: { text: message }
+            }),
             headers: { "Content-Type": "application/json" }
         });
     }
@@ -133,10 +138,9 @@ function Context({ children }) {
                     const id = res.data.bill_ID;
                     Swal.fire({
                         title: 'สั่งออเดอร์สำเร็จ',
-                        text: 'คำสั่งซื้อของคุณส่งไปยังร้านค้าแล้ว',
+                        text: 'คำสั่งซื้อของคุณส่งไปยังร้านค้าแล้ว แจ้งชำระเงินและรอรับอาหารได้เลย',
                         icon: 'success',
                         confirmButtonText: 'ยืนยัน',
-                        timer: 1200
                     });
 
                     const bodyDetails = cart.map(({ name, price, quantity, note }) => {
