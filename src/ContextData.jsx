@@ -28,6 +28,7 @@ function Context({ children }) {
             })
     }
 
+    const PageAccessToken = import.meta.env.VITE_PAGE_ACCESS_TOKEN;
     const sendMessageToPage = async () => {
         const reportMenu = cart
             .map(item => `${item.name}    ${item.note !== null ? item.note : ' '} X ${item.quantity} ราคา ${item.price * item.quantity} บาท`)
@@ -37,7 +38,7 @@ function Context({ children }) {
             ? `${reportMenu}\nรวมทั้งหมด ${sumPrice} บาท ครับ`
             : `${reportMenu}\nรวมทั้งหมด ${sumPrice} บาท\nพร้อมเพย์ 0983460756 นายตนุภัทร สิทธิวงศ์\nโอนแล้วส่งสลิปมาด้วยนะครับ ขอบคุณครับ`;
 
-        await fetch(`https://graph.facebook.com/v19.0/me/messages?access_token=EAAkMtjSMoDoBP2ZBpjFfUkDPLxnI287AsbcZB3H7TQUz1WhHFJlg0wY88e2hRglCAgHx4KSTtN9j1Rg81rl2Ncc7fzoVcME2MWvwMStz05pLk5WNRC7nLlVGUXmZCjLQDclL6ccFxAy17UraJfXTHZAjqvyZBX0oLzQ4HuTs62HyuEt3d1G8rOahziMDQ048dRqbm4jwLEbsUZC2dHRZBZAINywJ
+        await fetch(`https://graph.facebook.com/v19.0/me/messages?access_token=${PageAccessToken}
 `, {
             method: "POST",
             body: JSON.stringify({
@@ -295,7 +296,8 @@ function Context({ children }) {
                 setPaymentType,
                 getQueue,
                 dev,
-                setShopId
+                setShopId,
+                PageAccessToken
             }}>
             {children}
         </AuthData.Provider>
