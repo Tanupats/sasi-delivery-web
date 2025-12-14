@@ -47,11 +47,13 @@ const ShopData = () => {
                                                         <h4>
                                                             {
                                                                 item.is_open ? (<Badge bg="success" style={{ fontWeight: 500 }}>
-                                                                    เปิด <AccessTimeIcon />  10:00 น - 22:00 น
-                                                                </Badge>) : (
+                                                                    เปิด <AccessTimeIcon />
+                                                                    {item.id === 1 ? "10:00 น - 22:00 น." : "17:00-21:00 น."}
+                                                                </Badge>) : (<>
 
-                                                                    <Badge bg="danger">ร้านปิด</Badge>
-                                                                )
+                                                                    {item.id === 1 ? <> <Badge bg="danger">ร้านปิด  </Badge> </> :
+                                                                        <Badge bg="danger">ร้านปิด  จะเปิดเวลา 17:00 น.  </Badge>}
+                                                                </>)
                                                             }
                                                         </h4>
                                                     </div>

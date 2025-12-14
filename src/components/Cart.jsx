@@ -36,7 +36,6 @@ const Cart = () => {
         dev,
         messengerId,
         setName,
-        PageAccessToken
     } = useContext(AuthData);
 
     const [loading, setLoading] = useState(false);
@@ -44,12 +43,11 @@ const Cart = () => {
     const getProfile = async () => {
         const res = await axios.get(`${dev}/bills/profile/${messengerId}`).then((data) => data);
         if (res.status === 200) {
-            setAddress(res.data?.address);
+            //setAddress(res.data?.address);
             setName(res.data?.customerName || "ลูกค้า");
             localStorage.setItem('name', res.data.customerName || "ลูกค้า");
         }
     }
-
 
     const onSave = async (e) => {
         e.preventDefault();
