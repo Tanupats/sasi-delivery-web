@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -13,14 +13,15 @@ import Login from './Login';
 import Admin from './admin';
 import Profile from './profile';
 import ListAltIcon from '@mui/icons-material/ListAlt';
-import CurrencyBitcoinIcon from '@mui/icons-material/CurrencyBitcoin';
-import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import LogoutIcon from '@mui/icons-material/Logout';
 import StoreIcon from '@mui/icons-material/Store';
 import Register from './Register';
 import Swal from 'sweetalert2';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import QRScanner from './update-bill-scanner';
+import ViewQuiltIcon from '@mui/icons-material/ViewQuilt';
+import AssessmentIcon from '@mui/icons-material/Assessment';
+import CropFreeIcon from '@mui/icons-material/CropFree';
 const NavbarMenu = () => {
   const {
     staffName,
@@ -61,21 +62,19 @@ const NavbarMenu = () => {
                     </Nav.Link>
 
                     <Nav.Link as={Link} to={'/report'} style={{ textDecoration: 'none', color: '#fff' }}>
-                      <CurrencyBitcoinIcon /> สรุปยอดขาย
+                      <AssessmentIcon /> สรุปยอดขาย
                     </Nav.Link>
-
 
                     <Nav.Link as={Link} to={'/orders'} style={{ textDecoration: 'none', color: '#fff' }}>
-                      <DeliveryDiningIcon />  ออเดอร์
+                      <ViewQuiltIcon />  ออเดอร์
                     </Nav.Link>
 
-
                     <Nav.Link as={Link} to={'/admin'} style={{ textDecoration: 'none', color: '#fff' }}>
-                      <StoreIcon /> {shop?.name}
+                      <StoreIcon /> จัดการข้อมูล{shop?.name}
                     </Nav.Link>
 
                     <Nav.Link as={Link} to={'/scan-bill'} style={{ textDecoration: 'none', color: '#fff' }}>
-                    สแกนงาน
+                      สแกนบาร์โค้ด  <CropFreeIcon />
                     </Nav.Link>
 
                   </>
