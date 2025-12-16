@@ -148,28 +148,46 @@ const FoodMenu = () => {
                         {
                             foods?.map((item, index) => {
                                 return (<React.Fragment key={index}>
-                                    <Col className="mb-4"
-                                        md={6}
-                                        xs={12}   >
-                                        <Card style={{ height: '173px', marginBottom: '12px', margin: 0, padding: 0, borderRadius: '2px' }}>
-                                            <Card.Body style={{ margin: 0, padding: 0 }}>
-                                                <Row>
-                                                    <Col
-                                                        md={3}
-                                                        xs={5}
-                                                    >
-                                                        {
 
-                                                            loading ? <Skeleton variant="rectangular" width={130} height={170} /> :
-                                                                <Image style={{ width: "100%", height: '170px', objectFit: 'cover' }}
-                                                                    src={`${import.meta.env.VITE_BAKUP_URL}/images/${item.img}`} />
-                                                        }
+
+
+                                    {
+                                        loading ?
+                                            <>
+
+                                                <Row style={{ marginBottom: '12px' }}>
+                                                    <Col md={6} xs={12}>
+
+                                                        <Skeleton variant="rectangular" width={300} height={90} />
+
                                                     </Col>
-                                                    {
-                                                        loading ?
-                                                            <Stack spacing={1}>
-                                                                <Skeleton variant="rectangular" width={210} height={60} />
-                                                                <Skeleton variant="rounded" width={210} height={60} /> </Stack> :
+                                                    <Col md={6} xs={12}>
+
+                                                        <Skeleton variant="rectangular" width={300} height={90} />
+
+                                                    </Col>
+
+
+                                                </Row>
+                                            </> :
+
+                                            <Col className="mb-4"
+                                                md={6}
+                                                xs={12}   >
+                                                <Card style={{ height: '173px', marginBottom: '12px', margin: 0, padding: 0, borderRadius: '2px' }}>
+                                                    <Card.Body style={{ margin: 0, padding: 0 }}>
+                                                        <Row>
+                                                            <Col
+                                                                md={3}
+                                                                xs={5}
+                                                            >
+
+                                                                <Image style={{ width: "100%", height: '170px', objectFit: 'cover' }}
+                                                                    src={`${dev}/images/${item.img}`} />
+
+                                                            </Col>
+
+
                                                             <Col md={9}
                                                                 xs={7} className="p-2">
                                                                 <h6>{item.foodname}</h6>
@@ -191,11 +209,14 @@ const FoodMenu = () => {
                                                                     <AddCircleIcon />
                                                                 </Button>
                                                             </Col>
-                                                    }
-                                                </Row>
-                                            </Card.Body>
-                                        </Card>
-                                    </Col>
+
+                                                        </Row>
+                                                    </Card.Body>
+                                                </Card>
+                                            </Col>
+
+                                    }
+
                                 </React.Fragment>)
                             })
                         }

@@ -85,7 +85,16 @@ const Cart = () => {
     return (<>
         <Card style={{ height: '100%', marginBottom: '120px' }}>
             <Card.Body style={{ height: '100%' }}>
-                <Card.Title as={'h5'} className="mb-4" >สรุปรายการสั่งซื้อ</Card.Title>
+                <Card.Title as={'h6'} className="mb-2 text-center" >สรุปรายการสั่งซื้อ</Card.Title>
+                <Button
+                className="mb-2"
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => router(-1)}
+                >
+                    <i className="bi bi-arrow-left"></i> ย้อนกลับ
+                </Button>
+
                 <Row>
                     {
                         cart.length !== 0 && cart?.map(item => {
