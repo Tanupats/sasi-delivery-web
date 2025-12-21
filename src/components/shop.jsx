@@ -9,6 +9,7 @@ const ShopData = () => {
     const { userid, name } = useParams();
     const router = useNavigate();
     const [data, setData] = useState([]);
+
     useEffect(() => {
         if (userid && name) {
             localStorage.setItem("messangerId", userid);
@@ -61,7 +62,7 @@ const ShopData = () => {
                                                     <Image
                                                         style={{
                                                             width: "100%",
-                                                            height: "360px",
+                                                            height: "200px",
                                                             objectFit: "cover",
                                                             cursor: item.is_open ? "pointer" : "not-allowed",
                                                             opacity: item.is_open ? 1 : 0.5, // ถ้าปิดร้านให้ดูจางลง

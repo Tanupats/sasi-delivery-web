@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Row, Card, Alert, Col, Button } from "react-bootstrap";
+import { Row, Card, Alert, Col, Button, Form } from "react-bootstrap";
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import axios from "axios";
@@ -22,6 +22,7 @@ const Myorder = () => {
     const { counterOrder } = useContext(AuthData)
     let messengerId = localStorage.getItem("messangerId");
     const [myOrder, setMyOrder] = useState([]);
+    const [orderHistory, setOrderHistory] = useState([]);
     const getMyOrder = () => {
         axios.get(`${import.meta.env.VITE_BAKUP_URL}/bills/myorder?messengerId=${messengerId}`)
             .then(res => {
@@ -33,6 +34,7 @@ const Myorder = () => {
 
     const [showQr, setShowQr] = useState(false);
     const [qrCode, setQrCode] = useState("sample");
+
 
     function handleQR(amount) {
         setQrCode(generatePayload("0983460756", { amount: Number(amount) }));
@@ -49,10 +51,21 @@ const Myorder = () => {
 
         return () => clearInterval(interval);
     }, [])
+
+
+    const getOrderHistoryByDate = (date) => {
+        axios.get(`${import.meta.env.VITE_BAKUP_URL}/bills/order-history?messengerId=${messengerId}&date_input=${date}`)
+            .then(res => {
+                if (res.status === 200) {
+                    setOrderHistory(res.data);
+                }
+            })
+    }
+
     return (<>
         <Card>
             <Card.Body>
-                <Card.Title
+                <Card.Title as={'h6'}
                     className="text-center mb-3">
                     คำสั่งซื้อของฉัน
                 </Card.Title>
@@ -82,8 +95,6 @@ const Myorder = () => {
                                                         <br />
 
                                                     </h6>
-
-
 
                                                     <Row>
                                                         <Stepper activeStep={item.step} orientation={isMobile ? 'vertical' : 'horizontal'}>
@@ -123,6 +134,11 @@ const Myorder = () => {
 
                             })
                         }
+
+                        {myOrder.length === 0 && (
+
+                            <Alert variant="danger text-center">ยังไม่มีคำสั่งซื้อ</Alert>
+                        )}
                     </Tab>
                     <Tab eventKey="profile" title={<b className="custom-tab-title">ที่ต้องได้รับ</b>}>
                         {
@@ -165,15 +181,58 @@ const Myorder = () => {
                             })
 
                         }
+
+                        {myOrder.length === 0 && (
+
+                            <Alert variant="danger text-center">ยังไม่มีคำสั่งซื้อ</Alert>
+                        )}
+                    </Tab>
+                    <Tab eventKey="order-history" title={<b className="custom-tab-title">ประวัติคำสั่งซื้อ</b>}>
+                        <Form className="mb-2">
+
+                            <Form.Label> ระบุวันที่สั่งซื้อ</Form.Label>
+                            <Form.Control type="date" onChange={(e) => getOrderHistoryByDate(e.target.value)} />
+                        </Form>
+
+                        {
+                            orderHistory.map((item, index) => {
+
+                                return (<React.Fragment key={index}>
+                                    <Card className="mb-4" >
+                                        <Card.Body>
+                                            <h6> หมายเลขออเดอร์ {item.bill_ID.slice(-5).toUpperCase()} <br />  วันที่สั่งออเดอร์ { }
+                                                {moment(item.Date_times).format('YYYY-MM-DD')}
+                                                &nbsp;  เวลา {moment(item.Date_times).format('HH:mm')} น.
+
+                                            </h6>
+                                            <hr />
+                                            <b>รายการสั่งซื้อ</b>
+                                            <Details bill_ID={item.bill_ID} status={item.statusOrder} />
+                                            <h6 style={{ fontSize: '18px' }}>รวมทั้งหมด {item.amount} บาท</h6>
+                                            <h6 style={{ fontSize: '18px' }}>การรับอาหาร - {item.ordertype === "สั่งกลับบ้าน" ? "จัดส่งที่ " + item.address : item.ordertype}
+
+                                            </h6>
+                                            <Button variant="light"> สั่งซื้ออีกครั้ง</Button>
+
+
+                                        </Card.Body>
+
+                                    </Card>
+                                </React.Fragment>)
+
+                            })
+
+                        }
+                        {orderHistory.length === 0 && (
+
+                            <Alert variant="danger text-center">ไม่พบคำสั่งซื้อที่ค้นหา</Alert>
+                        )}
+
                     </Tab>
 
                 </Tabs>
 
 
-                {myOrder.length === 0 && (
-
-                    <Alert variant="danger text-center">ยังไม่มีคำสั่งซื้อ</Alert>
-                )}
             </Card.Body>
         </Card>
     </>)
