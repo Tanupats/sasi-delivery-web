@@ -7,7 +7,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
-import RoomServiceIcon from '@mui/icons-material/RoomService';
 import Detail from "./DetailReport";
 import { Card, Row, Col, Button, Form, Modal, Alert } from "react-bootstrap"
 import Swal from 'sweetalert2';
@@ -18,6 +17,8 @@ import PaidIcon from '@mui/icons-material/Paid';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import PaymentIcon from '@mui/icons-material/Payment';
+import DiningIcon from '@mui/icons-material/Dining';
+import StorefrontIcon from '@mui/icons-material/Storefront';
 const Report = () => {
     const { shop } = useContext(AuthData);
     const shopID = shop?.shop_id;
@@ -126,18 +127,9 @@ const Report = () => {
         });
     }
 
-    // useEffect(() => {
-    //     if (shop) {
-    //         getOrderFood()
-    //     }
-
-
-    // }, [shop])
-
     useEffect(() => {
         searchOrder();
         geReport();
-
     }, [startDate, shopID])
 
     return (<>
@@ -152,7 +144,7 @@ const Report = () => {
 
                                         <Col md={6}>
                                             <Form.Label>
-                                                แสดงยอดขาย
+                                                ระบุวันที่แสดงยอดขาย
                                             </Form.Label>
                                             <Form.Control
                                                 onChange={(e) => setStartDate(e.target.value)}
@@ -175,13 +167,13 @@ const Report = () => {
 
                                         <Row mt={4}>
                                             <Col md={6} xs={6}>
-                                                <Alert variant="primary" className="d-flex">
-                                                    <PaymentIcon /> {' '} <h5> โอนจ่าย {formatMoney(bank_transfer)}</h5>
+                                                <Alert variant="primary" className="d-flex ">
+                                                    <PaymentIcon /> {' '} <h5> รับโอน {formatMoney(bank_transfer)} บาท </h5>
                                                 </Alert>
                                             </Col>
                                             <Col md={6} xs={6}>
                                                 <Alert variant="success" className="d-flex">
-                                                    <PaidIcon />  {' '}   <h5 style={{ color: '#000' }}> เงินสด {formatMoney(cash)}</h5>
+                                                    <PaidIcon />  {' '}   <h5 style={{ color: '#000' }}> {' '} จ่ายเงินสด {formatMoney(cash)} บาท</h5>
                                                 </Alert>
                                             </Col>
                                         </Row>
@@ -194,22 +186,22 @@ const Report = () => {
 
                                                 <div className="text-center card-report-1 mb-2">  <DeliveryDiningIcon style={{ fontSize: '30px' }} /> <br />
                                                     เดลิเวอรี่ จำนวน {counter.takeawayCount} บิล
-                                                    <p> ยอดขาย = {new Intl.NumberFormat().format(counter.takeawayTotalAmount || 0)} บาท</p>
+                                                    <p> ยอดขาย  {new Intl.NumberFormat().format(counter.takeawayTotalAmount || 0)} บาท</p>
                                                     <p> {counter.takeawayCount > 0 ? (counter.takeawayCount / counter.totalCount * 100).toFixed(2) : 0} %</p>
 
                                                 </div> </Col>
                                             <Col md={4}>
                                                 <div className="text-center card-report-2 mb-2">
-                                                    <RoomServiceIcon style={{ fontSize: '30px' }} />
+                                                    <DiningIcon style={{ fontSize: '30px' }} />
                                                     <br /> ทานที่ร้าน จำนวน {counter.dineInCount} บิล
-                                                    <p> ยอดขาย = {new Intl.NumberFormat().format(counter.dineInTotalAmount || 0)} บาท</p>
+                                                    <p> ยอดขาย  {new Intl.NumberFormat().format(counter.dineInTotalAmount || 0)} บาท</p>
                                                     <p> {counter.dineInCount > 0 ? ((counter?.dineInCount / counter.totalCount) * 100).toFixed(2) : 0} %</p>
                                                 </div>
                                             </Col>
                                             <Col md={4}>
                                                 <div className="text-center card-report-3 mb-2">
-                                                    <RoomServiceIcon style={{ fontSize: '30px' }} />  <br /> รับเองหน้าร้าน จำนวน {counter.pickupCount} บิล
-                                                    <p> ยอดขาย = {new Intl.NumberFormat().format(counter.pickupTotalAmount || 0)} บาท</p>
+                                                    <StorefrontIcon style={{ fontSize: '30px' }} />  <br /> รับเองหน้าร้าน จำนวน {counter.pickupCount} บิล
+                                                    <p> ยอดขาย  {new Intl.NumberFormat().format(counter.pickupTotalAmount || 0)} บาท</p>
                                                     <p>{counter.pickupCount > 0 ? ((counter?.pickupCount / counter.totalCount) * 100).toFixed(2) : 0} %</p>
                                                 </div>
                                             </Col>

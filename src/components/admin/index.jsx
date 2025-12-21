@@ -64,15 +64,14 @@ const Admin = () => {
                     <Nav className="flex-column w-100" style={{ flex: 1 }}>
                         <Nav.Link onClick={() => handleNavClick("เมนูอาหาร")}><MenuBookIcon /> รายการสินค้า</Nav.Link>
                         <Nav.Link onClick={() => handleNavClick("ประเภทสินค้า")}><PollIcon /> ประเภทสินค้า</Nav.Link>
-                        <Nav.Link onClick={() => handleNavClick("บัญชี")}><CreditCardIcon /> บัญชี</Nav.Link>
-                        <Nav.Link onClick={() => handleNavClick("สรุปยอดขาย")}><DataThresholdingIcon /> รายงานยอดขาย</Nav.Link>
+                        <Nav.Link onClick={() => handleNavClick("บัญชี")}><CreditCardIcon /> บัญชีรายจ่าย</Nav.Link>
+                        <Nav.Link onClick={() => handleNavClick("สรุปยอดขาย")}><DataThresholdingIcon /> สรุปยอดขาย</Nav.Link>
                         <Nav.Link onClick={() => handleNavClick("สต๊อก")}> <BallotIcon /> สต๊อกสินค้า</Nav.Link>
                         <Nav.Link onClick={() => handleNavClick("สรุปรายการสั่งซื้อ")}> <AssessmentIcon /> สรุปรายการสั่งซื้อ</Nav.Link>
                     </Nav>
                 </Navbar>
             </Col>
             <Col md={10} xs={12}>
-
                 {
                     openMenu === "สต๊อก" && (
                         <Stock />
