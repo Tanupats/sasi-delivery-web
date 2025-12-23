@@ -49,11 +49,11 @@ const ShopData = () => {
                                                             {
                                                                 item.is_open ? (<Badge bg="success" style={{ fontWeight: 500 }}>
                                                                     เปิด <AccessTimeIcon />
-                                                                    {item.id === 1 ? "10:00 น - 22:00 น." : "17:00-21:00 น."}
+                                                                   {item.open_time}
                                                                 </Badge>) : (<>
 
-                                                                    {item.id === 1 ? <> <Badge bg="danger">ร้านปิด  จะเปิดเวลา 10:00 น. </Badge> </> :
-                                                                        <Badge bg="danger">ร้านปิด  จะเปิดเวลา 17:00 น.  </Badge>}
+                                                                     
+                                                                        <Badge bg="danger">ร้านปิด จะเปิดอีกครั้งเวลา {item.open_time}  </Badge>
                                                                 </>)
                                                             }
                                                         </h4>
@@ -65,7 +65,7 @@ const ShopData = () => {
                                                             height: "200px",
                                                             objectFit: "cover",
                                                             cursor: item.is_open ? "pointer" : "not-allowed",
-                                                            opacity: item.is_open ? 1 : 0.5, // ถ้าปิดร้านให้ดูจางลง
+                                                            opacity: item.is_open ? 1 : 0.5, 
                                                         }}
                                                         src={`${import.meta.env.VITE_BAKUP_URL}/images/${item.photo}`}
                                                         onClick={() => {

@@ -19,10 +19,10 @@ function Context({ children }) {
     const [paymentType, setPaymentType] = useState("bank_transfer");
     const [shopId, setShopId] = useState("")
 
-    const dev = import.meta.env.VITE_BAKUP_URL;
+    const api_url = import.meta.env.VITE_BAKUP_URL;
 
     const getCounterOrder = async () => {
-        await axios.get(`${dev}/bills/counter-myorder?messengerId=${messengerId}`)
+        await axios.get(`${api_url}/bills/counter-myorder?messengerId=${messengerId}`)
             .then(res => {
                 setCounterOrder(res.data.count);
             })
@@ -132,34 +132,29 @@ function Context({ children }) {
                 address: Address,
                 step: 1
             }
-            try {
-                const res = await axios.post(`${dev}/bills/order`, body);
+            const res = await axios.post(`${api_url}/bills/order`, body);
+            if (res.status === 200) {
+                const id = res.data.bill_ID;
+                Swal.fire({
+                    title: 'สั่งออเดอร์สำเร็จ',
+                    text: 'คำสั่งซื้อของคุณส่งไปยังร้านค้าแล้ว แจ้งชำระเงินและรอรับอาหารได้เลย',
+                    icon: 'success',
+                    confirmButtonText: 'ยืนยัน',
+                });
 
-                if (res.status === 200) {
-                    const id = res.data.bill_ID;
-                    Swal.fire({
-                        title: 'สั่งออเดอร์สำเร็จ',
-                        text: 'คำสั่งซื้อของคุณส่งไปยังร้านค้าแล้ว แจ้งชำระเงินและรอรับอาหารได้เลย',
-                        icon: 'success',
-                        confirmButtonText: 'ยืนยัน',
-                    });
+                const bodyDetails = cart.map(({ name, price, quantity, note }) => {
+                    return {
+                        bills_id: id,
+                        foodname: name,
+                        price: parseFloat(price),
+                        quantity: quantity,
+                        note: note
+                    }
+                });
 
-                    const bodyDetails = cart.map(({ name, price, quantity, note }) => {
-                        return {
-                            bills_id: id,
-                            foodname: name,
-                            price: parseFloat(price),
-                            quantity: quantity,
-                            note: note
-                        }
-                    });
-
-                    axios.post(`${dev}/billsdetails`, bodyDetails);
-                }
-
+                await axios.post(`${api_url}/billsdetails`, bodyDetails);
                 sendMessageToPage(messengerId);
-
-            } catch (error) {
+            } else {
                 console.error("เกิดข้อผิดพลาดในการสั่งอาหาร: ", error);
                 Swal.fire({
                     title: 'เกิดข้อผิดพลาด',
@@ -168,7 +163,6 @@ function Context({ children }) {
                     confirmButtonText: 'ตกลง'
                 });
             }
-
         } else {
             Swal.fire({
                 title: 'ไม่สามารถสั่งอาหารได้',
@@ -182,7 +176,7 @@ function Context({ children }) {
 
     const getQueue = async () => {
         if (shopId) {
-            await axios.get(`${dev}/queues?shop_id=${shopId}`)
+            await axios.get(`${api_url}/queues?shop_id=${shopId}`)
                 .then(res => {
                     if (res.status === 200) {
                         setQueue(res.data.queues)
@@ -280,6 +274,7 @@ function Context({ children }) {
                 messengerId,
                 queue,
                 resetCart,
+                setCart,
                 setOrderType,
                 orderType,
                 setName,
@@ -295,7 +290,7 @@ function Context({ children }) {
                 paymentType,
                 setPaymentType,
                 getQueue,
-                dev,
+                api_url,
                 setShopId,
                 PageAccessToken
             }}>

@@ -33,7 +33,7 @@ const Cart = () => {
         setPaymentType,
         setOrderType,
         orderType,
-        dev,
+        api_url,
         messengerId,
         setName,
     } = useContext(AuthData);
@@ -41,9 +41,8 @@ const Cart = () => {
     const [loading, setLoading] = useState(false);
 
     const getProfile = async () => {
-        const res = await axios.get(`${dev}/bills/profile/${messengerId}`).then((data) => data);
+        const res = await axios.get(`${api_url}/bills/profile/${messengerId}`).then((data) => data);
         if (res.status === 200) {
-            //setAddress(res.data?.address);
             setName(res.data?.customerName || "ลูกค้า");
             localStorage.setItem('name', res.data.customerName || "ลูกค้า");
         }
@@ -107,7 +106,7 @@ const Cart = () => {
                                                     xs={5}
                                                 >
                                                     <Image style={{ width: "100%", height: '130px', objectFit: 'cover', borderRadius: '8px' }}
-                                                        src={`${dev}/images/${item.photo}`} />
+                                                        src={`${api_url}/images/${item.photo}`} />
                                                 </Col>
                                                 <Col md={5} xs={5}>
                                                     <div className="menu-list mt-3">

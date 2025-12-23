@@ -26,7 +26,7 @@ const NavbarMenu = () => {
     <Router>
       <Navbar bg="light" data-bs-theme="light" className='when-print' sticky='top' expand="lg">
         <Container fluid>
-          <Navbar.Brand href="#home" style={{ color: '#FD720D', fontWeight: 500 }}>SASI Food</Navbar.Brand>
+          <Navbar.Brand href="#home" style={{ color: '#FD720D', fontWeight: 500 }}>SASI FOOD</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto text-center">

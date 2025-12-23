@@ -15,26 +15,26 @@ import QRCode from 'qrcode.react';
 import generatePayload from 'promptpay-qr'
 import GetQueueComponent from './queueComponent';
 
+
 const Myorder = () => {
     const steps = ['รับออเดอร์แล้ว', 'กำลังทำอาหาร', 'กำลังจัดส่ง', 'จัดส่งสำเร็จ'];
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-    const { counterOrder } = useContext(AuthData)
+    const { counterOrder, api_url } = useContext(AuthData)
     let messengerId = localStorage.getItem("messangerId");
     const [myOrder, setMyOrder] = useState([]);
     const [orderHistory, setOrderHistory] = useState([]);
-    const getMyOrder = () => {
-        axios.get(`${import.meta.env.VITE_BAKUP_URL}/bills/myorder?messengerId=${messengerId}`)
+    const [showQr, setShowQr] = useState(false);
+    const [qrCode, setQrCode] = useState("sample");
+
+    const getMyOrder = async () => {
+        await axios.get(`${api_url}/bills/myorder?messengerId=${messengerId}`)
             .then(res => {
                 if (res.status === 200) {
                     setMyOrder(res.data);
                 }
             })
     }
-
-    const [showQr, setShowQr] = useState(false);
-    const [qrCode, setQrCode] = useState("sample");
-
 
     function handleQR(amount) {
         setQrCode(generatePayload("0983460756", { amount: Number(amount) }));
@@ -52,9 +52,13 @@ const Myorder = () => {
         return () => clearInterval(interval);
     }, [])
 
+    const getBillDetails = async (bill_ID) => {
+        const res = await axios.get(`${api_url}/billsdetails/${bill_ID}`);
+        console.log(res.data);
+        }
 
-    const getOrderHistoryByDate = (date) => {
-        axios.get(`${import.meta.env.VITE_BAKUP_URL}/bills/order-history?messengerId=${messengerId}&date_input=${date}`)
+    const getOrderHistoryByDate = async (date) => {
+      await  axios.get(`${api_url}/bills/order-history?messengerId=${messengerId}&date_input=${date}`)
             .then(res => {
                 if (res.status === 200) {
                     setOrderHistory(res.data);
@@ -212,7 +216,7 @@ const Myorder = () => {
                                             <h6 style={{ fontSize: '18px' }}>การรับอาหาร - {item.ordertype === "สั่งกลับบ้าน" ? "จัดส่งที่ " + item.address : item.ordertype}
 
                                             </h6>
-                                            <Button variant="light"> สั่งซื้ออีกครั้ง</Button>
+                                            <Button variant="light" onClick={() => {getBillDetails(item.bill_ID) }}> สั่งซื้ออีกครั้ง</Button>
 
 
                                         </Card.Body>

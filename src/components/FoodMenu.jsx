@@ -15,7 +15,7 @@ import { useParams } from 'react-router-dom';
 const FoodMenu = () => {
     const { shop_id } = useParams();
 
-    const { addToCart, dev, setShopId } = useContext(AuthData)
+    const { addToCart, api_url, setShopId } = useContext(AuthData)
 
     const [foods, setFoods] = useState([]);
     const [menuType, setMenuType] = useState([]);
@@ -29,7 +29,7 @@ const FoodMenu = () => {
     }
 
     const getMenuType = async () => {
-        await axios.get(`${dev}/menutype/shop/${shop_id}`)
+        await axios.get(`${api_url}/menutype/shop/${shop_id}`)
             .then(res => {
                 setMenuType(res.data);
             })
@@ -37,7 +37,7 @@ const FoodMenu = () => {
 
     const getMenuByTypeId = async (id) => {
         setLoading(true)
-        await axios.get(`${dev}/foodmenu/${id}`)
+        await axios.get(`${api_url}/foodmenu/${id}`)
             .then(res => {
                 setFoods(res.data);
                 setLoading(false);
@@ -46,7 +46,7 @@ const FoodMenu = () => {
 
     const getFoodMenu = () => {
         setLoadings(true)
-        fetch(`${dev}/foodmenu/shop/${shop_id}`)
+        fetch(`${api_url}/foodmenu/shop/${shop_id}`)
             .then((res) => res.json())
             .then((data) => {
                 if (data) {
@@ -183,7 +183,7 @@ const FoodMenu = () => {
                                                             >
 
                                                                 <Image style={{ width: "100%", height: '170px', objectFit: 'cover' }}
-                                                                    src={`${dev}/images/${item.img}`} />
+                                                                    src={`${api_url}/images/${item.img}`} />
 
                                                             </Col>
 
