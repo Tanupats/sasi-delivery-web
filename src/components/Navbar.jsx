@@ -18,10 +18,11 @@ import StoreIcon from '@mui/icons-material/Store';
 import Register from './Register';
 import Swal from 'sweetalert2';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import QRScanner from './update-bill-scanner';
 import ViewQuiltIcon from '@mui/icons-material/ViewQuilt';
 import AssessmentIcon from '@mui/icons-material/Assessment';
-import CropFreeIcon from '@mui/icons-material/CropFree';
+import FacebookConnect from './facebookConnect';
+import authUi from './callback-facebook';
+
 const NavbarMenu = () => {
   const {
     staffName,
@@ -60,21 +61,21 @@ const NavbarMenu = () => {
                     <Nav.Link as={Link} to={'/pos'} style={{ textDecoration: 'none', color: '#fff' }}>
                       <ListAltIcon /> ขายสินค้า
                     </Nav.Link>
+                    <Nav.Link as={Link} to={'/orders'} style={{ textDecoration: 'none', color: '#fff' }}>
+                      <ViewQuiltIcon />  จัดการออเดอร์
+                    </Nav.Link>
 
                     <Nav.Link as={Link} to={'/report'} style={{ textDecoration: 'none', color: '#fff' }}>
                       <AssessmentIcon /> สรุปยอดขาย
                     </Nav.Link>
 
-                    <Nav.Link as={Link} to={'/orders'} style={{ textDecoration: 'none', color: '#fff' }}>
-                      <ViewQuiltIcon />  ออเดอร์
-                    </Nav.Link>
 
                     <Nav.Link as={Link} to={'/admin'} style={{ textDecoration: 'none', color: '#fff' }}>
-                      <StoreIcon /> จัดการข้อมูล{shop?.name}
+                      <StoreIcon /> จัดการ {shop?.name}
                     </Nav.Link>
 
-                    <Nav.Link as={Link} to={'/scan-bill'} style={{ textDecoration: 'none', color: '#fff' }}>
-                      สแกนบาร์โค้ด  <CropFreeIcon />
+                    <Nav.Link as={Link} to={'/page-connect'} style={{ textDecoration: 'none', color: '#fff' }}>
+                      เชื่อมต่อ page  
                     </Nav.Link>
 
                   </>
@@ -106,7 +107,8 @@ const NavbarMenu = () => {
         <Route path="/admin" Component={Admin}></Route>
         <Route path="/register" Component={Register}></Route>
         <Route path="/profile" Component={Profile}></Route>
-        <Route path="/scan-bill" Component={QRScanner}></Route>
+        <Route path="/page-connect" Component={FacebookConnect}></Route> 
+        <Route path="/facebook/callback" Component={authUi}></Route> 
       </Routes>
     </Router>
   );

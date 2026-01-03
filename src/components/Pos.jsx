@@ -4,30 +4,20 @@ import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import { Row, Col, Table, Card, Form, Container, Modal, Alert, Nav } from 'react-bootstrap';
 import FoodComponent from './foodComponent';
-import Pagination from 'react-bootstrap/Pagination';
 import CancelIcon from '@mui/icons-material/Cancel';
 import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
 import { AuthData } from "../ContextData";
 import { nanoid } from 'nanoid'
 import SaveIcon from '@mui/icons-material/Save';
-let active = 2;
-let items = [];
+
 import { httpGet } from '../http';
 import QRCode from 'qrcode.react';
 import generatePayload from 'promptpay-qr'
 import { useNavigate } from "react-router-dom";
 
 
-for (let number = 1; number <= 5; number++) {
-  items.push(
-    <Pagination.Item key={number} active={number === active}>
-      {number}
-    </Pagination.Item>,
-  );
-}
-
 import CircularProgress from '@mui/material/CircularProgress';
-import QRCodeBill from './qr-code-bill';
+
 
 const Pos = () => {
   const router = useNavigate()
@@ -51,7 +41,7 @@ const Pos = () => {
     resetCart,
     Id
   } =
-    useContext(AuthData)
+    useContext(AuthData);
 
   const [menu, setMenu] = useState();
   const [menuType, setMenuType] = useState();
@@ -173,32 +163,7 @@ const Pos = () => {
     <>
       <Container fluid >
         <Row>
-          <Col md={2} className='when-print bg-light border-end shadow-sm'>
-            <div style={{ width: '200px', height: '100vh', backgroundColor: '#f8f9fa' }}>
-              <h5 className="p-3"></h5>
-              <Nav defaultActiveKey="/dashboard" className="flex-column px-3">
-                <Nav.Link href="/admin">📦 จัดการสินค้า</Nav.Link>
-                <Nav.Link href="/report">📈 รายงาน</Nav.Link>
-                <Nav.Link href="/profile">⚙️ โปรไฟล์</Nav.Link>
-              </Nav>
-            </div>
-          </Col>
-          <Col md={6} className='when-print'>
-            {/* <div className="search mt-4 w-50">
-              <InputGroup>
-                <InputGroup.Text>
-                  <SearchIcon />
-                </InputGroup.Text>
-                <Form.Control
-                  placeholder="search"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-                <Button> ค้นหา </Button>
-              </InputGroup>
-
-            </div> */}
-
+          <Col md={8} className='when-print'>
             <div className='menu-type mt-4'>
               <div className="title">
                 <h5>ประเภท </h5>
@@ -288,19 +253,18 @@ const Pos = () => {
 
                 {
                   queueNumber > 0 && (
-                    <div className='text-center'>
+                    <div className='text-center mt-2'>
+                      <h6> คิวที่ {queueNumber} </h6>
                       <h6> {shop?.name}</h6>
                       <h6>  ใบเสร็จรับเงิน</h6>
-                      <h6> ลำดับคิว {queueNumber} </h6>
+
                       วันที่ {date} เวลา {time}
                     </div>
                   )
                 }
 
                 <Row className='mt-4'>
-                  <Col md={12}>
-                    <div className='when-print'>
-                      <h5>รายการสินค้า</h5></div>
+                  <Col md={12}>                
                     <Table>
                       <tbody>
                         {
@@ -308,7 +272,7 @@ const Pos = () => {
                             return (
                               <tr key={index} style={{ padding: 0, margin: 0 }}>
                                 <td style={{ padding: '2px 4px', lineHeight: '1.5' }}>
-                                  {item.name} <br /> {item.note}
+                                  {item.name}   {item.note !== "" &&  "*"+item.note}
                                 </td>
                                 <td style={{ padding: '2px 4px', lineHeight: '1.5' }}>{item.quantity}</td>
                                 <td style={{ padding: '2px 4px', lineHeight: '1.5' }}>{formatMoney(item.price)}</td>
@@ -329,9 +293,9 @@ const Pos = () => {
                         <tr>
                           <td className='get-order' colSpan={4}>การรับสินค้า-{orderType}</td>
                         </tr>
-                        <tr>
+                        {/* <tr>
                           <td className='get-order' style={{ padding: '2px 4px', lineHeight: '1.2' }} colSpan={4}>รวม {toTal} รายการ</td>
-                        </tr>
+                        </tr> */}
                         {
                           name !== "" && (
                             <tr>
@@ -359,32 +323,32 @@ const Pos = () => {
                           <Col>
                             <div className="total when-print mb-2 text-center">
                               <h5> รวมทั้งหมด {sumPrice.toLocaleString('th-TH', { style: 'currency', currency: 'THB' })}</h5>
-                              <h5>  รวม {toTal} รายการ</h5>
+                              <h5> รวม {toTal} รายการ</h5>
                             </div>
 
                           </Col>
 
                           <Col md={12}>
-                            <Button
+                            {/* <Button
                               variant='primary'
                               className='when-print mb-2 w-100'
                               onClick={() => {
                                 handleQR(),
                                   setShowQr(!showQr)
                               }}>
-                              qr code payment </Button>
+                               Qrcode payment </Button> */}
 
-                           
+
                           </Col>
 
-                          <Col md={12} className='text-center'>
+                          {/* <Col md={12} className='text-center'>
                             {
                               showQr ? <center><QRCode value={qrCode} />
                                 <h5>{staffName}</h5>
                               </center> : <></>
                             }
-                          </Col> 
-                            {   Id && <QRCodeBill Id={Id} /> } 
+                          </Col>
+                          {Id && <QRCodeBill Id={Id} />} */}
                         </Row>
                       )
                     }
@@ -393,19 +357,19 @@ const Pos = () => {
                       <Row className='order-type when-print'>
                         <ButtonGroup >
                           <Button className='btn btn-danger w-100'
-                            onClick={() => { setOrderType("เสิร์ฟในร้าน"), setName("ทานที่ร้าน") }}
+                            onClick={() => { setOrderType("เสิร์ฟในร้าน") }}
                             style={{ border: 'none' }} >ทานที่ร้าน</Button>
 
                           <Button className='btn btn-primary w-100'
-                            onClick={() => { setOrderType("รับเอง"), setName("รับเองหน้าร้าน") }}
+                            onClick={() => { setOrderType("รับเอง") }}
                             style={{ border: 'none' }} >รับหน้าร้าน</Button><Button className='btn btn-success w-100'
-                              onClick={() => { setOrderType("สั่งกลับบ้าน"), setName("จัดส่ง") }}
+                              onClick={() => { setOrderType("สั่งกลับบ้าน") }}
                               style={{ border: 'none' }} >จัดส่ง</Button>
                         </ButtonGroup>
                         <Col md={12} className='mt-3 mb-4' style={{ marginBottom: '500px' }}>
                           <Form.Control
                             type="text"
-                            placeholder='ข้อมูลติดต่อ'
+                            placeholder='ข้อมูลลูกค้า'
                             onChange={(e) => setName(e.target.value)} value={name} />
                         </Col>
                       </Row>
@@ -435,7 +399,7 @@ const Pos = () => {
                           style={{ height: '46px' }}
                           onClick={() => { resetCart() }}
                           variant='danger w-100'>
-                          ยกเลิก
+                          ยกเลิกบิล
                         </Button>
                       </Col>
                     </Row>

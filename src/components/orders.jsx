@@ -9,59 +9,29 @@ import { AuthData } from "../ContextData";
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
 import SendIcon from '@mui/icons-material/Send';
-import { sendMessageToPage } from "../http";
-import QRCodeBill from "./qr-code-bill";
 
 const Orders = () => {
-    const { shop } = useContext(AuthData);
+    const { shop, sendMessageToPage } = useContext(AuthData);
     const token = localStorage.getItem("token");
     const [report, setReport] = useState([]);
     const [printBillId, setPrintBillId] = useState(null);
-
-    const [Delivered, setDelivered] = useState(0);
-    const [OrderNew, setOrderNew] = useState(0);
-    const [OrderCooking, setOrderCooking] = useState(0);
-    const [OrderCookingFinish, setOrderCookingFinish] = useState(0);
-
+    const [statusOrder, setStatusOrder] = useState([]);
+    const [statusActive, setStatusActive] = useState("ใหม่");
+    
     const getMenuReport = async (status) => {
+        setReport([]);
         if (shop?.shop_id) {
             await httpGet(`/bills?status=${status}&shop_id=${shop?.shop_id}`, { headers: { 'apikey': token } })
                 .then(res => { setReport(res.data) });
         }
     }
 
-    const getOrderDelivery = async () => {
+    const getOrderStatus = async () => {
         if (shop?.shop_id) {
-            await httpGet(`/bills/counter-order-status/${shop?.shop_id}?statusOrder=ส่งสำเร็จ`, { headers: { 'apikey': token } })
+            await httpGet(`/bills/counter-order-status/${shop?.shop_id}`, { headers: { 'apikey': token } })
                 .then(res => {
-                    setDelivered(res.data.count);
-                })
-        }
-    }
-
-    const getOrderNew = async () => {
-        if (shop?.shop_id) {
-            await httpGet(`/bills/counter-order-status/${shop?.shop_id}?statusOrder=รับออเดอร์แล้ว`, { headers: { 'apikey': token } })
-                .then(res => {
-                    setOrderNew(res.data.count);
-                })
-        }
-    }
-
-    const getOrderCooking = async () => {
-        if (shop?.shop_id) {
-            await httpGet(`/bills/counter-order-status/${shop?.shop_id}?statusOrder=กำลังส่ง`, { headers: { 'apikey': token } })
-                .then(res => {
-                    setOrderCooking(res.data.count);
-                })
-        }
-    }
-
-    const getOrderCookingFinish = async () => {
-        if (shop?.shop_id) {
-            await httpGet(`/bills/counter-order-status/${shop?.shop_id}?statusOrder=ทำเสร็จแล้ว`, { headers: { 'apikey': token } })
-                .then(res => {
-                    setOrderCookingFinish(res.data.count);
+                    setStatusOrder([]);
+                    setStatusOrder(res.data);
                 })
         }
     }
@@ -81,20 +51,16 @@ const Orders = () => {
     };
 
     const CancelOrder = async (id, bid) => {
-        await httpDelete(`/bills/${id}`)
-        await httpDelete(`/billsdetails/${bid}`)
-        await getMenuReport("รับออเดอร์แล้ว")
+        await httpDelete(`/bills/${id}`);
+        await httpDelete(`/billsdetails/${bid}`);
+        await getMenuReport("รับออเดอร์แล้ว");
     }
-
 
     const reset = async () => {
         await setReport([]);
         setPrintBillId(null);
         getMenuReport("รับออเดอร์แล้ว");
-        getOrderDelivery();
-        getOrderNew();
-        getOrderCooking();
-        getOrderCookingFinish();
+        getOrderStatus();
     }
 
     const UpdateStatus = async (id, status, messageid, step, ordertype) => {
@@ -121,23 +87,19 @@ const Orders = () => {
                                     sendMessageToPage(messageid, "ออเดอร์ทำเสร็จแล้วครับเข้ามาที่ร้านได้เลยนะครับ");
                                 } else {
                                     sendMessageToPage(messageid, "ออเดอร์ทำเสร็จแล้วครับ รอจัดส่งนะครับ");
-                                }                           
+                                }
                             }
                         }
-                        setReport([]);
                         getMenuReport("รับออเดอร์แล้ว");
+                        getOrderStatus();
                     }
                 })
             }
         });
-
-        getOrderDelivery();
-        getOrderNew();
-        getOrderCooking();
-        getOrderCookingFinish();
+        
     }
 
-   
+
     const deleteBill = async (id, bid) => {
         Swal.fire({
             title: 'คุณต้องการยกเลิกออเดอร์หรือไม่ ?',
@@ -155,17 +117,10 @@ const Orders = () => {
         });
     }
 
-
-
     useEffect(() => {
         getMenuReport("รับออเดอร์แล้ว");
-        getOrderDelivery();
-        getOrderNew();
-        getOrderCooking();
-        getOrderCookingFinish();
+        getOrderStatus();
     }, [shop])
-
-
 
     return (<>
         <Row className="mt-3">
@@ -177,21 +132,18 @@ const Orders = () => {
 
                         <Row className="when-print">
                             <ButtonGroup aria-label="Basic example">
-                                <Button variant="btn btn-outline-primary" style={{ fontSize: '18px' }} onClick={() => { setReport([]), getMenuReport("รับออเดอร์แล้ว") }}>ใหม่ {OrderNew}</Button>
-                                <Button variant="btn btn-outline-success" style={{ fontSize: '18px' }} onClick={() => { setReport([]), getMenuReport("ทำเสร็จแล้ว") }}>เสร็จแล้ว {OrderCookingFinish}</Button>
-                                <Button variant="btn btn-outline-danger" style={{ fontSize: '18px' }} onClick={() => { setReport([]), getMenuReport("กำลังส่ง") }}>รอดำเนินการ  {OrderCooking}</Button>
-                                <Button variant="btn btn-outline-primary" style={{ fontSize: '18px' }} onClick={() => { setReport([]), getMenuReport("ส่งสำเร็จ") }}>สำเร็จ {Delivered} </Button>
-
+                                <Button  variant={statusActive === "ใหม่" ? "btn btn-outline-primary active" : "btn btn-outline-primary"} style={{ fontSize: '18px' }} onClick={() => { setReport([]), setStatusActive("ใหม่"), getMenuReport("รับออเดอร์แล้ว") }}>ใหม่ {statusOrder[0]?.total}</Button>
+                                <Button  variant={statusActive === "เสร็จแล้ว" ? "btn btn-outline-success active" : "btn btn-outline-success"} style={{ fontSize: '18px' }} onClick={() => { setReport([]), setStatusActive("เสร็จแล้ว"), getMenuReport("ทำเสร็จแล้ว") }}>เสร็จแล้ว {statusOrder[2]?.total}</Button>
+                                <Button  variant={statusActive === "รอดำเนินการ" ? "btn btn-outline-danger active" : "btn btn-outline-danger"} style={{ fontSize: '18px' }} onClick={() =>  {  setReport([]), setStatusActive("รอดำเนินการ"), getMenuReport("กำลังส่ง") }}>รอดำเนินการ  {statusOrder[1]?.total}</Button>
+                                <Button  variant={statusActive === "สำเร็จ" ? "btn btn-outline-primary active" : "btn btn-outline-primary"} style={{ fontSize: '18px' }} onClick={() => { setReport([]), setStatusActive("สำเร็จ"), getMenuReport("ส่งสำเร็จ") }}>สำเร็จ {statusOrder[3]?.total} </Button>
                             </ButtonGroup>
                         </Row>
                         <Row className="mt-4 when-print">
-                            <Col md={6} xs={6}>
+                            <Col md={3} xs={3}>
                                 <Button
                                     className="w-100"
                                     onClick={() => { reset() }}
                                 > < RestartAltIcon /> โหลดข้อมูลใหม่ </Button></Col>
-
-
                         </Row>
 
                         <Row>
@@ -201,15 +153,20 @@ const Orders = () => {
                                         <Col md={4}>
                                             <Card className="mb-4 mt-4" id={item.id}>
                                                 <Card.Body style={{ padding: '12px' }}>
-                                                    <div className="text-center show-header">
-                                                        <h5> {shop?.name} </h5>
-                                                        <h5>ใบเสร็จรับเงิน</h5>
+                                                    
+                                                    <div className="text-center">
+                                                         <h6> คิวที่ {item.queueNumber} </h6>
+                                                        </div>  
+                                                    <div className="text-center show-header"> 
+                                                         
+                                                        <h6> {shop?.name} </h6>
+                                                        <h6>ใบเสร็จรับเงิน</h6>
                                                     </div>
-                                                    <b> คิวที่ {item.queueNumber} <br /> เลขออเดอร์ {item.bill_ID.slice(-5).toUpperCase()}</b>
+                                                    <b> <br /> เลขออเดอร์ {item.bill_ID.slice(-5).toUpperCase()}</b>
                                                     <p>
-                                                        เวลาสั่งซื้อ {moment(item.timeOrder).format('HH:mm')} น. &nbsp; <br />
+                                                        เวลา {moment(item.timeOrder).format('HH:mm')} น. &nbsp; 
                                                         วันที่ {moment(item.timeOrder).format('YYYY-MM-DD')}<br />
-                                                        {item?.printStatus !== null ? item?.printStatus : "ออเดอร์ใหม่"}
+                                                        {/* {item?.printStatus !== null ? item?.printStatus : "ออเดอร์ใหม่"} */}
                                                     </p>
                                                     <Row>
                                                         <Col md={6} xs={6}>
@@ -232,7 +189,7 @@ const Orders = () => {
                                                         </Col>
                                                         {
 
-                                                            item.statusOrder === 'รับออเดอร์แล้ว' && (
+                                                            item.statusOrder === 'รับออเดอร์แล้ว' && ( <> 
                                                                 <Col md={6} xs={6} className="mb-2">
                                                                     <Button
                                                                         className="when-print"
@@ -242,31 +199,32 @@ const Orders = () => {
                                                                         <LocalPrintshopIcon />  พิมพ์ใบเสร็จ
                                                                     </Button>
                                                                 </Col>
+                                                                <Col md={6} xs={6} className="mb-2"></Col>
 
-                                                            )
+                                                           </> )
                                                         }
 
                                                     </Row>
-                                                    <Alert className="when-print bg-white">
-                                                        <b>สถานะ : {item.statusOrder}</b>
+                                                    <Alert className="when-print bg-white text-center">
+                                                        <b>{item.statusOrder}</b>
                                                     </Alert>
                                                     <Details
                                                         reset={reset}
                                                         id={item.id}
                                                         bill_ID={item.bill_ID}
                                                         status={item.statusOrder}
-                                                        userId={item.messengerId}                                                    
+                                                        userId={item.messengerId}
                                                     />
 
                                                     <Row>
                                                         <Col md={8}>
-                                                            <h5>รวมทั้งหมด {item.amount} บาท</h5>
-                                                            <h5>ลูกค้า-{item.customerName}</h5>
-                                                            {item.address ? <h5>จัดส่งที่-{item.address}</h5> : " "}
-                                                            <h5>วิธีการรับอาหาร-{item.ordertype}</h5>
+                                                            <h6>รวมทั้งหมด {item.amount} บาท</h6>
+                                                            <h6>{item.customerName}</h6>
+                                                            {item.address ? <h6>จัดส่งที่-{item.address}</h6> : " "}
+                                                            <h6>วิธีการรับอาหาร-{item.ordertype}</h6>
                                                         </Col>
                                                     </Row>
-                                                    <QRCodeBill Id={item.id} />
+
                                                     <Row className="mt-2">
 
                                                         {

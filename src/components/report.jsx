@@ -157,8 +157,7 @@ const Report = () => {
 
 
                                 </Form>
-                                {
-                                    totalToday > 0 && (<>
+
                                         <Card.Title className="text-center" style={{ color: 'green', marginBottom: '20px' }}>  ยอดขายวันนี้   {formatMoney(totalToday)} บาท
                                         </Card.Title>
 
@@ -177,7 +176,7 @@ const Report = () => {
                                                 </Alert>
                                             </Col>
                                         </Row>
-                                    </>)}
+                                  
                                 <Card className="mt-2">
                                     <Card.Body>
 

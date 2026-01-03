@@ -1,21 +1,18 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Row, Col, Navbar, Nav, Card } from 'react-bootstrap'
 import './index.scss';
 import FoodMenuAdmin from "./FoodMenuAdmin";
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import DataThresholdingIcon from '@mui/icons-material/DataThresholding';
-import RecentActorsIcon from '@mui/icons-material/RecentActors';
 import PollIcon from '@mui/icons-material/Poll';
-import GroupIcon from '@mui/icons-material/Group';
 import Stock from "./stock";
 import Accounting from "./accounting";
 import ReportProduct from "./ReportProduct";
 import { httpGet } from "../../http";
 import { AuthData } from "../../ContextData";
 import MenuType from "./MenuType";
-import BallotIcon from '@mui/icons-material/Ballot';
-import AssessmentIcon from '@mui/icons-material/Assessment';
+
 const Admin = () => {
     const [openMenu, setOpenMenu] = useState("เมนูอาหาร");
     const [inComeNow, setIncomeNow] = useState(0);
@@ -36,6 +33,7 @@ const Admin = () => {
     const formatMoney = (val) => {
         return new Intl.NumberFormat().format(val)
     }
+
     const geOutcomeNow = async () => {
         await httpGet(`/account/outcome-mounth?shop_id=${shop?.shop_id}`)
             .then(res => {
@@ -64,10 +62,8 @@ const Admin = () => {
                     <Nav className="flex-column w-100" style={{ flex: 1 }}>
                         <Nav.Link onClick={() => handleNavClick("เมนูอาหาร")}><MenuBookIcon /> รายการสินค้า</Nav.Link>
                         <Nav.Link onClick={() => handleNavClick("ประเภทสินค้า")}><PollIcon /> ประเภทสินค้า</Nav.Link>
-                        <Nav.Link onClick={() => handleNavClick("บัญชี")}><CreditCardIcon /> บัญชีรายจ่าย</Nav.Link>
-                        <Nav.Link onClick={() => handleNavClick("สรุปยอดขาย")}><DataThresholdingIcon /> สรุปยอดขาย</Nav.Link>
-                        <Nav.Link onClick={() => handleNavClick("สต๊อก")}> <BallotIcon /> สต๊อกสินค้า</Nav.Link>
-                        <Nav.Link onClick={() => handleNavClick("สรุปรายการสั่งซื้อ")}> <AssessmentIcon /> สรุปรายการสั่งซื้อ</Nav.Link>
+                        {/* <Nav.Link onClick={() => handleNavClick("บัญชี")}><CreditCardIcon /> บันทึกรายจ่าย</Nav.Link> */}
+                        <Nav.Link onClick={() => handleNavClick("สรุปยอดขาย")}><DataThresholdingIcon /> สรุปยอดขายทั้งหมด</Nav.Link>
                     </Nav>
                 </Navbar>
             </Col>
@@ -101,7 +97,7 @@ const Admin = () => {
                                 </Card.Body>
                             </Card>
                         </Col>
-                        <Col md={6}>
+                        {/* <Col md={6}>
                             <Card className="mt-2">
                                 <Card.Body>
                                     <Card.Title style={{ color: 'red' }}>
@@ -112,8 +108,8 @@ const Admin = () => {
                                     </Card.Title>
                                 </Card.Body>
                             </Card>
-                        </Col>
-                        <Col md={6}>
+                        </Col> */}
+                        {/* <Col md={6}>
                             <Card className="mt-2">
                                 <Card.Body>
                                     <Card.Title style={{ color: '#FD720D' }}>
@@ -123,7 +119,7 @@ const Admin = () => {
                                     </Card.Title>
                                 </Card.Body>
                             </Card>
-                        </Col>
+                        </Col> */}
                         {/* <Col md={6}>
                             <Card className="mt-2">
                                 <Card.Body>

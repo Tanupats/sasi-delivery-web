@@ -4,7 +4,7 @@ import Swal from 'sweetalert2'
 import { httpGet, httpPost } from "./http";
 function Context({ children }) {
 
-    const [cart, setCart] = useState([])
+    const [cart, setCart] = useState([]);
     const [toTal, setTotal] = useState(0);
     const [sumPrice, setSumPrice] = useState(0);
     const [name, setName] = useState("เสิร์ฟในร้าน");
@@ -13,11 +13,11 @@ function Context({ children }) {
     const [queue, setQueu] = useState(0);
     const [queueNumber, setQueueNumber] = useState(0);
     const [staffName, setStaffName] = useState("");
-    const [user, setUser] = useState({ name: '' })
-    const [shop, setShop] = useState({})
+    const [user, setUser] = useState({ name: '' });
+    const [shop, setShop] = useState({});
     const [statusPrint, setStatusPrint] = useState("");
     const token = localStorage.getItem("token");
-    const [Id, setId] = useState(null);
+    const [Id,setId] = useState(null);
 
     const getUser = async () => {
         if (token) {
@@ -31,10 +31,8 @@ function Context({ children }) {
                         }
                     })
             } catch (error) {
-                console.log('error get me', error);
                 localStorage.clear();
                 window.location.href = '/';
-
             }
         }
     }
@@ -59,6 +57,34 @@ function Context({ children }) {
     const removeCart = (id) => {
         let newCart = cart.filter(item => item.id !== id);
         setCart(newCart);
+    }
+
+
+    const sendMessageToPage = (userid, messageText) => {
+        const page_token = shop.facebook_token;
+        axios.post(`https://graph.facebook.com/v18.0/me/messages?access_token=${page_token}`, {
+            recipient: {
+                id: userid
+            },
+            message: {
+                text: messageText
+            }
+        }).then(response => {
+            if (response) {
+                Swal.fire({
+                    title: 'ส่งข้อความรับออเดอร์สำเร็จแล้ว',
+                    icon: 'success',
+                })
+
+            }
+        }).catch(error => {
+            if (error) {
+                Swal.fire({
+                    title: 'ส่งข้อความไปยังลูกไม่สำเร็จ',
+                    icon: 'error',
+                })
+            }
+        });
     }
 
     const updateNote = (id, note) => {
@@ -106,8 +132,6 @@ function Context({ children }) {
         if (cart.length > 0) {
             setStatusPrint('พิมพ์เวลา ' + new Date().getHours() + ':' + new Date().getMinutes())
             window.print();
-
-
         } else {
             Swal.fire({
                 title: 'ไม่มีรายการอาหาร',
@@ -116,7 +140,6 @@ function Context({ children }) {
                 confirmButtonText: 'ยืนยัน'
             })
         }
-
     }
 
 
@@ -208,27 +231,24 @@ function Context({ children }) {
         }
     }
 
-
     const sumAmount = () => {
         if (cart.length > 0) {
             let total = 0;
             cart.map(item => {
                 total += (item?.quantity * item?.price);
             })
-
             let totalQuantity = cart.reduce((sum, item) => sum + (item?.quantity || 0), 0);
-
             setTotal(totalQuantity);
-            setSumPrice(total)
+            setSumPrice(total);
 
         } else {
             setTotal(0);
-            setSumPrice(0)
+            setSumPrice(0);
         }
     }
 
     useEffect(() => {
-        sumAmount()
+        sumAmount();
     }, [cart])
 
     useEffect(() => {
@@ -241,9 +261,6 @@ function Context({ children }) {
         const userid = localStorage.getItem("userId");
         getShop(userid);
     }, [])
-
-
-
 
     return (<>
         <AuthData.Provider
@@ -280,6 +297,7 @@ function Context({ children }) {
                 Id,
                 statusPrint,
                 getUser,
+                sendMessageToPage,
                 printSlip
             }}>
             {children}

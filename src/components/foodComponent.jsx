@@ -53,7 +53,7 @@ export default function FoodComponent({ data }) {
                         <div className="text-left p-2">
                             <h6>{foodname}</h6>
                         </div>
-                        <Button
+                        {/* <Button
                             disabled={status !== 1}
                             style={{
                                 backgroundColor: status === 1 ? '#FD720D' : '#ccc',
@@ -63,7 +63,7 @@ export default function FoodComponent({ data }) {
                             className="w-100"
                         >
                             <AddCircleOutlineIcon /> ADD
-                        </Button>
+                        </Button> */}
                     </Col>
                 </Row>
 
