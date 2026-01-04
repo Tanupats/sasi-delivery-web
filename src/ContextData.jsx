@@ -51,7 +51,7 @@ function Context({ children }) {
         if (cart.length === 0) {
             setCart([itemCart]);
         } else {
-            setCart([...cart, itemCart]);
+            setCart([...cart,itemCart]);
         }
     }
 
