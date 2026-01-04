@@ -2,6 +2,7 @@ import { createContext, useState, useEffect } from "react";
 export const AuthData = createContext();
 import Swal from 'sweetalert2'
 import { httpGet, httpPost } from "./http";
+import axios from "axios";
 function Context({ children }) {
 
     const [cart, setCart] = useState([]);
@@ -62,7 +63,7 @@ function Context({ children }) {
 
     const sendMessageToPage = (userid, messageText) => {
         const page_token = shop.facebook_token;
-        axios.post(`https://graph.facebook.com/v18.0/me/messages?access_token=${page_token}`, {
+        axios.post(`https://graph.facebook.com/v19.0/me/messages?access_token=${page_token}`, {
             recipient: {
                 id: userid
             },
