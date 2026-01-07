@@ -66,8 +66,6 @@ export default function FacebookLogin() {
       },
       {
         scope: "pages_show_list,pages_messaging,pages_read_engagement",
-        auth_type: "rerequest",
-        return_scopes: true
       }
     );
   }
