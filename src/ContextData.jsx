@@ -19,7 +19,7 @@ function Context({ children }) {
     const [paymentType, setPaymentType] = useState("bank_transfer");
     const [shopId, setShopId] = useState("")
 
-    const api_url = import.meta.env.VITE_BAKUP_URL;
+    const api_url = import.meta.env.VITE_API_URL;
 
     const getCounterOrder = async () => {
         await axios.get(`${api_url}/bills/counter-myorder?messengerId=${messengerId}`)
@@ -152,7 +152,7 @@ function Context({ children }) {
                     }
                 });
 
-                await axios.post(`${api_url}/billsdetails`, bodyDetails);
+                await axios.post(`${api_url}/billsdetails`, bodyDetails)
                 sendMessageToPage(messengerId);
             } else {
                 console.error("เกิดข้อผิดพลาดในการสั่งอาหาร: ", error);

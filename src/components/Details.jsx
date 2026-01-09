@@ -7,7 +7,7 @@ const Details = (props) => {
     const [detail, setDetail] = useState([]);
 
     const getDetail = async () => {
-        await axios.get(`${import.meta.env.VITE_BAKUP_URL}/billsdetails/${bill_ID}`)
+        await axios.get(`${import.meta.env.VITE_API_URL}/billsdetails/${bill_ID}`)
             .then(res => {
                 setDetail(res.data);
             })
@@ -21,14 +21,14 @@ const Details = (props) => {
 
         <ListGroup className="mt-2">
             <Row>
-              
-               
+
+
                 {
                     detail.map((item, index) => {
                         return (<React.Fragment key={index}>
                             <Col md={12}>
                                 <ListGroup.Item style={{ border: 'none', margin: '0px', padding: '0px', fontSize: '18px' }}>
-                                      <h6> {item.foodname} {item.note}   {item.price} X {item.quantity}  </h6></ListGroup.Item>
+                                    <h6> {item.foodname} {item.note}   {item.price} X {item.quantity}  </h6></ListGroup.Item>
                             </Col>
                         </React.Fragment>)
                     })

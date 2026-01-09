@@ -16,6 +16,7 @@ import generatePayload from 'promptpay-qr'
 import GetQueueComponent from './queueComponent';
 
 
+
 const Myorder = () => {
     const steps = ['รับออเดอร์แล้ว', 'กำลังทำอาหาร', 'กำลังจัดส่ง', 'จัดส่งสำเร็จ'];
     const theme = useTheme();
@@ -54,11 +55,10 @@ const Myorder = () => {
 
     const getBillDetails = async (bill_ID) => {
         const res = await axios.get(`${api_url}/billsdetails/${bill_ID}`);
-        console.log(res.data);
-        }
+    }
 
     const getOrderHistoryByDate = async (date) => {
-      await  axios.get(`${api_url}/bills/order-history?messengerId=${messengerId}&date_input=${date}`)
+        await axios.get(`${api_url}/bills/order-history?messengerId=${messengerId}&date_input=${date}`)
             .then(res => {
                 if (res.status === 200) {
                     setOrderHistory(res.data);
@@ -80,7 +80,7 @@ const Myorder = () => {
                 >
                     <Tab eventKey="home" title={<b className="custom-tab-title">คำสั่งซื้อใหม่ {counterOrder}</b>}>
                         {
-                            myOrder?.map((item, index) => {
+                          Array.isArray(myOrder) && myOrder?.map((item, index) => {
                                 if (item.statusOrder === "รับออเดอร์แล้ว") {
                                     return (
                                         <React.Fragment key={index}>
@@ -216,7 +216,7 @@ const Myorder = () => {
                                             <h6 style={{ fontSize: '18px' }}>การรับอาหาร - {item.ordertype === "สั่งกลับบ้าน" ? "จัดส่งที่ " + item.address : item.ordertype}
 
                                             </h6>
-                                            <Button variant="light" onClick={() => {getBillDetails(item.bill_ID) }}> สั่งซื้ออีกครั้ง</Button>
+                                            <Button variant="light" onClick={() => { getBillDetails(item.bill_ID) }}> สั่งซื้ออีกครั้ง</Button>
 
 
                                         </Card.Body>
