@@ -8,17 +8,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 const ShopData = () => {
     const { userid, name } = useParams();
     const router = useNavigate();
-    const [data, setData] = useState([{
-        "id": 1,
-        "shop_id": "15b4e191-d125-4c18-bdd1-445091c349ff",
-        "user_id": "3",
-        "creted": "2024-07-21T18:11:52.960Z",
-        "photo": "1753698542238.jpg",
-        "name": "ร้านศศิ สาขาหนองคาย",
-        "is_open": true,
-        "shop_type": "ร้านอาหาร",
-        "open_time": "10:00 น - 22:00 น",
-    }]);
+    const [data, setData] = useState([]);
    
     const getShopData = async () => {
         await axios.get(`${import.meta.env.VITE_API_URL}/shop`)
