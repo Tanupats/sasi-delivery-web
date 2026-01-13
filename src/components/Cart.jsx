@@ -86,7 +86,7 @@ const Cart = () => {
             <Card.Body style={{ height: '100%' }}>
                 <Card.Title as={'h6'} className="mb-2 text-center" >สรุปรายการสั่งซื้อ</Card.Title>
                 <Button
-                className="mb-2"
+                    className="mb-2"
                     variant="secondary"
                     size="sm"
                     onClick={() => router(-1)}
@@ -148,16 +148,14 @@ const Cart = () => {
                                                         <RemoveCircleOutlineIcon />
                                                     </Button>
                                                 </Col>
-                                                {
-                                                    item.name !== 'ไข่ดาว' && item.name !== 'ข้าวสวย' && item.name !== 'ไข่เจียว' && (
-                                                        <Col md={4} className="mt-3">
-                                                            <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                                                <button type="button" className="btn btn-outline-primary" onClick={() => setMenuNormal(item.id)}>ธรรมดา </button>
-                                                                <button type="button" className="btn btn-outline-success" onClick={() => setMenuPichet(item.id, item)}>พิเศษ </button>
-                                                            </div>
-                                                        </Col>
-                                                    )
-                                                }
+
+                                                <Col md={4} className="mt-3">
+                                                    <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                                        <button type="button" className="btn btn-outline-primary" onClick={() => setMenuNormal(item.id)}>ธรรมดา </button>
+                                                        <button type="button" className="btn btn-outline-success" onClick={() => setMenuPichet(item.id, item)}>พิเศษ </button>
+                                                    </div>
+                                                </Col>
+
                                                 <Col md={12} xs={12}>
                                                     <Form.Control
                                                         className='w-100 mt-3'
@@ -195,13 +193,13 @@ const Cart = () => {
                                                         getProfile();
                                                     }}
                                                 > <DeliveryDiningIcon />  จัดส่ง</Button>
-                                                {/* <Button
+                                                <Button
                                                     variant={orderType === 'เสิร์ฟในร้าน' ? 'danger w-100' : 'outline-danger w-100'}
                                                     onClick={() => {
                                                         setOrderType("เสิร์ฟในร้าน");
                                                         setAddress("");
                                                     }}
-                                                > <LocalDiningIcon />  ทานที่ร้าน</Button> */}
+                                                > <LocalDiningIcon />  ทานที่ร้าน</Button>
                                                 <Button variant={orderType === 'รับเอง' ? 'primary w-100' : 'outline-primary w-100'}
                                                     onClick={() => {
                                                         setOrderType("รับเอง");
@@ -242,7 +240,7 @@ const Cart = () => {
                                     </Form>
                                 </Col>
                                 {/* <Col md={12} className="mt-3"><h5 style={{ color: 'red' }}> รอคิวตอนนี้ {queue} คิว </h5></Col> */}
-                                <Col md={12} className="mt-3">  <h6 style={{ color: 'red' }}> * รบกวนรอหน่อยนะครับ พี่ทำคนเดียวจะช้ากว่าปกติครับ </h6>  </Col>
+                                <Col md={12} className="mt-3">  <h6 style={{ color: 'red' }}> * รบกวนสั่งเสร็จแล้วส่งข้อความมาในเพจด้วยครับ ถ้าแชทไม่ขึ้นแจ้งเตือน </h6>  </Col>
                                 <Col className="mt-3">
 
                                     <Button

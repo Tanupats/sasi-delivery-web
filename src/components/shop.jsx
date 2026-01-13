@@ -30,7 +30,8 @@ const ShopData = () => {
                 <Row>
                     {
                       data.map((item, index) => {
-                                return (
+
+                         if(item.id === 1) return (
                                     <React.Fragment key={index}>
                                         <Col
                                             style={{ cursor: 'pointer' }}
@@ -53,7 +54,7 @@ const ShopData = () => {
                                                                 </Badge>) : (<>
 
 
-                                                                    <Badge bg="danger">ร้านปิด จะเปิดอีกครั้งเวลา {item.open_time}  </Badge>
+                                                                    <Badge bg="danger">{item.open_time}  </Badge>
                                                                 </>)
                                                             }
                                                         </h4>
