@@ -58,7 +58,7 @@ const Cart = () => {
         }
 
         const result = await Swal.fire({
-            title: 'ยืนยันการสั่งซื้อ ?',
+            title: 'รบกวนสั่งแล้วแจ้งที่เพจด้วยนะครับ เนื่องจากแชทไม่ส่งไปถ้าไม่ทักเพจมาก่อนครับ ?',
             html: `จำนวนคิวที่รอ ${queueMessage} คิว`,
             icon: 'question',
             showCancelButton: true,
