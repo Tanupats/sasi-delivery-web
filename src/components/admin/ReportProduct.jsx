@@ -8,14 +8,14 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { AuthData } from "../../ContextData";
+//import { AuthData } from "../../ContextData";
 
 const ReportProduct = () => {
     const [data, setData] = useState([]);
-    const { shop } = useContext(AuthData);
+    //const { shop } = useContext(AuthData);
     useEffect(() => {
         const getData = async () => {
-            await httpGet(`/account/report?shop_id=${shop.shop_id} `)
+            await httpGet(`/group`)
                 .then((data) => {
                     if (data) {
                         setData(data.data);
@@ -51,8 +51,8 @@ const ReportProduct = () => {
                         >
 
                             <TableCell align="left">{index + 1}</TableCell>
-                            <TableCell align="left">{row.listname}</TableCell>
-                            <TableCell align="left">{row.count}</TableCell>
+                            <TableCell align="left">{row.foodname}</TableCell>
+                            <TableCell align="left">{row._sum.quantity}</TableCell>
 
 
                         </TableRow>

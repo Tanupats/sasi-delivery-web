@@ -63,6 +63,7 @@ const Admin = () => {
                         <Nav.Link onClick={() => handleNavClick("เมนูอาหาร")}><MenuBookIcon /> รายการสินค้า</Nav.Link>
                         <Nav.Link onClick={() => handleNavClick("ประเภทสินค้า")}><PollIcon /> ประเภทสินค้า</Nav.Link>
                         {/* <Nav.Link onClick={() => handleNavClick("บัญชี")}><CreditCardIcon /> บันทึกรายจ่าย</Nav.Link> */}
+                        <Nav.Link onClick={() => handleNavClick("สรุปรายการสั่งซื้อ")}><CreditCardIcon /> สรุปรายการสั่งซื้อ</Nav.Link> 
                         <Nav.Link onClick={() => handleNavClick("สรุปยอดขาย")}><DataThresholdingIcon /> สรุปยอดขายทั้งหมด</Nav.Link>
                     </Nav>
                 </Navbar>
@@ -138,6 +139,7 @@ const Admin = () => {
                         <ReportProduct />
                     )
                 }
+                
                 {
                     openMenu === "ประเภทสินค้า" && (
 
