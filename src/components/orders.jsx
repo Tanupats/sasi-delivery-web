@@ -151,8 +151,8 @@ const Orders = () => {
                                 <React.Fragment key={index}>
                                     {(printBillId === null || printBillId === item.bill_ID) && (
                                         <Col md={4}>
-                                            <Card className="mb-4 mt-4" id={item.id}>
-                                                <Card.Body style={{ padding: '12px' }}>
+                                            <Card className="mb-4 mt-4 bd-printer" id={item.id}>
+                                                <Card.Body style={{ padding: '8px' }}>
                                                     
                                                     <div className="text-center">
                                                          <h6> คิวที่ {item.queueNumber} </h6>
@@ -166,7 +166,7 @@ const Orders = () => {
                                                     <p>
                                                         เวลา {moment(item.timeOrder).format('HH:mm')} น. &nbsp; 
                                                         วันที่ {moment(item.timeOrder).format('YYYY-MM-DD')}<br />
-                                                        {/* {item?.printStatus !== null ? item?.printStatus : "ออเดอร์ใหม่"} */}
+                                                       {item?.printStatus !== null ? item?.printStatus : <p>   ออเดอร์ใหม่ </p> } 
                                                     </p>
                                                     <Row>
                                                         <Col md={6} xs={6}>

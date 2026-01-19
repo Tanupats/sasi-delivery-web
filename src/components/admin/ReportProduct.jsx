@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Row, Col, Form, Button, Navbar, Nav, Card } from 'react-bootstrap'
-import { httpDelete, httpGet, httpPost } from "../../http";
+import { useState, useEffect, useContext } from "react";
+import { Badge } from 'react-bootstrap'
+import { httpGet } from "../../http";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -8,7 +8,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-//import { AuthData } from "../../ContextData";
 
 const ReportProduct = () => {
     const [data, setData] = useState([]);
@@ -52,9 +51,7 @@ const ReportProduct = () => {
 
                             <TableCell align="left">{index + 1}</TableCell>
                             <TableCell align="left">{row.foodname}</TableCell>
-                            <TableCell align="left">{row._sum.quantity}</TableCell>
-
-
+                            <TableCell align="left"> <Badge pill>   {row._sum.quantity}</Badge></TableCell>
                         </TableRow>
 
                     ))}

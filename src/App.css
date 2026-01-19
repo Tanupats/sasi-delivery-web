@@ -8,6 +8,10 @@
 }
 
 @media print {
+  .bd-printer{
+
+    border:none;
+  }
   .show-header {
     display: block;
   }
