@@ -62,7 +62,7 @@ const Admin = () => {
                     <Nav className="flex-column w-100" style={{ flex: 1 }}>
                         <Nav.Link onClick={() => handleNavClick("เมนูอาหาร")}><MenuBookIcon /> รายการสินค้า</Nav.Link>
                         <Nav.Link onClick={() => handleNavClick("ประเภทสินค้า")}><PollIcon /> ประเภทสินค้า</Nav.Link>
-                        {/* <Nav.Link onClick={() => handleNavClick("บัญชี")}><CreditCardIcon /> บันทึกรายจ่าย</Nav.Link> */}
+                        <Nav.Link onClick={() => handleNavClick("บัญชี")}><CreditCardIcon /> บันทึกรายจ่าย</Nav.Link>
                         <Nav.Link onClick={() => handleNavClick("สรุปรายการสั่งซื้อ")}><CreditCardIcon /> สรุปรายการสั่งซื้อ</Nav.Link> 
                         <Nav.Link onClick={() => handleNavClick("สรุปยอดขาย")}><DataThresholdingIcon /> สรุปยอดขายทั้งหมด</Nav.Link>
                     </Nav>
@@ -87,7 +87,7 @@ const Admin = () => {
                 {
                     openMenu === "สรุปยอดขาย" && (<Row className="mt-3">
                         <Col md={6}>
-                            <Card className="mt-2">
+                            <Card className="mt-2 text-center">
                                 <Card.Body>
                                     <Card.Title style={{ color: 'green' }}>
 
@@ -98,8 +98,8 @@ const Admin = () => {
                                 </Card.Body>
                             </Card>
                         </Col>
-                        {/* <Col md={6}>
-                            <Card className="mt-2">
+                        <Col md={6}>
+                            <Card className="mt-2 text-center">
                                 <Card.Body>
                                     <Card.Title style={{ color: 'red' }}>
 
@@ -109,9 +109,9 @@ const Admin = () => {
                                     </Card.Title>
                                 </Card.Body>
                             </Card>
-                        </Col> */}
-                        {/* <Col md={6}>
-                            <Card className="mt-2">
+                        </Col> 
+                         <Col md={6}>
+                            <Card className="mt-2 text-center">
                                 <Card.Body>
                                     <Card.Title style={{ color: '#FD720D' }}>
 
@@ -120,16 +120,16 @@ const Admin = () => {
                                     </Card.Title>
                                 </Card.Body>
                             </Card>
-                        </Col> */}
-                        {/* <Col md={6}>
-                            <Card className="mt-2">
+                        </Col> 
+                         <Col md={6}>
+                            <Card className="mt-2 text-center">
                                 <Card.Body>
                                     <Card.Title style={{ color: 'blue' }}>
-                                        ออเดอร์  + {totalOrder}
+                                      คำสั่งซื้อ   {totalOrder}
                                     </Card.Title>
                                 </Card.Body>
                             </Card>
-                        </Col> */}
+                        </Col> 
                     </Row>
                     )
                 }
@@ -137,6 +137,12 @@ const Admin = () => {
                     openMenu === "สรุปรายการสั่งซื้อ" && (
 
                         <ReportProduct />
+                    )
+                }
+                {
+                    openMenu === "รายจ่าย" && (
+
+                        <Accounting />
                     )
                 }
                 

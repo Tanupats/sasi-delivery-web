@@ -71,12 +71,12 @@ const NavbarMenu = () => {
 
 
                     <Nav.Link as={Link} to={'/admin'} style={{ textDecoration: 'none', color: '#fff' }}>
-                      <StoreIcon /> จัดการ {shop?.name}
+                      <StoreIcon /> จัดการข้อมูล {shop?.name}
                     </Nav.Link>
 
-                    <Nav.Link as={Link} to={'/page-connect'} style={{ textDecoration: 'none', color: '#fff' }}>
+                    {/* <Nav.Link as={Link} to={'/page-connect'} style={{ textDecoration: 'none', color: '#fff' }}>
                       เชื่อมต่อ page  
-                    </Nav.Link>
+                    </Nav.Link> */}
 
                   </>
 
@@ -84,7 +84,7 @@ const NavbarMenu = () => {
 
                 <Nav className="ml-auto" >
                   <Nav.Link as={Link} to={'/profile'} style={{ textDecoration: 'none', color: '#fff' }}>
-                    < AccountCircleIcon />  {staffName}
+                    < AccountCircleIcon /> ผู้ใช้ : {staffName}
                   </Nav.Link>
                   <Nav.Link onClick={logout} style={{ textDecoration: 'none', color: '#fff' }}>
                     <LogoutIcon />  ออกจากระบบ

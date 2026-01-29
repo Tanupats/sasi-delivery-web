@@ -9,16 +9,10 @@ import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
 import { AuthData } from "../ContextData";
 import { nanoid } from 'nanoid'
 import SaveIcon from '@mui/icons-material/Save';
-
 import { httpGet } from '../http';
-import QRCode from 'qrcode.react';
 import generatePayload from 'promptpay-qr'
 import { useNavigate } from "react-router-dom";
-
-
 import CircularProgress from '@mui/material/CircularProgress';
-
-
 const Pos = () => {
   const router = useNavigate()
   const {
@@ -66,6 +60,8 @@ const Pos = () => {
   const [loading, setLoading] = useState(false);
   const [loadingMenu, setLoadingMenu] = useState(false);
   const [loadingByeType, setLoadingByType] = useState(false);
+
+  const [activeTypeRecipe, setActiveTypeRecipe] = useState("เสิร์ฟในร้าน");
 
   const formatMoney = (val) => {
     return new Intl.NumberFormat().format(val)
@@ -264,7 +260,7 @@ const Pos = () => {
                 }
 
                 <Row className='mt-4'>
-                  <Col md={12}>                
+                  <Col md={12}>
                     <Table>
                       <tbody>
                         {
@@ -272,7 +268,7 @@ const Pos = () => {
                             return (
                               <tr key={index} style={{ padding: 0, margin: 0 }}>
                                 <td style={{ padding: '2px 4px', lineHeight: '1.5' }}>
-                                  {item.name}   {item.note !== "" &&  "*"+item.note}
+                                  {item.name}   {item.note !== null && "*" + item.note}
                                 </td>
                                 <td style={{ padding: '2px 4px', lineHeight: '1.5' }}>{item.quantity}</td>
                                 <td style={{ padding: '2px 4px', lineHeight: '1.5' }}>{formatMoney(item.price)}</td>
@@ -316,57 +312,31 @@ const Pos = () => {
 
                     </Table>
 
-                    {
-
-                      cart?.length > 0 && (
-                        <Row>
-                          <Col>
-                            <div className="total when-print mb-2 text-center">
-                              <h5> รวมทั้งหมด {sumPrice.toLocaleString('th-TH', { style: 'currency', currency: 'THB' })}</h5>
-                              <h5> รวม {toTal} รายการ</h5>
-                            </div>
-
-                          </Col>
-
-                          <Col md={12}>
-                            {/* <Button
-                              variant='primary'
-                              className='when-print mb-2 w-100'
-                              onClick={() => {
-                                handleQR(),
-                                  setShowQr(!showQr)
-                              }}>
-                               Qrcode payment </Button> */}
-
-
-                          </Col>
-
-                          {/* <Col md={12} className='text-center'>
-                            {
-                              showQr ? <center><QRCode value={qrCode} />
-                                <h5>{staffName}</h5>
-                              </center> : <></>
-                            }
-                          </Col>
-                          {Id && <QRCodeBill Id={Id} />} */}
-                        </Row>
-                      )
-                    }
+                
 
                     <Form>
                       <Row className='order-type when-print'>
-                        <ButtonGroup >
-                          <Button className='btn btn-danger w-100'
-                            onClick={() => { setOrderType("เสิร์ฟในร้าน") }}
-                            style={{ border: 'none' }} >ทานที่ร้าน</Button>
+                      
+                            <ButtonGroup className='w-100'>
+                          <Button variant={activeTypeRecipe === "เสิร์ฟในร้าน" ? 'btn btn-danger  ' : 'outline-danger '}
+                            onClick={() => { setOrderType("เสิร์ฟในร้าน"), 
+                              setName("ทานที่ร้าน"),setActiveTypeRecipe("เสิร์ฟในร้าน") }}
+                          >ทานที่ร้าน</Button>
 
-                          <Button className='btn btn-primary w-100'
-                            onClick={() => { setOrderType("รับเอง") }}
-                            style={{ border: 'none' }} >รับหน้าร้าน</Button><Button className='btn btn-success w-100'
-                              onClick={() => { setOrderType("สั่งกลับบ้าน") }}
-                              style={{ border: 'none' }} >จัดส่ง</Button>
-                        </ButtonGroup>
-                        <Col md={12} className='mt-3 mb-4' style={{ marginBottom: '500px' }}>
+                          <Button variant={activeTypeRecipe === "รับเอง" ? 'btn btn-primary  ' : 'outline-primary '}
+                            onClick={() => { setOrderType("รับเอง"), setName("รับหน้าร้าน"),
+                              setActiveTypeRecipe("รับเอง") }}
+                          >รับหน้าร้าน</Button>
+
+                          <Button variant={activeTypeRecipe === "สั่งกลับบ้าน" ? 'btn btn-success  ' : 'outline-success '}
+                            onClick={() => { setOrderType("สั่งกลับบ้าน"), setName("จัดส่ง"),
+                              setActiveTypeRecipe("สั่งกลับบ้าน") }}
+                          >จัดส่ง</Button>
+                          </ButtonGroup>
+
+                    
+
+                        <Col md={12} className='mt-2 mb-4' style={{ marginBottom: '500px' }}>
                           <Form.Control
                             type="text"
                             placeholder='ข้อมูลลูกค้า'
@@ -374,7 +344,22 @@ const Pos = () => {
                         </Col>
                       </Row>
                     </Form>
-                    <Row className='mt-3 mb-2 when-print sticky-bottom-mobile'>
+                        {
+
+                      cart?.length > 0 && (
+                        <Row className='mb-2'>
+                          <Col>
+                            <div className="total when-print mb-1 text-center">
+                              <h5> รวมทั้งหมด {sumPrice.toLocaleString('th-TH', { style: 'currency', currency: 'THB' })}</h5>                   
+                            </div>
+
+                          </Col>
+
+
+                        </Row>
+                      )
+                    }
+                    <Row className='when-print sticky-bottom-mobile'>
 
 
                       <Col md={6} xs={6}>
@@ -396,7 +381,7 @@ const Pos = () => {
                       </Col>
                       <Col md={12} xs={12} className='mt-3'>
                         <Button
-                          style={{ height: '46px' }}
+                          style={{ height: '46px',marginBottom:'20px' }}
                           onClick={() => { resetCart() }}
                           variant='danger w-100'>
                           ยกเลิกบิล
