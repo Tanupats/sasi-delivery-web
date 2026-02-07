@@ -36,6 +36,7 @@ const Cart = () => {
         api_url,
         messengerId,
         setName,
+        name
     } = useContext(AuthData);
 
     const [loading, setLoading] = useState(false);
@@ -209,6 +210,19 @@ const Cart = () => {
                                             {
                                                 orderType === "สั่งกลับบ้าน" && (
                                                     <Form.Group className="mt-2">
+
+                                                        {
+                                                            name === "ลูกค้า" && (<> <Form.Label>ชื่อผู้รับ </Form.Label>
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    value={name}
+                                                                    onChange={(e) => setName(e.target.value)}
+                                                                    placeholder="ระบุชื่อผู้รับ ต้องตรงกับ facebook เท่านั้นเพื่อการติดต่อที่สะดวก"
+                                                                    required />
+
+                                                            </>)
+                                                        }
+
                                                         <Form.Label style={{ fontWeight: 500 }}> ที่อยู่จัดส่ง    </Form.Label>
                                                         <Form.Control
                                                             value={Address}

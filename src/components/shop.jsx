@@ -5,6 +5,8 @@ import Badge from 'react-bootstrap/Badge';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+// import { signInWithPopup } from "firebase/auth"
+// import { auth, facebookProvider } from "../firebase"
 const ShopData = () => {
     const { userid, name } = useParams();
     const router = useNavigate();
@@ -24,73 +26,96 @@ const ShopData = () => {
 
     }, [])
 
-    return (<>
-        <Card style={{ marginBottom: '120px', border: 'none' }}>
-            <Card.Body>
-                <Row>
-                    {
-                        data.map((item, index) => {
 
-                            if (item.id === 1) return (
-                                <React.Fragment key={index}>
-                                    <Col
-                                        style={{ cursor: 'pointer' }}
-                                        md={4}
-                                        xs={12}
-                                        className="mt-2"
+    
+        // const login = async () => {
+        //     try {
+        //         const result = await signInWithPopup(auth, facebookProvider)
+        //         const user = result.user
 
-                                    >
-                                        <Card>
-                                            <Card.Body style={{ padding: 10 }}>
+        //         console.log("Login success:", user)
+        //         alert(`ยินดีต้อนรับ ${user.displayName}`)
+        //     } catch (err) {
+        //         console.error(err)
+        //         alert("Login ไม่สำเร็จ")
+        //     }
+        // }
+    
+        return (<>
+            <Card style={{ marginBottom: '120px', border: 'none' }}>
+                <Card.Body>
+                    <Row>
+                        {
+                            data.map((item, index) => {
 
-                                                <Card.Title>{item.name}</Card.Title>
-                                                <div className="mb-2">
+                                if (item.id === 1) return (
+                                    <React.Fragment key={index}>
+                                        <Col
+                                            style={{ cursor: 'pointer' }}
+                                            md={4}
+                                            xs={12}
+                                            className="mt-2"
 
-                                                    <h4>
-                                                        {
-                                                            item.is_open ? (<Badge bg="success" style={{ fontWeight: 500 }}>
-                                                                เปิด <AccessTimeIcon />
-                                                                {item.open_time}
-                                                            </Badge>) : (<>
+                                        >
+                                            <Card>
+                                                <Card.Body style={{ padding: 10 }}>
 
+                                                    <Card.Title>{item.name}</Card.Title>
+                                                    <div className="mb-2">
 
-                                                                <Badge bg="danger">{item.open_time}  </Badge>
-                                                            </>)
-                                                        }
-                                                    </h4>
-                                                </div>
-
-                                                <Image
-                                                    style={{
-                                                        width: "100%",
-                                                        height: "200px",
-                                                        objectFit: "cover",
-                                                        cursor: item.is_open ? "pointer" : "not-allowed",
-                                                        opacity: item.is_open ? 1 : 0.5,
-                                                    }}
-                                                    src={`${import.meta.env.VITE_API_URL}/images/${item.photo}`}
-                                                    onClick={() => {
-                                                        if (item.is_open) {
-                                                            router(`/foodmenu/${item.shop_id}`);
-                                                        }
-                                                    }}
-                                                />
-
-                                            </Card.Body>
-                                        </Card>
-                                    </Col>
-                                </React.Fragment>
-                            );
-                        })
-                    }
-
-                </Row>
-
-            </Card.Body>
+                                                        <h4>
+                                                            {
+                                                                item.is_open ? (<Badge bg="success" style={{ fontWeight: 500 }}>
+                                                                    เปิด <AccessTimeIcon />
+                                                                    {item.open_time}
+                                                                </Badge>) : (<>
 
 
-        </Card >
-    </>)
-}
+                                                                    <Badge bg="danger">{item.open_time}  </Badge>
+                                                                </>)
+                                                            }
+                                                        </h4>
+                                                    </div>
+
+                                                    <Image
+                                                        style={{
+                                                            width: "100%",
+                                                            height: "200px",
+                                                            objectFit: "cover",
+                                                            cursor: item.is_open ? "pointer" : "not-allowed",
+                                                            opacity: item.is_open ? 1 : 0.5,
+                                                        }}
+                                                        src={`${import.meta.env.VITE_API_URL}/images/${item.photo}`}
+                                                        onClick={() => {
+                                                            if (item.is_open) {
+                                                                router(`/foodmenu/${item.shop_id}`);
+                                                            }
+                                                        }}
+                                                    />
+
+                                                </Card.Body>
+                                            </Card>
+                                        </Col>
+                                    </React.Fragment>
+                                );
+                            })
+                        }
+
+                    </Row>
+
+
+
+                    {/* <button onClick={login}>
+                        Login with Facebook
+                    </button> */}
+
+
+
+                </Card.Body>
+
+
+            </Card >
+        </>)
+    }
 
 export default ShopData;

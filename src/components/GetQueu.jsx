@@ -11,7 +11,7 @@ const GetQueue = () => {
             <Card>
                 <Card.Body>
 
-                    <Card.Title as="h5" className='text-center'>  จำนวนคิวทั้งหมดตอนนี้ {queue} คิว</Card.Title>
+                    <Card.Title as="h5" className='text-center'>  คิวทั้งหมด {queue} </Card.Title>
                 </Card.Body>
 
 
