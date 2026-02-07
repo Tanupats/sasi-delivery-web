@@ -8,13 +8,16 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import moment from "moment";
 
 const ReportProduct = () => {
     const [data, setData] = useState([]);
     //const { shop } = useContext(AuthData);
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
     useEffect(() => {
         const getData = async () => {
-            await httpGet(`/group`)
+            await httpGet(`/group?startDate=${moment(startDate).format('YYYY-MM-DD')}&endDate=${moment(endDate).format('YYYY-MM-DD')}`)
                 .then((data) => {
                     if (data) {
                         setData(data.data);
@@ -23,7 +26,7 @@ const ReportProduct = () => {
         }
         getData();
     }
-        , [])
+        , [startDate, endDate]);
 
     return (<>
 
@@ -31,15 +34,21 @@ const ReportProduct = () => {
             <div className="text-center mt-4">
                 <h6>สรุปรายการสั่งซื้อ เดือนปัจจุบัน</h6>
             </div>
+            <div className="row">
+                <div className="col-md-3 text-left ms-3">
+                    <h6>วันที่เริ่มต้น</h6>  <input className="form-control mb-2" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+                </div>
+                <div className="col-md-3 text-left me-3">
+                    <h6>วันที่สิ้นสุด</h6>  <input className="form-control mb-2" type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+                </div>
+            </div>
+
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                     <TableRow>
-
                         <TableCell align="left">ลำดับ</TableCell>
                         <TableCell align="left">รายการ</TableCell>
                         <TableCell align="left">จำนวน</TableCell>
-
-
                     </TableRow>
                 </TableHead>
                 <TableBody>
