@@ -12,8 +12,9 @@ import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import LocalDiningIcon from '@mui/icons-material/LocalDining';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import axios from "axios";
-const Cart = () => {
+import { ArrowLeft } from "lucide-react";
 
+const Cart = () => {
     const router = useNavigate()
     const { toTal,
         cart,
@@ -44,22 +45,25 @@ const Cart = () => {
     const getProfile = async () => {
         const res = await axios.get(`${api_url}/bills/profile/${messengerId}`).then((data) => data);
         if (res.status === 200) {
-            setName(res.data?.customerName || "ลูกค้า");
-            localStorage.setItem('name', res.data.customerName || "ลูกค้า");
+            const name = res.data?.customerName;
+            setName(name);
+            localStorage.setItem('name', name);
+        } else {
+            setName("");
         }
     }
 
     const onSave = async (e) => {
         e.preventDefault();
+        await getQueue();
         let queueMessage = `<h4 style="color: ${queue > 9 ? 'red' : 'black'}">${queue}</h4>`;
         if (queue > 10) {
             queueMessage += `<div style="color:red;">* รอประมาณ 1.30 ชม ขึ้นไป</div>`;
         } else if (queue >= 9) {
             queueMessage += `<div style="color:red;">* รอประมาณ 40 น. - 1 ชั่วโมง </div>`;
         }
-
         const result = await Swal.fire({
-            title: 'รบกวนสั่งแล้วแจ้งที่เพจด้วยนะครับ เนื่องจากแชทไม่ส่งไปถ้าไม่ทักเพจมาก่อนครับ ?',
+            title: 'สั่งอาหารแล้ว แจ้งที่เพจด้วยนะครับ',
             html: `จำนวนคิวที่รอ ${queueMessage} คิว`,
             icon: 'question',
             showCancelButton: true,
@@ -76,10 +80,10 @@ const Cart = () => {
             router('/Myorder');
         }
     }
-    useEffect(() => {
-        getQueue();
-        getProfile();
 
+    useEffect(() => {
+        getProfile();
+        getQueue();
     }, [cart])
 
     return (<>
@@ -92,7 +96,7 @@ const Cart = () => {
                     size="sm"
                     onClick={() => router(-1)}
                 >
-                    <i className="bi bi-arrow-left"></i> ย้อนกลับ
+                    <ArrowLeft size={20} />   ย้อนกลับ
                 </Button>
 
                 <Row>
@@ -210,27 +214,26 @@ const Cart = () => {
                                             {
                                                 orderType === "สั่งกลับบ้าน" && (
                                                     <Form.Group className="mt-2">
-
-                                                        {
-                                                            name === "ลูกค้า" && (<> <Form.Label>ชื่อผู้รับ </Form.Label>
-                                                                <Form.Control
-                                                                    type="text"
-                                                                    value={name}
-                                                                    onChange={(e) => setName(e.target.value)}
-                                                                    placeholder="ระบุชื่อผู้รับ ต้องตรงกับ facebook เท่านั้นเพื่อการติดต่อที่สะดวก"
-                                                                    required />
-
-                                                            </>)
-                                                        }
-
-                                                        <Form.Label style={{ fontWeight: 500 }}> ที่อยู่จัดส่ง    </Form.Label>
+                                                        <Form.Label style={{ fontWeight: 500 }}>ชื่อผู้รับ  </Form.Label>
+                                                        <Form.Control
+                                                            title="กรอกชื่อ facebook ของคุณ"
+                                                            type="text"
+                                                            value={name}
+                                                            className="mb-2 mt-1"
+                                                            onChange={(e) => {
+                                                                localStorage.setItem("name", e.target.value);
+                                                                setName(e.target.value);
+                                                            }}
+                                                            placeholder="กรอกชื่อ facebook เท่านั้นร้านจะติดต่อไม่ได้"
+                                                            required />
+                                                        <Form.Label style={{ fontWeight: 500 }}> ที่อยู่จัดส่ง / ข้อมูลติดต่อ  </Form.Label>
                                                         <Form.Control
                                                             value={Address}
                                                             type="text"
                                                             required
                                                             onChange={(e) => setAddress(e.target.value)}
-                                                            placeholder="ระบุที่อยู่สำหรับจัดส่งอาหาร"
-                                                            className="mb-2" />
+                                                            placeholder="ที่อยู่จัดส่ง และ เบอร์โทรติดต่อถ้ามี"
+                                                            className="mb-2 mt-1" />
                                                     </Form.Group>
                                                 )
                                             }
@@ -253,8 +256,7 @@ const Cart = () => {
                                         </Form.Group>
                                     </Form>
                                 </Col>
-                                {/* <Col md={12} className="mt-3"><h5 style={{ color: 'red' }}> รอคิวตอนนี้ {queue} คิว </h5></Col> */}
-                                <Col md={12} className="mt-3">  <h6 style={{ color: 'red' }}> * รบกวนสั่งเสร็จแล้วส่งข้อความมาในเพจด้วยครับ ถ้าแชทไม่ขึ้นแจ้งเตือน </h6>  </Col>
+
                                 <Col className="mt-3">
 
                                     <Button
@@ -275,9 +277,11 @@ const Cart = () => {
                                 </Col>
                             </>
                         ) : (
-                            <Alert variant='danger' className='pd-3 text-center'>
-                                ยังไม่มีรายการสั่งอาหาร
-                            </Alert>)
+                            <Col>
+
+                                <Alert variant='danger' className='pd-3 text-center text-bold'>
+                                    ยังไม่มีรายการอาหาร
+                                </Alert></Col>)
                     }
                 </Row>
             </Card.Body>
