@@ -174,7 +174,7 @@ const FoodMenu = () => {
                                             <Col className="mb-4"
                                                 md={6}
                                                 xs={12}   >
-                                                <Card style={{ height: '173px', marginBottom: '12px', margin: 0, padding: 0, borderRadius: '2px' }}>
+                                                <Card style={{ height: '173px', marginBottom: '12px', margin: 0, padding: 0, borderRadius: '12px',cursor: item.status === 0 ? 'not-allowed' : 'pointer' }}>
                                                     <Card.Body style={{ margin: 0, padding: 0 }}>
                                                         <Row>
                                                             <Col
@@ -182,7 +182,7 @@ const FoodMenu = () => {
                                                                 xs={5}
                                                             >
 
-                                                                <Image style={{ width: "100%", height: '170px', objectFit: 'cover' }}
+                                                                <Image style={{ width: "100%", height: '170px', objectFit: 'cover',borderRadius: '12px' }}
                                                                     src={`${api_url}/images/${item.img}`} />
 
                                                             </Col>

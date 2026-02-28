@@ -5,14 +5,11 @@ const QueueComponent = ({ rider_id }) => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-
     if (!rider_id) return;
     axios
-      .get(`${import.meta.env.VITE_BAKUP_URL}/user/${rider_id}`)
+      .get(`${import.meta.env.VITE_API_URL}/user/${rider_id}`)
       .then((res) => {
-        console.log(res);
         if (res.status === 200) {
-
           setData(res.data);
         }
       })

@@ -6,8 +6,6 @@ import Badge from 'react-bootstrap/Badge';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-// import { signInWithPopup } from "firebase/auth"
-// import { auth, facebookProvider } from "../firebase"
 const ShopData = () => {
     const { userid, name } = useParams();
     const router = useNavigate();
@@ -58,25 +56,9 @@ const ShopData = () => {
         }
     }, [])
 
-
-
-    // const login = async () => {
-    //     try {
-    //         const result = await signInWithPopup(auth, facebookProvider)
-    //         const user = result.user
-
-    //         console.log("Login success:", user)
-    //         alert(`ยินดีต้อนรับ ${user.displayName}`)
-    //     } catch (err) {
-    //         console.error(err)
-    //         alert("Login ไม่สำเร็จ")
-    //     }
-    // }
-
-
     return (<>
         <Card style={{ marginBottom: '120px', border: 'none' }}>
-            <Card.Body>
+            <Card.Body style={{ padding: '0' }}>
                 <Row>
                     {
                         data.map((item, index) => {
@@ -134,20 +116,8 @@ const ShopData = () => {
                             );
                         })
                     }
-
                 </Row>
-
-
-
-                {/* <button onClick={login}>
-                        Login with Facebook
-                    </button> */}
-
-
-
             </Card.Body>
-
-
         </Card >
     </>)
 }

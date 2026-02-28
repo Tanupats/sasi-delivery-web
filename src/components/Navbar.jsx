@@ -24,7 +24,7 @@ const NavbarMenu = () => {
 
   return (
     <Router>
-      <Navbar bg="light" data-bs-theme="light" className='when-print' sticky='top' expand="lg">
+      <Navbar bg="light" data-bs-theme="light" className='when-print' sticky='top' expand="lg" style={{ borderBottom: '1px solid #d3d3d3' }}>
         <Container fluid>
           <Navbar.Brand href="#home" style={{ color: '#FD720D', fontWeight: 500 }}>SASI FOOD</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
