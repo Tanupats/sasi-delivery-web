@@ -216,7 +216,7 @@ const Cart = () => {
                                                     <Form.Group className="mt-2">
                                                         <Form.Label style={{ fontWeight: 500 }}>ชื่อผู้รับ  </Form.Label>
                                                         <Form.Control
-                                                            title="กรอกชื่อ facebook ของคุณ"
+                                                            title="กรอกชื่อ facebook"
                                                             type="text"
                                                             value={name}
                                                             className="mb-2 mt-1"
@@ -224,7 +224,7 @@ const Cart = () => {
                                                                 localStorage.setItem("name", e.target.value);
                                                                 setName(e.target.value);
                                                             }}
-                                                            placeholder="กรอกชื่อ facebook เท่านั้นร้านจะติดต่อไม่ได้"
+                                                            placeholder="กรอกชื่อ facebook ร้านจะติดต่อกลับทาง messenger"
                                                             required />
                                                         <Form.Label style={{ fontWeight: 500 }}> ที่อยู่จัดส่ง / ข้อมูลติดต่อ  </Form.Label>
                                                         <Form.Control
