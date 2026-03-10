@@ -6,7 +6,26 @@
 .show-header {
   display: none;
 }
-
+.right-scroll{
+	  height:500px;       /* กำหนดความสูง */
+	  overflow-y:scroll;  /* บังคับให้มีแถบเลื่อน */
+	  overflow-x:hidden;
+	  padding-right:6px;
+	}
+	
+	/* scroll bar */
+	.right-scroll::-webkit-scrollbar{
+	  width:8px;
+	}
+	
+	.right-scroll::-webkit-scrollbar-thumb{
+	  background:#0d6efd;
+	  border-radius:10px;
+	}
+	
+	.right-scroll::-webkit-scrollbar-track{
+	  background:#eee;
+	}
 @media print {
   .bd-printer{
 

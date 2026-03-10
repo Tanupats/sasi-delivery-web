@@ -5,13 +5,12 @@ import { AuthData } from "../ContextData";
 import Swal from 'sweetalert2'
 import moment from "moment";
 const Profile = () => {
-    const { user,setUser, shop, getUser, setShop } = useContext(AuthData);
+    const { user, setUser, shop, getUser, setShop } = useContext(AuthData);
     const [status, setStatus] = useState(shop?.is_open);
-    
+
 
     const updateData = async () => {
-
-        await httpPut('/shop/' + shop?.id, {...shop,is_open:status})
+        await httpPut('/shop/' + shop?.id, { ...shop, is_open: status })
             .then((res) => {
                 if (res) {
                     getUser();
@@ -56,8 +55,22 @@ const Profile = () => {
                             className="form-control mb-2"
                             value={shop.open_time}
                             onChange={(e) => setShop({ ...shop, open_time: e.target.value })} />
+                        <div className="row">
 
-                        <Button onClick={() => updateData()} className="mt-2">แก้ไขโปรไฟล์</Button>
+                            <div className="col-md-2">
+
+                                <label> รหัสการเข้าถึงเพจ</label>
+                            </div>
+                            <div className="col-md-10">
+                                <input type="password"
+                                    className="form-control mb-2"
+                                    placeholder="รหัสผ่าน"
+                                    value={shop.facebook_token}
+                                    onChange={(e) => setShop({ ...shop, facebook_token: e.target.value })} />
+                            </div>
+                        </div>
+
+                        <Button onClick={() => updateData()} className="mt-2">บันทึกการแก้ไข</Button>
                     </Card.Body>
                 </Card>
             </Col>

@@ -56,10 +56,20 @@ export default function FacebookLogin() {
     FB.login(
       (response) => {
         if (response.authResponse) {
-          console.log("User Token:", response.authResponse.accessToken);
-          getPages(response.authResponse.accessToken);
+          const accessToken = response.authResponse.accessToken;
+          const userId = response.authResponse.userID;
+          console.log("User Token:", accessToken);
+          console.log("User PSID:", userId);
+          
+          // Get user name from Facebook
+          FB.api('/me', { fields: 'name' }, (userInfo) => {
+            console.log("User Name:", userInfo.name);
+            console.log("User ID (PSID):", userInfo.id);
+          });
+          
+          getPages(accessToken);
           console.log(response);
-          //updateUserToken( response.authResponse.accessToken);
+          updateUserToken(accessToken);
         } else {
           alert("Login cancelled");
         }

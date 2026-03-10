@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { Row, Col, Navbar, Nav, Card } from 'react-bootstrap'
 import './index.scss';
-import FoodMenuAdmin from "./FoodMenuAdmin";
+import Products from "./products";
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import DataThresholdingIcon from '@mui/icons-material/DataThresholding';
@@ -60,11 +60,11 @@ const Admin = () => {
             <Col md={2} className="dash-board">
                 <Navbar expand="lg" className="d-flex flex-column vh-100" style={{ height: '100%' }}>
                     <Nav className="flex-column w-100" style={{ flex: 1 }}>
-                        <Nav.Link onClick={() => handleNavClick("เมนูอาหาร")}><MenuBookIcon /> รายการสินค้า</Nav.Link>
+                        <Nav.Link onClick={() => handleNavClick("เมนูอาหาร")}><MenuBookIcon /> จัดการข้อมูลสินค้า</Nav.Link>
                         <Nav.Link onClick={() => handleNavClick("ประเภทสินค้า")}><PollIcon /> ประเภทสินค้า</Nav.Link>
                         <Nav.Link onClick={() => handleNavClick("บัญชี")}><CreditCardIcon /> บันทึกรายจ่าย</Nav.Link>
-                        <Nav.Link onClick={() => handleNavClick("สรุปรายการสั่งซื้อ")}><CreditCardIcon /> สรุปรายการสั่งซื้อ</Nav.Link> 
-                        <Nav.Link onClick={() => handleNavClick("สรุปยอดขาย")}><DataThresholdingIcon /> สรุปยอดขายทั้งหมด</Nav.Link>
+                        <Nav.Link onClick={() => handleNavClick("สรุปรายการสั่งซื้อ")}><CreditCardIcon /> สรุปรายการขาย</Nav.Link> 
+                        <Nav.Link onClick={() => handleNavClick("สรุปยอดขาย")}><DataThresholdingIcon /> รายงานยอดขาย</Nav.Link>
                     </Nav>
                 </Navbar>
             </Col>
@@ -76,7 +76,7 @@ const Admin = () => {
                 }
                 {
                     openMenu === "เมนูอาหาร" && (
-                        <FoodMenuAdmin />
+                        <Products />
                     )
                 }
                 {

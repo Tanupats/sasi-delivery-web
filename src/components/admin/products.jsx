@@ -1,13 +1,13 @@
 import { useState, useEffect, useContext } from "react";
 import { Row, Col, Card, Image, Button, Modal, Form } from "react-bootstrap";
-import Badge from 'react-bootstrap/Badge';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FoodMenuForm from "./FoodMenuForm";
 import Swal from 'sweetalert2';
 import { AuthData } from "../../ContextData";
+import { getMenuType } from "../../api";
 import { httpDelete, httpGet, httpPut } from "../../http";
-const FoodMenuAdmin = () => {
+const Products = () => {
     const { shop } = useContext(AuthData);
     const [foods, setFoods] = useState([]);
     const [menuType, setMenuType] = useState([]);
@@ -20,21 +20,11 @@ const FoodMenuAdmin = () => {
     const token = localStorage.getItem("token");
 
     const shopId = shop?.shop_id;
-    const getStockProduct = async () => {
-        await httpGet('/stock')
-            .then((data) => {
-                if (data) {
-                    setStock(data.data);
-                }
-            })
-    }
 
-    const getMenuType = async () => {
+    const getType = async () => {
         if (shopId !== undefined) {
-            await httpGet(`/menutype/${shopId}`, { headers: { 'apikey': token } })
-                .then(res => {
-                    setMenuType(res.data);
-                })
+            const data = await getMenuType(shopId, token);
+            setMenuType(data);
         }
     }
 
@@ -132,7 +122,7 @@ const FoodMenuAdmin = () => {
     useEffect(() => {
         if (shopId) {
             getFoodMenu();
-            getMenuType();
+            getType();
         }
 
         // getStockProduct();
@@ -141,31 +131,44 @@ const FoodMenuAdmin = () => {
     return (
         <>
             <Card style={{ width: '100%', borderRadius: 0 }}>
-                <Card.Title className="text-center mt-3">  รายการสินค้า</Card.Title>
+                <Card.Title className="text-center mt-3">  จัดการข้อมูลเมนูอาหาร</Card.Title>
                 <Card.Body>
                     <Row>
-                        <Col md={12} className="mb-2">
-                            {
-                                menuType.length > 0 && menuType?.map((item, index) => {
-                                    return (
-                                        <Badge
-                                            key={index}
-                                            style={{
-                                                marginRight: '12px',
-                                                fontSize: '18px',
-                                                backgroundColor: '#FD720D',
-                                                marginBottom: '12px',
-                                                cursor: 'pointer'
-                                            }}
-                                            onClick={() => getMenuByTypeId(item.id)}
-                                            pill bg="">
-                                            {item.name}
-                                        </Badge>
-                                    )
-                                })
-                            }
+                        <Col md={12}>
+                            <div className="border mt-3 p-3">
+                        
+                                <div className="row align-items-center">
+                                    <div className="col-md-3">
+
+                                        <select className="form-select" onChange={(e)=> getMenuByTypeId(e.target.value)}>
+                                            <option>เลือกประเภท</option>
+                                            {
+                                                menuType.map((item, index) => {
+                                                    return (
+                                                        <option key={index} value={item.id}>
+                                                            {item.name}
+                                                        </option>
+                                                    )
+                                                })
+                                            }
+                                        </select>
+
+                                    </div>
+
+                                    <div className="col-md-6">
+                                        <form className="d-flex">
+                                            <input className="form-control me-2" type="search" placeholder="ค้นหาสินค้า" />
+                                            <button className="btn btn-outline-success" type="submit">ค้นหา</button>
+                                        </form>
+                                       
+                                    </div> 
+                                    <FoodMenuForm 
+                                    getMenuType={getMenuType} 
+                                    getFoodMenu={getFoodMenu} />
+                                </div>
+                            </div>
                         </Col>
-                        <FoodMenuForm getMenuType={getMenuType} getFoodMenu={getFoodMenu} />
+
                         <div className="menu-list" style={{ overflow: 'auto', height: '100vh' }}>
                             <Row>
                                 {
@@ -330,4 +333,4 @@ const FoodMenuAdmin = () => {
         </>)
 }
 
-export default FoodMenuAdmin;
+export default Products;
