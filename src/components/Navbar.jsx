@@ -74,17 +74,13 @@ const NavbarMenu = () => {
                       <StoreIcon /> จัดการข้อมูล {shop?.name}
                     </Nav.Link>
 
-                    {/* <Nav.Link as={Link} to={'/page-connect'} style={{ textDecoration: 'none', color: '#fff' }}>
-                      เชื่อมต่อ page  
-                    </Nav.Link> */}
-
                   </>
 
                 </Nav>
 
                 <Nav className="ml-auto" >
                   <Nav.Link as={Link} to={'/profile'} style={{ textDecoration: 'none', color: '#fff' }}>
-                    < AccountCircleIcon /> ผู้ใช้ : {staffName}
+                    < AccountCircleIcon />  {staffName}
                   </Nav.Link>
                   <Nav.Link onClick={logout} style={{ textDecoration: 'none', color: '#fff' }}>
                     <LogoutIcon />  ออกจากระบบ

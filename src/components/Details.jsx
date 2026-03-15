@@ -242,16 +242,16 @@ const Details = (props) => {
 
                                 <Col md={6} className="text-center">
                                     <Button
-                                        className="mt-3"
+                                        className="mt-3 w-100"
                                         onClick={() => UpdateDetailById()}
                                         style={{ float: 'left' }}
                                         variant="success">
-                                        แก้ไขข้อมูล
+                                        บันทึก
                                     </Button>
                                 </Col>
                                 <Col md={6}>
                                     <Button
-                                        className="mt-3"
+                                        className="mt-3 w-100"
                                         onClick={handleClose}
                                         style={{ float: 'left' }}
                                         variant="danger">

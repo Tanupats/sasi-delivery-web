@@ -141,9 +141,9 @@ const Orders = () => {
                         <Row className="mt-4 when-print">
                             <Col md={3} xs={3}>
                                 <Button
-                                    className="w-100"
+                                    className="w-75"
                                     onClick={() => { reset() }}
-                                > < RestartAltIcon /> โหลดข้อมูลใหม่ </Button></Col>
+                                > < RestartAltIcon /> โหลดใหม่ </Button></Col>
                         </Row>
 
                         <Row>
@@ -176,8 +176,20 @@ const Orders = () => {
                                                                     item.messengerId !== "pos" && item.statusOrder === "รับออเดอร์แล้ว" && (
 
                                                                         <Button
-                                                                            onClick={() => sendMessageToPage(item.messengerId, "ร้านรับออเดอร์แล้วครับ  ยอดรวม" + item.amount + "บาทครับ")}
-                                                                            variant="light w-100">
+                                                                            onClick={async () => {
+                                                                                const result = await Swal.fire({
+                                                                                    title: 'ยืนยันการส่งข้อความ',
+                                                                                    text: 'คุณต้องการส่งข้อความถึงลูกค้าหรือไม่?',
+                                                                                    icon: 'question',
+                                                                                    showCancelButton: true,
+                                                                                    confirmButtonText: 'ส่งข้อความ',
+                                                                                    cancelButtonText: 'ยกเลิก'
+                                                                                });
+                                                                                if (result.isConfirmed) {
+                                                                                    sendMessageToPage(item.messengerId, "ร้านรับออเดอร์แล้วครับ  ยอดรวม" + item.amount + "บาทครับ");
+                                                                                }
+                                                                            }}
+                                                                            variant="outline-primary w-100">
                                                                             <SendIcon />  ส่งข้อความอีกครั้ง</Button>
                                                                     )
 

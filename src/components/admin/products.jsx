@@ -253,12 +253,7 @@ const Products = () => {
                                                                 >
                                                                     <EditIcon /> แก้ไข
                                                                 </Button> {' '}
-                                                                <Button
-                                                                    onClick={() => onDeleteMenu(item.id)}
-                                                                    variant="danger"
-                                                                >
-                                                                    <DeleteIcon />
-                                                                </Button>
+                                                              
                                                             </Col>
                                                         </Row>
                                                     </Card.Body>
@@ -345,6 +340,7 @@ const Products = () => {
                                                         </p>
                                                     )}
                                                 </div>
+                                                
                                             </Col>
                                             <Col md={6} xs={6}>
                                                 <Form.Group>
@@ -370,7 +366,12 @@ const Products = () => {
                                                         type="text"
                                                         defaultValue={data?.notes} />
                                                 </Form.Group>
-
+  <Button
+                                                                    onClick={() => onDeleteMenu(data.id)}
+                                                                    variant="danger"
+                                                                >
+                                                                    <DeleteIcon /> ลบเมนู
+                                                                </Button>
                                             </Col>
 
                                         </Row>
