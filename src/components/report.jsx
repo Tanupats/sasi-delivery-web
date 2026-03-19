@@ -63,6 +63,12 @@ const Report = () => {
         await httpPut(`/bills/${row.id}`, body, { headers: { 'apikey': token } })
         await searchOrder();
     };
+    
+    const handleChangePayment = async (payment,id) => {
+        const body = { payment_status: payment }
+        await httpPut(`/bills/${id}`, body, { headers: { 'apikey': token } })
+        await searchOrder();
+    };
 
     const searchOrder = async () => {
         if (shopID !== undefined && startDate) {
@@ -227,6 +233,7 @@ const Report = () => {
                                         <TableCell>ลำดับ</TableCell>
                                         <TableCell align="left">ประเภทการรับ</TableCell>
                                         <TableCell align="left">ประเภทการชำระเงิน</TableCell>
+                                        <TableCell align="left">สถานะการชำระเงิน</TableCell>
                                         <TableCell align="left">ยอดรวม</TableCell>
                                         <TableCell align="left">ลูกค้า</TableCell>
                                         <TableCell align="left">เวลา</TableCell>
@@ -252,6 +259,8 @@ const Report = () => {
                                                     }
                                                     label={row.payment_type === "bank_transfer" ? 'โอนจ่าย' : 'เงินสด'}
                                                 /></TableCell>
+                                            <TableCell align="left">{row.payment_status === "ชำระเงินแล้ว" ? 
+                                             <Button variant="success"  onClick={()=>handleChangePayment("ยังไม่ชำระ",row.id)}> ชำระเงินแล้ว  </Button> : <Button variant="danger" onClick={()=>handleChangePayment("ชำระเงินแล้ว",row.id)} > ยังไม่ชำระ </Button>}   </TableCell>
                                             <TableCell align="left">{row.amount}</TableCell>
                                             <TableCell align="left">{row.customerName}</TableCell>
                                             <TableCell align="left">{moment(row.timeOrder).format('HH:mm')} น.</TableCell>
