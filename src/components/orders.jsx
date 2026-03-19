@@ -266,16 +266,7 @@ const Orders = () => {
                 <Card style={{ border: 'none', marginTop: '12px' }}  >
                     <Form>
                         <Row className="when-print">
-
-                            <Col md={6} xs={6} className="mb-3">
-                                <Button variant="warning" className="w-75" onClick={() => setShopId("15b4e191-d125-4c18-bdd1-445091c349ff")}> ร้านศศิ </Button>
-
-                            </Col>
-                            <Col md={6} xs={6}>
-                                <Button variant="primary" className="w-75" onClick={() => setShopId("a9c9cac7-fa2f-4f19-bdc8-016e9a0a0cda")}> ร้านเตี๋ยวซา </Button>
-
-                            </Col>
-
+                           
                             <ButtonGroup aria-label="Basic example" style={{ height: 60 }}>
                                 <Button variant={statusOrder === "รับออเดอร์แล้ว" ? "btn btn-primary" : "btn btn-outline-primary"}
                                     style={{ fontSize: '18px' }} onClick={() => { getMenuReport("รับออเดอร์แล้ว"), setStatusOrder("รับออเดอร์แล้ว") }}>ใหม่ {OrderNew}</Button>
@@ -331,18 +322,23 @@ const Orders = () => {
                                                     </p>
                                                     <Row>
                                                         <Col md={12} xs={12}>
-                                                            <h5>ลูกค้า - {item.customerName}</h5>
+                                                            <h5>{item.customerName}</h5>
                                                         </Col>
                                                     </Row>
                                                     <Alert className="bg-white p-2 text-center">
                                                         <Row>
                                                             <Col md={6} xs={6}>
-                                                                <h5>สถานะ :  {item.statusOrder}</h5>
+                                                                <h5>{item.statusOrder}</h5> 
                                                             </Col>
                                                             <Col md={6} xs={6}>
                                                                 <h5> {item.amount} บาท</h5>
+                                                                {item.payment_status==="ชำระเงินแล้ว" ?  <span style={{ color: 'green' }}> 
+                                                                    {item.payment_status} 
+                                                                    
+                                                                       </span> : <span style={{ color: 'red' }}> <b>ยังไม่ชำระเงิน</b> </span>} <br />
+                                                                       {item.payment_type === "bank_transfer" ?  <b>โอนจ่าย</b> : <b>จ่ายเงินสด</b>}
                                                             </Col>
-                                                        </Row>
+                                                        </Row> 
 
 
                                                     </Alert>
@@ -353,7 +349,7 @@ const Orders = () => {
                                                         status={item.statusOrder} />
                                                     <Row className="mt-2">
                                                         <Col md={8}>
-                                                            {item.address ? <h5>จัดส่งที่-{item.address}</h5> : " "}
+                                                            {item.address ? <h5>ที่อยู่จัดส่ง-{item.address}</h5> : " "}
                                                         </Col>
                                                     </Row>
 
