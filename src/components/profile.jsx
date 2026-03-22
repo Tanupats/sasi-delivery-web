@@ -2,81 +2,160 @@ import { useContext, useState } from "react";
 import { Card, Row, Col, Button } from "react-bootstrap";
 import { httpPut } from "../http";
 import { AuthData } from "../ContextData";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 import moment from "moment";
 const Profile = () => {
-    const { user, setUser, shop, getUser, setShop } = useContext(AuthData);
-    const [status, setStatus] = useState(shop?.is_open);
+  const { user, setUser, shop, getUser, setShop } = useContext(AuthData);
+  const [status, setStatus] = useState(shop?.is_open);
 
+  const updateData = async () => {
+    await httpPut("/shop/" + shop?.id, { ...shop, is_open: status }).then(
+      (res) => {
+        if (res) {
+          getUser();
+          Swal.fire({
+            title: "แก้ไขข้อมูลสำเร็จ",
+            text: "บันทึกข้อมูลสำเร็จ",
+            icon: "success",
+            confirmButtonText: "ยืนยัน",
+          });
+        }
+      },
+    );
+  };
 
-    const updateData = async () => {
-        await httpPut('/shop/' + shop?.id, { ...shop, is_open: status })
-            .then((res) => {
-                if (res) {
-                    getUser();
-                    Swal.fire({
-                        title: 'แก้ไขข้อมูลสำเร็จ',
-                        text: 'บันทึกข้อมูลสำเร็จ',
-                        icon: 'success',
-                        confirmButtonText: 'ยืนยัน'
-                    })
-                }
-            })
-    }
+  return (
+    <Row className="mt-4">
+      <Col md={3}></Col>
+      <Col md={6}>
+        <Card>
+          <Card.Title className="text-center mt-4">ข้อมูลบัญชี</Card.Title>
+          <Card.Body>
+            <h5>บัญชีผู้ใช้</h5>
+            <hr />
+            <p> ชื่อ-นามสกุล : {user.name}</p>
 
-    return (
-        <Row className='mt-4'>
-            <Col md={3}></Col>
-            <Col md={6}>
-                <Card>
-                    <Card.Title className="text-center mt-4">โปรไฟล์</Card.Title>
-                    <Card.Body>
+            <div className="row mb-2">
+              <div className="col-md-2"> อีเมล</div>
+              <div className="col-md-6">
+                <input
+                  type="email"
+                  name="email"
+                  className="form-control"
+                  value={user.email}
+                  onChange={(e) => setUser({ ...user, email: e.target.value })}
+                />{" "}
+              </div>
+            </div>
+            <div className="row mb-2">
+              <div className="col-md-2">
+                <label>รหัสผ่าน</label>
+              </div>
+              <div className="col-md-6">
+                <input
+                  type="password"
+                  className="form-control "
+                  placeholder="รหัสผ่านใหม่"
+                  value={user.password}
+                  onChange={(e) =>
+                    setUser({ ...user, password: e.target.value })
+                  }
+                />
+              </div>
+            </div>
 
-                        <h5>ข้อมูลผู้ใช้</h5>
-                        <p>    ชื่อ-นามสกุล :   {user.name}</p>
-                        <p>    อีเมล :   {user.email}</p>
-                        <label htmlFor="">เบอร์โทร</label>
-                        <input type="text"
-                            className="form-control mb-2"
-                            value={user.phone}
-                            onChange={(e) => setUser(e.target.value)} />
-                        <h5>ข้อมูลร้านค้า</h5>
-                        <p> ชื่อร้าน  :  {shop.name}</p>
-                        <p> ประเภทร้านค้า  :  {shop.shop_type}</p>
-                        <p> วันที่ลงทะเบียน: {moment(new Date(shop.creted)).format("DD/MM/YYYY").toLocaleString()}</p>
-                        <p> สถานะเปิดร้าน  :    {status ?
+            <div className="row">
+              <div className="col-md-2">
+                <label htmlFor="">เบอร์โทร</label>
+              </div>
+              <div className="col-md-6">
+                <input
+                  type="text"
+                  className="form-control mb-2"
+                  value={user.phone}
+                  onChange={(e) => setUser(e.target.value)}
+                />
+              </div>
+            </div>
 
-                            <Button variant="success" onClick={() => {
-                                setStatus(false)
-                            }}> เปิดร้าน </Button> :
-                            <Button variant="danger" onClick={() => { setStatus(true) }}>ร้านปิด</Button>}</p>
-                        <label htmlFor="">เวลาเปิด-ปิดร้าน</label>
-                        <input type="text"
-                            className="form-control mb-2"
-                            value={shop.open_time}
-                            onChange={(e) => setShop({ ...shop, open_time: e.target.value })} />
-                        <div className="row">
+            <h5>ข้อมูลร้านค้า</h5>
+            <hr />
+            <p> ชื่อร้าน : {shop.name}</p>
+            <p> ประเภทร้านค้า : {shop.shop_type}</p>
+            <p>
+              {" "}
+              วันที่ลงทะเบียน:{" "}
+              {moment(new Date(shop.creted))
+                .format("DD/MM/YYYY")
+                .toLocaleString()}
+            </p>
+            <p>
+              {" "}
+              สถานะเปิดร้าน :{" "}
+              {status ? (
+                <Button
+                  variant="success"
+                  onClick={() => {
+                    setStatus(false);
+                  }}
+                >
+                  {" "}
+                  เปิดร้าน{" "}
+                </Button>
+              ) : (
+                <Button
+                  variant="danger"
+                  onClick={() => {
+                    setStatus(true);
+                  }}
+                >
+                  ร้านปิด
+                </Button>
+              )}
+            </p>
+            <div className="row">
+              <div className="col-md-2">
+                <label htmlFor="">เวลาเปิดร้าน</label>
+              </div>
+              <div className="col-md-6">
+                <input
+                  type="text"
+                  className="form-control mb-2"
+                  value={shop.open_time}
+                  onChange={(e) =>
+                    setShop({ ...shop, open_time: e.target.value })
+                  }
+                />
+              </div>
+            </div>
 
-                            <div className="col-md-2">
+            <div className="row">
+              <div className="col-md-2">
+                <label> PAGE 
+                     TOKEN</label>
+              </div>
+              <div className="col-md-6">
+                <input
+                  type="password"
+                  className="form-control mb-2"
+                  placeholder="TOKEN"
+                  value={shop.facebook_token}
+                  onChange={(e) =>
+                    setShop({ ...shop, facebook_token: e.target.value })
+                  }
+                />
+              </div>
+            </div>
 
-                                <label> รหัสการเข้าถึงเพจ</label>
-                            </div>
-                            <div className="col-md-10">
-                                <input type="password"
-                                    className="form-control mb-2"
-                                    placeholder="รหัสผ่าน"
-                                    value={shop.facebook_token}
-                                    onChange={(e) => setShop({ ...shop, facebook_token: e.target.value })} />
-                            </div>
-                        </div>
-
-                        <Button onClick={() => updateData()} className="mt-2">บันทึกการแก้ไข</Button>
-                    </Card.Body>
-                </Card>
-            </Col>
-            <Col md={3}></Col>
-        </Row>
-    )
-}
+            <Button onClick={() => updateData()} className="mt-2">
+              บันทึกการแก้ไข
+            </Button>
+          </Card.Body>
+        </Card>
+      </Col>
+      <Col md={3}></Col>
+    </Row>
+  );
+};
 
 export default Profile;

@@ -315,7 +315,7 @@ const Orders = () => {
                                 ) : (
                                   " "
                                 )}
-                                <h6>วิธีการรับอาหาร-{item.ordertype}</h6>
+                                <h6>การรับอาหาร-{item.ordertype}</h6>
                               </Col>
                             </Row>
 
@@ -335,7 +335,7 @@ const Orders = () => {
                                     }}
                                     variant="success w-100"
                                   >
-                                    ทำอาหารเสร็จแล้ว
+                                    อัพเดทเป็นทำเสร็จแล้ว
                                   </Button>
                                 </Col>
                               )}

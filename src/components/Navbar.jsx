@@ -20,8 +20,6 @@ import Swal from 'sweetalert2';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ViewQuiltIcon from '@mui/icons-material/ViewQuilt';
 import AssessmentIcon from '@mui/icons-material/Assessment';
-import FacebookConnect from './facebookConnect';
-import authUi from './callback-facebook';
 
 const NavbarMenu = () => {
   const {
@@ -69,13 +67,10 @@ const NavbarMenu = () => {
                       <AssessmentIcon /> สรุปยอดขาย
                     </Nav.Link>
 
-
                     <Nav.Link as={Link} to={'/admin'} style={{ textDecoration: 'none', color: '#fff' }}>
                       <StoreIcon /> จัดการข้อมูล {shop?.name}
                     </Nav.Link>
-
                   </>
-
                 </Nav>
 
                 <Nav className="ml-auto" >
@@ -103,8 +98,6 @@ const NavbarMenu = () => {
         <Route path="/admin" Component={Admin}></Route>
         <Route path="/register" Component={Register}></Route>
         <Route path="/profile" Component={Profile}></Route>
-        <Route path="/page-connect" Component={FacebookConnect}></Route> 
-        <Route path="/facebook/callback" Component={authUi}></Route> 
       </Routes>
     </Router>
   );

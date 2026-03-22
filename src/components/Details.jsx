@@ -4,6 +4,7 @@ import Select from 'react-select'
 import { httpDelete, httpGet, httpPost, httpPut } from "../http";
 import { AuthData } from "../ContextData";
 import Swal from 'sweetalert2'
+import { CirclePlus } from 'lucide-react';
 const Details = (props) => {
     const token = localStorage.getItem("token");
     let { bill_ID, status, id, reset } = props;
@@ -156,8 +157,8 @@ const Details = (props) => {
     return (<>
 
         {status === "รับออเดอร์แล้ว" && (<Row>
-            <Col md={6}>
-                <Button className="when-print" variant="success" onClick={() => handleShow('', 'newMenu')}> เพิ่มเมนูใหม่</Button>
+            <Col md={6} className="mb-2">
+                 <Button className="when-print" variant="outline-success" onClick={() => handleShow('', 'newMenu')}> <CirclePlus /> เพิ่มรายการ</Button>
             </Col>
         </Row>)
         }
@@ -178,11 +179,11 @@ const Details = (props) => {
                                     <Col md={4}>
 
                                         <Button className="when-print mb-2"
-                                            variant="warning"
+                                            variant="outline-warning"
                                             onClick={() =>
                                                 handleShow(item, 'updateMenu')}>แก้ไข</Button>
                                         {' '}
-                                        <Button className="when-print mb-2" variant="danger"
+                                        <Button className="when-print mb-2" variant="outline-danger"
                                             onClick={() => deleteById(item.id)}>ลบ</Button>
                                     </Col>
                                 )}
@@ -322,7 +323,7 @@ const Details = (props) => {
 
                                     <Col md={6} className="text-center">
                                         <Button
-                                            className="mt-3"
+                                            className="mt-3 w-100"
                                             onClick={() => addNewMenu()}
                                             style={{ float: 'left' }}
                                             variant="success">
@@ -331,7 +332,7 @@ const Details = (props) => {
                                     </Col>
                                     <Col md={6}>
                                         <Button
-                                            className="mt-3"
+                                            className="mt-3 w-100"
                                             onClick={handleClose}
                                             style={{ float: 'left' }}
                                             variant="danger">

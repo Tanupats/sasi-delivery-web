@@ -11,7 +11,7 @@ function Context({ children }) {
     const [name, setName] = useState("เสิร์ฟในร้าน");
     const [orderType, setOrderType] = useState("เสิร์ฟในร้าน");
     const [role, setRole] = useState("");
-    const [queue, setQueu] = useState(0);
+    const [queue, setQueue] = useState(0);
     const [queueNumber, setQueueNumber] = useState(0);
     const [staffName, setStaffName] = useState("");
     const [user, setUser] = useState({ name: '' });
