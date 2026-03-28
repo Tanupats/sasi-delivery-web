@@ -78,10 +78,11 @@ const Orders = () => {
         formData.append('file', file);
         await httpPost(`/upload`, formData)
             .then(res => {
+                console.log('Upload response:', res);
                 if (res.status === 200) {
-                    const filename = dev + '/images/' + res.data.filename;
+                    const filename = dev+'/images/'+res.data.filename;
                     if (filename) {
-                        sendImageToPage(messageid, filename);
+                        sendImageToPage(messageid,filename);
                     }
                     setFile("");
                 }
@@ -123,7 +124,7 @@ const Orders = () => {
         });
     }
 
-    const PAGE_ACCESS_TOKEN = 'EAAkMtjSMoDoBOZCGYSt499z6jgiiAjAicsajaOWhjqIxmHsl0asrAm61k6LgD1ifGXHzbDsHrJFCZASriCSyoPDpeqFh3ZBTrWC4ymdZCZBwcioKueKj31QK6w6GFHILPiJaZA8hgNHXtW5OqkRTZBzI0VFvIOoVhGdGq28DvOHGVSNEmPMJjkAOikE1thOaF3mzDg6dnjSyZBGpIY6mMZA1rWaIx';
+    const PAGE_ACCESS_TOKEN = import.meta.env.VITE_PAGE_ACCESS_TOKEN;
     const sendMessageToPage = (userid, messageText) => {
         axios.post(`https://graph.facebook.com/v18.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
             recipient: {
@@ -196,12 +197,11 @@ const Orders = () => {
                 }
                 if (status === "ส่งสำเร็จ") {
                     if (messageid !== "pos") {
-                        const res = await httpGet(`/bills/${id}`).then((res) => res)
-                        console.log(res);
-                        if (res.data.statusOrder !== "ส่งสำเร็จ") {
-                            uploadFile(messageid);
-                            sendMessageToPage(messageid, "มาส่งแล้วนะครับ");
-                        }
+                           if(file){
+                    uploadFile(messageid);
+                           }          
+                    sendMessageToPage(messageid, "มาส่งแล้วนะครับ");
+                        
                     }
                     getMenuReport("กำลังส่ง");
                     setStatusOrder("กำลังส่ง");
