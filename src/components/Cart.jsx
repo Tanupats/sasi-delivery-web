@@ -232,7 +232,7 @@ const Cart = () => {
                                                             type="text"
                                                             required
                                                             onChange={(e) => setAddress(e.target.value)}
-                                                            placeholder="ที่อยู่จัดส่ง และ เบอร์โทรติดต่อถ้ามี"
+                                                            placeholder="ระบุที่อยู่จัดส่ง และ เบอร์โทรติดต่อถ้ามี"
                                                             className="mb-2 mt-1" />
                                                     </Form.Group>
                                                 )
