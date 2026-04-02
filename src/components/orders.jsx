@@ -136,71 +136,73 @@ const Orders = () => {
         <Col md={12}>
           <Card style={{ border: "none", marginTop: "12px" }}>
             <Form>
-              <Row className="when-print">
-                <ButtonGroup aria-label="Basic example">
-                  <Button
-                    variant={
-                      statusActive === "ใหม่"
-                        ? "btn btn-outline-primary active"
-                        : "btn btn-outline-primary"
-                    }
-                    style={{ fontSize: "18px" }}
-                    onClick={() => {
-                      (setReport([]),
-                        setStatusActive("ใหม่"),
-                        getMenuReport("รับออเดอร์แล้ว"));
-                    }}
-                  >
-                    ใหม่ {statusOrder[0]?.total}
-                  </Button>
-                  <Button
-                    variant={
-                      statusActive === "เสร็จแล้ว"
-                        ? "btn btn-outline-success active"
-                        : "btn btn-outline-success"
-                    }
-                    style={{ fontSize: "18px" }}
-                    onClick={() => {
-                      (setReport([]),
-                        setStatusActive("เสร็จแล้ว"),
-                        getMenuReport("ทำเสร็จแล้ว"));
-                    }}
-                  >
-                    เสร็จแล้ว {statusOrder[2]?.total}
-                  </Button>
-                  <Button
-                    variant={
-                      statusActive === "รอดำเนินการ"
-                        ? "btn btn-outline-danger active"
-                        : "btn btn-outline-danger"
-                    }
-                    style={{ fontSize: "18px" }}
-                    onClick={() => {
-                      (setReport([]),
-                        setStatusActive("รอดำเนินการ"),
-                        getMenuReport("กำลังส่ง"));
-                    }}
-                  >
-                    รอดำเนินการ {statusOrder[1]?.total}
-                  </Button>
-                  <Button
-                    variant={
-                      statusActive === "สำเร็จ"
-                        ? "btn btn-outline-primary active"
-                        : "btn btn-outline-primary"
-                    }
-                    style={{ fontSize: "18px" }}
-                    onClick={() => {
-                      (setReport([]),
-                        setStatusActive("สำเร็จ"),
-                        getMenuReport("ส่งสำเร็จ"));
-                    }}
-                  >
-                    สำเร็จ {statusOrder[3]?.total}{" "}
-                  </Button>
-                </ButtonGroup>
-              </Row>
-              <Row className="mt-4 when-print">
+    <Row className="when-print">
+  <ButtonGroup aria-label="Basic example">
+    <Button
+      style={{
+        fontSize: "18px",
+        borderColor: "#ff7a00",
+        color: statusActive === "ใหม่" ? "#fff" : "#ff7a00",
+        backgroundColor: statusActive === "ใหม่" ? "#ff7a00" : "transparent",
+      }}
+      onClick={() => {
+        setReport([]);
+        setStatusActive("ใหม่");
+        getMenuReport("รับออเดอร์แล้ว");
+      }}
+    >
+      ใหม่ {statusOrder[0]?.total}
+    </Button>
+
+    <Button
+      style={{
+        fontSize: "18px",
+        borderColor: "#ff7a00",
+        color: statusActive === "เสร็จแล้ว" ? "#fff" : "#ff7a00",
+        backgroundColor: statusActive === "เสร็จแล้ว" ? "#ff7a00" : "transparent",
+      }}
+      onClick={() => {
+        setReport([]);
+        setStatusActive("เสร็จแล้ว");
+        getMenuReport("ทำเสร็จแล้ว");
+      }}
+    >
+      เสร็จแล้ว {statusOrder[2]?.total}
+    </Button>
+
+    <Button
+      style={{
+        fontSize: "18px",
+        borderColor: "#ff7a00",
+        color: statusActive === "รอดำเนินการ" ? "#fff" : "#ff7a00",
+        backgroundColor: statusActive === "รอดำเนินการ" ? "#ff7a00" : "transparent",
+      }}
+      onClick={() => {
+        setReport([]);
+        setStatusActive("รอดำเนินการ");
+        getMenuReport("กำลังส่ง");
+      }}
+    >
+      รอดำเนินการ {statusOrder[1]?.total}
+    </Button>
+
+    <Button
+      style={{
+        fontSize: "18px",
+        borderColor: "#ff7a00",
+        color: statusActive === "สำเร็จ" ? "#fff" : "#ff7a00",
+        backgroundColor: statusActive === "สำเร็จ" ? "#ff7a00" : "transparent",
+      }}
+      onClick={() => {
+        setReport([]);
+        setStatusActive("สำเร็จ");
+        getMenuReport("ส่งสำเร็จ");
+      }}
+    >
+      สำเร็จ {statusOrder[3]?.total}
+    </Button>
+  </ButtonGroup>
+</Row>      <Row className="mt-4 when-print">
                 <Col md={3} xs={3}>
                   <Button
                     className="w-75"

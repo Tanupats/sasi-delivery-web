@@ -47,22 +47,6 @@ const Profile = () => {
                 />{" "}
               </div>
             </div>
-            <div className="row mb-2">
-              <div className="col-md-2">
-                <label>รหัสผ่าน</label>
-              </div>
-              <div className="col-md-6">
-                <input
-                  type="password"
-                  className="form-control "
-                  placeholder="รหัสผ่านใหม่"
-                  value={user.password}
-                  onChange={(e) =>
-                    setUser({ ...user, password: e.target.value })
-                  }
-                />
-              </div>
-            </div>
 
             <div className="row">
               <div className="col-md-2">
@@ -80,7 +64,29 @@ const Profile = () => {
 
             <h5>ข้อมูลร้านค้า</h5>
             <hr />
-            <p> ชื่อร้าน : {shop.name}</p>
+            
+            <div className="row">
+              <div className="col-md-2">ชื่อร้าน</div>
+              <div className="col-md-6">
+                <input
+                  value={shop.name}
+                  type="text"
+                  className="form-control mb-2"
+                  onChange={(e) => setShop({ ...shop, name: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-md-2">เว็บไซต์</div>
+              <div className="col-md-6">
+                <input
+                  value={shop.name}
+                  type="text"
+                  className="form-control mb-2"
+                  onChange={(e) => setShop({ ...shop, name: e.target.value })}
+                />
+              </div>
+            </div>
             <p> ประเภทร้านค้า : {shop.shop_type}</p>
             <p>
               {" "}
@@ -131,8 +137,7 @@ const Profile = () => {
 
             <div className="row">
               <div className="col-md-2">
-                <label> PAGE 
-                     TOKEN</label>
+                <label> PAGE TOKEN</label>
               </div>
               <div className="col-md-6">
                 <input
