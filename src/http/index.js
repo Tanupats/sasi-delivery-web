@@ -93,7 +93,7 @@ export const sendImageToPage = (userid, url) => {
       },
     )
     .then((response) => {
-      //axios.delete(url);
+      axios.delete(url);
       console.log("Image sent:", response.data);
     })
     .catch((error) => {

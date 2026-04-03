@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { Card, Row, Col, Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { AuthData } from "../ContextData";
-import { httpGet, httpPost } from "../http";
+import { httpPost } from "../http";
 const Login = () => {
     const router = useNavigate()
     const [email, setEmail] = useState("")
@@ -17,18 +17,18 @@ const Login = () => {
             .then(res => {
                 if (res) {
                     if (res.status === 200) {
-                        const { name, department, token, id } = res.data;
+                        const { name, department, token, id, shop_id } = res.data;
                         localStorage.setItem("name", name);
                         localStorage.setItem("role", department);
                         localStorage.setItem("token", token);
                         localStorage.setItem("userId", id);
+                        localStorage.setItem("shopId", shop_id);
                         setUser(res.data);
                         setStaffName(name);
                         router('/orders');
                     } else {
                         console.log('เข้าสู่ระบบไม่สำเร็จ')
                         setMessageError(true);
-
                     }
                 }
             })
