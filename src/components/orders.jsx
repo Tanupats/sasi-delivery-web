@@ -273,7 +273,7 @@ const Orders = () => {
                                             );
                                           }
                                         }}
-                                        variant="outline-primary w-100"
+                                        variant="outline-secondary  w-100"
                                       >
                                         <SendIcon /> ส่งข้อความอีกครั้ง
                                       </Button>

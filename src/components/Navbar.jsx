@@ -63,7 +63,7 @@ const NavbarMenu = () => {
               SASI POS
             </Navbar.Brand>
 
-            {/* PC MENU */}
+            
             <Nav className="ms-auto d-none d-lg-flex">
 
               <Nav.Link as={Link} to="/pos" style={{ color: "#fff" }}>
@@ -87,7 +87,7 @@ const NavbarMenu = () => {
               </Nav.Link>
 
               <Nav.Link onClick={logout} style={{ color: "#fff" }}>
-                <LogoutIcon /> ออก
+                <LogoutIcon /> ออกจากระบบ
               </Nav.Link>
 
             </Nav>

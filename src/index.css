@@ -105,29 +105,3 @@
   }
 }
 
-/* mobile */
-@media (max-width: 767px) {
-
-  .mobile-header {
-    display: block;
-    padding: 10px;
-    background: #FD720D;
-  }
-
-  .sidebar {
-    position: fixed;
-    left: -260px;
-    top: 0;
-    width: 260px;
-    height: 100vh;
-    background: white;
-    z-index: 999;
-    transition: 0.3s;
-    box-shadow: 2px 0 10px rgba(0,0,0,0.15);
-  }
-
-  .sidebar.open {
-    left: 0;
-  }
-
-}

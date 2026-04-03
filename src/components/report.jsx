@@ -153,8 +153,8 @@ const Report = () => {
                 <Card.Body>
                   <Form>
                     <Row className="mb-3">
-                      <Col md={6}>
-                        <Form.Label>ระบุวันที่แสดงยอดขาย</Form.Label>
+                      <Col md={3}>
+                        <Form.Label> <b>แสดงยอดขาย</b> </Form.Label>
                         <Form.Control
                           onChange={(e) => setStartDate(e.target.value)}
                           value={startDate}
@@ -169,19 +169,19 @@ const Report = () => {
                     style={{ color: "green", marginBottom: "20px" }}
                   >
                     {" "}
-                    ยอดขายวันนี้ {formatMoney(totalToday)} บาท
+                    วันที่ {startDate} <br /> ยอดขาย {formatMoney(totalToday)} บาท
                   </Card.Title>
 
                   <Row mt={4}>
                     <Col md={6} xs={6}>
-                      <Alert variant="primary" className="d-flex ">
-                        <PaymentIcon />{" "}
-                        <h5> รับโอน {formatMoney(bank_transfer)} บาท </h5>
+                      <Alert variant="primary" className="d-flex p-4">
+                        <PaymentIcon   className="me-2"/>{" "}
+                        <h5>{" "}เงินโอน {formatMoney(bank_transfer)} บาท </h5>
                       </Alert>
                     </Col>
                     <Col md={6} xs={6}>
-                      <Alert variant="success" className="d-flex">
-                        <PaidIcon />{" "}
+                      <Alert variant="secondary" className="d-flex p-4">
+                        <PaidIcon className="me-2" />{" "}
                         <h5 style={{ color: "#000" }}>
                           {" "}
                           จ่ายเงินสด {formatMoney(cash)} บาท
@@ -200,7 +200,7 @@ const Report = () => {
                               style={{ fontSize: "30px" }}
                             />{" "}
                             <br />
-                            เดลิเวอรี่ จำนวน {counter.takeawayCount} บิล
+                            เดลิเวอรี่  <br />จำนวน {counter.takeawayCount} บิล
                             <p>
                               {" "}
                               ยอดขาย{" "}
@@ -225,7 +225,7 @@ const Report = () => {
                         <Col md={4}>
                           <div className="text-center card-report-2 mb-2">
                             <DiningIcon style={{ fontSize: "30px" }} />
-                            <br /> ทานที่ร้าน จำนวน {counter.dineInCount} บิล
+                            <br /> ทานที่ร้าน  <br />  จำนวน {counter.dineInCount} บิล
                             <p>
                               {" "}
                               ยอดขาย{" "}
@@ -250,7 +250,7 @@ const Report = () => {
                         <Col md={4}>
                           <div className="text-center card-report-3 mb-2">
                             <StorefrontIcon style={{ fontSize: "30px" }} />{" "}
-                            <br /> รับเองหน้าร้าน จำนวน {counter.pickupCount}{" "}
+                            <br /> รับเองหน้าร้าน  <br /> จำนวน {counter.pickupCount}{" "}
                             บิล
                             <p>
                               {" "}
