@@ -57,6 +57,7 @@ const NavbarMenu = () => {
       </Navbar>
 
       <Paper sx={{
+        borderRadius: 12,
         position: "fixed",
         bottom: 0,
         left: 0,

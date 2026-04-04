@@ -37,10 +37,13 @@ const Cart = () => {
         api_url,
         messengerId,
         setName,
-        name
+        name,
+        deliveryFee,
+        setDeliveryFee
     } = useContext(AuthData);
 
     const [loading, setLoading] = useState(false);
+    
 
     const getProfile = async () => {
         const res = await axios.get(`${api_url}/bills/profile/${messengerId}`).then((data) => data);
@@ -48,6 +51,7 @@ const Cart = () => {
             const name = res.data?.customerName;
             setName(name);
             localStorage.setItem('name', name);
+            setAddress(res.data?.address);
         } else {
             setName("");
         }
@@ -63,7 +67,7 @@ const Cart = () => {
             queueMessage += `<div style="color:red;">* รอประมาณ 40 น. - 1 ชั่วโมง </div>`;
         }
         const result = await Swal.fire({
-            title: 'สั่งอาหารแล้ว แจ้งที่เพจด้วยนะครับ',
+            title: 'ยืนยันการสั่งซื้อ',
             html: `จำนวนคิวที่รอ ${queueMessage} คิว`,
             icon: 'question',
             showCancelButton: true,
@@ -92,7 +96,7 @@ const Cart = () => {
                 <Card.Title as={'h6'} className="mb-2 text-center" >สรุปรายการสั่งซื้อ</Card.Title>
                 <Button
                     className="mb-2"
-                    variant="secondary"
+                    variant="outline-secondary"
                     size="sm"
                     onClick={() => router(-1)}
                 >
@@ -100,88 +104,126 @@ const Cart = () => {
                 </Button>
 
                 <Row>
-                    {
-                        cart.length !== 0 && cart?.map(item => {
-                            return (<React.Fragment key={item.id}>
-                                <Col md={6} xs={12} style={{ marginBottom: '12px' }} key={item.id}>
-                                    <Card style={{ height: '100%', marginBottom: '10px', padding: '6px' }}>
-                                        <Card.Body className='p-0'>
-                                            <Row>
-                                                <Col md={3}
-                                                    xs={5}
-                                                >
-                                                    <Image style={{ width: "100%", height: '130px', objectFit: 'cover', borderRadius: '8px' }}
-                                                        src={`${api_url}/images/${item.photo}`} />
-                                                </Col>
-                                                <Col md={5} xs={5}>
-                                                    <div className="menu-list mt-3">
-                                                        <h6>{item?.name} {item?.price} ฿</h6>
-                                                        <h6></h6>
-                                                        <Form.Group>
-                                                            <Row className="mt-2"><Col xs={4} md={2}>
-                                                                <Button
-                                                                    style={{ backgroundColor: '#FD720D', border: 'none' }}
-                                                                    onClick={() => {
-                                                                        if (item.quantity > 1) {
-                                                                            updateQuantity(item.id, item.quantity - 1);
-                                                                        }
-                                                                    }}
-                                                                >
-                                                                    -
-                                                                </Button>
-                                                            </Col>
+                  {
+  cart.length !== 0 && cart?.map(item => {
+    return (
+      <Col md={4} xs={12} key={item.id} style={{ marginBottom: '10px' }}>
+        <Card style={{ borderRadius: '12px', padding: '8px' }}>
+          <Card.Body className="p-0">
 
-                                                                <Col xs={4} md={2} className="text-center p-2">
-                                                                    <h6>{item.quantity}</h6>
+            <Row className="align-items-center">
 
-                                                                </Col>
-                                                                <Col xs={4} md={2}>
-                                                                    <Button
-                                                                        style={{ backgroundColor: '#FD720D', border: 'none' }}
-                                                                        onClick={() => { updateQuantity(item.id, item.quantity + 1) }} >+</Button>
-                                                                </Col>
-                                                            </Row>
-                                                        </Form.Group>
-                                                    </div>
+              {/* รูป */}
+              <Col xs={4}>
+                <Image
+                  style={{
+                    width: "100%",
+                    height: "90px",
+                    objectFit: "cover",
+                    borderRadius: "10px"
+                  }}
+                  src={`${api_url}/images/${item.photo}`}
+                />
+              </Col>
 
-                                                </Col>
-                                                <Col md={4} xs={2} className="text-center">
-                                                    <Button
-                                                        onClick={() => removeCart(item.id)}
-                                                        style={{ float: 'right', color: 'red' }}
-                                                        variant="light">
-                                                        <RemoveCircleOutlineIcon />
-                                                    </Button>
-                                                </Col>
+              {/* รายการ */}
+              <Col xs={6} md={6}>
+                <h6 style={{ marginBottom: "4px" }}>
+                  {item.name}
+                </h6>
 
-                                                <Col md={4} className="mt-3">
-                                                    <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                                        <button type="button" className="btn btn-outline-primary" onClick={() => setMenuNormal(item.id)}>ธรรมดา </button>
-                                                        <button type="button" className="btn btn-outline-success" onClick={() => setMenuPichet(item.id, item)}>พิเศษ </button>
-                                                    </div>
-                                                </Col>
+                <b>
+                  {item.price} ฿
+                </b>
 
-                                                <Col md={12} xs={12}>
-                                                    <Form.Control
-                                                        className='w-100 mt-3'
-                                                        type="text"
-                                                        placeholder='หมายเหตุ'
-                                                        onChange={(e) => updateNote(item.id, e.target.value)}
-                                                        defaultValue={item.note}
-                                                    />
-                                                </Col>
-                                            </Row>
-                                        </Card.Body>
-                                    </Card>
-                                </Col>
-                            </React.Fragment>)
-                        })
-                    }
+                {/* จำนวน */}
+                <div className="d-flex align-items-center mt-2">
+
+                  <Button
+                    size="sm"
+                    style={{ background: "#FD720D", border: "none" }}
+                    onClick={() => {
+                      if (item.quantity > 1) {
+                        updateQuantity(item.id, item.quantity - 1);
+                      }
+                    }}
+                  >
+                    -
+                  </Button>
+
+                  <span style={{ margin: "0 10px" }}>
+                    {item.quantity}
+                  </span>
+
+                  <Button
+                    size="sm"
+                    style={{ background: "#FD720D", border: "none" }}
+                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                  >
+                    +
+                  </Button>
+
+                </div>
+
+              </Col>
+
+              {/* ลบ */}
+              <Col xs={2} className="text-end">
+                <Button 
+                
+                  onClick={() => removeCart(item.id)}
+                  variant="gray"
+                 
+                >
+                  <RemoveCircleOutlineIcon />
+                </Button>
+              </Col>
+
+              {/* ธรรมดา / พิเศษ */}
+              <Col xs={12} className="mt-2">
+                <div className="d-flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline-primary"
+                    onClick={() => setMenuNormal(item.id)}
+                  >
+                    ธรรมดา
+                  </Button>
+
+                  <Button
+                    size="sm"
+                    variant="outline-success"
+                    onClick={() => setMenuPichet(item.id, item)}
+                  >
+                    พิเศษ
+                  </Button>
+                </div>
+              </Col>
+
+              {/* หมายเหตุ */}
+              <Col xs={12}>
+                <Form.Control
+                  className="mt-2"
+               
+                  type="text"
+                  placeholder="หมายเหตุ"
+                  onChange={(e) => updateNote(item.id, e.target.value)}
+                  defaultValue={item.note}
+                />
+              </Col>
+
+            </Row>
+
+          </Card.Body>
+        </Card>
+      </Col>
+    )
+  })
+}
                     {
                         cart.length > 0 ? (
                             <>
-                                <h6>ยอดรวมทั้งหมด {sumPrice} บาท</h6>
-                                <h6>จำนวน {toTal} รายการ</h6>
+                                
                                 <Col md={12} xs={12} className="mt-2">
                                     <Form id="save" onSubmit={(e) => { onSave(e) }}>
                                         <Row className='order-type when-print'>
@@ -196,6 +238,7 @@ const Cart = () => {
                                                     onClick={() => {
                                                         setOrderType("สั่งกลับบ้าน");
                                                         getProfile();
+                                                        setDeliveryFee(5);
                                                     }}
                                                 > <DeliveryDiningIcon />  จัดส่ง</Button>
                                                 <Button
@@ -203,12 +246,14 @@ const Cart = () => {
                                                     onClick={() => {
                                                         setOrderType("เสิร์ฟในร้าน");
                                                         setAddress("");
+                                                        setDeliveryFee(0);
                                                     }}
                                                 > <LocalDiningIcon />  ทานที่ร้าน</Button>
                                                 <Button variant={orderType === 'รับเอง' ? 'primary w-100' : 'outline-primary w-100'}
                                                     onClick={() => {
                                                         setOrderType("รับเอง");
                                                         setAddress("");
+                                                        setDeliveryFee(0);
                                                     }}                                            > <ShoppingBagIcon />  รับที่ร้าน</Button>
                                             </ButtonGroup>
                                             {
@@ -226,7 +271,8 @@ const Cart = () => {
                                                             }}
                                                             placeholder="กรอกชื่อ facebook ร้านจะติดต่อกลับทาง messenger"
                                                             required />
-                                                        <Form.Label style={{ fontWeight: 500 }}> ที่อยู่จัดส่ง / ข้อมูลติดต่อ  </Form.Label>
+                                                        <Form.Label style={{ fontWeight: 500 }}> ที่อยู่จัดส่ง / ข้อมูลติดต่อ  </Form.Label> <br />
+                                                        {/* <b style={{ color: 'red' }}>ประกาศ : สำหรับพรุ่งนี้เป็นต้นไป ทางร้านขออนุญาตคิดค่าบริการจัดส่ง ขอบคุณครับ</b> */}
                                                         <Form.Control
                                                             value={Address}
                                                             type="text"
@@ -239,6 +285,11 @@ const Cart = () => {
                                             }
                                         </Row>
                                         <Form.Group className="mt-2">
+                                            <h6>ยอดรวมค่าอาหาร {sumPrice} บาท</h6>
+                                           {orderType === "สั่งกลับบ้าน" && <h6>ค่าจัดส่ง : {deliveryFee} บาท</h6>}
+                                            <h6>จำนวน {toTal} รายการ</h6>
+                                            <h6>รวมทั้งหมด : {sumPrice + deliveryFee} บาท</h6>
+
                                             <Form.Label style={{ fontWeight: 500 }}>  เลือกวิธีชำระเงิน </Form.Label>
                                             <Row>
                                                 <Col md={2} xs={6}>
@@ -279,8 +330,8 @@ const Cart = () => {
                         ) : (
                             <Col>
 
-                                <Alert variant='danger' className='pd-3 text-center text-bold'>
-                                    ยังไม่มีรายการอาหาร
+                                <Alert variant='danger' className='pd-3 text-center text-bold mt-3'>
+                                    <b>ไม่มีรายการอาหาร</b>   
                                 </Alert></Col>)
                     }
                 </Row>

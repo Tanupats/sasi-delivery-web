@@ -22,13 +22,13 @@ const Details = (props) => {
         <ListGroup className="mt-2">
             <Row>
 
-
+                    <h5>รายละเอียดคำสั่งซื้อ</h5>
                 {
                     detail.map((item, index) => {
                         return (<React.Fragment key={index}>
                             <Col md={12}>
                                 <ListGroup.Item style={{ border: 'none', margin: '0px', padding: '0px', fontSize: '18px' }}>
-                                    <h6> {item.foodname} {item.note}   {item.price} X {item.quantity}  </h6></ListGroup.Item>
+                                    <h5> {item.foodname} {item.note}   {item.price} X {item.quantity}  </h5></ListGroup.Item>
                             </Col>
                         </React.Fragment>)
                     })

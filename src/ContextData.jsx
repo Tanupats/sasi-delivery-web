@@ -17,7 +17,8 @@ function Context({ children }) {
   const [Address, setAddress] = useState("");
   const [paymentType, setPaymentType] = useState("bank_transfer");
   const [shopId, setShopId] = useState("");
-
+  const [deliveryFee, setDeliveryFee] = useState(5);
+  const [oldData, setOldData] = useState([]);
   const api_url = import.meta.env.VITE_API_URL;
 
   const getCounterOrder = async () => {
@@ -39,9 +40,13 @@ function Context({ children }) {
 
     const message =
       paymentType === "cash"
-        ? `${reportMenu}\nรวมทั้งหมด ${sumPrice} บาท ครับ`
-        : `${reportMenu}\nรวมทั้งหมด ${sumPrice} บาท\nพร้อมเพย์ 0983460756 นายตนุภัทร สิทธิวงศ์\nโอนแล้วส่งสลิปมาด้วยนะครับ ขอบคุณครับ`;
+        ? `${reportMenu}
+${orderType === "สั่งกลับบ้าน" ? `ค่าจัดส่ง : ${deliveryFee} บาท\n` : ""}รวมทั้งหมด ${sumPrice + deliveryFee} บาท`
+        : `${reportMenu}
+${orderType === "สั่งกลับบ้าน" ? `ค่าจัดส่ง : ${deliveryFee} บาท\n` : ""}รวมทั้งหมด ${sumPrice + deliveryFee} บาท
 
+พร้อมเพย์ 0983460756 นายตนุภัทร สิทธิวงศ์
+โอนแล้วส่งสลิปมาด้วยนะครับ ขอบคุณครับ`;
     await fetch(
       `https://graph.facebook.com/v19.0/me/messages?access_token=${PageAccessToken}
 `,
@@ -127,7 +132,7 @@ function Context({ children }) {
   const saveOrder = async () => {
     if (username !== null && messengerId !== null) {
       const body = {
-        amount: sumPrice,
+        amount: sumPrice + deliveryFee,
         ordertype: orderType,
         payment_type: paymentType,
         statusOrder: "รับออเดอร์แล้ว",
@@ -136,11 +141,11 @@ function Context({ children }) {
         messengerId: messengerId,
         address: Address,
         step: 1,
+        delivery_fee: deliveryFee,
       };
       const res = await axios.post(`${api_url}/bills/order`, body);
       if (res.status === 200) {
         const id = res.data.bill_ID;
-
         const bodyDetails = cart.map(({ name, price, quantity, note }) => {
           return {
             bills_id: id,
@@ -160,7 +165,6 @@ function Context({ children }) {
           confirmButtonText: "ยืนยัน",
         });
       } else {
-        console.error("เกิดข้อผิดพลาดในการสั่งอาหาร: ", error);
         Swal.fire({
           title: "เกิดข้อผิดพลาด",
           text: "ไม่สามารถสั่งอาหารได้ กรุณาลองใหม่ หรือสอบถามร้านค้า",
@@ -187,8 +191,6 @@ function Context({ children }) {
       });
     }
   };
-
-  const [oldData, setOldData] = useState([]);
 
   const setMenuPichet = (id, data) => {
     setOldData((prevData) => [...prevData, data]);
@@ -293,6 +295,8 @@ function Context({ children }) {
           api_url,
           setShopId,
           PageAccessToken,
+          deliveryFee,
+          setDeliveryFee,
         }}
       >
         {children}
