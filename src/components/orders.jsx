@@ -310,7 +310,9 @@ const Orders = () => {
 
                             <Row>
                               <Col md={8}>
+                                {  item.delivery_fee !== 0 && <h6>ค่าจัดส่ง {item.delivery_fee} บาท</h6> }
                                 <h6>รวมทั้งหมด {item.amount} บาท</h6>
+                                 
                                 <h6>{item.customerName}</h6>
                                 {item.address ? (
                                   <h6>จัดส่งที่-{item.address}</h6>

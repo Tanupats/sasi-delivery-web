@@ -187,6 +187,7 @@ function Context({ children }) {
                     price: parseInt(price),
                     quantity: quantity,
                     note: note,
+                    shop_id: shop_id
                 }
 
             })

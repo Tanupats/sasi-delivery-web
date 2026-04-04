@@ -1,3 +1,4 @@
+
 import { useContext, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
@@ -59,19 +60,19 @@ const NavbarMenu = () => {
               />
             </div>
 
-            <Navbar.Brand style={{ color: "#fff" }}>
+            <Navbar.Brand style={{ color: "#fff" }} className="when-print">
               SASI POS
             </Navbar.Brand>
 
-            
-            <Nav className="ms-auto d-none d-lg-flex">
+            {/* DESKTOP MENU (LEFT SIDE) */}
+            <Nav className="ms-3 d-none d-lg-flex">
 
               <Nav.Link as={Link} to="/pos" style={{ color: "#fff" }}>
                 <ListAltIcon /> ขายสินค้า
               </Nav.Link>
 
               <Nav.Link as={Link} to="/orders" style={{ color: "#fff" }}>
-                <ViewQuiltIcon /> จัดการออเดอร์
+                <ViewQuiltIcon /> ออเดอร์
               </Nav.Link>
 
               <Nav.Link as={Link} to="/report" style={{ color: "#fff" }}>
@@ -79,7 +80,7 @@ const NavbarMenu = () => {
               </Nav.Link>
 
               <Nav.Link as={Link} to="/admin" style={{ color: "#fff" }}>
-                <StoreIcon /> {shop?.name}
+                <StoreIcon /> จัดการ{shop?.name}
               </Nav.Link>
 
               <Nav.Link as={Link} to="/profile" style={{ color: "#fff" }}>
@@ -96,32 +97,35 @@ const NavbarMenu = () => {
         </Navbar>
       )}
 
-      {/* MOBILE SIDEBAR */}
+      {/* MOBILE OVERLAY */}
       {openMenu && (
-        <div className="overlay d-lg-none" onClick={() => setOpenMenu(false)} />
+        <div
+          className="overlay d-lg-none"
+          onClick={() => setOpenMenu(false)}
+        />
       )}
 
+      {/* MOBILE SIDEBAR */}
       <div className={`sidebar d-lg-none ${openMenu ? "show" : ""}`}>
-
         <Nav className="flex-column">
 
-          <Nav.Link as={Link} to="/pos" onClick={()=>setOpenMenu(false)}>
+          <Nav.Link as={Link} to="/pos" onClick={() => setOpenMenu(false)}>
             <ListAltIcon /> ขายสินค้า
           </Nav.Link>
 
-          <Nav.Link as={Link} to="/orders" onClick={()=>setOpenMenu(false)}>
+          <Nav.Link as={Link} to="/orders" onClick={() => setOpenMenu(false)}>
             <ViewQuiltIcon /> จัดการออเดอร์
           </Nav.Link>
 
-          <Nav.Link as={Link} to="/report" onClick={()=>setOpenMenu(false)}>
+          <Nav.Link as={Link} to="/report" onClick={() => setOpenMenu(false)}>
             <AssessmentIcon /> สรุปยอดขาย
           </Nav.Link>
 
-          <Nav.Link as={Link} to="/admin" onClick={()=>setOpenMenu(false)}>
+          <Nav.Link as={Link} to="/admin" onClick={() => setOpenMenu(false)}>
             <StoreIcon /> จัดการข้อมูล
           </Nav.Link>
 
-          <Nav.Link as={Link} to="/profile" onClick={()=>setOpenMenu(false)}>
+          <Nav.Link as={Link} to="/profile" onClick={() => setOpenMenu(false)}>
             <AccountCircleIcon /> {staffName}
           </Nav.Link>
 
@@ -130,7 +134,6 @@ const NavbarMenu = () => {
           </Nav.Link>
 
         </Nav>
-
       </div>
 
       {/* ROUTES */}
@@ -150,3 +153,4 @@ const NavbarMenu = () => {
 };
 
 export default NavbarMenu;
+

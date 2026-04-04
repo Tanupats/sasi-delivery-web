@@ -29,7 +29,7 @@ const Profile = () => {
       <Col md={3}></Col>
       <Col md={6}>
         <Card>
-          <Card.Title className="text-center mt-4">ข้อมูลบัญชี</Card.Title>
+          <Card.Title className="text-center mt-4">ข้อมูลผู้ใช้</Card.Title>
           <Card.Body>
             <h5>บัญชีผู้ใช้</h5>
             <hr />
@@ -37,7 +37,7 @@ const Profile = () => {
 
             <div className="row mb-2">
               <div className="col-md-2"> อีเมล</div>
-              <div className="col-md-6">
+              <div className="col-md-10">
                 <input
                   type="email"
                   name="email"
@@ -52,7 +52,7 @@ const Profile = () => {
               <div className="col-md-2">
                 <label htmlFor="">เบอร์โทร</label>
               </div>
-              <div className="col-md-6">
+              <div className="col-md-10">
                 <input
                   type="text"
                   className="form-control mb-2"
@@ -76,28 +76,18 @@ const Profile = () => {
                 />
               </div>
             </div>
-            <div className="row">
-              <div className="col-md-2">เว็บไซต์</div>
-              <div className="col-md-6">
-                <input
-                  value={shop.name}
-                  type="text"
-                  className="form-control mb-2"
-                  onChange={(e) => setShop({ ...shop, name: e.target.value })}
-                />
-              </div>
-            </div>
+           
             <p> ประเภทร้านค้า : {shop.shop_type}</p>
             <p>
               {" "}
-              วันที่ลงทะเบียน:{" "}
+              วันที่ลงทะเบียน : {" "}
               {moment(new Date(shop.creted))
                 .format("DD/MM/YYYY")
                 .toLocaleString()}
             </p>
             <p>
               {" "}
-              สถานะเปิดร้าน :{" "}
+              สถานะเปิดร้าน : {" "}
               {status ? (
                 <Button
                   variant="success"
@@ -123,7 +113,7 @@ const Profile = () => {
               <div className="col-md-2">
                 <label htmlFor="">เวลาเปิดร้าน</label>
               </div>
-              <div className="col-md-6">
+              <div className="col-md-10">
                 <input
                   type="text"
                   className="form-control mb-2"
@@ -137,9 +127,9 @@ const Profile = () => {
 
             <div className="row">
               <div className="col-md-2">
-                <label> PAGE TOKEN</label>
+                <label> token api</label>
               </div>
-              <div className="col-md-6">
+              <div className="col-md-10">
                 <input
                   type="password"
                   className="form-control mb-2"

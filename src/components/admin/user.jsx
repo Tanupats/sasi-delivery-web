@@ -9,7 +9,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import moment from "moment";
 import Swal from 'sweetalert2';
 const User = () => {
     const token = localStorage.getItem("token");
@@ -21,13 +20,11 @@ const User = () => {
     
     const [name, setName] = useState("");
     const [department, setDepartment] = useState("");
-    const [Price, setPrice] = useState(0.0);
-    const [date, setDate] = useState(moment(new Date()).format('YYYY-MM-DD'))
     const { shop_id } = shop;
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    const saveOutcome = async (e) => {
+    const saveUser = async (e) => {
         e.preventDefault();
         const body = {     
             name: name,
@@ -35,12 +32,10 @@ const User = () => {
             password: passWord,
             department: department,
             shop_id: shop_id,
+            phone: phone,
         };
 
-        await httpPost('/account', body)
-        setListName("");
-        setQuantity(1);
-        setPrice(0);
+        await httpPost('/user', body)
         await getData();
 
     };
@@ -96,7 +91,7 @@ const User = () => {
     useEffect(() => {
         getData();
     }
-        , [date])
+        , [])
 
 
 
@@ -106,7 +101,7 @@ const User = () => {
 
     <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>เพิ่มผู้ใช้ใหม่</Modal.Title>
+          <Modal.Title>เพิ่มข้อมูลพนักงาน</Modal.Title>
         </Modal.Header>
         <Modal.Body>
      <Form onSubmit={(e) => saveUser(e)} className="mt-4">
@@ -176,8 +171,8 @@ const User = () => {
     </Col>
 
     <Col md={12}>
-      <Button type="submit" variant="primary mt-3 w-25">
-        บันทึกผู้ใช้
+      <Button type="submit" variant="primary mt-3 w-100">
+       บันทึก
       </Button>
     </Col>
   </Row>
@@ -186,7 +181,7 @@ const User = () => {
             </Modal.Body>
     </Modal>
 
-        <Button variant="success"  className="mt-3" onClick={handleShow}>เพิ่มผู้ใช้ใหม่</Button>
+        <Button variant="success"  className="mt-3" onClick={handleShow}>เพิ่มข้อมูลพนักงาน</Button>
         <TableContainer component={Paper} className="mt-3">
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>

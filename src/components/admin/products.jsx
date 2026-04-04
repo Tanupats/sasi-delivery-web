@@ -32,6 +32,10 @@ const Products = () => {
     }
 
     const getMenuByTypeId = async (id) => {
+        if (id === "all") {
+            getFoodMenu();
+            return;
+        }
         await httpGet(`/foodmenu/${id}`)
             .then(res => {
                 setFoods(res.data);
@@ -173,17 +177,16 @@ const Products = () => {
     return (
         <>
             <Card style={{ width: '100%', borderRadius: 0 }}>
-                <Card.Title className="text-center mt-3">  จัดการข้อมูลเมนูอาหาร</Card.Title>
                 <Card.Body>
                     <Row>
                         <Col md={12}>
-                            <div className="border mt-3 p-3 mb-3">
+                            <div className="border p-3 mb-2">
 
                                 <div className="row align-items-center">
                                     <div className="col-md-3">
 
                                         <select className="form-select" onChange={(e) => getMenuByTypeId(e.target.value)}>
-                                            <option>เลือกประเภท</option>
+                                            <option value="all">ทั้งหมด</option>
                                             {
                                                 menuType.map((item, index) => {
                                                     return (
@@ -197,16 +200,23 @@ const Products = () => {
 
                                     </div>
 
-                                    <div className="col-md-6">
-                                        <form className="d-flex">
-                                            <input className="form-control me-2" type="search" placeholder="ค้นหาสินค้า" />
+                                    <div className="col-md-4">
+                                                <div className="d-flex">
+ <input className="form-control me-2" type="search" placeholder="ค้นหาสินค้า" />
                                             <button className="btn btn-outline-success" type="submit">ค้นหา</button>
-                                        </form>
+                                       
+
+                                                </div>
+                                           
+                                        
 
                                     </div>
-                                    <FoodMenuForm
+                                    <div className="col-md-3">
+                                        <FoodMenuForm
                                         getMenuType={getMenuType}
                                         getFoodMenu={getFoodMenu} />
+                                    </div>
+                                    
                                 </div>
                             </div>
                         </Col>

@@ -7,7 +7,10 @@
 .get-order{
   display: none;
 }
-
+ .title-heading{
+  font-weight: bold;
+    color: #FD720D;
+  }
 .sidebar{
   position: fixed;
   top:0;
@@ -72,6 +75,7 @@
     background-color: #FD720D;
     border-radius: 8px;
   }
+ 
   .card-report-2{
     font-size: 18px;
     padding: 8px;
