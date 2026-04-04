@@ -153,6 +153,7 @@ ${orderType === "สั่งกลับบ้าน" ? `ค่าจัดส�
             price: parseFloat(price),
             quantity: quantity,
             note: note,
+            shop_id: shopId,
           };
         });
 
