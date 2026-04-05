@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Card, Row, Col, Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { httpPost } from "../http";
+import Swal from "sweetalert2";
 const Register = () => {
   //user
   const [name, setName] = useState("");
@@ -31,7 +32,7 @@ const Register = () => {
       password: password,
       department: "admin",
     };
-    await httpPost("/auth/sigup", bodyUser).then((res) => {
+    await httpPost("/auth/signup", bodyUser).then((res) => {
       if (res) {
         if (res.status === 200) {
           userId = res.data.id;
@@ -50,6 +51,11 @@ const Register = () => {
     await httpPost("/shop", bodyShop).then((res) => {
       if (res) {
         if (res.status === 200) {
+
+          Swal.fire({
+            title: "ลงทะเบียนสำเร็จ!",
+            text: "คุณได้ลงทะเบียนร้านค้าสำเร็จแล้ว"})
+
           router("/");
         }
       }
@@ -103,7 +109,7 @@ const Register = () => {
               </Form.Group>
 
               <Form.Group className="mt-2">
-                <Form.Label>ชื่อร้านค้า (แบรนด์)</Form.Label>
+                <Form.Label>ชื่อร้านค้า</Form.Label>
                 <Form.Control
                   required
                   onChange={(e) => setshopName(e.target.value)}
@@ -112,7 +118,7 @@ const Register = () => {
                 />
               </Form.Group>
               <Form.Group className="mt-2">
-                <Form.Label>โลโก้ หรือ แบรนด์</Form.Label>
+                <Form.Label>รูปภาพร้านค้า</Form.Label>
                 <Form.Control
                   type="file"
                   placeholder="โลโก้"

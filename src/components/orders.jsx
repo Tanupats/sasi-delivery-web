@@ -120,7 +120,7 @@ const Orders = () => {
       cancelButtonText: "ยกเลิก",
     }).then((result) => {
       if (result.isConfirmed) {
-        CancelOrder(id, bid);
+         CancelOrder(id, bid);
       }
     });
   };

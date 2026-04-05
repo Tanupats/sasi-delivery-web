@@ -65,7 +65,7 @@ const Login = () => {
                                 <Form onSubmit={login}>
                                     <Form.Group>
                                         <Form.Label>
-                                            username
+                                            email
                                         </Form.Label>
                                         <Form.Control
                                             required
