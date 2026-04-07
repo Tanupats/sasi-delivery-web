@@ -202,8 +202,10 @@ const Orders = () => {
       สำเร็จ {statusOrder[3]?.total}
     </Button>
   </ButtonGroup>
-</Row>      <Row className="mt-4 when-print">
-                <Col md={3} xs={3}>
+</Row>    
+
+  <Row className="mt-4 when-print">
+                <Col md={4} xs={12}>
                   <Button
                     className="w-75"
                     onClick={() => {

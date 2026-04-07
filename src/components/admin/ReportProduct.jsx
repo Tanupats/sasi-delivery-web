@@ -30,12 +30,10 @@ const ReportProduct = () => {
 
     return (<>
 
-        <TableContainer component={Paper} className="mt-3">
-            <div className="text-center mt-4">
-                <h6>สรุปรายการสั่งซื้อ</h6>
-            </div>
+        <TableContainer component={Paper} className="mt-3 p-3">
+           
 
-            <div className="row">
+            <div className="row"> 
                 <div className="col-md-3 col-xs-6 text-left ms-3">
                     <h6>วันที่เริ่มต้น</h6>  
                     <input className="form-control mb-2" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />

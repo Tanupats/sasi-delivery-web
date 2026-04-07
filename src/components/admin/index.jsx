@@ -11,7 +11,7 @@ import MenuBookIcon from "@mui/icons-material/MenuBook";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import DataThresholdingIcon from "@mui/icons-material/DataThresholding";
 import PollIcon from "@mui/icons-material/Poll";
-
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { httpGet } from "../../http";
 import { AuthData } from "../../ContextData";
 
@@ -68,7 +68,7 @@ const Admin = () => {
           eventKey="ประเภทสินค้า"
           title={
             <span style={{ color: "#6c757d" }}>
-              <PollIcon /> ประเภท
+              <PollIcon /> ประเภทสินค้า
             </span>
           }
         >
@@ -79,7 +79,7 @@ const Admin = () => {
           eventKey="บัญชี"
           title={
             <span style={{ color: "#6c757d" }}>
-              <CreditCardIcon /> จัดการพนักงาน
+              <AccountCircleIcon /> จัดการพนักงาน
             </span>
           }
         >

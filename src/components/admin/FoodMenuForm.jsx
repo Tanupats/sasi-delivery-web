@@ -4,6 +4,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { AuthData } from "../../ContextData";
 import Swal from 'sweetalert2';
 import { httpGet, httpPost } from "../../http";
+import { CloudUpload as CloudUploadIcon } from '@mui/icons-material';
 const FoodMenuForm = (props) => {
     const { getFoodMenu } = props;
     const { shop } = useContext(AuthData);
@@ -122,12 +123,37 @@ const FoodMenuForm = (props) => {
                                                 <Form.Label>รูปภาพสินค้า </Form.Label>
 
                                                 <Image src={imgPreview} style={{ width: '100%', height: '180px', objectFit: 'cover' }} />
-                                                <Form.Control
-                                                    className="mt-4"
-                                                    required
-                                                    type="file"
-                                                    onChange={handleImageChange}
-                                                />
+                                               <Form.Group className="mt-4">
+<Form.Group className="mt-4">
+  <Form.Label
+    className="w-100 outline-none text-center"
+    htmlFor="upload-file"
+    style={{
+      backgroundColor: "#eeeeee", // สีเทาอ่อน (Light Grey)
+      color: "#333333",           // สีตัวอักษรเทาเข้มเพื่อให้ตัดกับพื้นหลัง
+      padding: "8px 16px",
+      borderRadius: "6px",
+      cursor: "pointer",
+      display: "inline-block",
+      border: "1px solid #ccc",   // เพิ่มเส้นขอบบางๆ ให้ดูมีมิติ
+      transition: "0.3s"          // ใส่ transition เผื่อเวลา hover
+    }}
+    // เพิ่มเอฟเฟกต์เวลาเอาเมาส์ไปวาง (Optional)
+    onMouseOver={(e) => e.target.style.backgroundColor = "#e0e0e0"}
+    onMouseOut={(e) => e.target.style.backgroundColor = "#eeeeee"}
+  >
+    <CloudUploadIcon style={{ color: '#333333', marginRight: '8px' }} /> อัพโหลดรูปภาพ
+  </Form.Label>
+
+  <Form.Control
+    id="upload-file"
+    required
+    type="file"
+    onChange={handleImageChange}
+    style={{ display: "none" }}
+  />
+</Form.Group>
+</Form.Group>
                                             </Form.Group>
                                         </Col>
                                         <Col md={7} xs={7}>
@@ -135,14 +161,17 @@ const FoodMenuForm = (props) => {
                                                 <Form.Label>ชื่อสินค้า </Form.Label>
                                                 <Form.Control
                                                     type="text"
+                                                    required
                                                     placeholder="ชื่อสินค้า"
                                                     onChange={(e) => setFoodName(e.target.value)}
                                                     value={foodname} />
                                             </Form.Group>
                                             <Form.Group className="mb-2">
-                                                <Form.Label>ราคาขาย </Form.Label>
+                                                <Form.Label>ราคา </Form.Label>
 
-                                                <Form.Control type="text"
+                                                <Form.Control 
+                                                type="number"
+                                                    required
                                                     onChange={(e) => setPrice(e.target.value)}
                                                     value={price}
                                                     placeholder="ราคา"
@@ -151,6 +180,7 @@ const FoodMenuForm = (props) => {
                                             <Form.Group className="mb-2">
                                                 <Form.Label>ประเภท </Form.Label>
                                                 <Form.Select
+                                                    required
                                                     onChange={(e) => setMenuTypeId(e.target.value)}
                                                     aria-label="Default select example">
                                                     {menuType.map((item, index) => {
@@ -161,6 +191,7 @@ const FoodMenuForm = (props) => {
                                             <Form.Group className="mb-2">
                                                 <Form.Label>สถานะสินค้า </Form.Label>
                                                 <Form.Select
+                                                    required
                                                     onChange={(e) => setStatus(e.target.value)}
                                                     aria-label="Default select example">
                                                     <option value="1">พร้อมขาย</option>
@@ -181,30 +212,33 @@ const FoodMenuForm = (props) => {
 
                     </Row>
                 </Form>
-            </Modal.Body>
-
-            <Modal.Footer>
                 <Row>
 
-                    <Col md={6} xs={6}>
+                    <Col md={3} xs={3}>
                         <Button
                             form="addmenu"
                             type="submit"
                             className="w-100"
-                            variant="success"
+                            variant="primary"
                         >
                             บันทึก
                         </Button>
                     </Col>
-                    <Col md={6} xs={6}>
-                        <Button variant="danger" onClick={handleClose}>
+                    <Col md={3} xs={3}>
+                        <Button 
+                        className="w-100"
+                        
+                        variant="danger" onClick={handleClose}>
                             ยกเลิก
                         </Button>
                     </Col>
                 </Row>
+            </Modal.Body>
+
+         
 
 
-            </Modal.Footer>
+      
 
 
         </Modal>

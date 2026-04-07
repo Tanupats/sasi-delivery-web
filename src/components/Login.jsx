@@ -14,6 +14,7 @@ const Login = () => {
     const getShop = (id) => {
         httpGet('/shop/shop-user/' + id).then((res) => {
             setShop({ ...res.data[0] });
+            localStorage.setItem("shopId", res.data[0].shop_id);
         })
     }
 
@@ -33,8 +34,7 @@ const Login = () => {
                         getShop(id);
                         setStaffName(name);
                         router('/pos');
-                    } else {
-                        console.log('เข้าสู่ระบบไม่สำเร็จ')
+                    } else {                
                         setMessageError(true);
                     }
                 }

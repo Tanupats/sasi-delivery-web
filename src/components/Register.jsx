@@ -32,7 +32,7 @@ const Register = () => {
       password: password,
       department: "admin",
     };
-    await httpPost("/auth/signup", bodyUser).then((res) => {
+    await httpPost("/auth/sigup", bodyUser).then((res) => {
       if (res) {
         if (res.status === 200) {
           userId = res.data.id;

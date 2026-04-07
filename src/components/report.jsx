@@ -20,7 +20,7 @@ import PaymentIcon from "@mui/icons-material/Payment";
 import DiningIcon from "@mui/icons-material/Dining";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 const Report = () => {
-  const { shop,sendMessageToPage } = useContext(AuthData);
+  const { shop, sendMessageToPage } = useContext(AuthData);
   const shopID = shop?.shop_id;
   const [totalToday, setTotalToday] = useState(0);
   const [data, setData] = useState([]);
@@ -154,7 +154,10 @@ const Report = () => {
                   <Form>
                     <Row className="mb-3">
                       <Col md={3}>
-                        <Form.Label> <b>แสดงยอดขาย</b> </Form.Label>
+                        <Form.Label>
+                          {" "}
+                          <b>แสดงยอดขาย</b>{" "}
+                        </Form.Label>
                         <Form.Control
                           onChange={(e) => setStartDate(e.target.value)}
                           value={startDate}
@@ -169,14 +172,15 @@ const Report = () => {
                     style={{ color: "green", marginBottom: "20px" }}
                   >
                     {" "}
-                    วันที่ {startDate} <br /> ยอดขาย {formatMoney(totalToday)} บาท
+                    วันที่ {startDate} <br /> ยอดขาย {formatMoney(totalToday)}{" "}
+                    บาท
                   </Card.Title>
 
                   <Row mt={4}>
                     <Col md={6} xs={6}>
                       <Alert variant="primary" className="d-flex p-4">
-                        <PaymentIcon   className="me-2"/>{" "}
-                        <h5>{" "}เงินโอน {formatMoney(bank_transfer)} บาท </h5>
+                        <PaymentIcon className="me-2" />{" "}
+                        <h5> เงินโอน {formatMoney(bank_transfer)} บาท </h5>
                       </Alert>
                     </Col>
                     <Col md={6} xs={6}>
@@ -184,7 +188,7 @@ const Report = () => {
                         <PaidIcon className="me-2" />{" "}
                         <h5 style={{ color: "#000" }}>
                           {" "}
-                          จ่ายเงินสด {formatMoney(cash)} บาท
+                          เงินสด {formatMoney(cash)} บาท
                         </h5>
                       </Alert>
                     </Col>
@@ -200,7 +204,8 @@ const Report = () => {
                               style={{ fontSize: "30px" }}
                             />{" "}
                             <br />
-                            เดลิเวอรี่  <br />จำนวน {counter.takeawayCount} บิล
+                            เดลิเวอรี่ <br />
+                            จำนวน {counter.takeawayCount} บิล
                             <p>
                               {" "}
                               ยอดขาย{" "}
@@ -225,7 +230,10 @@ const Report = () => {
                         <Col md={4}>
                           <div className="text-center card-report-2 mb-2">
                             <DiningIcon style={{ fontSize: "30px" }} />
-                            <br /> ทานที่ร้าน  <br />  จำนวน {counter.dineInCount} บิล
+                            <br /> ทานที่ร้าน <br /> จำนวน {
+                              counter.dineInCount
+                            }{" "}
+                            บิล
                             <p>
                               {" "}
                               ยอดขาย{" "}
@@ -250,8 +258,8 @@ const Report = () => {
                         <Col md={4}>
                           <div className="text-center card-report-3 mb-2">
                             <StorefrontIcon style={{ fontSize: "30px" }} />{" "}
-                            <br /> รับเองหน้าร้าน  <br /> จำนวน {counter.pickupCount}{" "}
-                            บิล
+                            <br /> รับเองหน้าร้าน <br /> จำนวน{" "}
+                            {counter.pickupCount} บิล
                             <p>
                               {" "}
                               ยอดขาย{" "}
@@ -286,7 +294,15 @@ const Report = () => {
               <TableContainer component={Paper} className="mt-3">
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                   <TableHead>
-                    <TableRow>
+                    <TableRow
+                      sx={{
+                        backgroundColor: "#f5f5f5",
+                        "& th, & td": {
+                          fontWeight: "bold",
+                          fontSize: "16px",
+                        },
+                      }}
+                    >
                       <TableCell>ลำดับ</TableCell>
                       <TableCell align="left">ประเภทการรับ</TableCell>
                       <TableCell align="left">ประเภทการชำระเงิน</TableCell>

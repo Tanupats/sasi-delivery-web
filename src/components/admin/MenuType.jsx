@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Row, Col, Form, Button, Card, Modal } from 'react-bootstrap'
 import { httpDelete, httpGet, httpPost, httpPut } from "../../http";
 import Table from '@mui/material/Table';
@@ -108,7 +108,7 @@ const MenuType = () => {
                 <Row>
                     <Col>
                         <Button onClick={() => handleShowType()}>
-                            <AddCircleIcon />  เพิ่มประเภท </Button>
+                            <AddCircleIcon />  เพิ่มประเภทสินค้า </Button>
                     </Col>
                 </Row>
                 <TableContainer component={Paper} className="mt-3">
@@ -123,7 +123,7 @@ const MenuType = () => {
                         <TableBody>
                             {data?.length > 0 && data?.map((row, index) => (
                                 <TableRow
-                                    key={row.account_id}
+                                    key={index}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                 >
                                     <TableCell align="left">{index + 1}</TableCell>
@@ -154,7 +154,7 @@ const MenuType = () => {
                                                         <Form.Label>ประเภท </Form.Label>
                                                         <Form.Control
                                                             type="text"
-                                                            placeholder="ชื่อประเภท"
+                                                            placeholder="ประเภท"
                                                             onChange={(e) => setTypeName(e.target.value)}
                                                             value={typeName} />
                                                     </Form.Group>
@@ -165,20 +165,34 @@ const MenuType = () => {
                                 </Col>
                             </Row>
                         </Form>
-                    </Modal.Body>
-
-                    <Modal.Footer>
-                        <Button
+                        <Row>
+                            <Col md={3} xs={3}>
+                            <Button
+                            className="w-100"
                             form="addmenu"
                             type="submit"
                             variant="success"
                         >
                             บันทึก
                         </Button>
-                        <Button variant="danger" onClick={handleCloseType}>
+                            </Col>
+                            <Col md={3} xs={3}>
+                             <Button variant="danger"
+                                className="w-100"
+                             onClick={handleCloseType}>
                             ยกเลิก
                         </Button>
-                    </Modal.Footer>
+                            </Col>
+
+
+                        </Row>
+                        
+                       
+                 
+                    </Modal.Body>
+
+                  
+                        
                 </Modal>
             </Card.Body>
 
