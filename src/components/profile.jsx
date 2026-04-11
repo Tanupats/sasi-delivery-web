@@ -4,6 +4,7 @@ import { httpPut } from "../http";
 import { AuthData } from "../ContextData";
 import Swal from "sweetalert2";
 import moment from "moment";
+
 const Profile = () => {
   const { user, setUser, shop, getUser, setShop } = useContext(AuthData);
   const [status, setStatus] = useState(shop?.is_open);
@@ -15,7 +16,6 @@ const Profile = () => {
           getUser();
           Swal.fire({
             title: "แก้ไขข้อมูลสำเร็จ",
-            text: "บันทึกข้อมูลสำเร็จ",
             icon: "success",
             confirmButtonText: "ยืนยัน",
           });
@@ -25,130 +25,129 @@ const Profile = () => {
   };
 
   return (
-    <Row className="mt-4">
-      <Col md={3}></Col>
-      <Col md={6}>
-        <Card>
-          <Card.Title className="text-center mt-4">ข้อมูลผู้ใช้</Card.Title>
-          <Card.Body>
-            <h5>บัญชีผู้ใช้</h5>
-            <hr />
-            <p> ชื่อ-นามสกุล : {user.name}</p>
+    <Row className="mt-4 justify-content-center">
+      <Col md={7}>
+        <Card className="p-4 shadow-sm">
+          <Card.Title className="text-center mb-4">
+            บัญชีผู้ใช้งานร้านค้า
+          </Card.Title>
 
-            <div className="row mb-2">
-              <div className="col-md-2"> อีเมล</div>
-              <div className="col-md-10">
-                <input
-                  type="email"
-                  name="email"
-                  className="form-control"
-                  value={user.email}
-                  onChange={(e) => setUser({ ...user, email: e.target.value })}
-                />{" "}
-              </div>
-            </div>
+          {/* ---------------- บัญชีผู้ใช้ ---------------- */}
+          <h6 className="mb-3">บัญชีผู้ใช้งาน</h6>
 
-            <div className="row">
-              <div className="col-md-2">
-                <label htmlFor="">เบอร์โทร</label>
-              </div>
-              <div className="col-md-10">
-                <input
-                  type="text"
-                  className="form-control mb-2"
-                  value={user.phone}
-                  onChange={(e) => setUser(e.target.value)}
-                />
-              </div>
-            </div>
+          <div className="mb-3">
+            <label>ชื่อ-นามสกุล</label>
+            <input className="form-control" value={user.name} onChange={(e) => setUser({ ...user, name: e.target.value })} />
+          </div>
 
-            <h5>ข้อมูลร้านค้า</h5>
-            <hr />
-            
-            <div className="row">
-              <div className="col-md-2">ชื่อร้าน</div>
-              <div className="col-md-6">
-                <input
-                  value={shop.name}
-                  type="text"
-                  className="form-control mb-2"
-                  onChange={(e) => setShop({ ...shop, name: e.target.value })}
-                />
-              </div>
-            </div>
-           
-            <p> ประเภทร้านค้า : {shop.shop_type}</p>
-            <p>
-              {" "}
-              วันที่ลงทะเบียน : {" "}
-              {moment(new Date(shop.creted))
-                .format("DD/MM/YYYY")
-                .toLocaleString()}
-            </p>
-            <p>
-              {" "}
-              สถานะเปิดร้าน : {" "}
-              {status ? (
-                <Button
-                  variant="success"
-                  onClick={() => {
-                    setStatus(false);
-                  }}
-                >
-                  {" "}
-                  เปิดร้าน{" "}
-                </Button>
-              ) : (
-                <Button
-                  variant="danger"
-                  onClick={() => {
-                    setStatus(true);
-                  }}
-                >
-                  ร้านปิด
-                </Button>
-              )}
-            </p>
-            <div className="row">
-              <div className="col-md-2">
-                <label htmlFor="">เวลาเปิดร้าน</label>
-              </div>
-              <div className="col-md-10">
-                <input
-                  type="text"
-                  className="form-control mb-2"
-                  value={shop.open_time}
-                  onChange={(e) =>
-                    setShop({ ...shop, open_time: e.target.value })
-                  }
-                />
-              </div>
-            </div>
+          <div className="mb-3">
+            <label>อีเมล</label>
+            <input
+            disabled
+              readOnly
+              type="email"
+              className="form-control"
+              value={user.email}
+              onChange={(e) => setUser({ ...user, email: e.target.value }) }
+            />
+          </div>
 
-            <div className="row">
-              <div className="col-md-2">
-                <label> token api</label>
-              </div>
-              <div className="col-md-10">
-                <input
-                  type="password"
-                  className="form-control mb-2"
-                  placeholder="TOKEN"
-                  value={shop.facebook_token}
-                  onChange={(e) =>
-                    setShop({ ...shop, facebook_token: e.target.value })
-                  }
-                />
-              </div>
-            </div>
+          <div className="mb-4">
+            <label>เบอร์โทร</label>
+            <input
+              type="text"
+              className="form-control"
+              value={user.phone}
+              onChange={(e) => setUser({ ...user, phone: e.target.value })}
+            />
+          </div>
 
-            <Button onClick={() => updateData()} className="mt-2">
-              บันทึกการแก้ไข
-            </Button>
-          </Card.Body>
+        
+
+          {/* ---------------- ข้อมูลร้านค้า ---------------- */}
+          <h6 className="mb-3">ข้อมูลร้านค้า</h6>
+
+          <Row className="mb-3">
+            <Col md={6}>
+              <label>ร้านค้า</label>
+              <input
+                className="form-control"
+                value={shop.name}
+                onChange={(e) => setShop({ ...shop, name: e.target.value })}
+              />
+            </Col>
+
+            <Col md={6}>
+              <label>ประเภทร้านค้า</label>
+              <input className="form-control" value={shop.shop_type} disabled />
+            </Col>
+          </Row>
+
+          <Row className="mb-3">
+            <Col md={6}>
+              <label>วันที่ลงทะเบียน</label>
+              <input
+                className="form-control"
+                value={moment(shop.created).format("DD/MM/YYYY")}
+                disabled
+              />
+            </Col>
+
+            <Col md={6}>
+              <label>page access token</label>
+              <input
+                type="password"
+                className="form-control"
+                value={shop.facebook_token}
+                onChange={(e) =>
+                  setShop({
+                    ...shop,
+                    facebook_token: e.target.value,
+                  })
+                }
+              />
+            </Col>
+          </Row>
+
+          <Row>
+            <Col md={6}>
+              <label>เวลาเปิด - ปิดร้าน</label>
+
+              <input
+                type="text"
+                className="form-control"
+                value={shop.open_time}
+                onChange={(e) =>
+                  setShop({
+                    ...shop,
+                    open_time: e.target.value,
+                  })
+                }
+              />
+            </Col>
+            <Col md={6}>
+              <label>สถานะร้าน</label>
+              <Button
+                className="w-100"
+                variant={status ? "outline-success" : "outline-danger"}
+                onClick={() => setStatus(!status)}
+              >
+                {status ? "ร้านเปิด" : "ร้านปิด"}
+              </Button>
+            </Col>
+
+            <Col md={12}>
+              <Button
+                className="w-100 mt-4"
+                style={{ background: "#ff7a00", border: "none" }}
+                onClick={updateData}
+              >
+                แก้ไขข้อมูล
+              </Button>
+            </Col>
+          </Row>
         </Card>
       </Col>
-      <Col md={3}></Col>
     </Row>
   );
 };

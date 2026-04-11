@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Row, Col, Form, Button, Modal } from "react-bootstrap";
+import { Row, Col, Form, Button, Modal, Card } from "react-bootstrap";
 import { httpDelete, httpGet, httpPost } from "../../http";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -9,7 +9,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Swal from "sweetalert2";
-
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 const User = () => {
   const token = localStorage.getItem("token");
   const shopId = localStorage.getItem("shopId");
@@ -100,13 +100,14 @@ const User = () => {
   }, []);
 
   return (
-    <>
+    <Card>
+      <Card.Body>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>เพิ่มข้อมูลผู้ใช้</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form onSubmit={(e) => saveUser(e)} className="mt-4">
+          <Form onSubmit={(e) => saveUser(e)}>
             <Row>
               <Col md={6}>
                 <Form.Group className="mb-2">
@@ -182,9 +183,17 @@ const User = () => {
         </Modal.Body>
       </Modal>
 
-      <Button variant="secondary" className="mt-3 border" onClick={handleShow}>
-        <i className="bi bi-plus-circle me-1"></i>เพิ่มข้อมูลพนักงาน
+<Row>
+
+  <Col>
+    <Button variant="secondary"   onClick={handleShow}>
+     <AddCircleIcon /> เพิ่มข้อมูลพนักงาน
       </Button>
+  </Col>
+</Row>
+    
+
+
       <TableContainer component={Paper} className="mt-3">
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -228,7 +237,9 @@ const User = () => {
           </TableBody>
         </Table>
       </TableContainer>
-    </>
+      </Card.Body>
+      </Card>
+    
   );
 };
 export default User;

@@ -1,4 +1,3 @@
-
 import { useContext, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
@@ -50,49 +49,48 @@ const NavbarMenu = () => {
     <Router>
       {staffName && (
         <Navbar style={{ background: "#FD720D" }} sticky="top">
-          <Container fluid>
+          <Container fluid className="px-2">
 
-            {/* MOBILE MENU BUTTON */}
+            {/* MOBILE MENU */}
             <div className="d-lg-none">
               <MenuIcon
-                style={{ color: "#fff", cursor: "pointer", marginRight: 15 }}
+                style={{ color: "#fff", cursor: "pointer", marginRight: 8 }}
                 onClick={() => setOpenMenu(true)}
               />
             </div>
 
-            <Navbar.Brand style={{ color: "#fff" }} className="when-print">
+            <Navbar.Brand style={{ color: "#fff", marginRight: 10 }}>
               SASI POS
             </Navbar.Brand>
 
-            {/* DESKTOP MENU (LEFT SIDE) */}
-            <Nav className="ms-3 d-none d-lg-flex">
+            {/* DESKTOP MENU */}
+            <Nav className="d-none d-lg-flex">
 
               <Nav.Link as={Link} to="/pos" style={{ color: "#fff" }}>
-                <ListAltIcon /> ขายสินค้า
+                <ListAltIcon style={{ marginRight: 4 }} /> ขายสินค้า
               </Nav.Link>
 
               <Nav.Link as={Link} to="/orders" style={{ color: "#fff" }}>
-                <ViewQuiltIcon /> ออเดอร์
+                <ViewQuiltIcon style={{ marginRight: 4 }} /> ออเดอร์
               </Nav.Link>
 
               <Nav.Link as={Link} to="/report" style={{ color: "#fff" }}>
-                <AssessmentIcon /> สรุปยอดขาย
+                <AssessmentIcon style={{ marginRight: 4 }} /> สรุปยอดขาย
               </Nav.Link>
 
               <Nav.Link as={Link} to="/admin" style={{ color: "#fff" }}>
-                <StoreIcon /> จัดการ{shop?.name}
+                <StoreIcon style={{ marginRight: 4 }} /> จัดการ{shop?.name}
               </Nav.Link>
 
               <Nav.Link as={Link} to="/profile" style={{ color: "#fff" }}>
-                <AccountCircleIcon /> {staffName}
+                <AccountCircleIcon style={{ marginRight: 4 }} /> {staffName}
               </Nav.Link>
 
               <Nav.Link onClick={logout} style={{ color: "#fff" }}>
-                <LogoutIcon /> ออกจากระบบ
+                <LogoutIcon style={{ marginRight: 4 }} /> ออกจากระบบ
               </Nav.Link>
 
             </Nav>
-
           </Container>
         </Navbar>
       )}
@@ -153,4 +151,3 @@ const NavbarMenu = () => {
 };
 
 export default NavbarMenu;
-

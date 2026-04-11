@@ -126,9 +126,9 @@ const Admin = () => {
                 {" "}
                 <Card.Body>
                   {" "}
-                  <Card.Title style={{ color: "blue" }}>
+                  <Card.Title style={{ color: "#007bff" }}>
                     {" "}
-                    คำสั่งซื้อ {totalOrder}{" "}
+                    คำสั่งซื้อ {totalOrder}{" "} ออเดอร์{" "}
                   </Card.Title>{" "}
                 </Card.Body>{" "}
               </Card>{" "}

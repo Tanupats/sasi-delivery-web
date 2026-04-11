@@ -199,7 +199,11 @@ const Products = () => {
                                         </select>
 
                                     </div>
-
+ <div className="col-md-3">
+                                        <FoodMenuForm
+                                        getMenuType={getMenuType}
+                                        getFoodMenu={getFoodMenu} />
+                                    </div>
                                     <div className="col-md-4">
                                                 <div className="d-flex">
  <input className="form-control me-2" type="search" placeholder="ค้นหาสินค้า" />
@@ -211,11 +215,7 @@ const Products = () => {
                                         
 
                                     </div>
-                                    <div className="col-md-3">
-                                        <FoodMenuForm
-                                        getMenuType={getMenuType}
-                                        getFoodMenu={getFoodMenu} />
-                                    </div>
+                                   
                                     
                                 </div>
                             </div>
@@ -376,7 +376,7 @@ const Products = () => {
                                                         type="text"
                                                         defaultValue={data?.notes} />
                                                 </Form.Group>
-  <Button
+  <Button  className="mt-2"
                                                                     onClick={() => onDeleteMenu(data.id)}
                                                                     variant="danger"
                                                                 >

@@ -101,7 +101,7 @@ const FoodMenuForm = (props) => {
 
         <Row className="mb-3 mt-3">
             <Col>
-                <Button variant="primary" onClick={() => handleShow()}>
+                <Button variant="secondary" onClick={() => handleShow()}>
                     <AddCircleIcon /> เพิ่มสินค้าใหม่ </Button>
             </Col>
         </Row>

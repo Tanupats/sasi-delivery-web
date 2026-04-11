@@ -10,7 +10,7 @@ import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
 import Detail from "./DetailReport";
 import { Card, Row, Col, Button, Form, Modal, Alert } from "react-bootstrap";
 import Swal from "sweetalert2";
-import moment from "moment/moment";
+import moment from "moment";
 import { AuthData } from "../ContextData";
 import { httpDelete, httpGet, httpPost, httpPut } from "../http";
 import PaidIcon from "@mui/icons-material/Paid";
@@ -19,39 +19,55 @@ import Switch from "@mui/material/Switch";
 import PaymentIcon from "@mui/icons-material/Payment";
 import DiningIcon from "@mui/icons-material/Dining";
 import StorefrontIcon from "@mui/icons-material/Storefront";
+import Spinner from 'react-bootstrap/Spinner';
 const Report = () => {
   const { shop, sendMessageToPage } = useContext(AuthData);
   const shopID = shop?.shop_id;
+
   const [totalToday, setTotalToday] = useState(0);
   const [data, setData] = useState([]);
   const [counter, setCounter] = useState({});
-  const [startDate, setStartDate] = useState(
-    moment(new Date()).format("YYYY-MM-DD"),
-  );
+
+  // เก็บวันที่ในรูปแบบ DD/MM/YYYY
+  const [startDate, setStartDate] = useState(moment().format("DD/MM/YYYY"));
+
   const token = localStorage.getItem("token");
   const [show, setShow] = useState(false);
   const [id, setId] = useState("");
   const [bank_transfer, setBank_transfer] = useState(0);
   const [cash, setCash] = useState(0);
+  const [loading, setLoading] = useState(false);
   const handleClose = () => setShow(false);
+
+  const formatMoney = (val) => {
+    return new Intl.NumberFormat().format(val);
+  };
+
+  const getApiDate = () => {
+    return moment(startDate, "DD/MM/YYYY").format("YYYY-MM-DD");
+  };
 
   const getOrderFood = async () => {
     if (shop?.shop_id) {
       let sumToday = 0;
       let bank = 0;
       let cashIn = 0;
+
       await httpGet(`/bills?shop_id=${shop?.shop_id}`, {
         headers: { apikey: token },
       }).then((res) => {
         setData(res.data);
+
         res?.data?.map((item) => {
           sumToday += Number(item?.amount);
+
           if (item.payment_type === "bank_transfer") {
             bank += Number(item?.amount);
           } else {
             cashIn += Number(item?.amount);
           }
         });
+
         setBank_transfer(bank);
         setCash(cashIn);
         setTotalToday(sumToday);
@@ -64,7 +80,11 @@ const Report = () => {
       payment_type:
         row.payment_type === "bank_transfer" ? "cash" : "bank_transfer",
     };
-    await httpPut(`/bills/${row.id}`, body, { headers: { apikey: token } });
+
+    await httpPut(`/bills/${row.id}`, body, {
+      headers: { apikey: token },
+    });
+
     await searchOrder();
   };
 
@@ -72,33 +92,55 @@ const Report = () => {
     if (messengerId !== "pos") {
       sendMessageToPage(messengerId, "ขอบคุณครับ");
     }
+
     const body = { payment_status: payment };
-    await httpPut(`/bills/${id}`, body, { headers: { apikey: token } });
+
+    await httpPut(`/bills/${id}`, body, {
+      headers: { apikey: token },
+    });
+
     await searchOrder();
   };
 
   const searchOrder = async () => {
-    if (shopID !== undefined && startDate) {
+    setLoading(true);
+    if (shopID && startDate) {
       let bank = 0;
       let cashIn = 0;
-      if (shopID) {
-        const body = { startDate: startDate, shop_id: shopID };
-        await httpPost(`/bills/searchByDate`, body, {
-          headers: { apikey: token },
-        }).then((res) => {
-          setData(res.data.data);
-          res?.data.data?.map((item) => {
-            if (item.payment_type === "bank_transfer") {
-              bank += Number(item?.amount);
-            } else {
-              cashIn += Number(item?.amount);
-            }
-          });
-          setBank_transfer(bank);
-          setCash(cashIn);
-          setTotalToday(res.data.total);
+
+      const body = {
+        startDate: getApiDate(),
+        shop_id: shopID,
+      };
+
+      await httpPost(`/bills/searchByDate`, body, {
+        headers: { apikey: token },
+      }).then((res) => {
+        setData(res.data.data);
+
+        res?.data.data?.map((item) => {
+          if (item.payment_type === "bank_transfer") {
+            bank += Number(item?.amount);
+          } else {
+            cashIn += Number(item?.amount);
+          }
         });
-      }
+
+        setBank_transfer(bank);
+        setCash(cashIn);
+        setTotalToday(res.data.total);
+      });
+    }
+    setLoading(false);
+  };
+
+  const geReport = async () => {
+    if (shop?.shop_id) {
+      await httpGet(
+        `/report/count-order-type?startDate=${getApiDate()}&shop_id=${shop.shop_id}`,
+      ).then((res) => {
+        setCounter(res.data);
+      });
     }
   };
 
@@ -107,28 +149,12 @@ const Report = () => {
     await getOrderFood();
   };
 
-  const geReport = async () => {
-    if (shop.shop_id) {
-      await httpGet(
-        `/report/count-order-type?startDate=${startDate}&shop_id=${shop.shop_id}`,
-      ).then((res) => {
-        setCounter(res.data);
-      });
-    }
-  };
-
-  const formatMoney = (val) => {
-    return new Intl.NumberFormat().format(val);
-  };
-
   const deleteBill = async (id) => {
     Swal.fire({
       title: "คุณต้องการยกเลิกออเดอร์หรือไม่ ?",
       text: "กดยืนยันเพื่อยกเลิก",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
       confirmButtonText: "ยืนยันรายการ",
       cancelButtonText: "ยกเลิก",
     }).then((result) => {
@@ -155,13 +181,20 @@ const Report = () => {
                     <Row className="mb-3">
                       <Col md={3}>
                         <Form.Label>
-                          {" "}
-                          <b>แสดงยอดขาย</b>{" "}
+                          <b>แสดงยอดขาย</b>
                         </Form.Label>
+
                         <Form.Control
-                          onChange={(e) => setStartDate(e.target.value)}
-                          value={startDate}
+                          
                           type="date"
+                          value={moment(startDate, "DD/MM/YYYY").format(
+                            "YYYY-MM-DD",
+                          )}
+                          onChange={(e) =>
+                            setStartDate(
+                              moment(e.target.value).format("DD/MM/YYYY"),
+                            )
+                          }
                         />
                       </Col>
                     </Row>
@@ -171,25 +204,23 @@ const Report = () => {
                     className="text-center"
                     style={{ color: "green", marginBottom: "20px" }}
                   >
-                    {" "}
-                    วันที่ {startDate} <br /> ยอดขาย {formatMoney(totalToday)}{" "}
-                    บาท
+                    วันที่ {startDate}
+                    <br />
+                    ยอดขาย {formatMoney(totalToday)} บาท
                   </Card.Title>
 
-                  <Row mt={4}>
+                  <Row>
                     <Col md={6} xs={6}>
                       <Alert variant="primary" className="d-flex p-4">
-                        <PaymentIcon className="me-2" />{" "}
-                        <h5> เงินโอน {formatMoney(bank_transfer)} บาท </h5>
+                        <PaymentIcon className="me-2" />
+                        <h5>เงินโอน {formatMoney(bank_transfer)} บาท</h5>
                       </Alert>
                     </Col>
+
                     <Col md={6} xs={6}>
                       <Alert variant="secondary" className="d-flex p-4">
-                        <PaidIcon className="me-2" />{" "}
-                        <h5 style={{ color: "#000" }}>
-                          {" "}
-                          เงินสด {formatMoney(cash)} บาท
-                        </h5>
+                        <PaidIcon className="me-2" />
+                        <h5>เงินสด {formatMoney(cash)} บาท</h5>
                       </Alert>
                     </Col>
                   </Row>
@@ -199,88 +230,48 @@ const Report = () => {
                       <Row>
                         <Col md={4}>
                           <div className="text-center card-report-1 mb-2">
-                            {" "}
-                            <DeliveryDiningIcon
-                              style={{ fontSize: "30px" }}
-                            />{" "}
+                            <DeliveryDiningIcon style={{ fontSize: 30 }} />
                             <br />
-                            เดลิเวอรี่ <br />
+                            เดลิเวอรี่
+                            <br />
                             จำนวน {counter.takeawayCount} บิล
                             <p>
-                              {" "}
                               ยอดขาย{" "}
-                              {new Intl.NumberFormat().format(
-                                counter.takeawayTotalAmount || 0,
-                              )}{" "}
+                              {formatMoney(counter.takeawayTotalAmount || 0)}{" "}
                               บาท
-                            </p>
-                            <p>
-                              {" "}
-                              {counter.takeawayCount > 0
-                                ? (
-                                    (counter.takeawayCount /
-                                      counter.totalCount) *
-                                    100
-                                  ).toFixed(2)
-                                : 0}{" "}
-                              %
-                            </p>
-                          </div>{" "}
-                        </Col>
-                        <Col md={4}>
-                          <div className="text-center card-report-2 mb-2">
-                            <DiningIcon style={{ fontSize: "30px" }} />
-                            <br /> ทานที่ร้าน <br /> จำนวน {
-                              counter.dineInCount
-                            }{" "}
-                            บิล
-                            <p>
-                              {" "}
-                              ยอดขาย{" "}
-                              {new Intl.NumberFormat().format(
-                                counter.dineInTotalAmount || 0,
-                              )}{" "}
-                              บาท
-                            </p>
-                            <p>
-                              {" "}
-                              {counter.dineInCount > 0
-                                ? (
-                                    (counter?.dineInCount /
-                                      counter.totalCount) *
-                                    100
-                                  ).toFixed(2)
-                                : 0}{" "}
-                              %
                             </p>
                           </div>
                         </Col>
+
+                        <Col md={4}>
+                          <div className="text-center card-report-2 mb-2">
+                            <DiningIcon style={{ fontSize: 30 }} />
+                            <br />
+                            ทานที่ร้าน
+                            <br />
+                            จำนวน {counter.dineInCount} บิล
+                            <p>
+                              ยอดขาย{" "}
+                              {formatMoney(counter.dineInTotalAmount || 0)} บาท
+                            </p>
+                          </div>
+                        </Col>
+
                         <Col md={4}>
                           <div className="text-center card-report-3 mb-2">
-                            <StorefrontIcon style={{ fontSize: "30px" }} />{" "}
-                            <br /> รับเองหน้าร้าน <br /> จำนวน{" "}
-                            {counter.pickupCount} บิล
+                            <StorefrontIcon style={{ fontSize: 30 }} />
+                            <br />
+                            รับเองหน้าร้าน
+                            <br />
+                            จำนวน {counter.pickupCount} บิล
                             <p>
-                              {" "}
                               ยอดขาย{" "}
-                              {new Intl.NumberFormat().format(
-                                counter.pickupTotalAmount || 0,
-                              )}{" "}
-                              บาท
-                            </p>
-                            <p>
-                              {counter.pickupCount > 0
-                                ? (
-                                    (counter?.pickupCount /
-                                      counter.totalCount) *
-                                    100
-                                  ).toFixed(2)
-                                : 0}{" "}
-                              %
+                              {formatMoney(counter.pickupTotalAmount || 0)} บาท
                             </p>
                           </div>
                         </Col>
                       </Row>
+
                       <div className="text-center mt-4">
                         <b>รวมทั้งหมด {counter.totalCount} บิล</b>
                       </div>
@@ -289,52 +280,40 @@ const Report = () => {
                 </Card.Body>
               </Card>
             </Col>
-
-            <Col md={12}>
+                           { loading && (
+                <Col md={12} className="text-center mt-2 mb-2">
+                  <Spinner animation="border" variant="primary" />
+                </Col>
+              ) }
+            <Col md={12}> 
+           
               <TableContainer component={Paper} className="mt-3">
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <Table>
                   <TableHead>
-                    <TableRow
-                      sx={{
-                        backgroundColor: "#f5f5f5",
-                        "& th, & td": {
-                          fontWeight: "bold",
-                          fontSize: "16px",
-                        },
-                      }}
-                    >
+                    <TableRow>
                       <TableCell>ลำดับ</TableCell>
-                      <TableCell align="left">ประเภทการรับ</TableCell>
-                      <TableCell align="left">ประเภทการชำระเงิน</TableCell>
-                      <TableCell align="left">สถานะการชำระเงิน</TableCell>
-                      <TableCell align="left">ยอดรวม</TableCell>
-                      <TableCell align="left">ลูกค้า</TableCell>
-                      <TableCell align="left">เวลา</TableCell>
-                      <TableCell align="left">รายการ</TableCell>
-                      <TableCell align="left">จัดการ</TableCell>
+                      <TableCell>ประเภทการรับ</TableCell>
+                      <TableCell>ประเภทการชำระเงิน</TableCell>
+                      <TableCell>สถานะการชำระเงิน</TableCell>
+                      <TableCell>ยอดรวม</TableCell>
+                      <TableCell>ลูกค้า</TableCell>
+                      <TableCell>เวลา</TableCell>
+                      <TableCell>รายการ</TableCell>
+                      <TableCell>จัดการ</TableCell>
                     </TableRow>
                   </TableHead>
+
                   <TableBody>
                     {data?.map((row, index) => (
-                      <TableRow
-                        key={row.queueNumber}
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                        }}
-                      >
-                        <TableCell component="th" scope="row">
-                          {index + 1}
-                        </TableCell>
-                        <TableCell align="left">{row.ordertype}</TableCell>
-                        <TableCell align="left">
+                      <TableRow key={row.id}>
+                        <TableCell>{index + 1}</TableCell>
+                        <TableCell>{row.ordertype}</TableCell>
+
+                        <TableCell>
                           <FormControlLabel
                             control={
                               <Switch
-                                checked={
-                                  row.payment_type === "bank_transfer"
-                                    ? true
-                                    : false
-                                }
+                                checked={row.payment_type === "bank_transfer"}
                                 onChange={() => handleSwitchChange(row)}
                               />
                             }
@@ -345,7 +324,8 @@ const Report = () => {
                             }
                           />
                         </TableCell>
-                        <TableCell align="left">
+
+                        <TableCell>
                           {row.payment_status === "ชำระเงินแล้ว" ? (
                             <Button
                               variant="success"
@@ -353,8 +333,7 @@ const Report = () => {
                                 handleChangePayment("ยังไม่ชำระ", row.id)
                               }
                             >
-                              {" "}
-                              ชำระเงินแล้ว{" "}
+                              ชำระเงินแล้ว
                             </Button>
                           ) : (
                             <Button
@@ -367,34 +346,36 @@ const Report = () => {
                                 )
                               }
                             >
-                              {" "}
-                              ยังไม่ชำระ{" "}
+                              ยังไม่ชำระ
                             </Button>
-                          )}{" "}
+                          )}
                         </TableCell>
-                        <TableCell align="left">{row.amount}</TableCell>
-                        <TableCell align="left">{row.customerName}</TableCell>
-                        <TableCell align="left">
+
+                        <TableCell>{row.amount}</TableCell>
+                        <TableCell>{row.customerName}</TableCell>
+
+                        <TableCell>
                           {moment(row.timeOrder).format("HH:mm")} น.
                         </TableCell>
-                        <TableCell align="left">
+
+                        <TableCell>
                           <Button
                             variant="primary"
                             onClick={() => {
-                              (setId(row.bill_ID), setShow(true));
+                              setId(row.bill_ID);
+                              setShow(true);
                             }}
                           >
-                            {" "}
-                            ดูรายการ{" "}
+                            ดูรายการ
                           </Button>
                         </TableCell>
-                        <TableCell align="left">
+
+                        <TableCell>
                           <Button
                             variant="danger"
                             onClick={() => deleteBill(row.id)}
                           >
-                            {" "}
-                            ยกเลิก{" "}
+                            ยกเลิก
                           </Button>
                         </TableCell>
                       </TableRow>
@@ -409,27 +390,15 @@ const Report = () => {
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title> รายการอาหาร </Modal.Title>
+          <Modal.Title>รายการอาหาร</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Row>
-              <Col md={12}>
-                <Detail getOrderFood={getOrderFood} id={id} />
-              </Col>
 
-              <Col md={6}>
-                <Button
-                  className="mt-3"
-                  onClick={handleClose}
-                  style={{ float: "left" }}
-                  variant="danger"
-                >
-                  ปิด
-                </Button>
-              </Col>
-            </Row>
-          </Form>
+        <Modal.Body>
+          <Detail getOrderFood={getOrderFood} id={id} />
+
+          <Button className="mt-3" onClick={handleClose} variant="danger">
+            ปิด
+          </Button>
         </Modal.Body>
       </Modal>
     </>

@@ -61,6 +61,7 @@ const Orders = () => {
   };
 
   const reset = async () => {
+     setStatusActive("ใหม่");
     await setReport([]);
     setPrintBillId(null);
     getMenuReport("รับออเดอร์แล้ว");
@@ -146,9 +147,7 @@ const Orders = () => {
         backgroundColor: statusActive === "ใหม่" ? "#ff7a00" : "transparent",
       }}
       onClick={() => {
-        setReport([]);
-        setStatusActive("ใหม่");
-        getMenuReport("รับออเดอร์แล้ว");
+      reset();
       }}
     >
       ใหม่ {statusOrder[0]?.total}
@@ -204,19 +203,6 @@ const Orders = () => {
   </ButtonGroup>
 </Row>    
 
-  <Row className="mt-4 when-print">
-                <Col md={4} xs={12}>
-                  <Button
-                    className="w-75"
-                    onClick={() => {
-                      reset();
-                    }}
-                  >
-                    {" "}
-                    <RestartAltIcon /> โหลดใหม่{" "}
-                  </Button>
-                </Col>
-              </Row>
 
               <Row>
                 {report.map((item, index) => (
