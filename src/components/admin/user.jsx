@@ -59,11 +59,11 @@ const User = () => {
     });
   };
 
-  const deleteOutcome = async (id) => {
+  const deleteData = async (id) => {
     try {
       // แสดง Swal เพื่อยืนยันการลบ
       const result = await Swal.fire({
-        title: "ยืนยันการลบ?",
+        title: "ยืนยันการลบผู้ใช้?",
         text: "คุณต้องการลบข้อมูลนี้หรือไม่!",
         icon: "warning",
         showCancelButton: true,
@@ -75,7 +75,7 @@ const User = () => {
 
       if (result.isConfirmed) {
         // หากผู้ใช้กดยืนยัน
-        await httpDelete(`/user/${id}`);
+        await httpDelete(`/user/${id}`, { headers: { apikey: token } });
         await getData();
         Swal.fire({
           title: "ลบข้อมูลสำเร็จ!",
@@ -226,7 +226,7 @@ const User = () => {
                   <TableCell align="left">
                     <Button
                       variant="danger"
-                      onClick={() => deleteOutcome(row.id)}
+                      onClick={() => deleteData(row.id)}
                     >
                       {" "}
                       ลบ{" "}
