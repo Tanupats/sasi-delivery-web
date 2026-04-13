@@ -8,6 +8,7 @@ const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [selectedPackage, setSelectedPackage] = useState("trial");
   let userId = "";
   const router = useNavigate();
   //shop
@@ -42,19 +43,35 @@ const Register = () => {
   };
 
   const createShop = async () => {
-    await uploadFile();
+    if (filename !== "") {
+      await uploadFile();
+    }
+
+    const date_start = new Date();
+    let date_end = new Date();
+
+    if (selectedPackage === "trial") {
+      date_end.setDate(date_end.getDate() + 7);
+    } else if (selectedPackage === "pro") {
+      date_end.setMonth(date_end.getMonth() + 1);
+    }
+
     const bodyShop = {
       name: shopName,
       user_id: String(userId),
       photo: filename,
+      package_name: selectedPackage,
+      date_start: date_start.toISOString(),
+      end_date: date_end.toISOString(),
+      payment: selectedPackage === "trial" ? "free" : "unpaid",
     };
     await httpPost("/shop", bodyShop).then((res) => {
       if (res) {
         if (res.status === 200) {
-
           Swal.fire({
             title: "ลงทะเบียนสำเร็จ!",
-            text: "คุณได้ลงทะเบียนร้านค้าสำเร็จแล้ว"})
+            text: "คุณได้ลงทะเบียนร้านค้าสำเร็จแล้ว",
+          });
 
           router("/");
         }
@@ -73,10 +90,8 @@ const Register = () => {
       <Col md={3}></Col>
       <Col md={6}>
         <Card>
-          <Card.Title
-            className="text-center mt-4  title-heading"
-          >
-            ลงทะเบียนผู้ใช้ ใช้งานระบบ SASI POS
+          <Card.Title className="text-center mt-4  title-heading">
+            ลงทะเบียนผู้ใช้
           </Card.Title>
           <Card.Body>
             <Form onSubmit={saveRegister}>
@@ -86,7 +101,7 @@ const Register = () => {
                   onChange={(e) => setName(e.target.value)}
                   type="text"
                   required
-                  placeholder="ขื่อ-นามสกุล"
+                  placeholder="ชื่อ-นามสกุล"
                 />
               </Form.Group>
               <Form.Group className="mt-2">
@@ -114,16 +129,55 @@ const Register = () => {
                   required
                   onChange={(e) => setshopName(e.target.value)}
                   type="text"
-                  placeholder="ชื่อร้านค้า(แบรนด์)"
+                  placeholder="ตั้งชื่อร้านค้าของคุณ"
                 />
               </Form.Group>
               <Form.Group className="mt-2">
-                <Form.Label>รูปภาพร้านค้า</Form.Label>
+                <Form.Label>รูปภาพ</Form.Label>
                 <Form.Control
                   type="file"
                   placeholder="โลโก้"
                   onChange={(e) => setFile(e.target.files[0])}
                 />
+              </Form.Group>
+
+              <Form.Group className="mt-4">
+                <Form.Label className="fw-bold">เลือกแพ็กเกจ</Form.Label>
+                <div className="d-flex flex-column gap-2 mt-2">
+                  <Form.Check
+                    type="radio"
+                    name="package"
+                    id="package-trial"
+                    label={
+                      <span>
+                        <strong>ทดลองใช้ฟรี 7 วัน</strong>
+                        <br />
+                        <small className="text-muted">
+                          ทดลองใช้งานฟีเจอร์เต็มรูปแบบ ฟรี 7 วัน
+                        </small>
+                      </span>
+                    }
+                    value="trial"
+                    checked={selectedPackage === "trial"}
+                    onChange={(e) => setSelectedPackage(e.target.value)}
+                  />
+
+                  <Form.Check
+                    type="radio"
+                    name="package"
+                    id="package-pro"
+                    label={
+                      <span>
+                        <strong>แพ็กเกจ Pro</strong>
+                        <br />
+                        <small className="text-muted">600฿ /เดือน </small>
+                      </span>
+                    }
+                    value="pro"
+                    checked={selectedPackage === "pro"}
+                    onChange={(e) => setSelectedPackage(e.target.value)}
+                  />
+                </div>
               </Form.Group>
 
               <Row className="mt-4">
@@ -133,9 +187,11 @@ const Register = () => {
                   </Button>
                 </Col>
                 <Col md={6} xs={6}>
-                  <Button 
-                  onClick={() => router("/")}
-                  className="w-100" variant="danger">
+                  <Button
+                    onClick={() => router("/")}
+                    className="w-100"
+                    variant="danger"
+                  >
                     ยกเลิก
                   </Button>
                 </Col>

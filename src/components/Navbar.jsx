@@ -49,44 +49,46 @@ const NavbarMenu = () => {
     <Router>
       {staffName && (
         <Navbar style={{ background: "#FD720D" }} sticky="top">
-          <Container fluid className="px-2">
+          {/* 🔥 แก้ตรงนี้ */}
+          <Container fluid className="px-0">
 
             {/* MOBILE MENU */}
-            <div className="d-lg-none">
+            <div className="d-lg-none ms-2">
               <MenuIcon
-                style={{ color: "#fff", cursor: "pointer", marginRight: 8 }}
+                style={{ color: "#fff", cursor: "pointer" }}
                 onClick={() => setOpenMenu(true)}
               />
             </div>
 
-            <Navbar.Brand style={{ color: "#fff", marginRight: 10 }}>
+            {/* 🔥 ชิดซ้ายสุด */}
+            <Navbar.Brand className="ms-2 text-white fw-bold">
               SASI POS
             </Navbar.Brand>
 
-            {/* DESKTOP MENU */}
-            <Nav className="d-none d-lg-flex">
+            {/* 🔥 ดันเมนูไปขวา */}
+            <Nav className="d-none d-lg-flex ms-auto me-2">
 
-              <Nav.Link as={Link} to="/pos" style={{ color: "#fff" }}>
+              <Nav.Link as={Link} to="/pos" className="text-white">
                 <ListAltIcon style={{ marginRight: 4 }} /> ขายสินค้า
               </Nav.Link>
 
-              <Nav.Link as={Link} to="/orders" style={{ color: "#fff" }}>
+              <Nav.Link as={Link} to="/orders" className="text-white">
                 <ViewQuiltIcon style={{ marginRight: 4 }} /> ออเดอร์
               </Nav.Link>
 
-              <Nav.Link as={Link} to="/report" style={{ color: "#fff" }}>
+              <Nav.Link as={Link} to="/report" className="text-white">
                 <AssessmentIcon style={{ marginRight: 4 }} /> สรุปยอดขาย
               </Nav.Link>
 
-              <Nav.Link as={Link} to="/admin" style={{ color: "#fff" }}>
+              <Nav.Link as={Link} to="/admin" className="text-white">
                 <StoreIcon style={{ marginRight: 4 }} /> จัดการ{shop?.name}
               </Nav.Link>
 
-              <Nav.Link as={Link} to="/profile" style={{ color: "#fff" }}>
+              <Nav.Link as={Link} to="/profile" className="text-white">
                 <AccountCircleIcon style={{ marginRight: 4 }} /> {staffName}
               </Nav.Link>
 
-              <Nav.Link onClick={logout} style={{ color: "#fff" }}>
+              <Nav.Link onClick={logout} className="text-white">
                 <LogoutIcon style={{ marginRight: 4 }} /> ออกจากระบบ
               </Nav.Link>
 

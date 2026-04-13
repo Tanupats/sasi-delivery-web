@@ -252,7 +252,7 @@ const Products = () => {
                           style={{
                             height: "auto",
                             marginBottom: "12px",
-                            padding: 2,
+                            padding: 0,
                           }}
                         >
                           <Card.Body style={{ padding: 5 }}>
@@ -261,20 +261,21 @@ const Products = () => {
                                 <Image
                                   style={{
                                     width: "100%",
-                                    height: "160px",
+                                    height: "100px",
                                     objectFit: "cover",
                                   }}
                                   src={`${import.meta.env.VITE_API_URL}/images/${item.img}`}
                                 />
                               </Col>
                               <Col md={8} xs={8}>
-                                <div className="mt-3">
-                                  <h5>{item.foodname}</h5>
-                                  <h5>{item.Price}฿</h5>
+                                <div>
+                                  <h6>{item.foodname}</h6>
+                                  <h6> {item.Price}฿</h6>
                                 </div>
                                 {item.status === 1 && (
                                   <>
                                     <Button
+                                      size="sm"
                                       variant="success"
                                       onClick={() =>
                                         updateStatus(item.id, 0, item.TypeID)
@@ -287,6 +288,7 @@ const Products = () => {
                                 {item.status === 0 && (
                                   <>
                                     <Button
+                                      size="sm"
                                       variant="danger"
                                       onClick={() =>
                                         updateStatus(item.id, 1, item.TypeID)
@@ -297,11 +299,20 @@ const Products = () => {
                                   </>
                                 )}
                                 <Button
+                                  size="sm"
                                   onClick={() => onSelectMenu(item)}
                                   variant="warning"
                                 >
                                   <EditIcon /> แก้ไข
                                 </Button>{" "}
+                                <Button
+                                size="sm"
+                                 
+                                  onClick={() => onDeleteMenu(item.id)}
+                                  variant="danger"
+                                >
+                                  <DeleteIcon /> ลบเมนู
+                                </Button>
                               </Col>
                             </Row>
                           </Card.Body>
@@ -438,13 +449,6 @@ const Products = () => {
                             defaultValue={data?.notes}
                           />
                         </Form.Group>
-                        <Button
-                          className="mt-2"
-                          onClick={() => onDeleteMenu(data.id)}
-                          variant="danger"
-                        >
-                          <DeleteIcon /> ลบเมนู
-                        </Button>
                       </Col>
                     </Row>
                   </Card.Body>

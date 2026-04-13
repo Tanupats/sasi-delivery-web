@@ -178,7 +178,7 @@ const MenuType = () => {
                               <Form.Label>ประเภทสินค้า</Form.Label>
                               <Form.Control
                                 type="text"
-                                placeholder="ข้าวผัด, ก๋วยเตี๋ยว, ส้มตำ"
+                                placeholder="ประเภทสินค้า"
                                 onChange={(e) => setTypeName(e.target.value)}
                                 value={typeName}
                               />
@@ -215,7 +215,7 @@ const MenuType = () => {
           </Modal>
         </Card.Body>
 
-        <Modal size="lg" show={show} onHide={handleClose}>
+        <Modal size="sm" show={show} onHide={handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>แก้ไขข้อมูลประเภทสินค้า</Modal.Title>
           </Modal.Header>

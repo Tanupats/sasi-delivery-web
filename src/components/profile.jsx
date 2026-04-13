@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { Card, Row, Col, Button } from "react-bootstrap";
+import { Card, Row, Col, Button, Alert } from "react-bootstrap";
 import { httpPut } from "../http";
 import { AuthData } from "../ContextData";
 import Swal from "sweetalert2";
@@ -37,18 +37,22 @@ const Profile = () => {
 
           <div className="mb-3">
             <label>ชื่อ-นามสกุล</label>
-            <input className="form-control" value={user.name} onChange={(e) => setUser({ ...user, name: e.target.value })} />
+            <input
+              className="form-control"
+              value={user.name}
+              onChange={(e) => setUser({ ...user, name: e.target.value })}
+            />
           </div>
 
           <div className="mb-3">
             <label>อีเมล</label>
             <input
-            disabled
+              disabled
               readOnly
               type="email"
               className="form-control"
               value={user.email}
-              onChange={(e) => setUser({ ...user, email: e.target.value }) }
+              onChange={(e) => setUser({ ...user, email: e.target.value })}
             />
           </div>
 
@@ -61,8 +65,6 @@ const Profile = () => {
               onChange={(e) => setUser({ ...user, phone: e.target.value })}
             />
           </div>
-
-        
 
           {/* ---------------- ข้อมูลร้านค้า ---------------- */}
           <h6 className="mb-3">ข้อมูลร้านค้า</h6>
@@ -78,8 +80,11 @@ const Profile = () => {
             </Col>
 
             <Col md={6}>
-              <label>ประเภทร้านค้า</label>
-              <input className="form-control" value={shop.shop_type} disabled />
+              <label>แพ็คเกจ   600฿ / เดือน </label>
+              <Alert>
+                <span>
+           {" "} เหลือเวลาใช้งานอีก 15 วัน</span>
+              </Alert>
             </Col>
           </Row>
 
@@ -88,7 +93,7 @@ const Profile = () => {
               <label>วันที่ลงทะเบียน</label>
               <input
                 className="form-control"
-                value={moment(shop.created).format("DD/MM/YYYY")}
+                value={moment(shop.creted).format("DD/MM/YYYY")}
                 disabled
               />
             </Col>

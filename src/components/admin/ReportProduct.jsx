@@ -13,25 +13,39 @@ import { AuthData } from "../../ContextData";
 const ReportProduct = () => {
   const [data, setData] = useState([]);
   const { shop } = useContext(AuthData);
-  const [startDate, setStartDate] = useState(
-    moment().startOf("month").format("YYYY-MM-DD"),
-  );
 
-  const [endDate, setEndDate] = useState(
-    moment().endOf("month").format("YYYY-MM-DD"),
-  );
+  const [startDate, setStartDate] = useState(moment().startOf("month").format("YYYY-MM-DD"));
+  const [endDate, setEndDate] = useState(moment().endOf("month").format("YYYY-MM-DD"));
+
+ // 🔥 แยก function
+  const getData = async () => {
+    if (!shop?.shop_id) return; // ❗กัน error ตอน shop ยังไม่มา
+
+    try {
+      const res = await httpGet(
+        `/group?startDate=${startDate}&endDate=${endDate}&shop_id=${shop.shop_id}`
+      );
+
+      if (res) {
+        setData(res.data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // ✅ โหลดครั้งแรก + โหลดใหม่เมื่อ shop มา
   useEffect(() => {
-    const getData = async () => {
-      await httpGet(
-        `/group?startDate=${moment(startDate).format("YYYY-MM-DD")}&endDate=${moment(endDate).format("YYYY-MM-DD")}&shop_id=${shop?.shop_id}`,
-      ).then((data) => {
-        if (data) {
-          setData(data.data);
-        }
-      });
-    };
     getData();
+  }, [shop]);
+
+  // ✅ โหลดใหม่เมื่อ user เปลี่ยนวันที่
+  useEffect(() => {
+    if (shop?.shop_id) {
+      getData();
+    }
   }, [startDate, endDate]);
+
 
   return (
     <>
