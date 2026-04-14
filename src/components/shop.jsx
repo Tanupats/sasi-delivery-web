@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 const ShopData = () => {
-  const { userid, name } = useParams();
+  const { shop_id,userid, name, } = useParams();
   const router = useNavigate();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -47,16 +47,19 @@ const ShopData = () => {
     }
   };
 
-  useEffect(() => {
-    const getShopData = async () => {
-      await axios.get(`${import.meta.env.VITE_API_URL}/shop`).then((res) => {
+  console.log(shop_id,userid, name);
+ const getShopData = async () => {
+      await axios.get(`${import.meta.env.VITE_API_URL}/shop/${shop_id}`).then((res) => {
         setData(res.data);
       });
     };
 
+  useEffect(() => {
+   
     if (userid && name) {
       localStorage.setItem("messangerId", userid);
       localStorage.setItem("name", name);
+      localStorage.setItem("shop_id", shop_id);
       getShopData();
     }
   }, []);
@@ -67,7 +70,7 @@ const ShopData = () => {
         <Card.Body style={{ padding: "0" }}>
           <Row>
             {data.map((item, index) => {
-              if (item.id === 1)
+           
                 return (
                   <React.Fragment key={index}>
                     <Col md={4} xs={12} className="mt-2">

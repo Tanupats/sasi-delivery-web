@@ -8,8 +8,6 @@ import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import { AuthData } from "../ContextData";
 import FoodMenu from './FoodMenu';
 import Myorder from './Myorder';
-// import GetQueue from './GetQueu';
-// import AddToQueueIcon from '@mui/icons-material/AddToQueue';
 import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
 import { ShoppingCart, Receipt } from "@mui/icons-material";
 import Cart from './Cart';
@@ -21,7 +19,7 @@ const NavbarMenu = () => {
   const [value, setValue] = useState(0);
   const id = localStorage.getItem("messangerId");
   const name = localStorage.getItem("name");
-
+  const shop_id = localStorage.getItem("shop_id");
   return (
     <Router>
       <Navbar bg="light" data-bs-theme="light" className='when-print' sticky='top' expand="lg" style={{ borderBottom: '1px solid #d3d3d3' }}>
@@ -30,7 +28,7 @@ const NavbarMenu = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto text-center">
-              <Nav.Link style={{ textDecoration: 'none', color: '#000', fontSize: '16px', fontWeight: 300 }} as={Link} to={`/shop/${id}/${name}`}>
+              <Nav.Link style={{ textDecoration: 'none', color: '#000', fontSize: '16px', fontWeight: 300 }} as={Link} to={`/shop/${shop_id}/${id}/${name}`}>
                 <StorefrontIcon style={{ color: '#FD720D' }} /> ร้านค้า
               </Nav.Link>
               <Nav.Link style={{ textDecoration: 'none', color: '#000', fontSize: '16px', fontWeight: 300 }} as={Link} to={'/cart'}>
@@ -70,7 +68,7 @@ const NavbarMenu = () => {
           value={value}
         >
           <BottomNavigation showLabels value={value}>
-            <BottomNavigationAction onClick={() => setValue(3)} label="ร้านค้า" icon={<StorefrontIcon />} component={Link} to={`/shop/${id}/${name}`} />
+            <BottomNavigationAction onClick={() => setValue(3)} label="ร้านค้า" icon={<StorefrontIcon />} component={Link} to={`/shop/${shop_id}/${id}/${name}`} />
             {/* <BottomNavigationAction
               onClick={() => setValue(0)}
               label="เมนู" icon={<MenuBookIcon />}
@@ -83,7 +81,7 @@ const NavbarMenu = () => {
 
       <Routes>
         <Route path="/foodmenu/:shop_id/" Component={FoodMenu}></Route>
-        <Route path="/shop/:userid/:name" Component={ShopData}></Route>
+        <Route path="/shop/:shop_id/:userid/:name" Component={ShopData}></Route>
         <Route path="/Myorder" Component={Myorder}></Route>
         {/* <Route path="/queueNumber" Component={GetQueue}></Route> */}
         <Route path="/cart" Component={Cart}></Route>
