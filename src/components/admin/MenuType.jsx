@@ -111,7 +111,7 @@ const MenuType = () => {
         <Card.Body>
           <Row>
             <Col>
-              <Button variant="secondary" onClick={() => handleShowType()}>
+              <Button variant="success" onClick={() => handleShowType()}>
                 <AddCircleIcon /> เพิ่มประเภทสินค้า{" "}
               </Button>
             </Col>

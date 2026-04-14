@@ -9,8 +9,18 @@ const Profile = () => {
   const { user, setUser, shop, getUser, setShop } = useContext(AuthData);
   const [status, setStatus] = useState(shop?.is_open);
 
+  const getRemainingDays = () => {
+    if (!shop?.end_date) return "N/A";
+    const today = moment();
+    const endDate = moment(shop.end_date);
+    const days = endDate.diff(today, "days");
+    if (days < 0) return "หมดอายุแล้ว";
+    return days;
+  };
+
   const updateData = async () => {
-    await httpPut("/shop/" + shop?.id, { ...shop, is_open: status }).then(
+    await httpPut("/user/"+user?.id,{phone: user?.phone})
+    await httpPut("/shop/"+shop?.id,{ ...shop, is_open: status }).then(
       (res) => {
         if (res) {
           getUser();
@@ -80,10 +90,13 @@ const Profile = () => {
             </Col>
 
             <Col md={6}>
-              <label>แพ็คเกจ   600฿ / เดือน </label>
+              <label>แพ็คเกจ  {shop.package_name}   </label>
               <Alert>
                 <span>
-           {" "} เหลือเวลาใช้งานอีก 15 วัน</span>
+                  วันที่ใช้งาน: {moment(shop.date_start).format("DD/MM/YYYY")} - {moment(shop.end_date).format("DD/MM/YYYY")}
+                  <br />
+                  เหลือเวลาใช้งานอีก <strong>{getRemainingDays()}</strong> วัน
+                </span>
               </Alert>
             </Col>
           </Row>

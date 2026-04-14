@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { httpPost } from "../http";
 import Swal from "sweetalert2";
 const Register = () => {
+  
   //user
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -11,9 +12,11 @@ const Register = () => {
   const [selectedPackage, setSelectedPackage] = useState("trial");
   let userId = "";
   const router = useNavigate();
+  
   //shop
   const [shopName, setshopName] = useState("");
   const [file, setFile] = useState("");
+  const [phone,setPhone] = useState("");
 
   let filename = "";
   const uploadFile = async () => {
@@ -32,6 +35,7 @@ const Register = () => {
       email: email,
       password: password,
       department: "admin",
+      phone:phone
     };
     await httpPost("/auth/sigup", bodyUser).then((res) => {
       if (res) {
@@ -120,6 +124,15 @@ const Register = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   type="password"
                   placeholder="password"
+                />
+              </Form.Group>
+              <Form.Group className="mt-2">
+                <Form.Label>เบอร์โทร</Form.Label>
+                <Form.Control
+                  required
+                  onChange={(e) => setPhone(e.target.value)}
+                  type="text"
+                  placeholder="08xxxxxxxx"
                 />
               </Form.Group>
 

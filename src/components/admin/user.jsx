@@ -166,7 +166,6 @@ const User = () => {
                   >
                     <option value="">เลือกแผนก</option>
                     <option value="admin">Admin</option>
-                    <option value="manager">Manager</option>
                     <option value="cashier">Cashier</option>
                     <option value="rider">Rider</option>
                   </Form.Select>

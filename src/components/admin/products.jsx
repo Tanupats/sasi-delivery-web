@@ -218,13 +218,16 @@ const Products = () => {
                     />
                   </div>
                   <div className="col-md-4">
-                    <input
-                      value={keyword}
-                      onChange={(e) => setKeyword(e.target.value)}
-                      className="form-control"
-                      type="text"
-                      placeholder="ค้นหา"
-                    />
+
+                    <form onSubmit={(e) => { e.preventDefault(); searchMenu(); }}>
+                      <input
+                        value={keyword}
+                        onChange={(e) => setKeyword(e.target.value)}
+                        className="form-control"
+                        type="text"
+                        placeholder="ค้นหา"
+                      />
+                    </form>
                   </div>
                   <div className="col-md-2">
                     <button

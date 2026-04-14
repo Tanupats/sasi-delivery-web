@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Badge } from "react-bootstrap";
 import { httpGet } from "../../http";
 import Table from "@mui/material/Table";
@@ -83,7 +83,7 @@ const ReportProduct = () => {
             {data?.length > 0 &&
               data?.map((row, index) => (
                 <TableRow
-                  key={row.account_id}
+                  key={index}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell align="left">{index + 1}</TableCell>
