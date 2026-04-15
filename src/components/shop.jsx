@@ -47,7 +47,6 @@ const ShopData = () => {
     }
   };
 
-  console.log(shop_id,userid, name);
  const getShopData = async () => {
       await axios.get(`${import.meta.env.VITE_API_URL}/shop/${shop_id}`).then((res) => {
         setData(res.data);
