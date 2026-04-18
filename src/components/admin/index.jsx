@@ -152,10 +152,10 @@ const Admin = () => {
   <Col md={4}>
                    <Button variant="success"> + chatbot </Button>
                   </Col>
-                <Row className="mt-4 border-top bg-gray pt-4">
+                <Row className="mt-4 border-top pt-4" >
                 <span className="mb-2">block_name</span> 
                  
-                  <Col md={4}>
+                  <Col md={4} style={{backgroundColor:'#f3f3f3',height:'auto',padding:'20px'}}>
                       <div className="block">
 
 
@@ -172,19 +172,19 @@ const Admin = () => {
                           <br />
                       
 
-                          <span   className="border  p-2" variant="primary">สวัสดี</span>
-                          <span   className="border  p-2" variant="primary">สวัสดี</span>
-                          <span   className="border  p-2" variant="primary">สวัสดี</span>
+                          <span   className="border" variant="primary">สวัสดี</span>
+                          <span   className="border" variant="primary">สวัสดี</span>
+                          <span   className="border" variant="primary">สวัสดี</span>
                       </div>
                   </Col>
-                  <Col md={4}>
+                  <Col md={4} style={{backgroundColor:'#f3f3f3',height:'auto',padding:'20px'}}>
                   <div className="block">
                         <h5>ตั้งค่าข้อความตอบกลับอัตโนมัติ</h5>
                         <hr />
                         <p>สนในเมนูไหน ดูก่อนได้</p>
                       </div>
                   </Col>
-                  <Col md={4}>
+                  <Col md={4} style={{backgroundColor:'#f3f3f3',height:'auto',padding:'20px'}}>
                     <div className="block">
                       <h5>ตัวอย่างแชทบอท</h5>
                       <hr />
@@ -192,6 +192,8 @@ const Admin = () => {
                     </div>
                   </Col>
                 </Row>
+
+                <Button variant="success" className="mt-4 mb-2">บันทึกการตั้งค่า</Button>
             </Card.Body>
 
           </Card>
