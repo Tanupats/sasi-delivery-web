@@ -1,12 +1,12 @@
 import { useState, useEffect, useContext } from "react";
-import { Row, Col, Card, Tabs, Tab } from "react-bootstrap";
+import { Row, Col, Card, Tabs, Tab,Badge ,Button,Form} from "react-bootstrap";
 import "./index.scss";
 
 import Products from "./products";
 import ReportProduct from "./ReportProduct";
 import MenuType from "./MenuType";
 import User from "./user";
-
+import MessageIcon from '@mui/icons-material/Message';
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import DataThresholdingIcon from "@mui/icons-material/DataThresholding";
@@ -134,6 +134,68 @@ const Admin = () => {
               </Card>{" "}
             </Col>{" "}
           </Row>
+        </Tab>
+        <Tab 
+         eventKey="ตั้งค่าแชทบอท"
+          title={
+            <span style={{ color: "#6c757d" }}>
+              <MessageIcon /> จัดการแชทบอท
+            </span>
+          }
+        >
+
+          <Card>
+            <Card.Body>
+              <Card.Title className="text-center mb-4">
+                ออกแบบแชทบอท ตอบกลับอัตโนมัติ
+              </Card.Title>
+  <Col md={4}>
+                   <Button variant="success"> + chatbot </Button>
+                  </Col>
+                <Row className="mt-4 border-top bg-gray pt-4">
+                <span className="mb-2">block_name</span> 
+                 
+                  <Col md={4}>
+                      <div className="block">
+
+
+                        <h5>คีย์เวิร์ด </h5>  <hr />
+                        
+                          <Row>
+                            <Col md={8}>
+                             <Form.Control type="text" placeholder="Enter keyword" />
+                            </Col>
+                            <Col md={4}>
+                             <Button variant="outline-primary"> + คีย์เวิร์ด</Button> 
+                            </Col>
+                            </Row> 
+                          <br />
+                      
+
+                          <span   className="border  p-2" variant="primary">สวัสดี</span>
+                          <span   className="border  p-2" variant="primary">สวัสดี</span>
+                          <span   className="border  p-2" variant="primary">สวัสดี</span>
+                      </div>
+                  </Col>
+                  <Col md={4}>
+                  <div className="block">
+                        <h5>ตั้งค่าข้อความตอบกลับอัตโนมัติ</h5>
+                        <hr />
+                        <p>สนในเมนูไหน ดูก่อนได้</p>
+                      </div>
+                  </Col>
+                  <Col md={4}>
+                    <div className="block">
+                      <h5>ตัวอย่างแชทบอท</h5>
+                      <hr />
+                      <p>ข้อความที่จะแสดงเมื่อมีลูกค้าส่งข้อความเข้ามา</p>
+                    </div>
+                  </Col>
+                </Row>
+            </Card.Body>
+
+          </Card>
+         
         </Tab>
       </Tabs>
     </>
