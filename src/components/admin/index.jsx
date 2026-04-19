@@ -272,7 +272,7 @@ const Admin = () => {
                     </div>
 
                     <div className="chat-footer mt-3">
-                      <Button variant="outline-primary" size="sm">
+                      <Button variant="outline-primary" size="md">
                         <SendIcon /> ทดสอบ chatbot ด้วย Messenger
                       </Button>
                     </div>
