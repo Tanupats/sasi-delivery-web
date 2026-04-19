@@ -350,7 +350,7 @@ const Pos = () => {
                         </Col>
                         <ButtonGroup className="w-100 mb-3">
                           <Button
-                        style={{color: activeTypeRecipe === "เสิร์ฟในร้าน" ? "#fff" : "#000000", border: `2px solid ${activeTypeRecipe === "เสิร์ฟในร้าน" ? "#ff7a00" : "gray"}`, backgroundColor: activeTypeRecipe === "เสิร์ฟในร้าน" ? "#ff7a00" : "#fff"}}
+                        style={{color: activeTypeRecipe === "เสิร์ฟในร้าน" ? "#fff" : "#000000", border: `2px solid ${activeTypeRecipe === "เสิร์ฟในร้าน" ? "#ff7a00" : "#bebebe"}`, backgroundColor: activeTypeRecipe === "เสิร์ฟในร้าน" ? "#ff7a00" : "#fff"}}
                            
                             onClick={() => {
                               setOrderType("เสิร์ฟในร้าน");
@@ -362,7 +362,7 @@ const Pos = () => {
                           </Button>
 
                           <Button
-                           style={{color: activeTypeRecipe === "รับเอง" ? "#fff" : "#000000", border: `2px solid ${activeTypeRecipe === "รับเอง" ? "#ff7a00" : "gray"}`, backgroundColor: activeTypeRecipe === "รับเอง" ? "#ff7a00" : "#fff"}}
+                           style={{color: activeTypeRecipe === "รับเอง" ? "#fff" : "#000000", border: `2px solid ${activeTypeRecipe === "รับเอง" ? "#ff7a00" : "#bebebe"}`, backgroundColor: activeTypeRecipe === "รับเอง" ? "#ff7a00" : "#fff"}}
                           
                             onClick={() => {
                               setOrderType("รับเอง");
@@ -374,7 +374,7 @@ const Pos = () => {
                           </Button>
 
                           <Button 
-                          style={{color: activeTypeRecipe === "สั่งกลับบ้าน" ? "#fff" : "#000000", border: `2px solid ${activeTypeRecipe === "สั่งกลับบ้าน" ? "#ff7a00" : "gray"}`, backgroundColor: activeTypeRecipe === "สั่งกลับบ้าน" ? "#ff7a00" : "#fff"}}
+                          style={{color: activeTypeRecipe === "สั่งกลับบ้าน" ? "#fff" : "#000000", border: `2px solid ${activeTypeRecipe === "สั่งกลับบ้าน" ? "#ff7a00" : "#bebebe"}`, backgroundColor: activeTypeRecipe === "สั่งกลับบ้าน" ? "#ff7a00" : "#fff"}}
                     
                             onClick={() => {
                               setOrderType("สั่งกลับบ้าน");

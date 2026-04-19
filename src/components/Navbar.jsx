@@ -61,7 +61,7 @@ const NavbarMenu = () => {
             </div>
 
             {/* 🔥 ชิดซ้ายสุด */}
-            <Navbar.Brand className="ms-2 text-white fw-bold">
+            <Navbar.Brand className="ms-2 text-white fw-bold when-print">
               SASI POS
             </Navbar.Brand>
 

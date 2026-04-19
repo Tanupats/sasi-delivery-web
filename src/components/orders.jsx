@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Row, Col, Card, Button, Alert, Form } from "react-bootstrap";
+import { Row, Col, Card, Button, Alert, Form, Badge } from "react-bootstrap";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Details from "./Details";
 import moment from "moment/moment";
@@ -61,7 +61,7 @@ const Orders = () => {
   };
 
   const reset = async () => {
-     setStatusActive("ใหม่");
+    setStatusActive("ใหม่");
     await setReport([]);
     setPrintBillId(null);
     getMenuReport("รับออเดอร์แล้ว");
@@ -121,7 +121,7 @@ const Orders = () => {
       cancelButtonText: "ยกเลิก",
     }).then((result) => {
       if (result.isConfirmed) {
-         CancelOrder(id, bid);
+        CancelOrder(id, bid);
       }
     });
   };
@@ -137,72 +137,80 @@ const Orders = () => {
         <Col md={12}>
           <Card style={{ border: "none", marginTop: "12px" }}>
             <Form>
-    <Row className="when-print">
-  <ButtonGroup aria-label="Basic example">
-    <Button
-      style={{
-        fontSize: "18px",
-        borderColor: "#ff7a00",
-        color: statusActive === "ใหม่" ? "#fff" : "#ff7a00",
-        backgroundColor: statusActive === "ใหม่" ? "#ff7a00" : "transparent",
-      }}
-      onClick={() => {
-      reset();
-      }}
-    >
-      ใหม่ {statusOrder[0]?.total}
-    </Button>
+              <Row className="when-print">
+                <ButtonGroup aria-label="Basic example">
+                  <Button
+                    style={{
+                      fontSize: "18px",
+                      borderColor: "#ff7a00",
+                      color: statusActive === "ใหม่" ? "#fff" : "#ff7a00",
+                      backgroundColor:
+                        statusActive === "ใหม่" ? "#ff7a00" : "transparent",
+                    }}
+                    onClick={() => {
+                      reset();
+                    }}
+                  >
+                    ใหม่ {statusOrder[0]?.total}
+                  </Button>
 
-    <Button
-      style={{
-        fontSize: "18px",
-        borderColor: "#ff7a00",
-        color: statusActive === "เสร็จแล้ว" ? "#fff" : "#ff7a00",
-        backgroundColor: statusActive === "เสร็จแล้ว" ? "#ff7a00" : "transparent",
-      }}
-      onClick={() => {
-        setReport([]);
-        setStatusActive("เสร็จแล้ว");
-        getMenuReport("ทำเสร็จแล้ว");
-      }}
-    >
-      เสร็จแล้ว {statusOrder[2]?.total}
-    </Button>
+                  <Button
+                    style={{
+                      fontSize: "18px",
+                      borderColor: "#ff7a00",
+                      color: statusActive === "เสร็จแล้ว" ? "#fff" : "#ff7a00",
+                      backgroundColor:
+                        statusActive === "เสร็จแล้ว"
+                          ? "#ff7a00"
+                          : "transparent",
+                    }}
+                    onClick={() => {
+                      setReport([]);
+                      setStatusActive("เสร็จแล้ว");
+                      getMenuReport("ทำเสร็จแล้ว");
+                    }}
+                  >
+                    เสร็จแล้ว {statusOrder[2]?.total}
+                  </Button>
 
-    <Button
-      style={{
-        fontSize: "18px",
-        borderColor: "#ff7a00",
-        color: statusActive === "รอดำเนินการ" ? "#fff" : "#ff7a00",
-        backgroundColor: statusActive === "รอดำเนินการ" ? "#ff7a00" : "transparent",
-      }}
-      onClick={() => {
-        setReport([]);
-        setStatusActive("รอดำเนินการ");
-        getMenuReport("กำลังส่ง");
-      }}
-    >
-      รอดำเนินการ {statusOrder[1]?.total}
-    </Button>
+                  <Button
+                    style={{
+                      fontSize: "18px",
+                      borderColor: "#ff7a00",
+                      color:
+                        statusActive === "รอดำเนินการ" ? "#fff" : "#ff7a00",
+                      backgroundColor:
+                        statusActive === "รอดำเนินการ"
+                          ? "#ff7a00"
+                          : "transparent",
+                    }}
+                    onClick={() => {
+                      setReport([]);
+                      setStatusActive("รอดำเนินการ");
+                      getMenuReport("กำลังส่ง");
+                    }}
+                  >
+                    รอดำเนินการ {statusOrder[1]?.total}
+                  </Button>
 
-    <Button
-      style={{
-        fontSize: "18px",
-        borderColor: "#ff7a00",
-        color: statusActive === "สำเร็จ" ? "#fff" : "#ff7a00",
-        backgroundColor: statusActive === "สำเร็จ" ? "#ff7a00" : "transparent",
-      }}
-      onClick={() => {
-        setReport([]);
-        setStatusActive("สำเร็จ");
-        getMenuReport("ส่งสำเร็จ");
-      }}
-    >
-      สำเร็จ {statusOrder[3]?.total}
-    </Button>
-  </ButtonGroup>
-</Row>    
-
+                  <Button
+                    style={{
+                      fontSize: "18px",
+                      borderColor: "#ff7a00",
+                      color: statusActive === "สำเร็จ" ? "#fff" : "#ff7a00",
+                      backgroundColor:
+                        statusActive === "สำเร็จ" ? "#ff7a00" : "transparent",
+                    }}
+                    onClick={() => {
+                      setReport([]);
+                      setStatusActive("สำเร็จ");
+                      getMenuReport("ส่งสำเร็จ");
+                    }}
+                  >
+                    สำเร็จ {statusOrder[3]?.total}
+                  </Button>
+                </ButtonGroup>
+              </Row>
 
               <Row>
                 {report.map((item, index) => (
@@ -210,7 +218,7 @@ const Orders = () => {
                     {(printBillId === null || printBillId === item.bill_ID) && (
                       <Col md={4}>
                         <Card className="mb-4 mt-4 bd-printer" id={item.id}>
-                          <Card.Body style={{ padding: "8px" }}>
+                          <Card.Body style={{ padding: "18px" }}>
                             <Card.Header className="text-center">
                               <div className="text-center">
                                 <h6> คิวที่ {item.queueNumber} </h6>
@@ -219,24 +227,38 @@ const Orders = () => {
 
                             <div className="text-center show-header">
                               <h6> {shop?.name} </h6>
-                              <h6>ใบเสร็จรับเงิน</h6>
+                              <h6> ใบเสร็จรับเงิน</h6>
                             </div>
-                            <b>
-                              {" "}
-                              <br /> เลขออเดอร์{" "}
-                              {item.bill_ID.slice(-5).toUpperCase()}
-                            </b>
-                            <p>
-                              เวลา {moment(item.timeOrder).format("HH:mm")} น.
-                              &nbsp; วันที่{" "}
-                              {moment(item.timeOrder).format("YYYY-MM-DD")}
-                              <br />
-                              {item?.printStatus !== null ? (
-                                item?.printStatus
-                              ) : (
-                                <p> ออเดอร์ใหม่ </p>
-                              )}
-                            </p>
+
+                            <Row>
+                              <Col md={6}>
+                                <b>
+                                  {" "}
+                                  เลขออเดอร์{" "}
+                                  {item.bill_ID.slice(-5).toUpperCase()}  
+                                  <br />
+                                  เวลา {moment(item.timeOrder).format(
+                                    "HH:mm",
+                                  )}{" "}
+                                  น. &nbsp; <br /> วันที่{" "}
+                                  {moment(item.timeOrder).format("DD-MM-YYYY")}
+                                </b>
+                              </Col>
+                              <Col md={6} className="text-end p-2">
+                                <p>
+                                  {item?.printStatus ? (
+                                    <span className="bg-danger text-white px-2 py-1 rounded-pill mt-4 when-print">
+                                      {item?.printStatus}
+                                    </span>
+                                  ) : (
+                                    <span className="bg-success text-white px-2 py-1 rounded-pill when-print mt-4">
+                                      ออเดอร์ใหม่
+                                    </span>
+                                  )}
+                                </p>
+                              </Col>
+                            </Row>
+
                             <Row>
                               <Col md={6} xs={6}>
                                 <div className="when-print mb-2">
@@ -278,7 +300,7 @@ const Orders = () => {
                                       }
                                       variant="primary w-100"
                                     >
-                                      <LocalPrintshopIcon /> พิมพ์ใบเสร็จ
+                                      <LocalPrintshopIcon /> พิมพ์
                                     </Button>
                                   </Col>
                                   <Col md={6} xs={6} className="mb-2"></Col>
@@ -286,7 +308,7 @@ const Orders = () => {
                               )}
                             </Row>
                             <Alert className="when-print bg-white text-center">
-                              <b>{item.statusOrder}</b>
+                              <span>{item.statusOrder}</span>
                             </Alert>
                             <Details
                               reset={reset}
@@ -298,9 +320,11 @@ const Orders = () => {
 
                             <Row>
                               <Col md={8}>
-                                {  item.delivery_fee !== 0 && <h6>ค่าจัดส่ง {item.delivery_fee} บาท</h6> }
+                                {item.delivery_fee !== 0 && (
+                                  <h6>ค่าจัดส่ง {item.delivery_fee} บาท</h6>
+                                )}
                                 <h6>รวมทั้งหมด {item.amount} บาท</h6>
-                                 
+
                                 <h6>{item.customerName}</h6>
                                 {item.address ? (
                                   <h6>จัดส่งที่-{item.address}</h6>
@@ -327,7 +351,8 @@ const Orders = () => {
                                     }}
                                     variant="success w-100"
                                   >
-                                    อัพเดทเป็นทำเสร็จแล้ว
+                                    ทำ
+                                    เสร็จแล้ว
                                   </Button>
                                 </Col>
                               )}
@@ -361,7 +386,7 @@ const Orders = () => {
                                       }}
                                       variant="success w-100"
                                     >
-                                      กำลังส่ง
+                                      รอดำเนินการ
                                     </Button>
                                   </Col>
                                   <Col md={6} xs={6}>
@@ -377,7 +402,7 @@ const Orders = () => {
                                       }}
                                       variant="primary w-100"
                                     >
-                                      ส่งสำเร็จ
+                                      สำเร็จ
                                     </Button>
                                   </Col>
                                 </>
@@ -397,7 +422,7 @@ const Orders = () => {
                                       }}
                                       variant="success w-100"
                                     >
-                                      ส่งสำเร็จ
+                                      สำเร็จ
                                     </Button>
                                   </Col>
                                 </>
