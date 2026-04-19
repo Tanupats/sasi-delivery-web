@@ -213,7 +213,7 @@ const Admin = () => {
                       </Col>
                     </Row>
                     <br />
-                    <Row className="g-2">
+                    <Row className="g-2 bg-light p-2">
                       {randomKeywords.map((item, index) => (
                         <Col
                           key={index}
