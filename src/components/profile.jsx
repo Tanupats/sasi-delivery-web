@@ -19,11 +19,11 @@ const Profile = () => {
   };
 
   const updateData = async () => {
-    await httpPut("/user/"+user?.id,{phone: user?.phone})
-    await httpPut("/shop/"+shop?.id,{ ...shop, is_open: status }).then(
+    await httpPut("/user/" + user?.id, { phone: user?.phone });
+    await httpPut("/shop/" + shop?.id, { ...shop, is_open: status,delivery_fee:Number(shop.delivery_fee) }).then(
       (res) => {
         if (res) {
-          getUser();
+          getUser(); 
           Swal.fire({
             title: "แก้ไขข้อมูลสำเร็จ",
             icon: "success",
@@ -88,12 +88,24 @@ const Profile = () => {
                 onChange={(e) => setShop({ ...shop, name: e.target.value })}
               />
             </Col>
-
             <Col md={6}>
-              <label>แพ็คเกจ  {shop.package_name}   </label>
+              <label>ค่าบริการจัดส่ง</label>
+              <input
+                type="number"
+                className="form-control"
+                value={shop.delivery_fee}
+                onChange={(e) =>
+                  setShop({ ...shop, delivery_fee: e.target.value })
+                }
+              />
+            </Col>
+
+            <Col md={12} className="mt-2">
+              <label>แพ็คเกจ {shop.package_name} </label>
               <Alert>
                 <span>
-                  วันที่ใช้งาน: {moment(shop.date_start).format("DD/MM/YYYY")} - {moment(shop.end_date).format("DD/MM/YYYY")}
+                  วันที่ใช้งาน: {moment(shop.date_start).format("DD/MM/YYYY")} -{" "}
+                  {moment(shop.end_date).format("DD/MM/YYYY")}
                   <br />
                   เหลือเวลาใช้งานอีก <strong>{getRemainingDays()}</strong> วัน
                 </span>
