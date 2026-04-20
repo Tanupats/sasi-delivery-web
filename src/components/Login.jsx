@@ -5,122 +5,136 @@ import { AuthData } from "../ContextData";
 import { httpGet, httpPost } from "../http";
 
 const Login = () => {
-    const router = useNavigate()
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const { setStaffName, setUser, setShop } = useContext(AuthData);
-    const [messageError, setMessageError] = useState(false);
-  
-    const getShop = (id) => {
-        httpGet('/shop/shop-user/' + id).then((res) => {
-            setShop({ ...res.data[0] });
-            localStorage.setItem("shopId", res.data[0].shop_id);
-        })
-    }
+  const router = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { setStaffName, setUser, setShop } = useContext(AuthData);
+  const [messageError, setMessageError] = useState(false);
 
-    const login = async (e) => {
-        e.preventDefault();
-        const body = { email: email, password: password };
-        await httpPost('/auth/signin', body)
-            .then(res => {
-                if (res) {
-                    if (res.status === 200) {
-                        const { name, department, token, id } = res.data;
-                        localStorage.setItem("name", name);
-                        localStorage.setItem("role", department);
-                        localStorage.setItem("token", token);
-                        localStorage.setItem("userId", id);
-                        setUser(res.data);
-                        getShop(id);
-                        setStaffName(name);
-                        router('/pos');
-                    } else {                
-                        setMessageError(true);
-                    }
-                }
-            })
-    }
+  const getShop = (id) => {
+    httpGet("/shop/shop-user/" + id).then((res) => {
+      setShop({ ...res.data[0] });
+      localStorage.setItem("shopId", res.data[0].shop_id);
+    });
+  };
 
-    useEffect(() => {
-        if (localStorage.getItem("token")) {
-            router('/pos');
+
+  const getShopByUser = async (shop) => {
+    await httpGet("/shop/"+shop).then((res) => {
+      setShop(res.data[0]);
+      localStorage.setItem("shopId", res.data[0].shop_id);
+      localStorage.setItem("page_access_token",res.data[0].facebook_token);
+    });
+  };
+
+
+  const login = async (e) => {
+    e.preventDefault();
+    const body = { email: email, password: password };
+    await httpPost("/auth/signin", body).then((res) => {
+      if (res) {
+        if (res.status === 200) {
+          const { name, department, token, id, shop_id } = res.data;
+          localStorage.setItem("name", name);
+          localStorage.setItem("role", department);
+          localStorage.setItem("token", token);
+          localStorage.setItem("userId", id);
+          if (department === "admin") {
+            setUser(res.data);
+            getShop(id);//get shop by user 
+            setStaffName(name);
+            router("/pos");
+          }
+          if (department === "rider") {
+            router("/rider");
+            getShopByUser(shop_id);
+            localStorage.setItem("shopId",shop_id)
+          }
+        } else {
+          setMessageError(true);
         }
-    }, [])
+      }
+    });
+  };
 
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      router("/pos");
+    }
+  }, []);
 
-    return (
-        <>
-            <Row className="mt-4">
-                <Col md={4}>
+  return (
+    <>
+      <Row className="mt-4">
+        <Col md={4}></Col>
+        <Col md={4}>
+          <Card className="mt-4">
+            <Card.Body>
+              <Card.Title
+                className="text-center"
+                style={{ color: "#FD720D", border: "0px" }}
+              >
+                SASI POS <br />
+                <br />
+                เข้าสู่ระบบ{" "}
+              </Card.Title>
 
-                </Col>
-                <Col md={4}>
-                    <Card className="mt-4">
-                        <Card.Body>
-                            <Card.Title className="text-center" style={{ color: '#FD720D', border: '0px' }}>
-                                SASI POS <br />
-                                <br />
-                                เข้าสู่ระบบ </Card.Title>
-                       
-                                <Form onSubmit={login}>
-                                    <Form.Group>
-                                        <Form.Label>
-                                            email
-                                        </Form.Label>
-                                        <Form.Control
-                                            required
-                                            placeholder="email"
-                                            type="email"
-                                            value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
-                                        />
-                                    </Form.Group>
-                                    <Form.Group className="mt-2">
-                                        <Form.Label>
-                                            password
-                                        </Form.Label>
+              <Form onSubmit={login}>
+                <Form.Group>
+                  <Form.Label>email</Form.Label>
+                  <Form.Control
+                    required
+                    placeholder="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </Form.Group>
+                <Form.Group className="mt-2">
+                  <Form.Label>password</Form.Label>
 
-                                        <Form.Control
-                                            required
-                                            placeholder="password"
-                                            onChange={(e) => setPassword(e.target.value)}
-                                            type="password"
-                                        />
+                  <Form.Control
+                    required
+                    placeholder="password"
+                    onChange={(e) => setPassword(e.target.value)}
+                    type="password"
+                  />
+                </Form.Group>
+                {messageError ? (
+                  <p style={{ color: "red", marginTop: "12px" }}>
+                    {" "}
+                    รหัสผ่าน หรือ ชื่อผู้ใช้ไม่ถูกต้อง{" "}
+                  </p>
+                ) : (
+                  <> </>
+                )}
 
-                                    </Form.Group>
-                                    {
-                                        messageError ? (<p style={{ color: 'red', marginTop: '12px' }}> รหัสผ่าน หรือ ชื่อผู้ใช้ไม่ถูกต้อง </p>) : <> </>
-                                    }
+                <Button
+                  type="submit"
+                  style={{ backgroundColor: "#FD720D", border: "0px" }}
+                  className="w-100 mt-4"
+                >
+                  เข้าสู่ระบบ
+                </Button>
+                <div className="text-center mt-4">
+                  <p> หรือ </p>
+                </div>
 
-
-                                    <Button
-                                        type="submit"
-                                        style={{ backgroundColor: '#FD720D', border: '0px' }}
-
-                                        className="w-100 mt-4"
-                                    >เข้าสู่ระบบ</Button>
-                                    <div className="text-center mt-4">
-                                        <p> หรือ </p>
-                                    </div>
-
-                                    <Button
-                                        onClick={() => router('/register')}
-                                        variant="primary"
-                                        className="w-100 mt-2"
-                                    >ลงทะเบียน</Button>
-
-                                </Form>
-                           
-                        </Card.Body>
-                    </Card>
-                </Col>
-                <Col md={4}>
-
-                </Col>
-            </Row>
-
-        </>
-    )
-}
+                <Button
+                  onClick={() => router("/register")}
+                  variant="primary"
+                  className="w-100 mt-2"
+                >
+                  ลงทะเบียน
+                </Button>
+              </Form>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={4}></Col>
+      </Row>
+    </>
+  );
+};
 
 export default Login;
