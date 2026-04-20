@@ -1,13 +1,15 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext } from "react";
 import Swal from "sweetalert2";
 import { Row, Col, Card, Image } from "react-bootstrap";
 import Badge from "react-bootstrap/Badge";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import { AuthData } from "../ContextData";
 const ShopData = () => {
   const { shop_id,userid, name, } = useParams();
+  const {setAccount_payment,setPromptPay,setDeliveryFee} = useContext(AuthData);
   const router = useNavigate();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -31,6 +33,9 @@ const ShopData = () => {
   };
 
   const handleShopClick = async (shop) => {
+    setDeliveryFee(shop.delivery_fee);
+    setAccount_payment(shop.account_payment);
+    setPromptPay(shop.promtpay);
     localStorage.setItem("shop_token", shop.facebook_token);
     const token = shop.facebook_token;
     setLoading(true);

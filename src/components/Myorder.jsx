@@ -24,7 +24,7 @@ const Myorder = () => {
   ];
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const { counterOrder, api_url } = useContext(AuthData);
+  const { counterOrder, api_url, promptPay, account_payment } =  useContext(AuthData);
   let messengerId = localStorage.getItem("messangerId");
   const [myOrder, setMyOrder] = useState([]);
   const [orderHistory, setOrderHistory] = useState([]);
@@ -42,7 +42,8 @@ const Myorder = () => {
   };
 
   function handleQR(amount) {
-    setQrCode(generatePayload("0983460756", { amount: Number(amount) }));
+
+    setQrCode(generatePayload(promptPay, { amount: Number(amount) }));
   }
 
   useEffect(() => {
@@ -104,7 +105,7 @@ const Myorder = () => {
                               หมายเลขออเดอร์{" "}
                               {item.bill_ID.slice(-5).toUpperCase()} <br />{" "}
                               วันที่สั่งออเดอร์ {}
-                              {moment(item.Date_times).format("YYYY-MM-DD")}
+                              {moment(item.Date_times).format("DD-MM-YYYY")}
                               &nbsp; เวลา{" "}
                               {moment(item.Date_times).format("HH:mm")} น.
                             </h6>
@@ -151,10 +152,7 @@ const Myorder = () => {
                                   <Button
                                     variant="outline-primary"
                                     onClick={() => {
-                                      (handleQR(
-                                        Number(item.amount)
-                                     
-                                      ),
+                                      (handleQR(Number(item.amount)),
                                         setShowQr(!showQr));
                                     }}
                                   >
@@ -163,11 +161,11 @@ const Myorder = () => {
                                   {showQr ? (
                                     <center>
                                       <QRCode value={qrCode} className="mt-3" />
-                                      <h5>
-                                        นายตนุภัทร สิทธิวงศ์ <br />{" "}
-                                        ยอดรวมทั้งหมด {item.amount}
-                                        บาท{" "}
-                                      </h5>
+                                      <h6>
+                                        {account_payment} <br /> ยอดรวมทั้งหมด{" "}
+                                        {item.amount}
+                                       {" "} บาท
+                                      </h6>
                                     </center>
                                   ) : (
                                     <></>
@@ -268,7 +266,7 @@ const Myorder = () => {
                 <Alert variant="danger text-center">ยังไม่มีคำสั่งซื้อ</Alert>
               )}
             </Tab>
-            <Tab
+            {/* <Tab
               eventKey="order-history"
               title={<b className="custom-tab-title">ประวัติคำสั่งซื้อ</b>}
             >
@@ -340,7 +338,7 @@ const Myorder = () => {
                   ไม่พบคำสั่งซื้อที่ค้นหา
                 </Alert>
               )}
-            </Tab>
+            </Tab> */}
           </Tabs>
         </Card.Body>
       </Card>
