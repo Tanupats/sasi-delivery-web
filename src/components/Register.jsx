@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { httpPost } from "../http";
 import Swal from "sweetalert2";
 const Register = () => {
-  
   //user
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -12,11 +11,11 @@ const Register = () => {
   const [selectedPackage, setSelectedPackage] = useState("trial");
   let userId = "";
   const router = useNavigate();
-  
+
   //shop
   const [shopName, setshopName] = useState("");
   const [file, setFile] = useState("");
-  const [phone,setPhone] = useState("");
+  const [phone, setPhone] = useState("");
 
   let filename = "";
   const uploadFile = async () => {
@@ -35,7 +34,7 @@ const Register = () => {
       email: email,
       password: password,
       department: "admin",
-      phone:phone
+      phone: phone,
     };
     await httpPost("/auth/sigup", bodyUser).then((res) => {
       if (res) {
@@ -58,6 +57,8 @@ const Register = () => {
       date_end.setDate(date_end.getDate() + 7);
     } else if (selectedPackage === "pro") {
       date_end.setMonth(date_end.getMonth() + 1);
+    } else if (selectedPackage === "premium") {
+      date_end.setFullYear(date_end.getFullYear() + 1); // ✅ เพิ่มตรงนี้
     }
 
     const bodyShop = {
@@ -69,16 +70,15 @@ const Register = () => {
       end_date: date_end.toISOString(),
       payment: selectedPackage === "trial" ? "free" : "unpaid",
     };
-    await httpPost("/shop", bodyShop).then((res) => {
-      if (res) {
-        if (res.status === 200) {
-          Swal.fire({
-            title: "ลงทะเบียนสำเร็จ!",
-            text: "คุณได้ลงทะเบียนร้านค้าสำเร็จแล้ว",
-          });
 
-          router("/");
-        }
+    await httpPost("/shop", bodyShop).then((res) => {
+      if (res && res.status === 200) {
+        Swal.fire({
+          title: "ลงทะเบียนสำเร็จ!",
+          text: "คุณได้ลงทะเบียนร้านค้าสำเร็จแล้ว",
+        });
+
+        router("/");
       }
     });
   };
@@ -146,7 +146,7 @@ const Register = () => {
                 />
               </Form.Group>
               <Form.Group className="mt-2">
-                <Form.Label>รูปภาพ</Form.Label>
+                <Form.Label>รูปภาพ (หน้าปกร้าน)</Form.Label>
                 <Form.Control
                   type="file"
                   placeholder="โลโก้"
@@ -183,11 +183,26 @@ const Register = () => {
                       <span>
                         <strong>แพ็กเกจ Pro</strong>
                         <br />
-                        <small className="text-muted">600฿ /เดือน </small>
+                        <small className="text-muted">600฿ / เดือน </small>
                       </span>
                     }
                     value="pro"
                     checked={selectedPackage === "pro"}
+                    onChange={(e) => setSelectedPackage(e.target.value)}
+                  />
+                  <Form.Check
+                    type="radio"
+                    name="package"
+                    id="package-Premium"
+                    label={
+                      <span>
+                        <strong>แพ็กเกจ Premium</strong>
+                        <br />
+                        <small className="text-muted"> 5900฿ / ปี </small>
+                      </span>
+                    }
+                    value="premium"
+                    checked={selectedPackage === "premium"}
                     onChange={(e) => setSelectedPackage(e.target.value)}
                   />
                 </div>

@@ -18,9 +18,16 @@ const Profile = () => {
     return days;
   };
 
+
+  
   const updateData = async () => {
     await httpPut("/user/" + user?.id, { phone: user?.phone });
-    await httpPut("/shop/" + shop?.id, { ...shop, is_open: status,delivery_fee:Number(shop.delivery_fee) }).then(
+    await httpPut("/shop/" + shop?.id, { 
+       is_open: status,
+       delivery_fee:Number(shop.delivery_fee),
+       promtpay:shop.promtpay,
+       account_payment:shop.account_payment
+      }).then(
       (res) => {
         if (res) {
           getUser(); 
@@ -80,12 +87,30 @@ const Profile = () => {
           <h6 className="mb-3">ข้อมูลร้านค้า</h6>
 
           <Row className="mb-3">
-            <Col md={6}>
+            <Col md={6} className="mb-2">
               <label>ร้านค้า</label>
               <input
                 className="form-control"
                 value={shop.name}
                 onChange={(e) => setShop({ ...shop, name: e.target.value })}
+              />
+            </Col>
+            <Col md={6} className="mb-2">
+              <label>ชื่อบัญชีธนาคาร</label>
+              <input
+                placeholder="ชื่อบัญชีธนาคาร"
+                className="form-control"
+                value={shop.account_payment}
+                onChange={(e) => setShop({ ...shop, account_payment: e.target.value })}
+              />
+            </Col>
+            <Col md={6}>
+              <label>หมายเลขพร้อมเพย์</label>
+              <input
+                placeholder="พร้อทเพย์"
+                className="form-control"
+                value={shop.promtpay}
+                onChange={(e) => setShop({ ...shop, promtpay: e.target.value })}
               />
             </Col>
             <Col md={6}>
@@ -124,7 +149,7 @@ const Profile = () => {
             </Col>
 
             <Col md={6}>
-              <label>page access token</label>
+              <label>รหัสการเข้าถึงเพจ</label>
               <input
                 type="password"
                 className="form-control"
@@ -136,7 +161,10 @@ const Profile = () => {
                   })
                 }
               />
+
+             
             </Col>
+
           </Row>
 
           <Row>
@@ -168,7 +196,7 @@ const Profile = () => {
 
             <Col md={12}>
               <Button
-                className="w-100 mt-4"
+                className="w-100 mt-3"
                 style={{ background: "#ff7a00", border: "none" }}
                 onClick={updateData}
               >
