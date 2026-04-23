@@ -39,7 +39,7 @@ const Login = () => {
           localStorage.setItem("role", department);
           localStorage.setItem("token", token);
           localStorage.setItem("userId", id);
-          if (department === "admin") {
+          if (department === "admin" || department ==="manager") {
             setUser(res.data);
             getShop(id);//get shop by user 
             setStaffName(name);

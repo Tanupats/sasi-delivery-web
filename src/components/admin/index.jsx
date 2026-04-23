@@ -27,6 +27,7 @@ import Swal from "sweetalert2";
 import AddIcon from "@mui/icons-material/Add";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import SendIcon from "@mui/icons-material/Send";
+import SalesChart from "./chart-report";
 const Admin = () => {
   const [openMenu, setOpenMenu] = useState("เมนูอาหาร");
 
@@ -155,7 +156,12 @@ const Admin = () => {
                 </Card.Body>{" "}
               </Card>{" "}
             </Col>{" "}
+            <Col md={12}> 
+             <SalesChart/>
+            </Col>
+          
           </Row>
+
         </Tab>
         <Tab
           eventKey="ตั้งค่าแชทบอท"
