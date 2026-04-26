@@ -24,6 +24,7 @@ const Profile = () => {
     await httpPut("/user/" + user?.id, { phone: user?.phone });
     await httpPut("/shop/" + shop?.id, { 
        is_open: status,
+       open_time:shop.open_time,
        delivery_fee:Number(shop.delivery_fee),
        promtpay:shop.promtpay,
        account_payment:shop.account_payment
