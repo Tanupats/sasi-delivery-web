@@ -381,6 +381,18 @@ const Report = () => {
                       </TableRow>
                     ))}
                   </TableBody>
+
+                  {data.length===0  && (
+
+                    <TableBody>
+                      
+                     <TableRow> 
+                       <TableCell   className="text-center fw-bold" colSpan={9}> 
+                      <Alert variant="danger">ไม่มีข้อมูลยอดขาย </Alert>  
+                        </TableCell>   
+                        </TableRow> 
+                        </TableBody>
+                  ) }
                 </Table>
               </TableContainer>
             </Col>
