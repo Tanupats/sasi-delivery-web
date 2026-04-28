@@ -9,6 +9,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import DeleteIcon from '@mui/icons-material/Delete';
 import moment from "moment";
 import Swal from 'sweetalert2';
 const Accounting = () => {
@@ -21,28 +22,76 @@ const Accounting = () => {
     const [Price, setPrice] = useState(0.0);
     const [weight, setWeight] = useState(0.0);
     const [date, setDate] = useState(moment(new Date()).format('YYYY-MM-DD'))
+    const [tempItems, setTempItems] = useState([]);
     const { shop_id } = shop;
 
-    const saveOutcome = async (e) => {
+    const addItem = (e) => {
         e.preventDefault();
+        if (!listname || quantity <= 0 || Price <= 0) {
+            Swal.fire({
+                title: 'ข้อมูลไม่ครบถ้วน',
+                text: 'กรุณากรอกรายการ จำนวน และราคาให้ครบถ้วน',
+                icon: 'warning',
+                confirmButtonText: 'ตกลง',
+            });
+            return;
+        }
         const quantityValue = parseFloat(quantity);
         const priceValue = parseFloat(Price);
         const sum = quantityValue * priceValue;
-        const body = {
-            date_account: new Date(date).toISOString(),
+        
+        const newItem = {
             listname: listname,
             quantity: quantityValue,
-            Price: parseFloat(priceValue),
+            Price: priceValue,
+            total: sum,
+            date_account: new Date(date).toISOString(),
             shop_id: shop_id,
-            total: parseFloat(sum),
         };
-
-        await httpPost('/account', body)
+        
+        setTempItems([...tempItems, newItem]);
         setListName("");
         setQuantity(1);
         setPrice(0);
-        await getData();
+    };
 
+    const removeTempItem = (index) => {
+        const updated = tempItems.filter((_, i) => i !== index);
+        setTempItems(updated);
+    };
+
+    const saveAllOutcome = async () => {
+        if (tempItems.length === 0) {
+            Swal.fire({
+                title: 'ไม่มีรายการ',
+                text: 'กรุณาเพิ่มรายการก่อน',
+                icon: 'warning',
+                confirmButtonText: 'ตกลง',
+            });
+            return;
+        }
+
+        try {
+            for (const item of tempItems) {
+                await httpPost('/account', item);
+            }
+            Swal.fire({
+                title: 'บันทึกข้อมูลสำเร็จ!',
+                icon: 'success',
+                timer: 1500,
+                showConfirmButton: false,
+            });
+            setTempItems([]);
+            await getData();
+        } catch (error) {
+            console.error('Error saving records:', error);
+            Swal.fire({
+                title: 'เกิดข้อผิดพลาด',
+                text: 'ไม่สามารถบันทึกข้อมูลได้',
+                icon: 'error',
+                confirmButtonText: 'ตกลง',
+            });
+        }
     };
 
     const getData = async () => {
@@ -116,6 +165,10 @@ const Accounting = () => {
 
     useEffect(() => {
         getData();
+    }, [])
+
+    useEffect(() => {
+        getData();
     }
         , [date])
 
@@ -123,8 +176,9 @@ const Accounting = () => {
 
 
     return (<>
+        <div className="container" >
 
-        <Form onSubmit={(e) => saveOutcome(e)} className="mt-4">
+        <Form onSubmit={(e) => addItem(e)} className="mt-4">
             <Row>
                 <Col md={3}>
                     <Form.Label> วันที่ </Form.Label>  <Form.Control
@@ -168,22 +222,77 @@ const Accounting = () => {
                     </Form.Group>
 
                 </Col>
-                <Col md={3}>   <Button type="submit" variant="primary mt-4 w-50"> บันทึก </Button></Col>
+                <Col md={6}>   <Button type="submit" variant="primary mt-4 w-50"> เพิ่มรายการ </Button></Col>
             </Row>
 
         </Form>
 
-        <TableContainer component={Paper} className="mt-3">
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>ลำดับ</TableCell>
-                        <TableCell align="left">วันที่</TableCell>
-                        <TableCell align="left">รายการ</TableCell>
-                        <TableCell align="left">จำนวน</TableCell>
-                        <TableCell align="left">ราคา</TableCell>
-                        <TableCell align="left">รวมเป็นเงิน</TableCell>
-                        <TableCell align="left">จัดการ</TableCell>
+        {tempItems.length > 0 && (
+            <TableContainer component={Paper} className="mt-3">
+                <h6 className="p-3">รายการที่เพิ่มเพื่อบันทึก ({tempItems.length} รายการ)</h6>
+                <Table sx={{ minWidth: 650, "& td, & th": { border: "1px solid #999" } }} aria-label="temp items table">
+                    <TableHead sx={{ backgroundColor: '#707070' }}>
+                        <TableRow>
+                            <TableCell sx={{ backgroundColor: '#d6d6d6', color: '#303030', fontSize: '16px', fontWeight: 'bold' }}>ลำดับ</TableCell>
+                            <TableCell sx={{ backgroundColor: '#d6d6d6', color: '#303030', fontSize: '16px', fontWeight: 'bold' }} align="left">รายการ</TableCell>
+                            <TableCell sx={{ backgroundColor: '#d6d6d6', color: '#303030', fontSize: '16px', fontWeight: 'bold' }} align="left">จำนวน</TableCell>
+                            <TableCell sx={{ backgroundColor: '#d6d6d6', color: '#303030', fontSize: '16px', fontWeight: 'bold' }} align="left">ราคา</TableCell>
+                            <TableCell sx={{ backgroundColor: '#d6d6d6', color: '#303030', fontSize: '16px', fontWeight: 'bold' }} align="left">รวมเป็นเงิน</TableCell>
+                            <TableCell sx={{ backgroundColor: '#d6d6d6', color: '#303030', fontSize: '16px', fontWeight: 'bold' }} align="left">ลบ</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {tempItems.map((item, index) => (
+                            <TableRow key={index}>
+                                <TableCell>{index + 1}</TableCell>
+                                <TableCell align="left">{item.listname}</TableCell>
+                                <TableCell align="left">{item.quantity}</TableCell>
+                                <TableCell align="left">{item.Price}</TableCell>
+                                <TableCell align="left">{item.total}</TableCell>
+                                <TableCell align="left">
+                                    <Button variant="danger" size="sm" onClick={() => removeTempItem(index)}>
+                                        <DeleteIcon sx={{ fontSize: '18px' }} />
+                                    </Button>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                        {tempItems.length > 0 && (
+                            <TableRow sx={{ backgroundColor: '#e8e8e8' }}>
+                                <TableCell colSpan={4} align="right" sx={{ fontWeight: 'bold', fontSize: '16px', color: '#303030' }}>
+                                    ยอดรวมทั้งหมด:
+                                </TableCell>
+                                <TableCell align="left" sx={{ fontWeight: 'bold', fontSize: '16px', color: '#ff6b6b' }}>
+                                    {tempItems.reduce((sum, item) => sum + item.total, 0)} บาท
+                                </TableCell>
+                                <TableCell></TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+                <div className="p-3">
+                    <Button variant="success" onClick={saveAllOutcome} className="me-2">
+                        บันทึกข้อมูล
+                    </Button>
+                    <Button variant="secondary" onClick={() => setTempItems([])}>
+                        ยกเลิก
+                    </Button>
+                </div>
+            </TableContainer>
+        )}
+
+
+        <TableContainer component={Paper} className="mt-3 mb-5">
+            <h6 className="p-3  text-center">ข้อมูลค่าใช้จ่าย</h6>
+            <Table sx={{ minWidth: 650, "& td, & th": { border: "1px solid #999" } }} aria-label="saved data table">
+                <TableHead sx={{ backgroundColor: '#cacaca' }}>
+                    <TableRow className="text-left">
+                        <TableCell  colSpan={1}  sx={{ backgroundColor: '#d6d6d6', color: '#303030', fontSize: '16px', fontWeight: 'bold' }}>ลำดับ</TableCell>
+                        <TableCell sx={{ backgroundColor: '#d6d6d6', color: '#303030', fontSize: '16px', fontWeight: 'bold' }} align="left">วันที่</TableCell>
+                        <TableCell sx={{ backgroundColor: '#d6d6d6', color: '#303030', fontSize: '16px', fontWeight: 'bold' }} align="left">รายการ</TableCell>
+                        <TableCell sx={{ backgroundColor: '#d6d6d6', color: '#303030', fontSize: '16px', fontWeight: 'bold' }} align="left">จำนวน</TableCell>
+                        <TableCell sx={{ backgroundColor: '#d6d6d6', color: '#303030', fontSize: '16px', fontWeight: 'bold' }} align="left">ราคา</TableCell>
+                        <TableCell sx={{ backgroundColor: '#d6d6d6', color: '#303030', fontSize: '16px', fontWeight: 'bold' }} align="left">รวมเป็นเงิน</TableCell>
+                        <TableCell sx={{ backgroundColor: '#d6d6d6', color: '#303030', fontSize: '16px', fontWeight: 'bold' }} align="left">จัดการ</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -192,27 +301,36 @@ const Accounting = () => {
                             key={row.account_id}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
-                            <TableCell component="th" scope="row">
+                            <TableCell component="th" scope="row" colSpan={1}  sx={{ backgroundColor: '#f0f0f0', color: '#202020', fontSize: '14px' }}>
                                 {index + 1}
                             </TableCell>
                             <TableCell align="left">{moment(row.date_account).format('YYYY-MM-DD')}</TableCell>
-                            <TableCell align="left"> <Form.Control
-                                onChange={(e) => updateAccountId(row.account_id, e.target.value)}
-                                value={row.listname} />  </TableCell>
+                            <TableCell align="left">
+                               {row.listname} </TableCell>
                             <TableCell align="left">{row.quantity}</TableCell>
                             <TableCell align="left">{row.Price}</TableCell>
                             <TableCell align="left">{row.total}</TableCell>
-                            <TableCell align="left"><Button variant="danger" onClick={() => deleteOutcome(row.account_id)}> ลบ </Button></TableCell>
-                        </TableRow>
+                            <TableCell align="left"><Button variant="danger" onClick={() => deleteOutcome(row.account_id)}><DeleteIcon sx={{ fontSize: '18px' }} /></Button></TableCell>
+                        </TableRow> 
+
 
                     ))}
+                    {data?.length > 0 && (
+                        <TableRow sx={{ backgroundColor: '#e8e8e8' }}>
+                            <TableCell colSpan={5} align="right" sx={{ fontWeight: 'bold', fontSize: '16px', color: '#303030' }}>
+                                ค่าใช้จ่ายทั้งหมด:
+                            </TableCell>
+                            <TableCell align="left" sx={{ fontWeight: 'bold', fontSize: '16px', color: '#ff6b6b' }}>
+                                {outcome} บาท
+                            </TableCell>
+                            <TableCell></TableCell>
+                        </TableRow>
+                    )}
                 </TableBody>
             </Table>
-            <div className="mt-4 p-2">
-                <h5>ค่าใช้จ่ายทั้งหมด {outcome} บาท</h5>
-            </div>
 
         </TableContainer>
+        </div>
     </>)
 }
 export default Accounting;

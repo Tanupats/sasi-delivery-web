@@ -28,10 +28,12 @@ import AddIcon from "@mui/icons-material/Add";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import SendIcon from "@mui/icons-material/Send";
 import SalesChart from "./chart-report";
+import Accounting from "./accounting";
 const Admin = () => {
   const [openMenu, setOpenMenu] = useState("เมนูอาหาร");
 
   const [inComeNow, setIncomeNow] = useState(0);
+  const [outComeNow, setOutCome] = useState(0);
   const [totalOrder, setTotalOrder] = useState(85);
 
   const token = localStorage.getItem("token");
@@ -44,6 +46,16 @@ const Admin = () => {
       });
       setIncomeNow(res.data.totalAmount);
       setTotalOrder(res.data.total_bill);
+    }
+  };
+
+  const geOutComeNow = async () => {
+    if (shop) {
+      const res = await httpGet(`/account/outcome-mounth?shop_id=${shop?.shop_id}`, {
+        headers: { apikey: token },
+      });
+      setOutCome(res.data._sum.total);
+  
     }
   };
 
@@ -66,6 +78,7 @@ const Admin = () => {
   useEffect(() => {
     if (openMenu === "สรุปยอดขาย") {
       geIncomeNow();
+      geOutComeNow();
     }
   }, [openMenu]);
 
@@ -130,7 +143,7 @@ const Admin = () => {
         >
           <Row className="mt-3">
             {" "}
-            <Col md={6}>
+            <Col md={4}>
               {" "}
               <Card className="text-center">
                 {" "}
@@ -143,7 +156,33 @@ const Admin = () => {
                 </Card.Body>{" "}
               </Card>{" "}
             </Col>{" "}
-            <Col md={6}>
+            <Col md={4}>
+              {" "}
+              <Card className="text-center">
+                {" "}
+                <Card.Body>
+                  {" "}
+                  <Card.Title style={{ color: "#ff6b6b" }}>
+                    {" "}
+                    ค่าใช้จ่ายเดือนนี้ - {formatMoney(outComeNow)} บาท{" "}
+                  </Card.Title>{" "}
+                </Card.Body>{" "}
+              </Card>{" "}
+            </Col>{" "}
+            <Col md={4}>
+              {" "}
+              <Card className="text-center">
+                {" "}
+                <Card.Body>
+                  {" "}
+                  <Card.Title style={{ color: inComeNow - outComeNow >= 0 ? "#00b300" : "#ff0000" }}>
+                    {" "}
+                    กำไรสุทธิ = {formatMoney(inComeNow - outComeNow)} บาท{" "}
+                  </Card.Title>{" "}
+                </Card.Body>{" "}
+              </Card>{" "}
+            </Col>{" "}
+            <Col md={12} className="mt-2">
               {" "}
               <Card className="text-center">
                 {" "}
@@ -156,12 +195,10 @@ const Admin = () => {
                 </Card.Body>{" "}
               </Card>{" "}
             </Col>{" "}
-            <Col md={12}> 
-             <SalesChart/>
+            <Col md={12}>
+              <SalesChart />
             </Col>
-          
           </Row>
-
         </Tab>
         <Tab
           eventKey="ตั้งค่าแชทบอท"
@@ -291,6 +328,16 @@ const Admin = () => {
               </Button>
             </Card.Body>
           </Card>
+        </Tab>
+        <Tab
+          eventKey="บัญชีรายจ่าย"
+          title={
+            <span style={{ color: "#6c757d" }}>
+              <DataThresholdingIcon /> บัญชีรายจ่าย
+            </span>
+          }
+        >
+          <Accounting />
         </Tab>
       </Tabs>
     </>
