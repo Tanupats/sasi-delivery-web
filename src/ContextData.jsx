@@ -301,7 +301,6 @@ ${account_payment}`;
           PageAccessToken,
           deliveryFee,
           setDeliveryFee,
-          setAccount_payment,
           account_payment,
           setAccount_payment,
           setPromptPay,

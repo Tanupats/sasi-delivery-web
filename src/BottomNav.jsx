@@ -36,11 +36,21 @@ const BottomNav = () => {
               break;
           }
         }}
+        sx={{
+          '& .MuiBottomNavigationAction-root': {
+            color: '#999',
+            transition: 'color 0.3s ease',
+            '&.Mui-selected': {
+              color: '#ff6b35',
+              fontWeight: 'bold',
+            },
+          },
+        }}
       >
-        <BottomNavigationAction  icon={<Home />}   />
-        <BottomNavigationAction  icon={<Receipt    />}  />
-        <BottomNavigationAction  icon={<ShoppingCart   />}  />
-        <BottomNavigationAction  icon={<AccountCircle />  } />
+        <BottomNavigationAction label="Home" icon={<Home />}   />
+        <BottomNavigationAction label="Orders" icon={<Receipt    />}  />
+        <BottomNavigationAction label="Cart" icon={<ShoppingCart   />}  />
+        <BottomNavigationAction label="Profile" icon={<AccountCircle />  } />
       </BottomNavigation>
     </Paper>
   );
