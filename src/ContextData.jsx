@@ -144,6 +144,7 @@ ${account_payment}`;
         step: 1,
         delivery_fee: deliveryFee,
       };
+      sendMessageToPage(messengerId);
       const res = await axios.post(`${api_url}/bills/order`, body);
       if (res.status === 200) {
         const id = res.data.bill_ID;
@@ -159,12 +160,13 @@ ${account_payment}`;
         });
 
         await axios.post(`${api_url}/billsdetails`, bodyDetails);
-        sendMessageToPage(messengerId);
+
         Swal.fire({
           title: "สั่งออเดอร์สำเร็จ",
           text: "คำสั่งซื้อของคุณส่งไปยังร้านค้าแล้ว แจ้งชำระเงินและรอรับอาหารได้เลย",
           icon: "success",
           confirmButtonText: "ยืนยัน",
+          timer: 1300,
         });
       } else {
         Swal.fire({
@@ -303,7 +305,7 @@ ${account_payment}`;
           account_payment,
           setAccount_payment,
           setPromptPay,
-          promptPay
+          promptPay,
         }}
       >
         {children}
