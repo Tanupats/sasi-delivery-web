@@ -22,6 +22,7 @@ import { httpGet } from "../http";
 import generatePayload from "promptpay-qr";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 const Pos = () => {
   const router = useNavigate();
   const {
@@ -325,29 +326,19 @@ const Pos = () => {
                             
                           );
                         })}
-                        <tr>
+                        {/* <tr>
                               <td colSpan={4} style={{ padding: "4px" }}>
                                 รวมทั้งหมด : {sumPrice.toLocaleString("th-TH", {
                                 style: "currency",
                                 currency: "THB",
                               })}
                               </td>
-                            </tr>
+                            </tr> */}
                       </tbody>
                     </Table>
                     <Form>
                       <Row className="order-type when-print">
-                        <Col md={12} xs={12} className="mt-3">
-                          <Button
-                            style={{ height: "46px", marginBottom: "20px" }}
-                            onClick={() => {
-                              resetCart();
-                            }}
-                            variant="danger w-100"
-                          >
-                            ยกเลิกทั้งหมด
-                          </Button>
-                        </Col>
+                        
                         <ButtonGroup className="w-100 mb-3">
                           <Button
                         style={{color: activeTypeRecipe === "เสิร์ฟในร้าน" ? "#fff" : "#000000", border: `2px solid ${activeTypeRecipe === "เสิร์ฟในร้าน" ? "#ff7a00" : "#bebebe"}`, backgroundColor: activeTypeRecipe === "เสิร์ฟในร้าน" ? "#ff7a00" : "#fff"}}
@@ -373,20 +364,10 @@ const Pos = () => {
                             รับหน้าร้าน
                           </Button>
 
-                          <Button 
-                          style={{color: activeTypeRecipe === "สั่งกลับบ้าน" ? "#fff" : "#000000", border: `2px solid ${activeTypeRecipe === "สั่งกลับบ้าน" ? "#ff7a00" : "#bebebe"}`, backgroundColor: activeTypeRecipe === "สั่งกลับบ้าน" ? "#ff7a00" : "#fff"}}
-                    
-                            onClick={() => {
-                              setOrderType("สั่งกลับบ้าน");
-                              setName("จัดส่ง");
-                              setActiveTypeRecipe("สั่งกลับบ้าน");
-                            }}
-                          >
-                            จัดส่ง
-                          </Button>
+                        
                         </ButtonGroup>
 
-                        <Col
+                        {/* <Col
                           md={12}
                           className="mt-2 mb-4"
                           style={{ marginBottom: "500px" }}
@@ -397,7 +378,7 @@ const Pos = () => {
                             onChange={(e) => setName(e.target.value)}
                             value={name}
                           />
-                        </Col>
+                        </Col> */}
                       </Row>
                     </Form>
                     {cart?.length > 0 && (
@@ -430,15 +411,17 @@ const Pos = () => {
                       </Col>
 
                       <Col md={6} xs={6}>
-                        <Button
-                          style={{ height: "46px" }}
-                          onClick={() => {
-                            printSlip();
-                          }}
-                          variant="primary w-100"
-                        >
-                          <LocalPrintshopIcon /> พิมพ์
-                        </Button>
+                     
+                          <Button
+                            style={{ height: "46px", marginBottom: "20px" }}
+                            onClick={() => {
+                              resetCart();
+                            }}
+                            variant="danger w-100"
+                          >
+                            <CancelOutlinedIcon /> ยกเลิก
+                          </Button>
+                        
                       </Col>
                     </Row>
                   </Col>
@@ -578,12 +561,12 @@ const Pos = () => {
                     confirmMenu();
                   }}
                 >
-                  <AddCircleIcon /> เพิ่มลงในรายการ
+                  <AddCircleIcon /> บันทึก
                 </Button>
               </Col>
               <Col md={6} xs={6}>
                 <Button variant="danger w-100" onClick={handleClose}>
-                  ยกเลิก
+                  <CancelOutlinedIcon /> ยกเลิก
                 </Button>
               </Col>
             </Row>

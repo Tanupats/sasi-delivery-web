@@ -4,6 +4,8 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
+
+import MopedOutlinedIcon from '@mui/icons-material/MopedOutlined';
 import { AuthData } from "../ContextData";
 
 import FoodMenu from "./FoodMenu";
@@ -76,9 +78,12 @@ const NavbarMenu = () => {
               <Nav.Link as={Link} to="/orders" className="text-white">
                 <ViewQuiltIcon style={{ marginRight: 4 }} /> ออเดอร์
               </Nav.Link>
+              <Nav.Link as={Link} to="/rider" className="text-white">
+                <MopedOutlinedIcon style={{ marginRight: 4 }} /> ออเดอร์จัดส่ง
+              </Nav.Link>
 
               <Nav.Link as={Link} to="/report" className="text-white">
-                <AssessmentIcon style={{ marginRight: 4 }} /> สรุปยอดขาย
+                <AssessmentIcon style={{ marginRight: 4 }} />ยอดขาย
               </Nav.Link>
 
               <Nav.Link as={Link} to="/admin" className="text-white">
@@ -118,8 +123,12 @@ const NavbarMenu = () => {
             <ViewQuiltIcon /> จัดการออเดอร์
           </Nav.Link>
 
+          <Nav.Link as={Link} to="/rider" onClick={() => setOpenMenu(false)}>
+            <MopedOutlinedIcon /> ออเดอร์จัดส่ง
+          </Nav.Link>
+
           <Nav.Link as={Link} to="/report" onClick={() => setOpenMenu(false)}>
-            <AssessmentIcon /> สรุปยอดขาย
+            <AssessmentIcon /> ยอดขาย
           </Nav.Link>
 
           <Nav.Link as={Link} to="/admin" onClick={() => setOpenMenu(false)}>
