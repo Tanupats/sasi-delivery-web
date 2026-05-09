@@ -22,7 +22,7 @@ import Spinner from "react-bootstrap/Spinner";
 const Rider = () => {
   const dev = import.meta.env.VITE_API_URL;
   const { user ,shop} = useContext(AuthData);
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("page_access_token");
   const [report, setReport] = useState([]);
   const [file, setFile] = useState("");
   const [Delivered, setDelivered] = useState(0);
