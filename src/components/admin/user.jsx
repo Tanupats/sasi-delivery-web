@@ -185,7 +185,7 @@ const User = () => {
 <Row>
 
   <Col>
-    <Button variant="secondary"   onClick={handleShow}>
+    <Button variant="success"   onClick={handleShow}>
      <AddCircleIcon /> เพิ่มข้อมูลพนักงาน
       </Button>
   </Col>

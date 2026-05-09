@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { Row, Col, Form, Button } from 'react-bootstrap'
 import { httpDelete, httpGet, httpPost, httpPut } from "../../http";
 import { AuthData } from "../../ContextData";
@@ -19,11 +19,12 @@ const Accounting = () => {
     const token = localStorage.getItem("token");
     const [listname, setListName] = useState("");
     const [quantity, setQuantity] = useState(1);
-    const [Price, setPrice] = useState(0.0);
+    const [Price, setPrice] = useState("");
     const [weight, setWeight] = useState(0.0);
     const [date, setDate] = useState(moment(new Date()).format('YYYY-MM-DD'))
     const [tempItems, setTempItems] = useState([]);
     const { shop_id } = shop;
+    const listnameInputRef = useRef(null);
 
     const addItem = (e) => {
         e.preventDefault();
@@ -79,7 +80,8 @@ const Accounting = () => {
                 title: 'บันทึกข้อมูลสำเร็จ!',
                 icon: 'success',
                 timer: 1500,
-                showConfirmButton: false,
+                showConfirmButton: false
+              
             });
             setTempItems([]);
             await getData();
@@ -169,8 +171,14 @@ const Accounting = () => {
 
     useEffect(() => {
         getData();
-    }
-        , [date])
+    }, [date])
+
+    useEffect(() => {
+        if (listname === "" && listnameInputRef.current) {
+            listnameInputRef.current.focus();
+            listnameInputRef.current.select();
+        }
+    }, [listname])
 
 
 
@@ -188,7 +196,13 @@ const Accounting = () => {
                 <Col md={12}>
                     <Form.Group className="mb-2 mt-2">
                         <Form.Label> รายการ </Form.Label>
-                        <Form.Control type="text" value={listname} placeholder="รายการ" onChange={(e) => setListName(e.target.value)} />
+                        <Form.Control 
+                            ref={listnameInputRef}
+                            type="text" 
+                            value={listname} 
+                            placeholder="รายการ" 
+                            onChange={(e) => setListName(e.target.value)} 
+                        />
                     </Form.Group>
                 </Col>
                 <Col md={6}>
@@ -228,52 +242,61 @@ const Accounting = () => {
         </Form>
 
         {tempItems.length > 0 && (
-            <TableContainer component={Paper} className="mt-3">
-                <h6 className="p-3">รายการที่เพิ่มเพื่อบันทึก ({tempItems.length} รายการ)</h6>
-                <Table sx={{ minWidth: 650, "& td, & th": { border: "1px solid #999" } }} aria-label="temp items table">
-                    <TableHead sx={{ backgroundColor: '#707070' }}>
-                        <TableRow>
-                            <TableCell sx={{ backgroundColor: '#d6d6d6', color: '#303030', fontSize: '16px', fontWeight: 'bold' }}>ลำดับ</TableCell>
-                            <TableCell sx={{ backgroundColor: '#d6d6d6', color: '#303030', fontSize: '16px', fontWeight: 'bold' }} align="left">รายการ</TableCell>
-                            <TableCell sx={{ backgroundColor: '#d6d6d6', color: '#303030', fontSize: '16px', fontWeight: 'bold' }} align="left">จำนวน</TableCell>
-                            <TableCell sx={{ backgroundColor: '#d6d6d6', color: '#303030', fontSize: '16px', fontWeight: 'bold' }} align="left">ราคา</TableCell>
-                            <TableCell sx={{ backgroundColor: '#d6d6d6', color: '#303030', fontSize: '16px', fontWeight: 'bold' }} align="left">รวมเป็นเงิน</TableCell>
-                            <TableCell sx={{ backgroundColor: '#d6d6d6', color: '#303030', fontSize: '16px', fontWeight: 'bold' }} align="left">ลบ</TableCell>
+            <TableContainer component={Paper} className="mt-3" sx={{ boxShadow: 3, borderRadius: 2 }}>
+                <h6 className="p-3" style={{ fontSize: '18px', fontWeight: 'bold', margin: 0, backgroundColor: '#f5f5f5', borderRadius: '8px 8px 0 0' }}>
+                    รายการที่เพิ่มเพื่อบันทึก ({tempItems.length} รายการ)
+                </h6>
+                <Table sx={{ minWidth: 650 }} aria-label="temp items table">
+                    <TableHead>
+                        <TableRow sx={{ backgroundColor: '#1976d2' }}>
+                            <TableCell sx={{ color: '#fff', fontWeight: 'bold', fontSize: '14px' }}>ลำดับ</TableCell>
+                            <TableCell sx={{ color: '#fff', fontWeight: 'bold', fontSize: '14px' }} align="left">รายการ</TableCell>
+                            <TableCell sx={{ color: '#fff', fontWeight: 'bold', fontSize: '14px' }} align="right">จำนวน</TableCell>
+                            <TableCell sx={{ color: '#fff', fontWeight: 'bold', fontSize: '14px' }} align="right">ราคา</TableCell>
+                            <TableCell sx={{ color: '#fff', fontWeight: 'bold', fontSize: '14px' }} align="right">รวมเป็นเงิน</TableCell>
+                            <TableCell sx={{ color: '#fff', fontWeight: 'bold', fontSize: '14px' }} align="center">ลบ</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {tempItems.map((item, index) => (
-                            <TableRow key={index}>
-                                <TableCell>{index + 1}</TableCell>
+                            <TableRow 
+                                key={index}
+                                sx={{ 
+                                    '&:nth-of-type(odd)': { backgroundColor: '#f9f9f9' },
+                                    '&:hover': { backgroundColor: '#e3f2fd' },
+                                    transition: 'background-color 0.2s'
+                                }}
+                            >
+                                <TableCell sx={{ fontWeight: 'bold' }}>{index + 1}</TableCell>
                                 <TableCell align="left">{item.listname}</TableCell>
-                                <TableCell align="left">{item.quantity}</TableCell>
-                                <TableCell align="left">{item.Price}</TableCell>
-                                <TableCell align="left">{item.total}</TableCell>
-                                <TableCell align="left">
-                                    <Button variant="danger" size="sm" onClick={() => removeTempItem(index)}>
-                                        <DeleteIcon sx={{ fontSize: '18px' }} />
+                                <TableCell align="right">{item.quantity.toLocaleString('th-TH')}</TableCell>
+                                <TableCell align="right">{item.Price.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
+                                <TableCell align="right" sx={{ color: '#d32f2f', fontWeight: 'bold' }}>{item.total.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
+                                <TableCell align="center">
+                                    <Button variant="contained" color="error" size="small" onClick={() => removeTempItem(index)}>
+                                        <DeleteIcon sx={{ fontSize: '16px' }} />
                                     </Button>
                                 </TableCell>
                             </TableRow>
                         ))}
                         {tempItems.length > 0 && (
-                            <TableRow sx={{ backgroundColor: '#e8e8e8' }}>
-                                <TableCell colSpan={4} align="right" sx={{ fontWeight: 'bold', fontSize: '16px', color: '#303030' }}>
+                            <TableRow sx={{ backgroundColor: '#fff3e0', fontWeight: 'bold' }}>
+                                <TableCell colSpan={4} align="right" sx={{ fontWeight: 'bold', fontSize: '15px', color: '#333' }}>
                                     ยอดรวมทั้งหมด:
                                 </TableCell>
-                                <TableCell align="left" sx={{ fontWeight: 'bold', fontSize: '16px', color: '#ff6b6b' }}>
-                                    {tempItems.reduce((sum, item) => sum + item.total, 0)} บาท
+                                <TableCell align="right" sx={{ fontWeight: 'bold', fontSize: '15px', color: '#d32f2f' }}>
+                                    {tempItems.reduce((sum, item) => sum + item.total, 0).toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} บาท
                                 </TableCell>
                                 <TableCell></TableCell>
                             </TableRow>
                         )}
                     </TableBody>
                 </Table>
-                <div className="p-3">
-                    <Button variant="success" onClick={saveAllOutcome} className="me-2">
+                <div className="p-3" style={{ display: 'flex', gap: '10px', borderTop: '1px solid #e0e0e0' }}>
+                    <Button variant="contained" color="success" onClick={saveAllOutcome} sx={{ fontWeight: 'bold' }}>
                         บันทึกข้อมูล
                     </Button>
-                    <Button variant="secondary" onClick={() => setTempItems([])}>
+                    <Button variant="outlined" color="inherit" onClick={() => setTempItems([])}>
                         ยกเลิก
                     </Button>
                 </div>
@@ -281,54 +304,65 @@ const Accounting = () => {
         )}
 
 
-        <TableContainer component={Paper} className="mt-3 mb-5">
-            <h6 className="p-3  text-center">ข้อมูลค่าใช้จ่าย</h6>
-            <Table sx={{ minWidth: 650, "& td, & th": { border: "1px solid #999" } }} aria-label="saved data table">
-                <TableHead sx={{ backgroundColor: '#cacaca' }}>
-                    <TableRow className="text-left">
-                        <TableCell  colSpan={1}  sx={{ backgroundColor: '#d6d6d6', color: '#303030', fontSize: '16px', fontWeight: 'bold' }}>ลำดับ</TableCell>
-                        <TableCell sx={{ backgroundColor: '#d6d6d6', color: '#303030', fontSize: '16px', fontWeight: 'bold' }} align="left">วันที่</TableCell>
-                        <TableCell sx={{ backgroundColor: '#d6d6d6', color: '#303030', fontSize: '16px', fontWeight: 'bold' }} align="left">รายการ</TableCell>
-                        <TableCell sx={{ backgroundColor: '#d6d6d6', color: '#303030', fontSize: '16px', fontWeight: 'bold' }} align="left">จำนวน</TableCell>
-                        <TableCell sx={{ backgroundColor: '#d6d6d6', color: '#303030', fontSize: '16px', fontWeight: 'bold' }} align="left">ราคา</TableCell>
-                        <TableCell sx={{ backgroundColor: '#d6d6d6', color: '#303030', fontSize: '16px', fontWeight: 'bold' }} align="left">รวมเป็นเงิน</TableCell>
-                        <TableCell sx={{ backgroundColor: '#d6d6d6', color: '#303030', fontSize: '16px', fontWeight: 'bold' }} align="left">จัดการ</TableCell>
+        <TableContainer component={Paper} className="mt-3 mb-5" sx={{ boxShadow: 3, borderRadius: 2 }}>
+            <h6 className="p-3" style={{ fontSize: '18px', fontWeight: 'bold', margin: 0, backgroundColor: '#f5f5f5', borderRadius: '8px 8px 0 0' }}>
+                ข้อมูลค่าใช้จ่าย
+            </h6>
+            <Table sx={{ minWidth: 650 }} aria-label="saved data table">
+                <TableHead>
+                    <TableRow sx={{ backgroundColor: '#1976d2' }}>
+                        <TableCell sx={{ color: '#fff', fontWeight: 'bold', fontSize: '14px' }}>ลำดับ</TableCell>
+                        <TableCell sx={{ color: '#fff', fontWeight: 'bold', fontSize: '14px' }} align="left">วันที่</TableCell>
+                        <TableCell sx={{ color: '#fff', fontWeight: 'bold', fontSize: '14px' }} align="left">รายการ</TableCell>
+                        <TableCell sx={{ color: '#fff', fontWeight: 'bold', fontSize: '14px' }} align="right">จำนวน</TableCell>
+                        <TableCell sx={{ color: '#fff', fontWeight: 'bold', fontSize: '14px' }} align="right">ราคา</TableCell>
+                        <TableCell sx={{ color: '#fff', fontWeight: 'bold', fontSize: '14px' }} align="right">รวมเป็นเงิน</TableCell>
+                        <TableCell sx={{ color: '#fff', fontWeight: 'bold', fontSize: '14px' }} align="center">จัดการ</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {data?.length > 0 && data?.map((row, index) => (
                         <TableRow
                             key={row.account_id}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                            sx={{ 
+                                '&:nth-of-type(odd)': { backgroundColor: '#f9f9f9' },
+                                '&:hover': { backgroundColor: '#e3f2fd' },
+                                transition: 'background-color 0.2s'
+                            }}
                         >
-                            <TableCell component="th" scope="row" colSpan={1}  sx={{ backgroundColor: '#f0f0f0', color: '#202020', fontSize: '14px' }}>
-                                {index + 1}
-                            </TableCell>
+                            <TableCell sx={{ fontWeight: 'bold' }}>{index + 1}</TableCell>
                             <TableCell align="left">{moment(row.date_account).format('YYYY-MM-DD')}</TableCell>
-                            <TableCell align="left">
-                               {row.listname} </TableCell>
-                            <TableCell align="left">{row.quantity}</TableCell>
-                            <TableCell align="left">{row.Price}</TableCell>
-                            <TableCell align="left">{row.total}</TableCell>
-                            <TableCell align="left"><Button variant="danger" onClick={() => deleteOutcome(row.account_id)}><DeleteIcon sx={{ fontSize: '18px' }} /></Button></TableCell>
+                            <TableCell align="left">{row.listname}</TableCell>
+                            <TableCell align="right">{row.quantity?.toLocaleString('th-TH') || 0}</TableCell>
+                            <TableCell align="right">{parseFloat(row.Price).toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
+                            <TableCell align="right" sx={{ color: '#d32f2f', fontWeight: 'bold' }}>{parseFloat(row.total).toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
+                            <TableCell align="center">
+                                <Button variant="contained" color="error" size="small" onClick={() => deleteOutcome(row.account_id)}>
+                                    <DeleteIcon sx={{ fontSize: '16px' }} />
+                                </Button>
+                            </TableCell>
                         </TableRow> 
-
-
                     ))}
+                    {data?.length === 0 && (
+                        <TableRow>
+                            <TableCell colSpan={7} align="center" sx={{ padding: '40px', color: '#999', fontSize: '16px' }}>
+                                ไม่มีข้อมูล
+                            </TableCell>
+                        </TableRow>
+                    )}
                     {data?.length > 0 && (
-                        <TableRow sx={{ backgroundColor: '#e8e8e8' }}>
-                            <TableCell colSpan={5} align="right" sx={{ fontWeight: 'bold', fontSize: '16px', color: '#303030' }}>
+                        <TableRow sx={{ backgroundColor: '#fff3e0', fontWeight: 'bold' }}>
+                            <TableCell colSpan={5} align="right" sx={{ fontWeight: 'bold', fontSize: '15px', color: '#333' }}>
                                 ค่าใช้จ่ายทั้งหมด:
                             </TableCell>
-                            <TableCell align="left" sx={{ fontWeight: 'bold', fontSize: '16px', color: '#ff6b6b' }}>
-                                {outcome} บาท
+                            <TableCell align="right" sx={{ fontWeight: 'bold', fontSize: '15px', color: '#d32f2f' }}>
+                                {outcome.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} บาท
                             </TableCell>
                             <TableCell></TableCell>
                         </TableRow>
                     )}
                 </TableBody>
             </Table>
-
         </TableContainer>
         </div>
     </>)

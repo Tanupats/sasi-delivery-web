@@ -204,15 +204,13 @@ const Admin = () => {
           eventKey="ตั้งค่าแชทบอท"
           title={
             <span style={{ color: "#6c757d" }}>
-              <MessageIcon /> จัดการแชทบอท
+              <MessageIcon /> การตอบกลับอัตโนมัติ
             </span>
           }
         >
           <Card>
             <Card.Body>
-              <Card.Title className="text-center mb-4">
-                ออกแบบแชทบอท ตอบกลับอัตโนมัติ
-              </Card.Title>
+            
               <Row>
                 <Col md={2}>
                   <Button variant="outline-primary" className="w-100">
@@ -240,7 +238,7 @@ const Admin = () => {
                   border: "1px solid #ccc",
                 }}
               >
-                <span className="mb-2">ยินดีต้อนรับ</span>
+                <span className="mb-2" style={{ color: 'red', fontWeight: 'bold' }}>กำลังพัฒนาในส่วนของการตอบกลับอัตโนมัติ</span>
 
                 <Col md={4}>
                   <div className="block">
@@ -323,9 +321,9 @@ const Admin = () => {
                 </Col>
               </Row>
 
-              <Button variant="success" className="mt-4 mb-2">
+              {/* <Button variant="success" className="mt-4 mb-2">
                 บันทึกการตั้งค่า
-              </Button>
+              </Button> */}
             </Card.Body>
           </Card>
         </Tab>
