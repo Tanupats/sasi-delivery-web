@@ -22,7 +22,7 @@ import Spinner from "react-bootstrap/Spinner";
 const Rider = () => {
   const dev = import.meta.env.VITE_API_URL;
   const { user ,shop} = useContext(AuthData);
-  const token = localStorage.getItem("page_access_token");
+  const token = localStorage.getItem("token");
   const [report, setReport] = useState([]);
   const [file, setFile] = useState("");
   const [Delivered, setDelivered] = useState(0);
@@ -37,6 +37,19 @@ const Rider = () => {
   const [userid, setUserId] = useState("");
   const shopId = localStorage.getItem("shopId");
   const PAGE_ACCESS_TOKEN = localStorage.getItem("page_access_token");
+  const [statusOrderCount, setStatusOrderCount] = useState([]);
+
+
+   const getOrderStatus = async () => {
+      if (shopId) {
+        await httpGet(`/bills/counter-order-status/${shopId}`, {
+          headers: { apikey: token },
+        }).then((res) => {
+          setStatusOrderCount(res.data);
+        });
+      }
+    };
+  
 
   const sendImageToPage = async (userid, url) => {
     await axios
@@ -82,49 +95,9 @@ const Rider = () => {
     setLoading(false);
   };
 
-  const getOrderDelivery = async () => {
-    if (shopId) {
-      await httpGet(
-        `/bills/counter-order-status/${shopId}?statusOrder=ส่งสำเร็จ`,
-        { headers: { apikey: token } },
-      ).then((res) => {
-        setDelivered(res.data.count);
-      });
-    }
-  };
+ 
+ 
 
-  const getOrderNew = async () => {
-    if (shopId) {
-      await httpGet(
-        `/bills/counter-order-status/${shopId}?statusOrder=รับออเดอร์แล้ว`,
-        { headers: { apikey: token } },
-      ).then((res) => {
-        setOrderNew(res.data.count);
-      });
-    }
-  };
-
-  const getOrderCooking = async () => {
-    if (shopId) {
-      await httpGet(
-        `/bills/counter-order-status/${shopId}?statusOrder=กำลังส่ง`,
-        { headers: { apikey: token } },
-      ).then((res) => {
-        setOrderCooking(res.data.count);
-      });
-    }
-  };
-
-  const getOrderCookingFinish = async () => {
-    if (shopId) {
-      await httpGet(
-        `/bills/counter-order-status/${shopId}?statusOrder=ทำเสร็จแล้ว`,
-        { headers: { apikey: token } },
-      ).then((res) => {
-        setOrderCookingFinish(res.data.count);
-      });
-    }
-  };
 
   const uploadFile = async (messageid) => {
     const formData = new FormData();
@@ -265,20 +238,14 @@ const Rider = () => {
           setFile("");
           setOpen(false);
         }
-        getOrderNew();
-        getOrderDelivery();
-        getOrderCookingFinish();
-        getOrderCooking();
+      getOrderStatus();
       }
     });
   };
 
   useEffect(() => {
     getMenuReport("รับออเดอร์แล้ว");
-    getOrderNew();
-    getOrderDelivery();
-    getOrderCookingFinish();
-    getOrderCooking();
+    getOrderStatus();
   }, [shopId]);
 
   return (
@@ -337,7 +304,7 @@ const Rider = () => {
                         setStatusOrder("รับออเดอร์แล้ว"));
                     }}
                   >
-                    ใหม่ {OrderNew}
+                    ใหม่  {statusOrderCount[0]?.total}
                   </Button>
                   <Button
                     variant={
@@ -351,7 +318,7 @@ const Rider = () => {
                         setStatusOrder("ทำเสร็จแล้ว"));
                     }}
                   >
-                    พร้อมส่ง {OrderCookingFinish}
+                    พร้อมส่ง  {statusOrder[2]?.total}
                   </Button>
                   <Button
                     variant={
@@ -364,7 +331,7 @@ const Rider = () => {
                       (getMenuReport("กำลังส่ง"), setStatusOrder("กำลังส่ง"));
                     }}
                   >
-                    กำลังส่ง {OrderCooking}
+                    กำลังส่ง {statusOrderCount[1]?.total}
                   </Button>
                   <Button
                     variant={
@@ -377,7 +344,7 @@ const Rider = () => {
                       (getMenuReport("ส่งสำเร็จ"), setStatusOrder("ส่งสำเร็จ"));
                     }}
                   >
-                    ส่งสำเร็จ {Delivered}{" "}
+                    ส่งสำเร็จ {statusOrderCount[3]?.total}{" "}
                   </Button>
                 </ButtonGroup>
               </Row>
@@ -405,11 +372,8 @@ const Rider = () => {
                       <Col md={4}>
                         <Card className="mb-4 mt-4" id={item.id}>
                           <Card.Body style={{ padding: "12px" }}>
-                            <div className="text-center show-header">
-                              <h5> {shop?.name} </h5>
-                              <h5>ใบเสร็จรับเงิน</h5>
-                            </div>
-                            {/*  คิวที่ {item.queueNumber} <br /> */}
+                           
+                      
                             <b>
                               {" "}
                               เลขออเดอร์ {item.bill_ID.slice(-5).toUpperCase()}
@@ -417,26 +381,20 @@ const Rider = () => {
                             <p>
                               เวลาสั่งซื้อ{" "}
                               {moment(item.timeOrder).format("HH:mm")} น. &nbsp;
-                              วันที่สั่ง{" "}
+                              วันที่สั่งซื้อ{" "}
                               {moment(item.timeOrder).format("YYYY-MM-DD")}
                             </p>
-                            <Row>
-                              <Col md={12} xs={12}>
-                                <h5>{item.customerName}</h5>
-                              </Col>
-                            </Row>
+                          
                             <Alert className="bg-white p-2 text-center">
                               <Row>
                                 <Col md={6} xs={6}>
                                   <h5>{item.statusOrder}</h5>
                                 </Col>
-                                <Col md={6} xs={6}>
-                                  <h5> {item.amount} บาท</h5>
-
+                                <Col md={6} xs={6}>                         
                                   {item.payment_type === "bank_transfer" ? (
-                                    <Badge bg="danger">เงินโอน</Badge>
+                                    <Badge size="lg" bg="danger">เงินโอน</Badge>
                                   ) : (
-                                    <Badge bg="secondary">จ่ายเงินสด</Badge>
+                                    <Badge size="lg" bg="success">จ่ายเงินสด</Badge>
                                   )}
                                 </Col>
                               </Row>
@@ -446,10 +404,18 @@ const Rider = () => {
                               bill_ID={item.bill_ID}
                               status={item.statusOrder}
                             />
+
+                              <Row>
+                               
+                              <Col md={12} xs={12}>
+                                <h5>  รวมทั้งหมด {item.amount} บาท</h5> <hr />
+                                <h5>{item.customerName}</h5>
+                              </Col>
+                            </Row>
                             <Row className="mt-2">
                               <Col md={8}>
                                 {item.address ? (
-                                  <h5>ที่อยู่จัดส่ง-{item.address}</h5>
+                                  <h5>จัดส่ง-{item.address}</h5>
                                 ) : (
                                   " "
                                 )}

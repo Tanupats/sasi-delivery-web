@@ -144,13 +144,11 @@ const Details = (props) => {
 
     useEffect(() => {
         if (onUpdate) {
-            console.log(detail);
             let newPriceBeforeUpdate = 0;
             detail.map((item) => {
                 newPriceBeforeUpdate += item.quantity * item.price;
             })
             updateAmount(newPriceBeforeUpdate);
-
         }
     }, [detail])
 
@@ -171,7 +169,7 @@ const Details = (props) => {
                     return (<React.Fragment key={item.id}>
                         <Row>
                             <Col md={8}>
-                                <ListGroup.Item style={{ border: 'none', margin: '0px', padding: '0px', fontSize: '18px' }}>   {item.foodname}  {item.note}     {item.price}     {item.quantity}</ListGroup.Item>
+                                <ListGroup.Item style={{ border: 'none', margin: '0px', padding: '0px', fontSize: '18px' }}>   {item.foodname}  {item.note}     {item.price}   X   {item.quantity}</ListGroup.Item>
                             </Col>
 
                             {

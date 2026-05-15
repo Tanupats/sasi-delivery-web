@@ -4,8 +4,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
-
-import MopedOutlinedIcon from '@mui/icons-material/MopedOutlined';
+import MopedOutlinedIcon from "@mui/icons-material/MopedOutlined";
 import { AuthData } from "../ContextData";
 
 import FoodMenu from "./FoodMenu";
@@ -32,6 +31,7 @@ import Rider from "./rider";
 const NavbarMenu = () => {
   const { staffName, shop } = useContext(AuthData);
   const [openMenu, setOpenMenu] = useState(false);
+  const rule = localStorage.getItem("role");
 
   const logout = () => {
     Swal.fire({
@@ -54,7 +54,6 @@ const NavbarMenu = () => {
         <Navbar style={{ background: "#FD720D" }} sticky="top">
           {/* 🔥 แก้ตรงนี้ */}
           <Container fluid className="px-0">
-
             {/* MOBILE MENU */}
             <div className="d-lg-none ms-2">
               <MenuIcon
@@ -67,37 +66,39 @@ const NavbarMenu = () => {
             <Navbar.Brand className="ms-2 text-white fw-bold when-print">
               SASI POS
             </Navbar.Brand>
-
-            {/* 🔥 ดันเมนูไปขวา */}
             <Nav className="d-none d-lg-flex ms-auto me-2">
+              {rule !== "rider" && (
+                <>
+                  <Nav.Link as={Link} to="/pos" className="text-white">
+                    <ListAltIcon style={{ marginRight: 4 }} /> ขายสินค้า
+                  </Nav.Link>
 
-              <Nav.Link as={Link} to="/pos" className="text-white">
-                <ListAltIcon style={{ marginRight: 4 }} /> ขายสินค้า
-              </Nav.Link>
+                  <Nav.Link as={Link} to="/orders" className="text-white">
+                    <ViewQuiltIcon style={{ marginRight: 4 }} /> ออเดอร์
+                  </Nav.Link>
 
-              <Nav.Link as={Link} to="/orders" className="text-white">
-                <ViewQuiltIcon style={{ marginRight: 4 }} /> ออเดอร์
-              </Nav.Link>
-              <Nav.Link as={Link} to="/rider" className="text-white">
-                <MopedOutlinedIcon style={{ marginRight: 4 }} /> ออเดอร์จัดส่ง
-              </Nav.Link>
+                  <Nav.Link as={Link} to="/report" className="text-white">
+                    <AssessmentIcon style={{ marginRight: 4 }} /> สรุปยอดขาย
+                  </Nav.Link>
 
-              <Nav.Link as={Link} to="/report" className="text-white">
-                <AssessmentIcon style={{ marginRight: 4 }} />ยอดขาย
-              </Nav.Link>
+                  <Nav.Link as={Link} to="/admin" className="text-white">
+                    <StoreIcon style={{ marginRight: 4 }} /> จัดการ{shop?.name}
+                  </Nav.Link>
 
-              <Nav.Link as={Link} to="/admin" className="text-white">
-                <StoreIcon style={{ marginRight: 4 }} /> จัดการ{shop?.name}
-              </Nav.Link>
+                  <Nav.Link as={Link} to="/profile" className="text-white">
+                    <AccountCircleIcon style={{ marginRight: 4 }} /> {staffName}
+                  </Nav.Link>
+                </>
+              )}
 
-              <Nav.Link as={Link} to="/profile" className="text-white">
-                <AccountCircleIcon style={{ marginRight: 4 }} /> {staffName}
-              </Nav.Link>
-
+              {rule === "rider" && (
+                <Nav.Link as={Link} to="/rider" className="text-white">
+                  <MopedOutlinedIcon style={{ marginRight: 4 }} /> ออเดอร์จัดส่ง
+                </Nav.Link>
+              )}
               <Nav.Link onClick={logout} className="text-white">
                 <LogoutIcon style={{ marginRight: 4 }} /> ออกจากระบบ
               </Nav.Link>
-
             </Nav>
           </Container>
         </Navbar>
@@ -105,48 +106,56 @@ const NavbarMenu = () => {
 
       {/* MOBILE OVERLAY */}
       {openMenu && (
-        <div
-          className="overlay d-lg-none"
-          onClick={() => setOpenMenu(false)}
-        />
+        <div className="overlay d-lg-none" onClick={() => setOpenMenu(false)} />
       )}
 
       {/* MOBILE SIDEBAR */}
       <div className={`sidebar d-lg-none ${openMenu ? "show" : ""}`}>
         <Nav className="flex-column">
+          {rule !== "rider" && (
+            <>
+              <Nav.Link as={Link} to="/pos" onClick={() => setOpenMenu(false)}>
+                <ListAltIcon /> ขายสินค้า
+              </Nav.Link>
 
-          <Nav.Link as={Link} to="/pos" onClick={() => setOpenMenu(false)}>
-            <ListAltIcon /> ขายสินค้า
-          </Nav.Link>
+              <Nav.Link
+                as={Link}
+                to="/orders"
+                onClick={() => setOpenMenu(false)}
+              >
+                <ViewQuiltIcon /> ออเดอร์
+              </Nav.Link>
 
-          <Nav.Link as={Link} to="/orders" onClick={() => setOpenMenu(false)}>
-            <ViewQuiltIcon /> จัดการออเดอร์
-          </Nav.Link>
+              <Nav.Link
+                as={Link}
+                to="/report"
+                onClick={() => setOpenMenu(false)}
+              >
+                <AssessmentIcon /> สรุปยอดขาย
+              </Nav.Link>
 
-          <Nav.Link as={Link} to="/rider" onClick={() => setOpenMenu(false)}>
-            <MopedOutlinedIcon /> ออเดอร์จัดส่ง
-          </Nav.Link>
-
-          <Nav.Link as={Link} to="/report" onClick={() => setOpenMenu(false)}>
-            <AssessmentIcon /> ยอดขาย
-          </Nav.Link>
-
-          <Nav.Link as={Link} to="/admin" onClick={() => setOpenMenu(false)}>
-            <StoreIcon /> จัดการข้อมูล
-          </Nav.Link>
-
+              <Nav.Link
+                as={Link}
+                to="/admin"
+                onClick={() => setOpenMenu(false)}
+              >
+                <StoreIcon /> จัดการข้อมูล
+              </Nav.Link>
+            </>
+          )}
           <Nav.Link as={Link} to="/profile" onClick={() => setOpenMenu(false)}>
-            <AccountCircleIcon /> {staffName}
+            <AccountCircleIcon /> {staffName }
           </Nav.Link>
-
+          {rule === "rider" && (
+            <Nav.Link as={Link} to="/rider" onClick={() => setOpenMenu(false)}>
+              <MopedOutlinedIcon /> การจัดส่ง
+            </Nav.Link>
+          )}
           <Nav.Link onClick={logout}>
             <LogoutIcon /> ออกจากระบบ
           </Nav.Link>
-
         </Nav>
       </div>
-
-      {/* ROUTES */}
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/orders" element={<Orders />} />
@@ -158,7 +167,6 @@ const NavbarMenu = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/rider" element={<Rider />} />
-
       </Routes>
     </Router>
   );

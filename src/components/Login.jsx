@@ -15,6 +15,7 @@ const Login = () => {
     httpGet("/shop/shop-user/" + id).then((res) => {
       setShop({ ...res.data[0] });
       localStorage.setItem("shopId", res.data[0].shop_id);
+      localStorage.setItem("page_access_token",res.data[0].facebook_token);
     });
   };
 
@@ -35,6 +36,7 @@ const Login = () => {
       if (res) {
         if (res.status === 200) {
           const { name, department, token, id, shop_id } = res.data;
+          localStorage.setItem("shopId",shop_id);
           localStorage.setItem("name", name);
           localStorage.setItem("role", department);
           localStorage.setItem("token", token);
@@ -46,15 +48,18 @@ const Login = () => {
             router("/pos");
           }
           if (department === "rider") {
-            router("/rider");
+          
             getShopByUser(shop_id);
-            localStorage.setItem("shopId",shop_id)
+               
+              router("/rider");
+             
           }
         } else {
           setMessageError(true);
         }
       }
     });
+     window.location.reload();
   };
 
   useEffect(() => {
