@@ -195,12 +195,12 @@ const User = () => {
 
       <TableContainer component={Paper} className="mt-3">
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
+          <TableHead className="bg-gray-200 ">
+            <TableRow className="bg-gray-200 font-bold">
               <TableCell>ลำดับ</TableCell>
 
               <TableCell align="left">ชื่อ-นามสกุล</TableCell>
-              <TableCell align="left">อีเมล</TableCell>
+              <TableCell align="left">ชื่อผู้ใช้</TableCell>
               <TableCell align="left">แผนก</TableCell>
               <TableCell align="left">เบอร์โทร</TableCell>
               <TableCell align="left">จัดการ</TableCell>

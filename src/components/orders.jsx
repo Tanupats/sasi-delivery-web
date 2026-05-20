@@ -219,7 +219,7 @@ const Orders = () => {
                       <Col md={4}>
                         <Card className="mb-4 mt-4 bd-printer" id={item.id}>
                           <Card.Body style={{ padding: "18px" }}>
-                            <Card.Header className="text-center">
+                            <Card.Header className="text-center border-0 p-0 mb-3">
                               <div className="text-center">
                                 <h6> คิวที่ {item.queueNumber} </h6>
                               </div>
@@ -259,7 +259,7 @@ const Orders = () => {
                               </Col>
                             </Row>
 
-                            <Row>
+                            <Row className="mt-2">
                               <Col md={6} xs={6}>
                                 <div className="when-print mb-2">
                                   {item.messengerId !== "pos" &&
@@ -285,7 +285,7 @@ const Orders = () => {
                                         }}
                                         variant="outline-secondary  w-100"
                                       >
-                                        <SendIcon /> ส่งข้อความอีกครั้ง
+                                        <SendIcon /> ส่งข้อความ
                                       </Button>
                                     )}
                                 </div>
@@ -307,9 +307,7 @@ const Orders = () => {
                                 </>
                               )}
                             </Row>
-                            <Alert className="when-print bg-white text-center">
-                              <span>{item.statusOrder}</span>
-                            </Alert>
+                            
                             <Details
                               reset={reset}
                               id={item.id}
@@ -317,7 +315,9 @@ const Orders = () => {
                               status={item.statusOrder}
                               userId={item.messengerId}
                             />
-
+<Alert className="when-print bg-white text-center">
+                              <span>{item.statusOrder}</span>
+                            </Alert>
                             <Row>
                               <Col md={8}>
                                 {item.delivery_fee !== 0 && (
@@ -351,8 +351,7 @@ const Orders = () => {
                                     }}
                                     variant="success w-100"
                                   >
-                                    ทำ
-                                    เสร็จแล้ว
+                                    ทำเสร็จแล้ว
                                   </Button>
                                 </Col>
                               )}

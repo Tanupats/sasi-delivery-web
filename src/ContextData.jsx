@@ -206,7 +206,6 @@ function Context({ children }) {
 
     const setMenuPichet = (id) => {
         let newCart = cart.map(item => {
-            console.log(typeof (item.price))
             let newPrice = parseInt(item.price) + 10;
             if (item.id === id) {
                 return { ...item, price: newPrice, name: item.name + "พิเศษ" }

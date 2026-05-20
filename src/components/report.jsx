@@ -90,15 +90,12 @@ const Report = () => {
 
   const handleChangePayment = async (payment, id, messengerId) => {
     if (messengerId !== "pos") {
-      sendMessageToPage(messengerId, "ขอบคุณครับ");
+      sendMessageToPage(messengerId, "ชำระเงินสำเร็จ ขอบคุณครับ ");
     }
-
     const body = { payment_status: payment };
-
     await httpPut(`/bills/${id}`, body, {
       headers: { apikey: token },
     });
-
     await searchOrder();
   };
 
@@ -107,17 +104,14 @@ const Report = () => {
     if (shopID && startDate) {
       let bank = 0;
       let cashIn = 0;
-
       const body = {
         startDate: getApiDate(),
         shop_id: shopID,
       };
-
       await httpPost(`/bills/searchByDate`, body, {
         headers: { apikey: token },
       }).then((res) => {
         setData(res.data.data);
-
         res?.data.data?.map((item) => {
           if (item.payment_type === "bank_transfer") {
             bank += Number(item?.amount);
@@ -125,7 +119,6 @@ const Report = () => {
             cashIn += Number(item?.amount);
           }
         });
-
         setBank_transfer(bank);
         setCash(cashIn);
         setTotalToday(res.data.total);

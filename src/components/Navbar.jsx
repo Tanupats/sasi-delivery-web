@@ -66,8 +66,7 @@ const NavbarMenu = () => {
             <Navbar.Brand className="ms-2 text-white fw-bold when-print">
               SASI POS
             </Navbar.Brand>
-            <Nav className="d-none d-lg-flex ms-auto me-2">
-              {rule !== "rider" && (
+            <Nav className="d-none d-lg-flex ms-auto me-2">        
                 <>
                   <Nav.Link as={Link} to="/pos" className="text-white">
                     <ListAltIcon style={{ marginRight: 4 }} /> ขายสินค้า
@@ -88,14 +87,7 @@ const NavbarMenu = () => {
                   <Nav.Link as={Link} to="/profile" className="text-white">
                     <AccountCircleIcon style={{ marginRight: 4 }} /> {staffName}
                   </Nav.Link>
-                </>
-              )}
-
-              {rule === "rider" && (
-                <Nav.Link as={Link} to="/rider" className="text-white">
-                  <MopedOutlinedIcon style={{ marginRight: 4 }} /> ออเดอร์จัดส่ง
-                </Nav.Link>
-              )}
+                </>   
               <Nav.Link onClick={logout} className="text-white">
                 <LogoutIcon style={{ marginRight: 4 }} /> ออกจากระบบ
               </Nav.Link>
@@ -146,11 +138,7 @@ const NavbarMenu = () => {
           <Nav.Link as={Link} to="/profile" onClick={() => setOpenMenu(false)}>
             <AccountCircleIcon /> {staffName }
           </Nav.Link>
-          {rule === "rider" && (
-            <Nav.Link as={Link} to="/rider" onClick={() => setOpenMenu(false)}>
-              <MopedOutlinedIcon /> การจัดส่ง
-            </Nav.Link>
-          )}
+         
           <Nav.Link onClick={logout}>
             <LogoutIcon /> ออกจากระบบ
           </Nav.Link>

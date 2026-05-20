@@ -12,19 +12,10 @@ const Login = () => {
   const [messageError, setMessageError] = useState(false);
 
   const getShop = (id) => {
-    httpGet("/shop/shop-user/" + id).then((res) => {
+    httpGet("/shop/shop-user/"+id).then((res) => {
       setShop({ ...res.data[0] });
       localStorage.setItem("shopId", res.data[0].shop_id);
-      localStorage.setItem("page_access_token",res.data[0].facebook_token);
-    });
-  };
-
-
-  const getShopByUser = async (shop) => {
-    await httpGet("/shop/"+shop).then((res) => {
-      setShop(res.data[0]);
-      localStorage.setItem("shopId", res.data[0].shop_id);
-      localStorage.setItem("page_access_token",res.data[0].facebook_token);
+      localStorage.setItem("page_access_token", res.data[0].facebook_token);
     });
   };
 
@@ -36,30 +27,20 @@ const Login = () => {
       if (res) {
         if (res.status === 200) {
           const { name, department, token, id, shop_id } = res.data;
-          localStorage.setItem("shopId",shop_id);
+          localStorage.setItem("shopId", shop_id);
           localStorage.setItem("name", name);
           localStorage.setItem("role", department);
           localStorage.setItem("token", token);
-          localStorage.setItem("userId", id);
-          if (department === "admin" || department ==="manager") {
+          localStorage.setItem("userId", id);     
             setUser(res.data);
-            getShop(id);//get shop by user 
+            getShop(id);
             setStaffName(name);
             router("/pos");
-          }
-          if (department === "rider") {
-          
-            getShopByUser(shop_id);
-               
-              router("/rider");
-             
-          }
         } else {
           setMessageError(true);
         }
       }
     });
-     window.location.reload();
   };
 
   useEffect(() => {
