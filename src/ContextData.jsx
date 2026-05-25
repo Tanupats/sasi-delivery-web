@@ -221,15 +221,7 @@ function Context({ children }) {
         setRole(localStorage.getItem("role"));
     }, [])
 
-    useEffect(() => {
-        getUser();
-        const userid = localStorage.getItem("userId");
-        getShop(userid);
-    }, [])
-
-
-
-
+    
     return (<>
         <AuthData.Provider
             value={{

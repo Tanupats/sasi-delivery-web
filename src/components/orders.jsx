@@ -21,6 +21,7 @@ import Spinner from "react-bootstrap/Spinner";
 const Orders = () => {
   const { shop, user } = useContext(AuthData);
   const token = localStorage.getItem("token");
+  const facebook_token = localStorage.getItem("facebook_token");
   const [report, setReport] = useState([]);
   const [file, setFile] = useState("");
   const [Delivered, setDelivered] = useState(0);
@@ -28,7 +29,7 @@ const Orders = () => {
   const [OrderCooking, setOrderCooking] = useState(0);
   const [OrderCookingFinish, setOrderCookingFinish] = useState(0);
   const [statusOrder, setStatusOrder] = useState("รับออเดอร์แล้ว");
-  const [shopId, setShopId] = useState("15b4e191-d125-4c18-bdd1-445091c349ff");
+  const shopId = localStorage.getItem("shopId");
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [preview, setPreview] = useState("");
@@ -98,7 +99,6 @@ const Orders = () => {
     const formData = new FormData();
     formData.append("file", file);
     await httpPost(`/upload`, formData).then((res) => {
-      console.log("Upload response:", res);
       if (res.status === 200) {
         const filename = dev + "/images/" + res.data.filename;
         if (filename) {
@@ -144,7 +144,7 @@ const Orders = () => {
     });
   }
 
-  const PAGE_ACCESS_TOKEN = import.meta.env.VITE_PAGE_ACCESS_TOKEN;
+  const PAGE_ACCESS_TOKEN = facebook_token;
   const sendMessageToPage = (userid, messageText) => {
     axios
       .post(
