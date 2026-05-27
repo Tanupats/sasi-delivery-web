@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card, Row, Col, Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { httpPost } from "../http";
+import { http } from "../http";
 import Swal from "sweetalert2";
 const Register = () => {
   //user
@@ -21,7 +21,7 @@ const Register = () => {
   const uploadFile = async () => {
     const formData = new FormData();
     formData.append("file", file);
-    await httpPost(`/upload`, formData).then((res) => {
+    await http.post(`/upload`, formData).then((res) => {
       if (res.status === 200) {
         filename = res.data.filename;
       }
@@ -36,7 +36,7 @@ const Register = () => {
       department: "admin",
       phone: phone,
     };
-    await httpPost("/auth/sigup", bodyUser).then((res) => {
+    await http.post("/auth/sigup", bodyUser).then((res) => {
       if (res) {
         if (res.status === 200) {
           userId = res.data.id;
@@ -71,7 +71,7 @@ const Register = () => {
       payment: selectedPackage === "trial" ? "free" : "unpaid",
     };
 
-    await httpPost("/shop", bodyShop).then((res) => {
+    await http.post("/shop", bodyShop).then((res) => {
       if (res && res.status === 200) {
         Swal.fire({
           title: "ลงทะเบียนสำเร็จ!",

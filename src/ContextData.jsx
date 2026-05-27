@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 export const AuthData = createContext();
 import Swal from 'sweetalert2'
-import { httpGet, httpPost } from "./http";
+import { http } from "./http";
 import axios from "axios";
 function Context({ children }) {
 
@@ -23,7 +23,7 @@ function Context({ children }) {
     const getUser = async () => {
         if (token) {
             try {
-                await httpGet('/me', { headers: { 'apikey': token } })
+                await http.get('/me', { headers: { 'apikey': token } })
                     .then(res => {
                         if (res) {
                             if (res.status === 200) {
@@ -73,7 +73,7 @@ function Context({ children }) {
         }).then(response => {
             if (response) {
                 Swal.fire({
-                    title: 'ส่งข้อความรับออเดอร์สำเร็จแล้ว',
+                    title: 'ดำเนินการสำเร็จ',
                     icon: 'success',
                 })
 
@@ -164,7 +164,7 @@ function Context({ children }) {
                 printStatus: statusPrint,
                 payment_type: "bank_transfer"
             }
-            await httpPost(`/bills`, body, { headers: { 'apikey': token } })
+            await http.post(`/bills`, body, { headers: { 'apikey': token } })
                 .then(res => {
                     if (res.status === 200) {
                         setId(res.data.id);
@@ -191,7 +191,7 @@ function Context({ children }) {
                 }
 
             })
-            httpPost(`/billsdetails`, bodyDetails, { headers: { 'apikey': token } })
+            http.post(`/billsdetails`, bodyDetails, { headers: { 'apikey': token } })
             setQueueNumber(queueId);
             setCart([]);
         } else {
@@ -227,7 +227,7 @@ function Context({ children }) {
 
     const getShop = (id) => {
         if (id) {
-            httpGet('/shop/shop-user/' + id).then((res) => {
+            http.get('/shop/shop-user/' + id).then((res) => {
                 setShop({ ...res.data[0] })
             })
         }

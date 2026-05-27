@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { Row, Col, Form, Button } from 'react-bootstrap'
-import { httpDelete, httpGet, httpPost, httpPut } from "../../http";
+import { http } from "../../http";
 import { AuthData } from "../../ContextData";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -74,7 +74,7 @@ const Accounting = () => {
 
         try {
             for (const item of tempItems) {
-                await httpPost('/account', item);
+                await http.post('/account', item);
             }
             Swal.fire({
                 title: 'บันทึกข้อมูลสำเร็จ!',
@@ -98,7 +98,7 @@ const Accounting = () => {
 
     const getData = async () => {
         let total = 0;
-        await httpGet(`/account?date=${date}&shop_id=${shop_id}`)
+        await http.get(`/account?date=${date}&shop_id=${shop_id}`)
             .then((data) => {
                 if (data) {
                     setData(data.data);
@@ -127,7 +127,7 @@ const Accounting = () => {
 
             if (result.isConfirmed) {
                 // หากผู้ใช้กดยืนยัน
-                await httpDelete(`/account/${id}`);
+                await http.delete(`/account/${id}`);
                 await getData();
                 Swal.fire({
                     title: 'ลบข้อมูลสำเร็จ!',
@@ -148,7 +148,7 @@ const Accounting = () => {
     };
 
     const geOutcome = async () => {
-        await httpGet(`/account/outcome?shop_id=${shop_id}`)
+        await http.get(`/account/outcome?shop_id=${shop_id}`)
             .then(res => {
                 if (res.data._sum.total !== null) {
                     setOutcome(res.data._sum.total)
@@ -157,7 +157,7 @@ const Accounting = () => {
     }
 
     const updateAccountId = async (id, value) => {
-        await httpPut(`/account/${id}`, { listname: value })
+        await http.put(`/account/${id}`, { listname: value })
             .then(res => {
                 if (res.status === 200) {
                     getData()

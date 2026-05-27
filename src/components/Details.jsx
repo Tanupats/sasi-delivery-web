@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Row, Col, Button, Modal, ListGroup, Form } from "react-bootstrap";
 import Select from 'react-select'
-import { httpDelete, httpGet, httpPost, httpPut } from "../http";
+import { http } from "../http";
 import { AuthData } from "../ContextData";
 import Swal from 'sweetalert2'
 import { CirclePlus } from 'lucide-react';
@@ -33,14 +33,14 @@ const Details = (props) => {
     }
 
     const getMenuType = async () => {
-        await httpGet(`/menutype/${shop?.shop_id}`, { headers: { 'apikey': token } })
+        await http.get(`/menutype/${shop?.shop_id}`, { headers: { 'apikey': token } })
             .then(res => {
                 setMenuType(res.data);
             })
     }
 
     const getMenuByTypeId = async (id) => {
-        await httpGet(`/foodmenu/${id.value}`)
+        await http.get(`/foodmenu/${id.value}`)
             .then(res => {
 
                 let newOption = res.data.map(item => {
@@ -51,7 +51,7 @@ const Details = (props) => {
     }
 
     const getDetail = async () => {
-        await httpGet(`/billsdetails/${bill_ID}`)
+        await http.get(`/billsdetails/${bill_ID}`)
             .then(res => {
                 setDetail(res.data);
             })
@@ -71,7 +71,7 @@ const Details = (props) => {
 
         if (result.isConfirmed) {
             try {
-                const res = await httpDelete(`/billsdetails/remove/${id}`);
+                const res = await http.delete(`/billsdetails/remove/${id}`);
                 if (res.status === 200) {
                     Swal.fire('ลบแล้ว!', 'ข้อมูลถูกลบเรียบร้อยแล้ว', 'success');
                     getDetail();
@@ -87,7 +87,7 @@ const Details = (props) => {
 
     const updateAmount = async (newPrice) => {
         const body = { amount: newPrice };
-        await httpPut(`/bills/${id}`, body, { headers: { 'apikey': token } })
+        await http.put(`/bills/${id}`, body, { headers: { 'apikey': token } })
         await reset();
     }
 
@@ -100,7 +100,7 @@ const Details = (props) => {
             quantity: quantity ? parseInt(quantity) : parseInt(dataMenus.quantity),
             note: note ? note : dataMenus.note
         }
-        await httpPut(`/billsdetails/${id}`, body, { headers: { 'apikey': token } })
+        await http.put(`/billsdetails/${id}`, body, { headers: { 'apikey': token } })
             .then(res => {
                 if (res) {
                     getDetail();
@@ -118,7 +118,7 @@ const Details = (props) => {
             , quantity: parseInt(quantity)
             , note: note
         };
-        await httpPost(`/billsdetails`, body, { headers: { 'apikey': token } })
+        await http.post(`/billsdetails`, body, { headers: { 'apikey': token } })
             .then(res => {
                 if (res.status === 200) {
 

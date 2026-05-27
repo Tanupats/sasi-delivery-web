@@ -13,7 +13,7 @@ import {
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Details from "./Details";
 import moment from "moment/moment";
-import { httpGet, httpPut, httpPost } from "../http";
+import { http } from "../http";
 import Swal from "sweetalert2";
 import { AuthData } from "../ContextData";
 import axios from "axios";
@@ -42,7 +42,7 @@ const Rider = () => {
 
    const getOrderStatus = async () => {
       if (shopId) {
-        await httpGet(`/bills/counter-order-status/${shopId}`, {
+        await http.get(`/bills/counter-order-status/${shopId}`, {
           headers: { apikey: token },
         }).then((res) => {
           setStatusOrderCount(res.data);
@@ -86,7 +86,7 @@ const Rider = () => {
     if (shopId) {
       setReport([]);
       setLoading(true);
-      await httpGet(`/bills?status=${status}&shop_id=${shopId}`, {
+      await http.get(`/bills?status=${status}&shop_id=${shopId}`, {
         headers: { apikey: token },
       }).then((res) => {
         setReport(res.data);
@@ -102,7 +102,7 @@ const Rider = () => {
   const uploadFile = async (messageid) => {
     const formData = new FormData();
     formData.append("file", file);
-    await httpPost(`/upload`, formData).then((res) => {
+    await http.post(`/upload`, formData).then((res) => {
       console.log("Upload response:", res);
       if (res.status === 200) {
         const filename = dev + "/images/" + res.data.filename;
@@ -210,7 +210,7 @@ const Rider = () => {
       step: step,
       rider_id: user.id,
     };
-    httpPut(`/bills/${id}`, body).then(async (res) => {
+    http.put(`/bills/${id}`, body).then(async (res) => {
       if (res) {
         if (status === "ทำเสร็จแล้ว") {
           if (messageid !== "pos") {

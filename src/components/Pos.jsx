@@ -18,7 +18,7 @@ import LocalPrintshopIcon from "@mui/icons-material/LocalPrintshop";
 import { AuthData } from "../ContextData";
 import { nanoid } from "nanoid";
 import SaveIcon from "@mui/icons-material/Save";
-import { httpGet } from "../http";
+import { http } from "../http";
 import generatePayload from "promptpay-qr";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -97,7 +97,7 @@ const Pos = () => {
   const getMenu = () => {
     setLoadingMenu(true);
     if (shop.shop_id !== undefined) {
-      httpGet(`/foodmenu/getByShop/${shop.shop_id}`, {
+      http.get(`/foodmenu/getByShop/${shop.shop_id}`, {
         headers: { apikey: token },
       }).then((res) => {
         if (res.data.length > 0) {
@@ -114,7 +114,7 @@ const Pos = () => {
   const getMenuType = () => {
     if (shop.shop_id !== undefined) {
       setLoading(true);
-      httpGet(`/menutype/${shop.shop_id}`, { headers: { apikey: token } }).then(
+      http.get(`/menutype/${shop.shop_id}`, { headers: { apikey: token } }).then(
         (res) => {
           if (res.data.length > 0) {
             setMenuType(res.data);
@@ -130,7 +130,7 @@ const Pos = () => {
 
   const getMenuByTypeId = (id) => {
     setLoadingByType(true);
-    httpGet(`/foodmenu/${id}`).then((res) => {
+    http.get(`/foodmenu/${id}`).then((res) => {
       setMenu(res.data);
     });
   };

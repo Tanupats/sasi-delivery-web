@@ -7,7 +7,7 @@ import FoodMenuForm from "./FoodMenuForm";
 import Swal from "sweetalert2";
 import { AuthData } from "../../ContextData";
 import { getMenuType } from "../../api";
-import { httpDelete, httpGet, httpPut, httpPost } from "../../http";
+import { http } from "../../http";
 import { Search } from "lucide-react";
 const Products = () => {
   const { shop } = useContext(AuthData);
@@ -37,7 +37,7 @@ const Products = () => {
       getFoodMenu();
       return;
     }
-    await httpGet(`/foodmenu/${id}`).then((res) => {
+    await http.get(`/foodmenu/${id}`).then((res) => {
       setFoods(res.data);
     });
   };
@@ -52,7 +52,16 @@ const Products = () => {
   const [keyword, setKeyword] = useState("");
 
   const searchMenu = async () => {
-    await httpGet(`/foodmenu/search?keyword=${keyword}&shop_id=${shopId}`, {
+    if (!keyword || keyword.trim() === "") {
+      Swal.fire({
+        title: "กรุณากรอกคำค้นหา",
+        text: "โปรดกรอกคำค้นหาเมนูก่อน",
+        icon: "warning",
+        confirmButtonText: "ยืนยัน"
+      });
+      return;
+    }
+    await http.get(`/foodmenu/search?keyword=${keyword}&shop_id=${shopId}`, {
       headers: { apikey: token },
     }).then((res) => {
       setFoods(res.data);
@@ -83,7 +92,7 @@ const Products = () => {
   const uploadFile = async () => {
     const formData = new FormData();
     formData.append("file", imageFile);
-    await httpPost(`/upload`, formData).then((res) => {
+    await http.post(`/upload`, formData).then((res) => {
       if (res.status === 200) {
         filename = res.data.filename;
       }
@@ -106,7 +115,7 @@ const Products = () => {
     };
 
     const { id } = data;
-    await httpPut(`/foodmenu/${id}`, body, { headers: { apikey: token } }).then(
+    await http.put(`/foodmenu/${id}`, body, { headers: { apikey: token } }).then(
       (res) => {
         if (res.status === 200) {
           Swal.fire({
@@ -125,7 +134,7 @@ const Products = () => {
 
   const updateStatus = async (id, val, TypeID) => {
     const body = { status: val };
-    await httpPut(`/foodmenu/${id}`, body, { headers: { apikey: token } }).then(
+    await http.put(`/foodmenu/${id}`, body, { headers: { apikey: token } }).then(
       (res) => {
         if (res.status === 200) {
           getMenuByTypeId(TypeID);
@@ -146,7 +155,7 @@ const Products = () => {
       cancelButtonText: "ยกเลิก",
     }).then((result) => {
       if (result.isConfirmed) {
-        httpDelete(`/foodmenu/${id}`, { headers: { apikey: token } })
+        http.delete(`/foodmenu/${id}`, { headers: { apikey: token } })
           .then((res) => {
             if (res.status === 200) {
               Swal.fire("ลบข้อมูลสินค้าสำเร็จ!", "success");
@@ -166,7 +175,7 @@ const Products = () => {
 
   const getFoodMenu = () => {
     if (shopId !== undefined) {
-      httpGet(`/foodmenu/getByShop/${shopId}`, {
+      http.get(`/foodmenu/getByShop/${shopId}`, {
         headers: { apikey: token },
       }).then((res) => {
         if (res.data) {
@@ -195,8 +204,9 @@ const Products = () => {
           <Row>
             <Col md={12}>
               <div className="border p-3 mb-2">
-                <div className="row align-items-center">
-                  <div className="col-md-3">
+                <Row className="align-items-end">
+                  <Col xs={12} md={3} className="mb-2 mb-md-0">
+                
                     <select
                       className="form-select"
                       onChange={(e) => getMenuByTypeId(e.target.value)}
@@ -210,15 +220,17 @@ const Products = () => {
                         );
                       })}
                     </select>
-                  </div>
-                  <div className="col-md-3">
-                    <FoodMenuForm
-                      getMenuType={getMenuType}
-                      getFoodMenu={getFoodMenu}
-                    />
-                  </div>
-                  <div className="col-md-4">
-
+                  </Col>
+                  <Col xs={12} md={3} className="mb-2 mb-md-0">
+                    <div className="d-none d-md-block">
+                      <FoodMenuForm
+                        getMenuType={getMenuType}
+                        getFoodMenu={getFoodMenu}
+                      />
+                    </div>
+                  </Col>
+                  <Col xs={8} md={4} className="mb-2 mb-md-0">
+                    <label className="form-label d-block d-md-none">ค้นหา</label>
                     <form onSubmit={(e) => { e.preventDefault(); searchMenu(); }}>
                       <input
                         value={keyword}
@@ -228,17 +240,23 @@ const Products = () => {
                         placeholder="ค้นหา"
                       />
                     </form>
-                  </div>
-                  <div className="col-md-2">
+                  </Col>
+                  <Col xs={4} md={2} className="mb-2 mb-md-0">
                     <button
                       onClick={() => searchMenu()}
-                      className="btn btn-outline-success"
+                      className="btn btn-outline-success w-100"
                       type="submit"
                     >
-                      <Search /> ค้นหาเมนู
+                      <Search size={18} className="d-md-none" /> <span className="d-none d-md-inline">ค้นหาเมนู</span>
                     </button>
-                  </div>
-                </div>
+                  </Col>
+                  <Col xs={12} md={0} className="d-md-none mt-2">
+                    <FoodMenuForm
+                      getMenuType={getMenuType}
+                      getFoodMenu={getFoodMenu}
+                    />
+                  </Col>
+                </Row>
               </div>
             </Col>
 
@@ -304,9 +322,9 @@ const Products = () => {
                                 <Button
                                   size="sm"
                                   onClick={() => onSelectMenu(item)}
-                                  variant="warning"
+                                  variant="light"
                                 >
-                                  <EditIcon /> แก้ไข
+                                  <EditIcon /> 
                                 </Button>{" "}
                                 <Button
                                 size="sm"
@@ -314,7 +332,7 @@ const Products = () => {
                                   onClick={() => onDeleteMenu(item.id)}
                                   variant="danger"
                                 >
-                                  <DeleteIcon /> ลบเมนู
+                                  <DeleteIcon /> 
                                 </Button>
                               </Col>
                             </Row>

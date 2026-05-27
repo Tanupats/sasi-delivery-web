@@ -1,6 +1,6 @@
 import { Bar } from "react-chartjs-2";
 import { useState, useEffect } from "react";
-import { httpGet, httpPost } from "../../http";
+import { http } from "../../http";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -29,7 +29,7 @@ const SalesChart = () => {
   const shopId = localStorage.getItem("shopId");
   const fetchData = async () => {
     const body = { shop_id: shopId, year: year };
-    const res = await httpPost("/bills/sales-by-year", body, {
+    const res = await http.post("/bills/sales-by-year", body, {
       header: { apikey: token },
     });
     setData(res.data.data);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Badge } from "react-bootstrap";
-import { httpGet } from "../../http";
+import { http } from "../../http";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -22,7 +22,7 @@ const ReportProduct = () => {
     if (!shop?.shop_id) return; // ❗กัน error ตอน shop ยังไม่มา
 
     try {
-      const res = await httpGet(
+      const res = await http.get(
         `/group?startDate=${startDate}&endDate=${endDate}&shop_id=${shop.shop_id}`
       );
 

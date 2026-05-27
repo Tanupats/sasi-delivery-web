@@ -7,7 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { httpDelete, httpGet, httpPost, httpPut } from "../../http";
+import { http } from "../../http";
 import moment from "moment";
 import { AuthData } from "../../ContextData";
 import AddIcon from '@mui/icons-material/Add';
@@ -32,7 +32,7 @@ const Stock = () => {
 
     const getData = async () => {
         if (shopId !== null) {
-            await httpGet(`/stock?shop_id=${shopId}`)
+            await http.get(`/stock?shop_id=${shopId}`)
                 .then((data) => {
                     if (data) {
                         setData(data.data);
@@ -49,7 +49,7 @@ const Stock = () => {
             shop_id: shopId,
             stock_quantity: parseInt(item)
         }
-        await httpPost('/stock', body)
+        await http.post('/stock', body)
             .then((res) => {
                 if (res.status === 200) {
                     Swal.fire({
@@ -68,7 +68,7 @@ const Stock = () => {
         const body = {
             stock_quantity: parseInt(quantity)
         }
-        await httpPut('/stock/' + id, body)
+        await http.put('/stock/' + id, body)
             .then((res) => {
                 if (res) {
                     getData();
@@ -86,7 +86,7 @@ const Stock = () => {
         const body = {
             stock_quantity: totalGet
         }
-        await httpPut('/stock/' + stockData.id, body)
+        await http.put('/stock/' + stockData.id, body)
             .then((res) => {
                 if (res) {
                     getData();
@@ -103,7 +103,7 @@ const Stock = () => {
         const body = {
             stock_quantity: totalNew
         }
-        await httpPut(`/stock/ ${stockData.id}`, body)
+        await http.put(`/stock/ ${stockData.id}`, body)
             .then((res) => {
                 if (res) {
                     getData();
@@ -125,7 +125,7 @@ const Stock = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const res = await httpDelete(`/stock/${id}`, {
+                    const res = await http.delete(`/stock/${id}`, {
                         headers: { 'apikey': token }
                     });
                     if (res) {

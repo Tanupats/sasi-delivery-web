@@ -3,7 +3,7 @@ import { Row, Col, Card, Button, Alert, Form, Badge } from "react-bootstrap";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Details from "./Details";
 import moment from "moment/moment";
-import { httpDelete, httpGet, httpPut } from "../http";
+import { http } from "../http";
 import Swal from "sweetalert2";
 import { AuthData } from "../ContextData";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
@@ -21,7 +21,7 @@ const Orders = () => {
   const getMenuReport = async (status) => {
     setReport([]);
     if (shop?.shop_id) {
-      await httpGet(`/bills?status=${status}&shop_id=${shop?.shop_id}`, {
+      await http.get(`/bills?status=${status}&shop_id=${shop?.shop_id}`, {
         headers: { apikey: token },
       }).then((res) => {
         setReport(res.data);
@@ -31,7 +31,7 @@ const Orders = () => {
 
   const getOrderStatus = async () => {
     if (shop?.shop_id) {
-      await httpGet(`/bills/counter-order-status/${shop?.shop_id}`, {
+      await http.get(`/bills/counter-order-status/${shop?.shop_id}`, {
         headers: { apikey: token },
       }).then((res) => {
         setStatusOrder([]);
@@ -47,7 +47,7 @@ const Orders = () => {
     const body = {
       printStatus: `พิมพ์เวลา ${hours}:${minutes}`,
     };
-    await httpPut(`/bills/${id}`, body);
+    await http.put(`/bills/${id}`, body);
     setPrintBillId(billId);
     setTimeout(() => {
       window.print();
@@ -55,8 +55,8 @@ const Orders = () => {
   };
 
   const CancelOrder = async (id, bid) => {
-    await httpDelete(`/bills/${id}`);
-    await httpDelete(`/billsdetails/${bid}`);
+    await http.delete(`/bills/${id}`);
+    await http.delete(`/billsdetails/${bid}`);
     await getMenuReport("รับออเดอร์แล้ว");
   };
 
@@ -84,7 +84,7 @@ const Orders = () => {
           statusOrder: status,
           step: step,
         };
-        httpPut(`/bills/${id}`, body).then((res) => {
+        http.put(`/bills/${id}`, body).then((res) => {
           if (res) {
             if (status === "ทำเสร็จแล้ว") {
               if (messageid !== "pos") {
@@ -137,7 +137,16 @@ const Orders = () => {
         <Col md={12}>
           <Card style={{ border: "none", marginTop: "12px" }}>
             <Form>
-              <Row className="when-print">
+              <Row 
+                className="when-print"
+                style={{
+                  position: "sticky",
+                  top: 0,
+                  zIndex: 1000,
+                  backgroundColor: "#fff",
+                  padding: "15px 0",
+                }}
+              >
                 <ButtonGroup aria-label="Basic example">
                   <Button
                     style={{

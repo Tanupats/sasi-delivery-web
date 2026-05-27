@@ -2,7 +2,7 @@ import { useState, useContext, useEffect } from "react";
 import { Card, Row, Col, Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { AuthData } from "../ContextData";
-import { httpGet, httpPost } from "../http";
+import { http } from "../http";
 
 const Login = () => {
   const router = useNavigate();
@@ -12,7 +12,7 @@ const Login = () => {
   const [messageError, setMessageError] = useState(false);
 
   const getShop = (id) => {
-    httpGet("/shop/shop-user/"+id).then((res) => {
+    http.get("/shop/shop-user/"+id).then((res) => {
       setShop({ ...res.data[0] });
       localStorage.setItem("shopId", res.data[0].shop_id);
       localStorage.setItem("page_access_token", res.data[0].facebook_token);
@@ -23,7 +23,7 @@ const Login = () => {
   const login = async (e) => {
     e.preventDefault();
     const body = { email: email, password: password };
-    await httpPost("/auth/signin", body).then((res) => {
+    await http.post("/auth/signin", body).then((res) => {
       if (res) {
         if (res.status === 200) {
           const { name, department, token, id, shop_id } = res.data;

@@ -12,7 +12,7 @@ import { Card, Row, Col, Button, Form, Modal, Alert } from "react-bootstrap";
 import Swal from "sweetalert2";
 import moment from "moment";
 import { AuthData } from "../ContextData";
-import { httpDelete, httpGet, httpPost, httpPut } from "../http";
+import { http } from "../http";
 import PaidIcon from "@mui/icons-material/Paid";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
@@ -53,7 +53,7 @@ const Report = () => {
       let bank = 0;
       let cashIn = 0;
 
-      await httpGet(`/bills?shop_id=${shop?.shop_id}`, {
+      await http.get(`/bills?shop_id=${shop?.shop_id}`, {
         headers: { apikey: token },
       }).then((res) => {
         setData(res.data);
@@ -81,7 +81,7 @@ const Report = () => {
         row.payment_type === "bank_transfer" ? "cash" : "bank_transfer",
     };
 
-    await httpPut(`/bills/${row.id}`, body, {
+    await http.put(`/bills/${row.id}`, body, {
       headers: { apikey: token },
     });
 
@@ -93,7 +93,7 @@ const Report = () => {
       sendMessageToPage(messengerId, "ชำระเงินสำเร็จ ขอบคุณครับ ");
     }
     const body = { payment_status: payment };
-    await httpPut(`/bills/${id}`, body, {
+    await http.put(`/bills/${id}`, body, {
       headers: { apikey: token },
     });
     await searchOrder();
@@ -108,7 +108,7 @@ const Report = () => {
         startDate: getApiDate(),
         shop_id: shopID,
       };
-      await httpPost(`/bills/searchByDate`, body, {
+      await http.post(`/bills/searchByDate`, body, {
         headers: { apikey: token },
       }).then((res) => {
         setData(res.data.data);
@@ -129,7 +129,7 @@ const Report = () => {
 
   const geReport = async () => {
     if (shop?.shop_id) {
-      await httpGet(
+      await http.get(
         `/report/count-order-type?startDate=${getApiDate()}&shop_id=${shop.shop_id}`,
       ).then((res) => {
         setCounter(res.data);
@@ -138,7 +138,7 @@ const Report = () => {
   };
 
   const RemoveDetailsId = async (id) => {
-    await httpDelete(`/bills/${id}`);
+    await http.delete(`/bills/${id}`);
     await getOrderFood();
   };
 

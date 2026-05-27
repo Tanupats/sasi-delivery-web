@@ -3,7 +3,7 @@ import { Row, Col, Card, Image, Button, Modal, Form } from "react-bootstrap";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { AuthData } from "../../ContextData";
 import Swal from "sweetalert2";
-import { httpGet, httpPost } from "../../http";
+import { http } from "../../http";
 import { CloudUpload as CloudUploadIcon } from "@mui/icons-material";
 const FoodMenuForm = (props) => {
   const { getFoodMenu } = props;
@@ -23,7 +23,7 @@ const FoodMenuForm = (props) => {
   const [errorMessage, setErrorMessage] = useState("");
   const getMenuType = async () => {
     if (shopId !== undefined) {
-      await httpGet(`/menutype/${shopId}`, { headers: { apikey: token } }).then(
+      await http.get(`/menutype/${shopId}`, { headers: { apikey: token } }).then(
         (res) => {
           setMenuType(res.data);
         },
@@ -34,7 +34,7 @@ const FoodMenuForm = (props) => {
   const uploadFile = async () => {
     const formData = new FormData();
     formData.append("file", img);
-    const res = await httpPost("/upload", formData);
+    const res = await http.post("/upload", formData);
     if (res.status === 200) {
       return res.data.filename;
     }
@@ -62,7 +62,7 @@ const FoodMenuForm = (props) => {
         status: parseInt(status),
         shop_id: shopId,
       };
-      await httpPost(`/foodmenu`, body, { headers: { apikey: token } }).then(
+      await http.post(`/foodmenu`, body, { headers: { apikey: token } }).then(
         (res) => {
           if (res.status === 200) {
             Swal.fire({
@@ -111,7 +111,7 @@ const FoodMenuForm = (props) => {
 
   return (
     <>
-      <Row className="mb-3 mt-3">
+      <Row>
         <Col>
           <Button variant="success" onClick={() => handleShow()}>
             <AddCircleIcon /> เพิ่มสินค้าใหม่{" "}

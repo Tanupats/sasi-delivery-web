@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { Card, Row, Col, Button, Alert } from "react-bootstrap";
-import { httpPut } from "../http";
+import { http } from "../http";
 import { AuthData } from "../ContextData";
 import Swal from "sweetalert2";
 import moment from "moment";
@@ -21,8 +21,8 @@ const Profile = () => {
 
   
   const updateData = async () => {
-    await httpPut("/user/" + user?.id, { phone: user?.phone });
-    await httpPut("/shop/" + shop?.id, { 
+    await http.put("/user/" + user?.id, { phone: user?.phone });
+    await http.put("/shop/" + shop?.id, { 
        is_open: status,
        open_time:shop.open_time,
        delivery_fee:Number(shop.delivery_fee),

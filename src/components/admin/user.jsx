@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Row, Col, Form, Button, Modal, Card } from "react-bootstrap";
-import { httpDelete, httpGet, httpPost } from "../../http";
+import { http } from "../../http";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -32,7 +32,7 @@ const User = () => {
       shop_id: shopId,
       phone: phone,
     };
-    const res = await httpPost("/auth/sigup", body);
+    const res = await http.post("/auth/sigup", body);
     res.status === 200 &&
       Swal.fire({
         title: "เพิ่มข้อมูลสำเร็จ!",
@@ -50,7 +50,7 @@ const User = () => {
   };
 
   const getData = async () => {
-    await httpGet(`/user?shop_id=${shopId}`, {
+    await http.get(`/user?shop_id=${shopId}`, {
       headers: { apikey: token },
     }).then((data) => {
       if (data.status === 200) {
@@ -75,7 +75,7 @@ const User = () => {
 
       if (result.isConfirmed) {
         // หากผู้ใช้กดยืนยัน
-        await httpDelete(`/user/${id}`, { headers: { apikey: token } });
+        await http.delete(`/user/${id}`, { headers: { apikey: token } });
         await getData();
         Swal.fire({
           title: "ลบข้อมูลสำเร็จ!",

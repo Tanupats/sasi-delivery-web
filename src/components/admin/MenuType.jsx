@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { Row, Col, Form, Button, Card, Modal } from "react-bootstrap";
-import { httpDelete, httpGet, httpPost, httpPut } from "../../http";
+import { http } from "../../http";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -26,7 +26,7 @@ const MenuType = () => {
   const handleShow = () => setShow(true);
 
   const getData = async () => {
-    await httpGet(`/menutype/${shop?.shop_id}`, {
+    await http.get(`/menutype/${shop?.shop_id}`, {
       headers: { apikey: token },
     }).then((res) => {
       setData(res.data);
@@ -41,7 +41,7 @@ const MenuType = () => {
 
   const onDeleteData = async (payload) => {
     const { id } = payload;
-    await httpDelete(`/menutype/${id}`, { headers: { apikey: token } }).then(
+    await http.delete(`/menutype/${id}`, { headers: { apikey: token } }).then(
       (res) => {
         if (res.status === 200) {
           Swal.fire({
@@ -62,7 +62,7 @@ const MenuType = () => {
       name: typeName,
       shop_id: shop.shop_id,
     };
-    await httpPost(`/menutype`, body, { headers: { apikey: token } }).then(
+    await http.post(`/menutype`, body, { headers: { apikey: token } }).then(
       (res) => {
         if (res.status === 200) {
           Swal.fire({
@@ -82,7 +82,7 @@ const MenuType = () => {
     const body = {
       name: typeName,
     };
-    await httpPut(`/menutype/${id}`, body, { headers: { apikey: token } }).then(
+    await http.put(`/menutype/${id}`, body, { headers: { apikey: token } }).then(
       (res) => {
         if (res.status === 200) {
           Swal.fire({

@@ -21,7 +21,7 @@ import CreditCardIcon from "@mui/icons-material/CreditCard";
 import DataThresholdingIcon from "@mui/icons-material/DataThresholding";
 import PollIcon from "@mui/icons-material/Poll";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { httpGet } from "../../http";
+import { http } from "../../http";
 import { AuthData } from "../../ContextData";
 import Swal from "sweetalert2";
 import AddIcon from "@mui/icons-material/Add";
@@ -41,7 +41,7 @@ const Admin = () => {
   const randomKeywords = ["สวัสดี", "ขอบคุณ"];
   const geIncomeNow = async () => {
     if (shop) {
-      const res = await httpGet(`/bills/reportByMounth/${shop?.shop_id}`, {
+      const res = await http.get(`/bills/reportByMounth/${shop?.shop_id}`, {
         headers: { apikey: token },
       });
       setIncomeNow(res.data.totalAmount);
@@ -51,7 +51,7 @@ const Admin = () => {
 
   const geOutComeNow = async () => {
     if (shop) {
-      const res = await httpGet(`/account/outcome-mounth?shop_id=${shop?.shop_id}`, {
+      const res = await http.get(`/account/outcome-mounth?shop_id=${shop?.shop_id}`, {
         headers: { apikey: token },
       });
       setOutCome(res.data._sum.total);

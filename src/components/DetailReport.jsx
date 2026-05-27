@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { httpGet, httpPut } from "../http";
+import { http } from "../http";
 import { Form, Row, Col, Button } from "react-bootstrap";
 const Detail = (props) => {
     const { id, getOrderFood } = props;
@@ -11,7 +11,7 @@ const Detail = (props) => {
     const [note, setNote] = useState(0);
     const token = localStorage.getItem("token")
     const getData = async () => {
-        await httpGet(`/billsdetails/${id}`)
+        await http.get(`/billsdetails/${id}`)
             .then(res => {
                 setData(res.data)
             })
@@ -25,7 +25,7 @@ const Detail = (props) => {
             quantity: parseInt(quantity),
             note: note
         }
-        await httpPut(`/billsdetails/${id}`, body, { headers: { 'apikey': token } })
+        await http.put(`/billsdetails/${id}`, body, { headers: { 'apikey': token } })
             .then(res => {
                 if (res) {
                     getOrderFood();
