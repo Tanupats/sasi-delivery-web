@@ -35,7 +35,7 @@ const Orders = () => {
   const [preview, setPreview] = useState("");
   const [id, setId] = useState("");
   const [userid, setUserId] = useState("");
-
+  console.log("report", facebook_token);
   const getMenuReport = async (status) => {
     setReport([]);
     if (shopId) {
@@ -102,7 +102,7 @@ const Orders = () => {
       if (res.status === 200) {
         const filename = dev + "/images/" + res.data.filename;
         if (filename) {
-          sendImageToPage(messageid, filename);
+          sendImageToPage(messageid, filename, facebook_token);
         }
         setFile("");
       }
@@ -144,11 +144,10 @@ const Orders = () => {
     });
   }
 
-  const PAGE_ACCESS_TOKEN = facebook_token;
   const sendMessageToPage = (userid, messageText) => {
     axios
       .post(
-        `https://graph.facebook.com/v18.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`,
+        `https://graph.facebook.com/v18.0/me/messages?access_token=${facebook_token}`,
         {
           recipient: {
             id: userid,
@@ -292,7 +291,7 @@ const Orders = () => {
         <Col md={12}>
           <Card style={{ border: "none", marginTop: "12px" }}>
             <Form>
-              <Row className="when-print">
+              <Row className="when-print sticky-top" style={{ top: "56px", backgroundColor: "#fff", zIndex: 100, padding: "12px 0" }}>
                 <ButtonGroup aria-label="Basic example" style={{ height: 60 }}>
                   <Button
                     variant={
@@ -311,8 +310,8 @@ const Orders = () => {
                   <Button
                     variant={
                       statusOrder === "ทำเสร็จแล้ว"
-                        ? "btn btn-success"
-                        : "btn btn-outline-success"
+                        ? "btn btn-primary"
+                        : "btn btn-outline-primary"
                     }
                     style={{ fontSize: "18px" }}
                     onClick={() => {
@@ -325,8 +324,8 @@ const Orders = () => {
                   <Button
                     variant={
                       statusOrder === "กำลังส่ง"
-                        ? "btn btn-danger"
-                        : "btn btn-outline-danger"
+                        ? "btn btn-primary"
+                        : "btn btn-outline-primary"
                     }
                     style={{ fontSize: "18px" }}
                     onClick={() => {
@@ -405,9 +404,7 @@ const Orders = () => {
                                   {item.payment_type === "bank_transfer" ? (
                                     <Badge bg="danger">เงินโอน</Badge>
                                   ) : (
-                                    <Badge bg="secondary">
-                                      จ่ายเงินสด
-                                    </Badge>
+                                    <Badge bg="secondary">จ่ายเงินสด</Badge>
                                   )}
                                 </Col>
                               </Row>

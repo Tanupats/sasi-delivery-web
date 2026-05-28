@@ -39,7 +39,7 @@ const NavbarMenu = () => {
         staffName !== null && (
           <Navbar expand="lg" style={{ backgroundColor: '#FD720D' }} className='when-print ' sticky='top'>
             <Container fluid>
-              <Navbar.Brand href="/pos" style={{ color: '#fff' }}>SASI Delivery</Navbar.Brand>
+              <Navbar.Brand href="/pos" style={{ color: '#fff' }}>SASI RIDER</Navbar.Brand>
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
               <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto text-center">

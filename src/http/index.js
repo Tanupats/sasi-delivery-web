@@ -72,11 +72,11 @@ export const sendDeliverySuccess = async (userid) => {
   }
 };
 
-const PAGE_ACCESS_TOKEN = import.meta.env.VITE_PAGE_ACCESS_TOKEN;
-export const sendImageToPage = (userid, url) => {
+
+export const sendImageToPage = (userid, url,token) => {
   axios
     .post(
-      `https://graph.facebook.com/v18.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`,
+      `https://graph.facebook.com/v18.0/me/messages?access_token=${token}`,
       {
         recipient: {
           id: userid,
@@ -93,7 +93,7 @@ export const sendImageToPage = (userid, url) => {
       },
     )
     .then((response) => {
-      axios.delete(url);
+      // axios.delete(url);
       console.log("Image sent:", response.data);
     })
     .catch((error) => {
