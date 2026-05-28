@@ -26,7 +26,6 @@ import StoreIcon from "@mui/icons-material/Store";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ViewQuiltIcon from "@mui/icons-material/ViewQuilt";
 import AssessmentIcon from "@mui/icons-material/Assessment";
-import Rider from "./rider";
 
 const NavbarMenu = () => {
   const { staffName, shop } = useContext(AuthData);
@@ -154,7 +153,6 @@ const NavbarMenu = () => {
         <Route path="/admin" element={<Admin />} />
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/rider" element={<Rider />} />
       </Routes>
     </Router>
   );

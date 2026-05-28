@@ -54,7 +54,7 @@ const Login = () => {
       <Row className="mt-4">
         <Col md={4}></Col>
         <Col md={4}>
-          <Card className="mt-4">
+          <Card className="mt-4 rounded-card">
             <Card.Body>
               <Card.Title
                 className="text-center"
@@ -67,11 +67,11 @@ const Login = () => {
 
               <Form onSubmit={login}>
                 <Form.Group>
-                  <Form.Label>email</Form.Label>
+                  <Form.Label>username</Form.Label>
                   <Form.Control
                     required
-                    placeholder="email"
-                    type="email"
+                    placeholder="username"
+                    type="text"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
@@ -103,7 +103,7 @@ const Login = () => {
                   เข้าสู่ระบบ
                 </Button>
                 <div className="text-center mt-4">
-                  <p> หรือ </p>
+                  <p>  ยังไม่มีบัญชีผู้ใช้ ? คลิกปุ่มลงทะเบียน </p>
                 </div>
 
                 <Button

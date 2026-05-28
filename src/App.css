@@ -87,3 +87,23 @@ table tbody tr td {
   border-radius: 5px;
 }
 
+.rounded-card {
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: none;
+}
+
+/* Navbar Fixed Position */
+.navbar {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 1030;
+}
+
+body {
+  padding-top: 56px;
+}
+
