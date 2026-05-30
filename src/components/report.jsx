@@ -174,7 +174,7 @@ const Report = () => {
                     <Row className="mb-3">
                       <Col md={3}>
                         <Form.Label>
-                          <b>แสดงยอดขาย</b>
+                        เลือกวันที่แสดงยอดขาย
                         </Form.Label>
 
                         <Form.Control
@@ -282,17 +282,17 @@ const Report = () => {
            
               <TableContainer component={Paper} className="mt-3">
                 <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>ลำดับ</TableCell>
-                      <TableCell>ประเภทการรับ</TableCell>
-                      <TableCell>ประเภทการชำระเงิน</TableCell>
-                      <TableCell>สถานะการชำระเงิน</TableCell>
-                      <TableCell>ยอดรวม</TableCell>
-                      <TableCell>ลูกค้า</TableCell>
-                      <TableCell>เวลา</TableCell>
-                      <TableCell>รายการ</TableCell>
-                      <TableCell>จัดการ</TableCell>
+                  <TableHead sx={{ backgroundColor: "#FFE0B2" }}>
+                    <TableRow sx={{ backgroundColor: "#FFE0B2" }}>
+                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>ลำดับ</TableCell>
+                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>ประเภทการรับ</TableCell>
+                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>ประเภทการชำระเงิน</TableCell>
+                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>สถานะการชำระเงิน</TableCell>
+                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>ยอดรวม</TableCell>
+                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>ลูกค้า</TableCell>
+                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>เวลา</TableCell>
+                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>รายการ</TableCell>
+                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>จัดการ</TableCell>
                     </TableRow>
                   </TableHead>
 

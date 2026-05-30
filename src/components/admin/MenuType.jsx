@@ -116,13 +116,14 @@ const MenuType = () => {
               </Button>
             </Col>
           </Row>
+          
           <TableContainer component={Paper} className="mt-3">
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
-                <TableRow>
-                  <TableCell align="left">ลำดับ</TableCell>
-                  <TableCell align="left">รายการ</TableCell>
-                  <TableCell align="left">จัดการ</TableCell>
+                <TableRow style={{ backgroundColor: "#1976d2" }}>
+                  <TableCell align="left" sx={{ color: "white", fontWeight: 900 }}>ลำดับ</TableCell>
+                  <TableCell align="left" sx={{ color: "white", fontWeight: 900 }}>รายการ</TableCell>
+                  <TableCell align="left" sx={{ color: "white", fontWeight: 900 }}>จัดการ</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

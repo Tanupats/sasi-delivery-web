@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Badge } from "react-bootstrap";
+import { Badge, Pagination,Card } from "react-bootstrap";
 import { http } from "../../http";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -12,6 +12,9 @@ import moment from "moment";
 import { AuthData } from "../../ContextData";
 const ReportProduct = () => {
   const [data, setData] = useState([]);
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+  const [total, setTotal] = useState(0);
   const { shop } = useContext(AuthData);
 
   const [startDate, setStartDate] = useState(moment().startOf("month").format("YYYY-MM-DD"));
@@ -28,6 +31,8 @@ const ReportProduct = () => {
 
       if (res) {
         setData(res.data);
+        setTotal(res.data?.length || 0);
+        setPage(1);
       }
     } catch (err) {
       console.error(err);
@@ -47,10 +52,11 @@ const ReportProduct = () => {
   }, [startDate, endDate]);
 
 
-  return (
-    <>
-      <TableContainer component={Paper} className="mt-3 p-3">
-        <div className="row">
+  return (<Card>
+     
+          <Card.Body>
+  
+            <div className="row">
           <div className="col-md-3 col-xs-6 text-left ms-3">
             <h6>วันที่เริ่มต้น</h6>
             <input
@@ -70,34 +76,75 @@ const ReportProduct = () => {
             />
           </div>
         </div>
+      <TableContainer component={Paper} className="mt-3 p-3">
+
 
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell align="left">ลำดับ</TableCell>
-              <TableCell align="left">รายการ</TableCell>
-              <TableCell align="left">จำนวน</TableCell>
+          <TableHead sx={{ backgroundColor: "#1976d2" }}>
+            <TableRow sx={{ backgroundColor: "#1976d2" }}>
+              <TableCell sx={{ color: "white", fontWeight: 900 }} align="left">ลำดับ</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: 900 }} align="left">รายการ</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: 900 }} align="left">จำนวน</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {data?.length > 0 &&
-              data?.map((row, index) => (
-                <TableRow
-                  key={index}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell align="left">{index + 1}</TableCell>
-                  <TableCell align="left">{row.foodname}</TableCell>
-                  <TableCell align="left">
-                    {" "}
-                    <Badge pill> {row._sum.quantity}</Badge>
-                  </TableCell>
-                </TableRow>
-              ))}
+              data
+                ?.slice((page - 1) * perPage, page * perPage)
+                .map((row, index) => (
+                  <TableRow
+                    key={index}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell align="left">{(page - 1) * perPage + index + 1}</TableCell>
+                    <TableCell align="left">{row.foodname}</TableCell>
+                    <TableCell align="left">
+                      {" "}
+                      <Badge pill> {row._sum.quantity}</Badge>
+                    </TableCell>
+                  </TableRow>
+                ))}
           </TableBody>
         </Table>
+
+        {/* Pagination */}
+        <div className="mt-3 d-flex justify-content-between align-items-center">
+          <div>
+            <span>แสดง {(page - 1) * perPage + 1} ถึง {Math.min(page * perPage, total)} จากทั้งหมด {total} รายการ</span>
+          </div>
+          {total > perPage && (
+            <Pagination>
+              <Pagination.First
+                onClick={() => setPage(1)}
+                disabled={page === 1}
+              />
+              <Pagination.Prev
+                onClick={() => setPage(page - 1)}
+                disabled={page === 1}
+              />
+              {[...Array(Math.ceil(total / perPage))].map((_, i) => (
+                <Pagination.Item
+                  key={i + 1}
+                  active={page === i + 1}
+                  onClick={() => setPage(i + 1)}
+                >
+                  {i + 1}
+                </Pagination.Item>
+              ))}
+              <Pagination.Next
+                onClick={() => setPage(page + 1)}
+                disabled={page === Math.ceil(total / perPage)}
+              />
+              <Pagination.Last
+                onClick={() => setPage(Math.ceil(total / perPage))}
+                disabled={page === Math.ceil(total / perPage)}
+              />
+            </Pagination>
+          )}
+        </div>
       </TableContainer>
-    </>
-  );
+    
+    </Card.Body>
+  </Card>);
 };
 export default ReportProduct;

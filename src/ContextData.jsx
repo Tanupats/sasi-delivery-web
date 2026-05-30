@@ -75,6 +75,7 @@ function Context({ children }) {
                 Swal.fire({
                     title: 'ดำเนินการสำเร็จ',
                     icon: 'success',
+                    timer: 1300,
                 })
 
             }

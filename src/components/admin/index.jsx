@@ -178,7 +178,7 @@ const Admin = () => {
                   <Card.Title style={{ color: inComeNow - outComeNow >= 0 ? "#00b300" : "#ff0000" }}>
                     {" "}
                     กำไรสุทธิ = {formatMoney(inComeNow - outComeNow)} บาท{" "} 
-                    % {inComeNow > 0 ? `(${((inComeNow - outComeNow) / inComeNow * 100).toFixed(2)}%)` : ""}
+                    {inComeNow > 0 ? `(${((inComeNow - outComeNow) / inComeNow * 100).toFixed(2)}%)` : ""}
                   </Card.Title>{" "}
                 </Card.Body>{" "}
               </Card>{" "}

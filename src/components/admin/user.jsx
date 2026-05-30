@@ -102,7 +102,7 @@ const User = () => {
   return (
     <Card>
       <Card.Body>
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} onHide={handleClose} size="lg" centered>
         <Modal.Header closeButton>
           <Modal.Title>เพิ่มข้อมูลผู้ใช้</Modal.Title>
         </Modal.Header>
@@ -190,20 +190,19 @@ const User = () => {
       </Button>
   </Col>
 </Row>
-    
 
 
       <TableContainer component={Paper} className="mt-3">
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead className="bg-gray-200 ">
-            <TableRow className="bg-gray-200 font-bold">
-              <TableCell>ลำดับ</TableCell>
+          <TableHead >
+            <TableRow sx={{ backgroundColor: "#1976d2" }}>
+              <TableCell sx={{ color: "white", fontWeight: 900 }}>ลำดับ</TableCell>
 
-              <TableCell align="left">ชื่อ-นามสกุล</TableCell>
-              <TableCell align="left">ชื่อผู้ใช้</TableCell>
-              <TableCell align="left">แผนก</TableCell>
-              <TableCell align="left">เบอร์โทร</TableCell>
-              <TableCell align="left">จัดการ</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: 900 }} align="left">ชื่อ-นามสกุล</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: 900 }} align="left">ชื่อผู้ใช้</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: 900 }} align="left">แผนก</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: 900 }} align="left">เบอร์โทร</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: 900 }} align="left">จัดการ</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
