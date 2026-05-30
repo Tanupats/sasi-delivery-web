@@ -8,7 +8,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
 import Detail from "./DetailReport";
-import { Card, Row, Col, Button, Form, Modal, Alert } from "react-bootstrap";
+import { Card, Row, Col, Button, Form, Modal, Alert, Pagination } from "react-bootstrap";
 import Swal from "sweetalert2";
 import moment from "moment";
 import { AuthData } from "../ContextData";
@@ -27,6 +27,9 @@ const Report = () => {
   const [totalToday, setTotalToday] = useState(0);
   const [data, setData] = useState([]);
   const [counter, setCounter] = useState({});
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+  const [total, setTotal] = useState(0);
 
   // เก็บวันที่ในรูปแบบ DD/MM/YYYY
   const [startDate, setStartDate] = useState(moment().format("DD/MM/YYYY"));
@@ -112,6 +115,8 @@ const Report = () => {
         headers: { apikey: token },
       }).then((res) => {
         setData(res.data.data);
+        setTotal(res.data.data?.length || 0);
+        setPage(1);
         res?.data.data?.map((item) => {
           if (item.payment_type === "bank_transfer") {
             bank += Number(item?.amount);
@@ -297,9 +302,11 @@ const Report = () => {
                   </TableHead>
 
                   <TableBody>
-                    {data?.map((row, index) => (
+                    {data
+                      ?.slice((page - 1) * perPage, page * perPage)
+                      .map((row, index) => (
                       <TableRow key={row.id}>
-                        <TableCell>{index + 1}</TableCell>
+                        <TableCell>{(page - 1) * perPage + index + 1}</TableCell>
                         <TableCell>{row.ordertype}</TableCell>
 
                         <TableCell>
@@ -387,6 +394,45 @@ const Report = () => {
                         </TableBody>
                   ) }
                 </Table>
+
+                {/* Pagination */}
+                <div className="mt-3 d-flex justify-content-between align-items-center p-3">
+                  <div>
+                    <span>
+                      แสดง {(page - 1) * perPage + 1} ถึง{" "}
+                      {Math.min(page * perPage, total)} จากทั้งหมด {total} รายการ
+                    </span>
+                  </div>
+                  {total > perPage && (
+                    <Pagination>
+                      <Pagination.First
+                        onClick={() => setPage(1)}
+                        disabled={page === 1}
+                      />
+                      <Pagination.Prev
+                        onClick={() => setPage(page - 1)}
+                        disabled={page === 1}
+                      />
+                      {[...Array(Math.ceil(total / perPage))].map((_, i) => (
+                        <Pagination.Item
+                          key={i + 1}
+                          active={page === i + 1}
+                          onClick={() => setPage(i + 1)}
+                        >
+                          {i + 1}
+                        </Pagination.Item>
+                      ))}
+                      <Pagination.Next
+                        onClick={() => setPage(page + 1)}
+                        disabled={page === Math.ceil(total / perPage)}
+                      />
+                      <Pagination.Last
+                        onClick={() => setPage(Math.ceil(total / perPage))}
+                        disabled={page === Math.ceil(total / perPage)}
+                      />
+                    </Pagination>
+                  )}
+                </div>
               </TableContainer>
             </Col>
           </Row>

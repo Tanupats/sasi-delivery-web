@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { Row, Col, Form, Button } from 'react-bootstrap'
+import { Row, Col, Form, Button, Card } from 'react-bootstrap'
 import { http } from "../../http";
 import { AuthData } from "../../ContextData";
 import Table from '@mui/material/Table';
@@ -186,8 +186,13 @@ const Accounting = () => {
     return (<>
         <div className="container" >
 
-        <Form onSubmit={(e) => addItem(e)} className="mt-4">
-            <Row>
+        <Card className="mt-4" style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.1)', borderRadius: '8px' }}>
+            <Card.Body>
+                <Card.Title style={{ color: '#333', fontWeight: 'bold', marginBottom: '20px' }}>
+                    เพิ่มรายการค่าใช้จ่าย
+                </Card.Title>
+                <Form onSubmit={(e) => addItem(e)}>
+                    <Row>
                 <Col md={3}>
                     <Form.Label> วันที่ </Form.Label>  <Form.Control
                         value={date}
@@ -237,9 +242,10 @@ const Accounting = () => {
 
                 </Col>
                 <Col md={6}>   <Button type="submit" variant="primary mt-4 w-50"> เพิ่มรายการ </Button></Col>
-            </Row>
-
-        </Form>
+                </Row>
+                </Form>
+            </Card.Body>
+        </Card>
 
         {tempItems.length > 0 && (
             <TableContainer component={Paper} className="mt-3" sx={{ boxShadow: 3, borderRadius: 2 }}>

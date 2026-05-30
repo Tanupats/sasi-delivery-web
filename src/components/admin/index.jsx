@@ -205,7 +205,7 @@ const Admin = () => {
           eventKey="ตั้งค่าแชทบอท"
           title={
             <span style={{ color: "#6c757d" }}>
-              <MessageIcon /> การตอบกลับอัตโนมัติ
+              <MessageIcon /> แชทบอท
             </span>
           }
         >
