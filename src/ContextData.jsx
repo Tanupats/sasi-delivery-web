@@ -17,7 +17,7 @@ function Context({ children }) {
   const [Address, setAddress] = useState("");
   const [paymentType, setPaymentType] = useState("bank_transfer");
   const [shopId, setShopId] = useState("");
-  const [deliveryFee, setDeliveryFee] = useState(0);
+  const [deliveryFee, setDeliveryFee] = useState(0 || localStorage.getItem("delivery_fee"));
   const [account_payment, setAccount_payment] = useState(0);
   const [promptPay, setPromptPay] = useState("");
   const [oldData, setOldData] = useState([]);

@@ -48,7 +48,7 @@ const ShopData = () => {
     } else {
       setLoading(false);
       showNotification.error(
-        "ลิงค์หมดอายุเนื่องจากใช้งานมาแล้วครบ 24 ชม. กรุณาส่งข้อความขอลิงค์ใหม่กับทางร้านค้า"
+        "ลิงค์หมดอายุเนื่องจากใช้งานมาแล้วครบ 24 ชม. กรุณาส่งข้อความขอลิงค์ใหม่กับทางร้านค้า",
       );
     }
   };
@@ -84,7 +84,7 @@ const ShopData = () => {
                     ) : (
                       <>
                         <Card
-                          onClick={() => handleShopClick(item)}
+                          onClick={() => item.is_open && handleShopClick(item)}
                           style={{
                             cursor: item.is_open ? "pointer" : "not-allowed",
                           }}
@@ -101,8 +101,9 @@ const ShopData = () => {
                                   top: "10px",
                                   left: "10px",
                                   zIndex: 2,
-                                  fontSize: "14px",
-                                  padding: "8px 12px",
+                                  fontSize: "16px",
+                                  fontWeight: "700",
+                                  padding: "10px 16px",
                                   borderRadius: "20px",
                                 }}
                               >
@@ -113,7 +114,7 @@ const ShopData = () => {
                                     {item.open_time}
                                   </>
                                 ) : (
-                                  <>ปิด {item.open_time}</>
+                                  <>ร้านปิด จะเปิดอีกครั้งเวลา {item.open_time}</>
                                 )}
                               </Badge>
 

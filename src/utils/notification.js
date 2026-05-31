@@ -5,7 +5,7 @@ export const showNotification = {
   success: (message, title = '') => {
     const content = title ? `${title}\n${message}` : message;
     toast.success(content, {
-      position: 'top-right',
+      position: 'top-center',
       autoClose: 1200,
       hideProgressBar: false,
       closeOnClick: true,
