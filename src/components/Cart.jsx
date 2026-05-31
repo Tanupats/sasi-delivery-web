@@ -7,7 +7,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import PaymentsIcon from '@mui/icons-material/Payments';
-import Swal from 'sweetalert2';
+import { showConfirmation } from '../utils/notification';
 import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import LocalDiningIcon from '@mui/icons-material/LocalDining';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
@@ -60,29 +60,15 @@ const Cart = () => {
     const onSave = async (e) => {
         e.preventDefault();
         await getQueue();
-        let queueMessage = `<h4 style="color: ${queue > 9 ? 'red' : 'black'}">${queue}</h4>`;
-        if (queue > 10) {
-            queueMessage += `<div style="color:red;">* รอประมาณ 1.30 ชม ขึ้นไป</div>`;
-        } else if (queue >= 9) {
-            queueMessage += `<div style="color:red;">* รอประมาณ 40 น. - 1 ชั่วโมง </div>`;
-        }
-        const result = await Swal.fire({
-            title: 'ยืนยันการสั่งซื้อ',
-            html: `จำนวนคิวที่รอ ${queueMessage} คิว`,
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'ยืนยัน',
-            confirmButtonColor: 'green',
-            cancelButtonText: 'ยกเลิก',
-            cancelButtonColor: 'red'
-        });
-
-        if (result.isConfirmed) {
+        let waitTime = queue > 10 ? "ประมาณ 1.30 ชม ขึ้นไป" : queue >= 9 ? "ประมาณ 40 น. - 1 ชั่วโมง" : "ไม่นาน";
+        const message = `ยืนยันการสั่งซื้อ?\nจำนวนคิวที่รอ: ${queue} คิว\nรอ: ${waitTime}`;
+        
+        showConfirmation(message, async () => {
             setLoading(true);
             await saveOrder();
             setLoading(false);
             router('/Myorder');
-        }
+        }, null);
     }
 
     useEffect(() => {

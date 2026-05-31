@@ -1,6 +1,6 @@
 import axios from "axios";
-import React, { useState, useEffect,useContext } from "react";
-import Swal from "sweetalert2";
+import React, { useState, useEffect, useContext } from "react";
+import { showNotification } from "../utils/notification";
 import { Row, Col, Card, Image } from "react-bootstrap";
 import Badge from "react-bootstrap/Badge";
 import { useParams } from "react-router-dom";
@@ -8,8 +8,9 @@ import { useNavigate } from "react-router-dom";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { AuthData } from "../ContextData";
 const ShopData = () => {
-  const { shop_id,userid, name, } = useParams();
-  const {setAccount_payment,setPromptPay,setDeliveryFee} = useContext(AuthData);
+  const { shop_id, userid, name } = useParams();
+  const { setAccount_payment, setPromptPay, setDeliveryFee } =
+    useContext(AuthData);
   const router = useNavigate();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -21,7 +22,7 @@ const ShopData = () => {
         body: JSON.stringify({
           recipient: { id: recipientId },
           message: {
-            text: "สวัสดีครับ ลูกค้ากดสั่งอาหาร และแจ้งชำระเงินได้เลยครับ",
+            text: "สวัสดีครับ เลือกเมนูอาหารที่ต้องการได้เลยครับ",
           },
         }),
         headers: { "Content-Type": "application/json" },
@@ -33,7 +34,8 @@ const ShopData = () => {
   };
 
   const handleShopClick = async (shop) => {
-    setDeliveryFee(shop.delivery_fee);
+    localStorage.setItem("delivery_fee", shop.delivery_fee);
+    setDeliveryFee(shop.delivery_fee || localStorage.getItem("delivery_fee"));
     setAccount_payment(shop.account_payment);
     setPromptPay(shop.promtpay);
     localStorage.setItem("shop_token", shop.facebook_token);
@@ -45,21 +47,21 @@ const ShopData = () => {
       router("/foodmenu/" + shop.shop_id);
     } else {
       setLoading(false);
-      Swal.fire(
-        "ลิงค์หมดอายุเนื่องจากใช้งานมาแล้วครบ 24 ชม. กรุณาส่งข้อความขอลิงค์ใหม่กับทางร้านค้า",
-        { showConfirmButton: false },
+      showNotification.error(
+        "ลิงค์หมดอายุเนื่องจากใช้งานมาแล้วครบ 24 ชม. กรุณาส่งข้อความขอลิงค์ใหม่กับทางร้านค้า"
       );
     }
   };
 
- const getShopData = async () => {
-      await axios.get(`${import.meta.env.VITE_API_URL}/shop/${shop_id}`).then((res) => {
+  const getShopData = async () => {
+    await axios
+      .get(`${import.meta.env.VITE_API_URL}/shop/${shop_id}`)
+      .then((res) => {
         setData(res.data);
       });
-    };
+  };
 
   useEffect(() => {
-   
     if (userid && name) {
       localStorage.setItem("messangerId", userid);
       localStorage.setItem("name", name);
@@ -74,66 +76,69 @@ const ShopData = () => {
         <Card.Body style={{ padding: "0" }}>
           <Row>
             {data.map((item, index) => {
-           
-                return (
-                  <React.Fragment key={index}>
-                    <Col md={4} xs={12} className="mt-2">
-                      {loading ? (
-                        <h3>กำลังโหลด....</h3>
-                      ) : (
-                        <>
-                      <Card
-  onClick={() => handleShopClick(item)}
-  style={{
-    cursor: item.is_open ? "pointer" : "not-allowed",
-  }}
->
-  <Card.Body style={{ padding: 10 }}>
-    <Card.Title>{item.name}</Card.Title>
+              return (
+                <React.Fragment key={index}>
+                  <Col md={4} xs={12} className="mt-2">
+                    {loading ? (
+                      <h3>กำลังโหลด....</h3>
+                    ) : (
+                      <>
+                        <Card
+                          onClick={() => handleShopClick(item)}
+                          style={{
+                            cursor: item.is_open ? "pointer" : "not-allowed",
+                          }}
+                        >
+                          <Card.Body style={{ padding: 10 }}>
+                            <Card.Title>{item.name}</Card.Title>
 
-    <div style={{ position: "relative" }}>
-      {/* ป้ายเปิดปิด */}
-      <Badge
-        bg={item.is_open ? "success" : "danger"}
-        style={{
-          position: "absolute",
-          top: "10px",
-          left: "10px",
-          zIndex: 2,
-          fontSize: "14px",
-          padding: "8px 12px",
-          borderRadius: "20px",
-        }}
-      >
-        {item.is_open ? (
-          <>
-            เปิด <AccessTimeIcon style={{ fontSize: 16 }} /> {item.open_time}
-          </>
-        ) : (
-          <>ปิด {item.open_time}</>
-        )}
-      </Badge>
+                            <div style={{ position: "relative" }}>
+                              {/* ป้ายเปิดปิด */}
+                              <Badge
+                                bg={item.is_open ? "success" : "danger"}
+                                style={{
+                                  position: "absolute",
+                                  top: "10px",
+                                  left: "10px",
+                                  zIndex: 2,
+                                  fontSize: "14px",
+                                  padding: "8px 12px",
+                                  borderRadius: "20px",
+                                }}
+                              >
+                                {item.is_open ? (
+                                  <>
+                                    เปิด{" "}
+                                    <AccessTimeIcon style={{ fontSize: 16 }} />{" "}
+                                    {item.open_time}
+                                  </>
+                                ) : (
+                                  <>ปิด {item.open_time}</>
+                                )}
+                              </Badge>
 
-      {/* รูป */}
-      <Image
-        style={{
-          width: "100%",
-          height: "200px",
-          objectFit: "cover",
-          borderRadius: "10px",
-          cursor: item.is_open ? "pointer" : "not-allowed",
-          opacity: item.is_open ? 1 : 0.5,
-        }}
-        src={`${import.meta.env.VITE_API_URL}/images/${item.photo}`}
-      />
-    </div>
-  </Card.Body>
-</Card>
-                        </>
-                      )}
-                    </Col>
-                  </React.Fragment>
-                );
+                              {/* รูป */}
+                              <Image
+                                style={{
+                                  width: "100%",
+                                  height: "200px",
+                                  objectFit: "cover",
+                                  borderRadius: "10px",
+                                  cursor: item.is_open
+                                    ? "pointer"
+                                    : "not-allowed",
+                                  opacity: item.is_open ? 1 : 0.5,
+                                }}
+                                src={`${import.meta.env.VITE_API_URL}/images/${item.photo}`}
+                              />
+                            </div>
+                          </Card.Body>
+                        </Card>
+                      </>
+                    )}
+                  </Col>
+                </React.Fragment>
+              );
             })}
           </Row>
         </Card.Body>

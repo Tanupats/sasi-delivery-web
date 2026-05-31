@@ -9,7 +9,8 @@ import { AuthData } from "../ContextData";
 import FoodMenu from './FoodMenu';
 import Myorder from './Myorder';
 import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
-import { ShoppingCart, Receipt } from "@mui/icons-material";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import ReceiptIcon from "@mui/icons-material/Receipt";
 import Cart from './Cart';
 import ShopData from './shop';
 import StorefrontIcon from '@mui/icons-material/Storefront';
@@ -35,7 +36,7 @@ const NavbarMenu = () => {
                 ตะกร้า  <LocalMallIcon style={{ color: '#FD720D' }} /> {toTal}
               </Nav.Link>
               <Nav.Link style={{ textDecoration: 'none', color: '#000', fontSize: '16px', fontWeight: 300 }} as={Link} to={'/Myorder'}>
-                <Receipt style={{ color: '#FD720D' }} />  คำสั่งซื้อ {counterOrder}
+                <ReceiptIcon style={{ color: '#FD720D' }} />  คำสั่งซื้อ {counterOrder}
               </Nav.Link>
               {/* <Nav.Link style={{ textDecoration: 'none', color: '#000', fontSize: '16px', fontWeight: 300 }} as={Link} to={'/queueNumber'}>
                 <AddToQueueIcon style={{ color: '#FD720D' }} /> คิวทั้งหมด {queue >= 0 ? queue : "... กำลังโหลด"}
@@ -73,8 +74,8 @@ const NavbarMenu = () => {
               onClick={() => setValue(0)}
               label="เมนู" icon={<MenuBookIcon />}
               component={Link} to={`/foodmenu/${shop_id}`} /> */}
-            <BottomNavigationAction onClick={() => setValue(2)} label={"ตะกร้า" + toTal} icon={<ShoppingCart />} component={Link} to="/cart" />
-            <BottomNavigationAction onClick={() => setValue(1)} label={"คำสั่งซื้อ"} icon={<Receipt />} component={Link} to="/Myorder" />
+            <BottomNavigationAction onClick={() => setValue(2)} label={"ตะกร้า" + toTal} icon={<ShoppingCartIcon />} component={Link} to="/cart" />
+            <BottomNavigationAction onClick={() => setValue(1)} label={"คำสั่งซื้อ"} icon={<ReceiptIcon />} component={Link} to="/Myorder" />
           </BottomNavigation>
         </BottomNavigation>
       </Paper>

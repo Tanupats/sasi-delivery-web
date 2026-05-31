@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 export const AuthData = createContext();
 import axios from "axios";
-import Swal from "sweetalert2";
+import { showNotification } from "./utils/notification";
 
 function Context({ children }) {
   const messengerId = localStorage.getItem("messangerId");
@@ -73,13 +73,7 @@ ${account_payment}`;
       shop_id: data.shop_id,
     };
     setCart((prevCart) => [...prevCart, itemCart]);
-    Swal.fire({
-      title: "เพิ่มรายการสำเร็จ",
-      text: "เพิ่มรายการลงตะกร้าแล้ว",
-      icon: "success",
-      timer: 1200,
-      showConfirmButton: false,
-    });
+    showNotification.success("เพิ่มรายการลงตะกร้าแล้ว", "เพิ่มรายการสำเร็จ");
   };
 
   const removeCart = (id) => {
@@ -161,28 +155,21 @@ ${account_payment}`;
 
         await axios.post(`${api_url}/billsdetails`, bodyDetails);
 
-        Swal.fire({
-          title: "สั่งออเดอร์สำเร็จ",
-          text: "คำสั่งซื้อของคุณส่งไปยังร้านค้าแล้ว แจ้งชำระเงินและรอรับอาหารได้เลย",
-          icon: "success",
-          confirmButtonText: "ยืนยัน",
-          timer: 1300,
-        });
+        showNotification.success(
+          "คำสั่งซื้อของคุณส่งไปยังร้านค้าแล้ว แจ้งชำระเงินและรอรับอาหารได้เลย",
+          "สั่งออเดอร์สำเร็จ"
+        );
       } else {
-        Swal.fire({
-          title: "เกิดข้อผิดพลาด",
-          text: "ไม่สามารถสั่งอาหารได้ กรุณาลองใหม่ หรือสอบถามร้านค้า",
-          icon: "error",
-          confirmButtonText: "ตกลง",
-        });
+        showNotification.error(
+          "ไม่สามารถสั่งอาหารได้ กรุณาลองใหม่ หรือสอบถามร้านค้า",
+          "เกิดข้อผิดพลาด"
+        );
       }
     } else {
-      Swal.fire({
-        title: "ไม่สามารถสั่งอาหารได้",
-        text: "กรุณาใช้งานแอพที่กล่องข้อความเพจเพื่อสั่งอาหารเท่านั้น",
-        icon: "error",
-        confirmButtonText: "ยืนยัน",
-      });
+      showNotification.error(
+        "กรุณาใช้งานแอพที่กล่องข้อความเพจเพื่อสั่งอาหารเท่านั้น",
+        "ไม่สามารถสั่งอาหารได้"
+      );
     }
   };
 
@@ -254,7 +241,6 @@ ${account_payment}`;
 
   useEffect(() => {
     const interval = setInterval(() => {
-      getQueue();
       getCounterOrder();
     }, 7000);
 
