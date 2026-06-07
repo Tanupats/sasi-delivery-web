@@ -57,15 +57,17 @@ const Products = () => {
         title: "กรุณากรอกคำค้นหา",
         text: "โปรดกรอกคำค้นหาเมนูก่อน",
         icon: "warning",
-        confirmButtonText: "ยืนยัน"
+        confirmButtonText: "ยืนยัน",
       });
       return;
     }
-    await http.get(`/foodmenu/search?keyword=${keyword}&shop_id=${shopId}`, {
-      headers: { apikey: token },
-    }).then((res) => {
-      setFoods(res.data);
-    });
+    await http
+      .get(`/foodmenu/search?keyword=${keyword}&shop_id=${shopId}`, {
+        headers: { apikey: token },
+      })
+      .then((res) => {
+        setFoods(res.data);
+      });
   };
 
   const handleImageChange = (event) => {
@@ -112,11 +114,13 @@ const Products = () => {
       notes: data.notes,
       shop_id: data.shop_id,
       img: filename !== "" ? filename : data.img,
+      option_menu: data.option_menu,
     };
 
     const { id } = data;
-    await http.put(`/foodmenu/${id}`, body, { headers: { apikey: token } }).then(
-      (res) => {
+    await http
+      .put(`/foodmenu/${id}`, body, { headers: { apikey: token } })
+      .then((res) => {
         if (res.status === 200) {
           Swal.fire({
             title: "แก้ไขเมนู",
@@ -126,21 +130,20 @@ const Products = () => {
             timer: 1300,
           });
         }
-      },
-    );
+      });
     handleClose();
     getFoodMenu();
   };
 
   const updateStatus = async (id, val, TypeID) => {
     const body = { status: val };
-    await http.put(`/foodmenu/${id}`, body, { headers: { apikey: token } }).then(
-      (res) => {
+    await http
+      .put(`/foodmenu/${id}`, body, { headers: { apikey: token } })
+      .then((res) => {
         if (res.status === 200) {
           getMenuByTypeId(TypeID);
         }
-      },
-    );
+      });
   };
 
   const onDeleteMenu = async (id) => {
@@ -155,7 +158,8 @@ const Products = () => {
       cancelButtonText: "ยกเลิก",
     }).then((result) => {
       if (result.isConfirmed) {
-        http.delete(`/foodmenu/${id}`, { headers: { apikey: token } })
+        http
+          .delete(`/foodmenu/${id}`, { headers: { apikey: token } })
           .then((res) => {
             if (res.status === 200) {
               Swal.fire("ลบข้อมูลสินค้าสำเร็จ!", "success");
@@ -175,13 +179,15 @@ const Products = () => {
 
   const getFoodMenu = () => {
     if (shopId !== undefined) {
-      http.get(`/foodmenu/getByShop/${shopId}`, {
-        headers: { apikey: token },
-      }).then((res) => {
-        if (res.data) {
-          setFoods(res.data);
-        }
-      });
+      http
+        .get(`/foodmenu/getByShop/${shopId}`, {
+          headers: { apikey: token },
+        })
+        .then((res) => {
+          if (res.data) {
+            setFoods(res.data);
+          }
+        });
     }
   };
   useEffect(() => {
@@ -206,7 +212,6 @@ const Products = () => {
               <div className="border p-3 mb-2">
                 <Row className="align-items-end">
                   <Col xs={12} md={3} className="mb-2 mb-md-0">
-                
                     <select
                       className="form-select"
                       onChange={(e) => getMenuByTypeId(e.target.value)}
@@ -230,8 +235,15 @@ const Products = () => {
                     </div>
                   </Col>
                   <Col xs={8} md={4} className="mb-2 mb-md-0">
-                    <label className="form-label d-block d-md-none">ค้นหา</label>
-                    <form onSubmit={(e) => { e.preventDefault(); searchMenu(); }}>
+                    <label className="form-label d-block d-md-none">
+                      ค้นหา
+                    </label>
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        searchMenu();
+                      }}
+                    >
                       <input
                         value={keyword}
                         onChange={(e) => setKeyword(e.target.value)}
@@ -247,7 +259,8 @@ const Products = () => {
                       className="btn btn-outline-success w-100"
                       type="submit"
                     >
-                      <Search size={18} className="d-md-none" /> <span className="d-none d-md-inline">ค้นหาเมนู</span>
+                      <Search size={18} className="d-md-none" />{" "}
+                      <span className="d-none d-md-inline">ค้นหาเมนู</span>
                     </button>
                   </Col>
                   <Col xs={12} md={0} className="d-md-none mt-2">
@@ -324,15 +337,14 @@ const Products = () => {
                                   onClick={() => onSelectMenu(item)}
                                   variant="light"
                                 >
-                                  <EditIcon /> 
+                                  <EditIcon />
                                 </Button>{" "}
                                 <Button
-                                size="sm"
-                                 
+                                  size="sm"
                                   onClick={() => onDeleteMenu(item.id)}
                                   variant="danger"
                                 >
-                                  <DeleteIcon /> 
+                                  <DeleteIcon />
                                 </Button>
                               </Col>
                             </Row>
@@ -469,6 +481,18 @@ const Products = () => {
                             type="text"
                             defaultValue={data?.notes}
                           />
+                        </Form.Group>
+                        <Form.Group>
+                          <Form.Label>ตัวเลือกเพิ่มเติม</Form.Label>
+                          <Form.Select
+                            value={data?.option_menu || "N"}
+                            onChange={(e) =>
+                              setData({ ...data, option_menu: e.target.value })
+                            }
+                          >
+                            <option value="N">ไม่แสดง</option>
+                            <option value="Y">แสดง</option>
+                          </Form.Select>
                         </Form.Group>
                       </Col>
                     </Row>
