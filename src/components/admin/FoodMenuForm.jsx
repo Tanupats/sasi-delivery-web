@@ -1,10 +1,10 @@
 import { useState, useEffect, useContext } from "react";
 import { Row, Col, Card, Image, Button, Modal, Form } from "react-bootstrap";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { AuthData } from "../../ContextData";
 import Swal from "sweetalert2";
 import { http } from "../../http";
-import { CloudUpload as CloudUploadIcon } from "@mui/icons-material";
 const FoodMenuForm = (props) => {
   const { getFoodMenu } = props;
   const { shop } = useContext(AuthData);
