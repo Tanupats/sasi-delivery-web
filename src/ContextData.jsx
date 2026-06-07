@@ -71,6 +71,7 @@ ${account_payment}`;
       photo: data.img,
       note: data.note,
       shop_id: data.shop_id,
+      option_menu: data.option_menu,
     };
     setCart((prevCart) => [...prevCart, itemCart]);
     showNotification.success("เพิ่มรายการลงตะกร้าแล้ว", "เพิ่มรายการสำเร็จ");

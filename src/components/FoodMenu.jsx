@@ -184,7 +184,8 @@ const FoodMenu = () => {
                         <Card.Body style={{ margin: 0, padding: 0 }}>
                           <Row>
                             <Col md={3} xs={5}>
-                              <Image
+                              <Image 
+                               onClick={() => onSelectMenu(item)}
                                 style={{
                                   width: "100%",
                                   height: "170px",
