@@ -128,7 +128,7 @@ const Cart = () => {
                           {/* รูป */}
                           <Col xs={4}>
                             <Image
-                            title={item.name+item?.option_menu}
+                            title={item.name}
                               style={{
                                 width: "100%",
                                 height: "90px",
@@ -193,7 +193,7 @@ const Cart = () => {
 
                  
                           
-                           { item.option_menu && (<>
+                           { item.option_menu ==="Y" && (<>
                             
                             <Col xs={12} className="mt-2">
                             <div className="d-flex gap-2">
