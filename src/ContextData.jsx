@@ -17,7 +17,9 @@ function Context({ children }) {
   const [Address, setAddress] = useState("");
   const [paymentType, setPaymentType] = useState("bank_transfer");
   const [shopId, setShopId] = useState("");
-  const [deliveryFee, setDeliveryFee] = useState(0 || localStorage.getItem("delivery_fee"));
+  const [deliveryFee, setDeliveryFee] = useState(
+    0 || localStorage.getItem("delivery_fee"),
+  );
   const [account_payment, setAccount_payment] = useState(0);
   const [promptPay, setPromptPay] = useState("");
   const [oldData, setOldData] = useState([]);
@@ -155,21 +157,21 @@ ${account_payment}`;
         });
 
         await axios.post(`${api_url}/billsdetails`, bodyDetails);
-
+        console.log("ส่ง billsdetail =", bodyDetails);
         showNotification.success(
           "คำสั่งซื้อของคุณส่งไปยังร้านค้าแล้ว แจ้งชำระเงินและรอรับอาหารได้เลย",
-          "สั่งออเดอร์สำเร็จ"
+          "สั่งออเดอร์สำเร็จ",
         );
       } else {
         showNotification.error(
           "ไม่สามารถสั่งอาหารได้ กรุณาลองใหม่ หรือสอบถามร้านค้า",
-          "เกิดข้อผิดพลาด"
+          "เกิดข้อผิดพลาด",
         );
       }
     } else {
       showNotification.error(
         "กรุณาใช้งานแอพที่กล่องข้อความเพจเพื่อสั่งอาหารเท่านั้น",
-        "ไม่สามารถสั่งอาหารได้"
+        "ไม่สามารถสั่งอาหารได้",
       );
     }
   };

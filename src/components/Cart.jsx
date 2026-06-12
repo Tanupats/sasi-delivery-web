@@ -90,6 +90,13 @@ const Cart = () => {
       null,
     );
   };
+  
+useEffect(() => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth", // เอาออกได้ถ้าไม่ต้องการแอนิเมชัน
+  });
+}, []);
 
   useEffect(() => {
     getProfile();
