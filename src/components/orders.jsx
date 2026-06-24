@@ -21,22 +21,26 @@ const Orders = () => {
   const getMenuReport = async (status) => {
     setReport([]);
     if (shop?.shop_id) {
-      await http.get(`/bills?status=${status}&shop_id=${shop?.shop_id}`, {
-        headers: { apikey: token },
-      }).then((res) => {
-        setReport(res.data);
-      });
+      await http
+        .get(`/bills?status=${status}&shop_id=${shop?.shop_id}`, {
+          headers: { apikey: token },
+        })
+        .then((res) => {
+          setReport(res.data);
+        });
     }
   };
 
   const getOrderStatus = async () => {
     if (shop?.shop_id) {
-      await http.get(`/bills/counter-order-status/${shop?.shop_id}`, {
-        headers: { apikey: token },
-      }).then((res) => {
-        setStatusOrder([]);
-        setStatusOrder(res.data);
-      });
+      await http
+        .get(`/bills/counter-order-status/${shop?.shop_id}`, {
+          headers: { apikey: token },
+        })
+        .then((res) => {
+          setStatusOrder([]);
+          setStatusOrder(res.data);
+        });
     }
   };
 
@@ -52,6 +56,7 @@ const Orders = () => {
     setTimeout(() => {
       window.print();
     }, 2000);
+    reset();
   };
 
   const CancelOrder = async (id, bid) => {
@@ -81,9 +86,15 @@ const Orders = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         const body = {
-          statusOrder: status,
-          step: step,
+          statusOrder:
+            ordertype === "เสิร์ฟในร้าน" || ordertype === "รับเอง"
+              ? "ส่งสำเร็จ"
+              : status,
+
+          step:
+            ordertype === "เสิร์ฟในร้าน" || ordertype === "รับเอง" ? 4 : step,
         };
+
         http.put(`/bills/${id}`, body).then((res) => {
           if (res) {
             if (status === "ทำเสร็จแล้ว") {
@@ -101,9 +112,9 @@ const Orders = () => {
                 }
               }
             }
-            getMenuReport("รับออเดอร์แล้ว");
-            getOrderStatus();
           }
+          getMenuReport("รับออเดอร์แล้ว");
+          getOrderStatus();
         });
       }
     });
@@ -137,7 +148,7 @@ const Orders = () => {
         <Col md={12}>
           <Card style={{ border: "none", marginTop: "12px" }}>
             <Form>
-              <Row 
+              <Row
                 className="when-print"
                 style={{
                   position: "sticky",
@@ -244,7 +255,7 @@ const Orders = () => {
                                 <b>
                                   {" "}
                                   เลขออเดอร์{" "}
-                                  {item.bill_ID.slice(-5).toUpperCase()}  
+                                  {item.bill_ID.slice(-5).toUpperCase()}
                                   <br />
                                   เวลา {moment(item.timeOrder).format(
                                     "HH:mm",
@@ -316,7 +327,7 @@ const Orders = () => {
                                 </>
                               )}
                             </Row>
-                            
+
                             <Details
                               reset={reset}
                               id={item.id}
@@ -324,7 +335,7 @@ const Orders = () => {
                               status={item.statusOrder}
                               userId={item.messengerId}
                             />
-<Alert className="when-print bg-white text-center">
+                            <Alert className="when-print bg-white text-center">
                               <span>{item.statusOrder}</span>
                             </Alert>
                             <Row>
