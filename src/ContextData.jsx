@@ -223,7 +223,7 @@ ${account_payment}`;
       let totalMenu = 0;
       let total = 0;
       cart.map((item) => {
-        total += item?.quantity * item?.price;
+        total +=   item?.quantity * item?.price;
         totalMenu += item?.quantity;
       });
       setTotal(totalMenu);
@@ -236,6 +236,7 @@ ${account_payment}`;
 
   useEffect(() => {
     sumAmount();
+    console.log("cart updated:", cart);
   }, [cart]);
 
   useEffect(() => {
