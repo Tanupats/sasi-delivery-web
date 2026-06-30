@@ -15,8 +15,9 @@
       display: none;
     }
     .order-type{
+      padding: 24px;
       margin-top:0px;
-padding-top: 0;
+
     }
     .name{
       display:block;
