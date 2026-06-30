@@ -56,7 +56,7 @@ const Orders = () => {
     setTimeout(() => {
       window.print();
     }, 2000);
-    reset();
+    
   };
 
   const CancelOrder = async (id, bid) => {

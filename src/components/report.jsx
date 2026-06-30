@@ -8,7 +8,16 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
 import Detail from "./DetailReport";
-import { Card, Row, Col, Button, Form, Modal, Alert, Pagination } from "react-bootstrap";
+import {
+  Card,
+  Row,
+  Col,
+  Button,
+  Form,
+  Modal,
+  Alert,
+  Pagination,
+} from "react-bootstrap";
 import Swal from "sweetalert2";
 import moment from "moment";
 import { AuthData } from "../ContextData";
@@ -19,7 +28,7 @@ import Switch from "@mui/material/Switch";
 import PaymentIcon from "@mui/icons-material/Payment";
 import DiningIcon from "@mui/icons-material/Dining";
 import StorefrontIcon from "@mui/icons-material/Storefront";
-import Spinner from 'react-bootstrap/Spinner';
+import Spinner from "react-bootstrap/Spinner";
 const Report = () => {
   const { shop, sendMessageToPage } = useContext(AuthData);
   const shopID = shop?.shop_id;
@@ -56,25 +65,27 @@ const Report = () => {
       let bank = 0;
       let cashIn = 0;
 
-      await http.get(`/bills?shop_id=${shop?.shop_id}`, {
-        headers: { apikey: token },
-      }).then((res) => {
-        setData(res.data);
+      await http
+        .get(`/bills?shop_id=${shop?.shop_id}`, {
+          headers: { apikey: token },
+        })
+        .then((res) => {
+          setData(res.data);
 
-        res?.data?.map((item) => {
-          sumToday += Number(item?.amount);
+          res?.data?.map((item) => {
+            sumToday += Number(item?.amount);
 
-          if (item.payment_type === "bank_transfer") {
-            bank += Number(item?.amount);
-          } else {
-            cashIn += Number(item?.amount);
-          }
+            if (item.payment_type === "bank_transfer") {
+              bank += Number(item?.amount);
+            } else {
+              cashIn += Number(item?.amount);
+            }
+          });
+
+          setBank_transfer(bank);
+          setCash(cashIn);
+          setTotalToday(sumToday);
         });
-
-        setBank_transfer(bank);
-        setCash(cashIn);
-        setTotalToday(sumToday);
-      });
     }
   };
 
@@ -111,34 +122,40 @@ const Report = () => {
         startDate: getApiDate(),
         shop_id: shopID,
       };
-      await http.post(`/bills/searchByDate`, body, {
-        headers: { apikey: token },
-      }).then((res) => {
-        setData(res.data.data);
-        setTotal(res.data.data?.length || 0);
-        setPage(1);
-        res?.data.data?.map((item) => {
-          if (item.payment_type === "bank_transfer") {
-            bank += Number(item?.amount);
-          } else {
-            cashIn += Number(item?.amount);
-          }
+      await http
+        .post(`/bills/searchByDate`, body, {
+          headers: { apikey: token },
+        })
+        .then((res) => {
+          setData(res.data.data);
+          setTotal(res.data.data?.length || 0);
+          setPage(1);
+          res?.data.data?.map((item) => {
+            if (item.payment_type === "bank_transfer") {
+              bank += Number(item?.amount);
+            } else {
+              cashIn += Number(item?.amount);
+            }
+          });
+          setBank_transfer(bank);
+          setCash(cashIn);
+
+          const total = res.data.total;
+          setTotalToday(total);
         });
-        setBank_transfer(bank);
-        setCash(cashIn);
-        setTotalToday(res.data.total);
-      });
     }
     setLoading(false);
   };
 
   const geReport = async () => {
     if (shop?.shop_id) {
-      await http.get(
-        `/report/count-order-type?startDate=${getApiDate()}&shop_id=${shop.shop_id}`,
-      ).then((res) => {
-        setCounter(res.data);
-      });
+      await http
+        .get(
+          `/report/count-order-type?startDate=${getApiDate()}&shop_id=${shop.shop_id}`,
+        )
+        .then((res) => {
+          setCounter(res.data);
+        });
     }
   };
 
@@ -163,8 +180,8 @@ const Report = () => {
   };
 
   useEffect(() => {
-    searchOrder();
     geReport();
+    searchOrder();
   }, [startDate, shopID]);
 
   return (
@@ -178,12 +195,9 @@ const Report = () => {
                   <Form>
                     <Row className="mb-3">
                       <Col md={3}>
-                        <Form.Label>
-                        เลือกวันที่แสดงยอดขาย
-                        </Form.Label>
+                        <Form.Label>เลือกวันที่แสดงยอดขาย</Form.Label>
 
                         <Form.Control
-                          
                           type="date"
                           value={moment(startDate, "DD/MM/YYYY").format(
                             "YYYY-MM-DD",
@@ -204,7 +218,11 @@ const Report = () => {
                   >
                     วันที่ {startDate}
                     <br />
-                    ยอดขาย {formatMoney(totalToday)} บาท
+                    ยอดขาย{" "}
+                    {totalToday &&
+                      counter &&
+                      formatMoney(totalToday - counter.takeawayCount * 5)}{" "}
+                    บาท
                   </Card.Title>
 
                   <Row>
@@ -235,7 +253,10 @@ const Report = () => {
                             จำนวน {counter.takeawayCount} บิล
                             <p>
                               ยอดขาย{" "}
-                              {formatMoney(counter.takeawayTotalAmount || 0)}{" "}
+                              {formatMoney(
+                                counter.takeawayTotalAmount -
+                                  counter.takeawayCount * 5,
+                              )}{" "}
                               บาท
                             </p>
                           </div>
@@ -278,26 +299,43 @@ const Report = () => {
                 </Card.Body>
               </Card>
             </Col>
-                           { loading && (
-                <Col md={12} className="text-center mt-2 mb-2">
-                  <Spinner animation="border" variant="primary" />
-                </Col>
-              ) }
-            <Col md={12}> 
-           
+            {loading && (
+              <Col md={12} className="text-center mt-2 mb-2">
+                <Spinner animation="border" variant="primary" />
+              </Col>
+            )}
+            <Col md={12}>
               <TableContainer component={Paper} className="mt-3">
                 <Table>
                   <TableHead sx={{ backgroundColor: "#FFE0B2" }}>
                     <TableRow sx={{ backgroundColor: "#FFE0B2" }}>
-                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>ลำดับ</TableCell>
-                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>ประเภทการรับ</TableCell>
-                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>ประเภทการชำระเงิน</TableCell>
-                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>สถานะการชำระเงิน</TableCell>
-                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>ยอดรวม</TableCell>
-                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>ลูกค้า</TableCell>
-                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>เวลา</TableCell>
-                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>รายการ</TableCell>
-                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>จัดการ</TableCell>
+                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>
+                        ลำดับ
+                      </TableCell>
+                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>
+                        ประเภทการรับ
+                      </TableCell>
+                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>
+                        ประเภทการชำระเงิน
+                      </TableCell>
+                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>
+                        สถานะการชำระเงิน
+                      </TableCell>
+                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>
+                        ยอดรวม
+                      </TableCell>
+                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>
+                        ลูกค้า
+                      </TableCell>
+                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>
+                        เวลา
+                      </TableCell>
+                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>
+                        รายการ
+                      </TableCell>
+                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>
+                        จัดการ
+                      </TableCell>
                     </TableRow>
                   </TableHead>
 
@@ -305,94 +343,94 @@ const Report = () => {
                     {data
                       ?.slice((page - 1) * perPage, page * perPage)
                       .map((row, index) => (
-                      <TableRow key={row.id}>
-                        <TableCell>{(page - 1) * perPage + index + 1}</TableCell>
-                        <TableCell>{row.ordertype}</TableCell>
+                        <TableRow key={row.id}>
+                          <TableCell>
+                            {(page - 1) * perPage + index + 1}
+                          </TableCell>
+                          <TableCell>{row.ordertype}</TableCell>
 
-                        <TableCell>
-                          <FormControlLabel
-                            control={
-                              <Switch
-                                checked={row.payment_type === "bank_transfer"}
-                                onChange={() => handleSwitchChange(row)}
-                              />
-                            }
-                            label={
-                              row.payment_type === "bank_transfer"
-                                ? "โอนจ่าย"
-                                : "เงินสด"
-                            }
-                          />
-                        </TableCell>
-
-                        <TableCell>
-                          {row.payment_status === "ชำระเงินแล้ว" ? (
-                            <Button
-                              variant="success"
-                              onClick={() =>
-                                handleChangePayment("ยังไม่ชำระ", row.id)
+                          <TableCell>
+                            <FormControlLabel
+                              control={
+                                <Switch
+                                  checked={row.payment_type === "bank_transfer"}
+                                  onChange={() => handleSwitchChange(row)}
+                                />
                               }
+                              label={
+                                row.payment_type === "bank_transfer"
+                                  ? "โอนจ่าย"
+                                  : "เงินสด"
+                              }
+                            />
+                          </TableCell>
+
+                          <TableCell>
+                            {row.payment_status === "ชำระเงินแล้ว" ? (
+                              <Button
+                                variant="success"
+                                onClick={() =>
+                                  handleChangePayment("ยังไม่ชำระ", row.id)
+                                }
+                              >
+                                ชำระเงินแล้ว
+                              </Button>
+                            ) : (
+                              <Button
+                                variant="danger"
+                                onClick={() =>
+                                  handleChangePayment(
+                                    "ชำระเงินแล้ว",
+                                    row.id,
+                                    row.messengerId,
+                                  )
+                                }
+                              >
+                                ยังไม่ชำระ
+                              </Button>
+                            )}
+                          </TableCell>
+
+                          <TableCell>{row.amount}</TableCell>
+                          <TableCell>{row.customerName}</TableCell>
+
+                          <TableCell>
+                            {moment(row.timeOrder).format("HH:mm")} น.
+                          </TableCell>
+
+                          <TableCell>
+                            <Button
+                              variant="primary"
+                              onClick={() => {
+                                setId(row.bill_ID);
+                                setShow(true);
+                              }}
                             >
-                              ชำระเงินแล้ว
+                              ดูรายการ
                             </Button>
-                          ) : (
+                          </TableCell>
+
+                          <TableCell>
                             <Button
                               variant="danger"
-                              onClick={() =>
-                                handleChangePayment(
-                                  "ชำระเงินแล้ว",
-                                  row.id,
-                                  row.messengerId,
-                                )
-                              }
+                              onClick={() => deleteBill(row.id)}
                             >
-                              ยังไม่ชำระ
+                              ยกเลิก
                             </Button>
-                          )}
-                        </TableCell>
-
-                        <TableCell>{row.amount}</TableCell>
-                        <TableCell>{row.customerName}</TableCell>
-
-                        <TableCell>
-                          {moment(row.timeOrder).format("HH:mm")} น.
-                        </TableCell>
-
-                        <TableCell>
-                          <Button
-                            variant="primary"
-                            onClick={() => {
-                              setId(row.bill_ID);
-                              setShow(true);
-                            }}
-                          >
-                            ดูรายการ
-                          </Button>
-                        </TableCell>
-
-                        <TableCell>
-                          <Button
-                            variant="danger"
-                            onClick={() => deleteBill(row.id)}
-                          >
-                            ยกเลิก
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                          </TableCell>
+                        </TableRow>
+                      ))}
                   </TableBody>
 
-                  {data.length===0  && (
-
+                  {data.length === 0 && (
                     <TableBody>
-                      
-                     <TableRow> 
-                       <TableCell   className="text-center fw-bold" colSpan={9}> 
-                      <Alert variant="danger">ไม่มีข้อมูลยอดขาย </Alert>  
-                        </TableCell>   
-                        </TableRow> 
-                        </TableBody>
-                  ) }
+                      <TableRow>
+                        <TableCell className="text-center fw-bold" colSpan={9}>
+                          <Alert variant="danger">ไม่มีข้อมูลยอดขาย </Alert>
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  )}
                 </Table>
 
                 {/* Pagination */}
@@ -400,7 +438,8 @@ const Report = () => {
                   <div>
                     <span>
                       แสดง {(page - 1) * perPage + 1} ถึง{" "}
-                      {Math.min(page * perPage, total)} จากทั้งหมด {total} รายการ
+                      {Math.min(page * perPage, total)} จากทั้งหมด {total}{" "}
+                      รายการ
                     </span>
                   </div>
                   {total > perPage && (
