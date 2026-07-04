@@ -56,7 +56,6 @@ const Orders = () => {
     setTimeout(() => {
       window.print();
     }, 2000);
-    
   };
 
   const CancelOrder = async (id, bid) => {
@@ -252,17 +251,13 @@ const Orders = () => {
 
                             <Row>
                               <Col md={6}>
-                                <b>
-                                  {" "}
-                                  เลขออเดอร์{" "}
-                                  {item.bill_ID.slice(-5).toUpperCase()}
-                                  <br />
-                                  เวลา {moment(item.timeOrder).format(
-                                    "HH:mm",
-                                  )}{" "}
-                                  น. &nbsp; <br /> วันที่{" "}
-                                  {moment(item.timeOrder).format("DD-MM-YYYY")}
-                                </b>
+                                {" "}
+                                เลขออเดอร์{" "}
+                                {item.bill_ID.slice(-5).toUpperCase()}
+                                <br />
+                                {moment(item.timeOrder).format("HH:mm")} น.
+                                &nbsp;{" "}
+                                {moment(item.timeOrder).format("DD-MM-YYYY")}
                               </Col>
                               <Col md={6} className="text-end p-2">
                                 <p>
