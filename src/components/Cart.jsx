@@ -22,7 +22,7 @@ import LocalDiningIcon from "@mui/icons-material/LocalDining";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import axios from "axios";
 import { ArrowLeft } from "lucide-react";
-import Swal from "sweetalert2";
+
 const Cart = () => {
   const router = useNavigate();
   const {
@@ -68,47 +68,16 @@ const Cart = () => {
 
   const onSave = async (e) => {
     e.preventDefault();
-
-    const result = await Swal.fire({
-      title: "ยืนยันการสั่งซื้อ",
-      text: "คุณต้องการยืนยันการสั่งซื้อใช่หรือไม่?",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonText: "ยืนยัน",
-      cancelButtonText: "ยกเลิก",
-      confirmButtonColor: "#198754", // สีเขียว Bootstrap
-      cancelButtonColor: "#dc3545", // สีแดง Bootstrap
-      reverseButtons: true,
-      allowOutsideClick: false,
-    });
-
-    if (!result.isConfirmed) return;
-
-    try {
-      setLoading(true);
-
-      await saveOrder();
-
-      await Swal.fire({
-        icon: "success",
-        title: "สั่งซื้อสำเร็จ",
-        text: "ระบบได้บันทึกคำสั่งซื้อเรียบร้อยแล้ว",
-        confirmButtonColor: "#198754",
-        timer: 1800,
-        showConfirmButton: false,
-      });
-
-      router("/Myorder");
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "เกิดข้อผิดพลาด",
-        text: "ไม่สามารถบันทึกคำสั่งซื้อได้",
-        confirmButtonColor: "#dc3545",
-      });
-    } finally {
-      setLoading(false);
-    }
+    showConfirmation(
+      `ยืนยันการสั่งซื้อ?`,
+      async () => {
+        setLoading(true);
+        await saveOrder();
+        setLoading(false);
+        router("/Myorder");
+      },
+      null,
+    );
   };
 
   useEffect(() => {
@@ -126,7 +95,7 @@ const Cart = () => {
     <>
       <Card style={{ height: "100%", marginBottom: "120px" }}>
         <Card.Body style={{ height: "100%" }}>
-          <Card.Title as={"h6"} className="mb-2 text-center">
+          <Card.Title as={"h6"} className="mb-2 text-left">
             รายการสั่งซื้อ
           </Card.Title>
           <Button
@@ -176,6 +145,7 @@ const Cart = () => {
                             {/* จำนวน */}
                             <div className="d-flex align-items-center mt-2">
                               <Button
+                              
                                 size="sm"
                                 style={{
                                   background: "#FD720D",
@@ -219,42 +189,44 @@ const Cart = () => {
                             </Button>
                           </Col>
 
-                          {item.option_menu === "Y" && (
-                            <>
-                              <Col xs={12} className="mt-2">
-                                <div className="d-flex gap-2">
-                                  <Button
-                                    size="sm"
-                                    variant="outline-primary"
-                                    onClick={() => setMenuNormal(item.id)}
-                                  >
-                                    ธรรมดา
-                                  </Button>
+                          <Row>
+                            <Col md={6} xs={6}   className="mt-2">
+                              {item.option_menu === "Y" && (
+                                <>
+                                  <div className="d-flex gap-2">
+                                    <Button
+                                      size="md"
+                                      variant="outline-primary"
+                                      onClick={() => setMenuNormal(item.id)}
+                                    >
+                                      ธรรมดา
+                                    </Button>
 
-                                  <Button
-                                    size="sm"
-                                    variant="outline-success"
-                                    onClick={() => setMenuPichet(item.id, item)}
-                                  >
-                                    พิเศษ
-                                  </Button>
-                                </div>
-                              </Col>
-                            </>
-                          )}
-
-                          {/* หมายเหตุ */}
-                          <Col xs={12}>
-                            <Form.Control
-                              className="mt-2"
-                              type="text"
-                              placeholder="หมายเหตุ"
-                              onChange={(e) =>
-                                updateNote(item.id, e.target.value)
-                              }
-                              defaultValue={item.note}
-                            />
-                          </Col>
+                                    <Button
+                                      size="md"
+                                      variant="outline-success"
+                                      onClick={() =>
+                                        setMenuPichet(item.id, item)
+                                      }
+                                    >
+                                      พิเศษ
+                                    </Button>
+                                  </div>
+                                </>
+                              )}
+                            </Col>
+                            <Col md={6} xs={6}>
+                              <Form.Control
+                                className="mt-2 w-100"
+                                type="text"
+                                placeholder="*หมายเหตุเพิ่มเติม"
+                                onChange={(e) =>
+                                  updateNote(item.id, e.target.value)
+                                }
+                                defaultValue={item.note}
+                              />
+                            </Col>
+                          </Row>
                         </Row>
                       </Card.Body>
                     </Card>
@@ -276,7 +248,7 @@ const Cart = () => {
                         เลือกวิธีรับอาหาร
                       </Form.Label>
                       <Row className="mb-2">
-                        <Col md={4} xs={12} className="mb-2">
+                        <Col md={4} xs={4} className="mb-2">
                           <Button
                             className="w-100"
                             style={{
@@ -300,7 +272,7 @@ const Cart = () => {
                             <DeliveryDiningIcon /> จัดส่ง
                           </Button>
                         </Col>
-                        <Col md={4} xs={12} className="mb-2">
+                        <Col md={4} xs={4} className="mb-2">
                           <Button
                             variant={
                               orderType === "เสิร์ฟในร้าน"
@@ -314,10 +286,10 @@ const Cart = () => {
                             }}
                           >
                             {" "}
-                            <LocalDiningIcon /> ทานที่ร้าน
+                            <LocalDiningIcon /> ทานร้าน
                           </Button>
                         </Col>
-                        <Col md={4} xs={12} className="mb-2">
+                        <Col md={4} xs={4} className="mb-2">
                           <Button
                             variant={
                               orderType === "รับเอง"
@@ -331,7 +303,7 @@ const Cart = () => {
                             }}
                           >
                             {" "}
-                            <ShoppingBagIcon /> รับหน้าร้าน
+                            <ShoppingBagIcon /> รับเอง
                           </Button>
                         </Col>
                       </Row>
@@ -356,14 +328,13 @@ const Cart = () => {
                             {" "}
                             ที่อยู่จัดส่ง / ข้อมูลติดต่อ{" "}
                           </Form.Label>{" "}
-                          <br />
                           <Form.Control
                             value={Address}
                             type="text"
                             required
                             onChange={(e) => setAddress(e.target.value)}
                             placeholder="ระบุที่อยู่จัดส่ง และ เบอร์โทรติดต่อถ้ามี"
-                            className="mb-2 mt-1"
+                            className="mt-1"
                           />
                         </Form.Group>
                       )}

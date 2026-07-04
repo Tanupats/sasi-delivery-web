@@ -236,7 +236,6 @@ ${account_payment}`;
 
   useEffect(() => {
     sumAmount();
-    console.log("cart updated:", cart);
   }, [cart]);
 
   useEffect(() => {
