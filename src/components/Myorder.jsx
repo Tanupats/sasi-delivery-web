@@ -13,7 +13,7 @@ import { useTheme } from "@mui/material/styles";
 import { AuthData } from "../ContextData";
 import QRCode from "qrcode.react";
 import generatePayload from "promptpay-qr";
-import GetQueueComponent from "./queueComponent";
+//import GetQueueComponent from "./queueComponent";
 
 const Myorder = () => {
   const steps = [
@@ -197,7 +197,7 @@ const Myorder = () => {
             </Tab>
             <Tab
               eventKey="profile"
-              title={<b className="custom-tab-title">ที่ต้องได้รับ</b>}
+              title={<b className="custom-tab-title">สำเร็จ</b>}
             >
               {myOrder.map((item, index) => {
                 if (item.statusOrder !== "รับออเดอร์แล้ว") {
@@ -240,7 +240,7 @@ const Myorder = () => {
                               ? "จัดส่งที่ " + item.address
                               : item.ordertype}
                           </h6>
-                          <GetQueueComponent rider_id={item.rider_id} />
+                          {/* <GetQueueComponent rider_id={item.rider_id} /> */}
                           <Row>
                             <Stepper
                               activeStep={item.step}

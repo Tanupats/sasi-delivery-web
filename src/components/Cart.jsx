@@ -269,7 +269,7 @@ const Cart = () => {
                             }}
                           >
                             {" "}
-                            <DeliveryDiningIcon /> จัดส่ง
+                            <DeliveryDiningIcon /> <br /> จัดส่ง
                           </Button>
                         </Col>
                         <Col md={4} xs={4} className="mb-2">
@@ -286,10 +286,10 @@ const Cart = () => {
                             }}
                           >
                             {" "}
-                            <LocalDiningIcon /> ทานร้าน
+                            <LocalDiningIcon /> <br /> ทานร้าน
                           </Button>
                         </Col>
-                        <Col md={4} xs={4} className="mb-2">
+                        <Col md={4} xs={4} className="mb-2 d-flex">
                           <Button
                             variant={
                               orderType === "รับเอง"
@@ -302,8 +302,8 @@ const Cart = () => {
                               setDeliveryFee(0);
                             }}
                           >
-                            {" "}
-                            <ShoppingBagIcon /> รับเอง
+                            {" "} 
+                            <ShoppingBagIcon />  <br />  รับเอง
                           </Button>
                         </Col>
                       </Row>
@@ -369,7 +369,7 @@ const Cart = () => {
                             onClick={() => setPaymentType("bank_transfer")}
                           >
                             {" "}
-                            <AccountBalanceIcon /> โอนจ่าย{" "}
+                            <AccountBalanceIcon /> เงินโอน{" "}
                           </Button>
                         </Col>
                         <Col md={2} xs={6}>
