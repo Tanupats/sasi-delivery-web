@@ -13,7 +13,7 @@ import { useTheme } from "@mui/material/styles";
 import { AuthData } from "../ContextData";
 import QRCode from "qrcode.react";
 import generatePayload from "promptpay-qr";
-//import GetQueueComponent from "./queueComponent";
+
 
 const Myorder = () => {
   const steps = [
@@ -24,7 +24,8 @@ const Myorder = () => {
   ];
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const { counterOrder, api_url, promptPay, account_payment } =  useContext(AuthData);
+  const { counterOrder, api_url, promptPay, account_payment } =
+    useContext(AuthData);
   let messengerId = localStorage.getItem("messangerId");
   const [myOrder, setMyOrder] = useState([]);
   const [orderHistory, setOrderHistory] = useState([]);
@@ -42,7 +43,6 @@ const Myorder = () => {
   };
 
   function handleQR(amount) {
-
     setQrCode(generatePayload(promptPay, { amount: Number(amount) }));
   }
 
@@ -117,15 +117,11 @@ const Myorder = () => {
                             />
 
                             {item.ordertype === "สั่งกลับบ้าน" && (
-                              <h6 style={{ fontSize: "18px" }}>
-                                ค่าส่ง {item.delivery_fee} บาท
-                              </h6>
+                              <h6>ค่าส่ง {item.delivery_fee} บาท</h6>
                             )}
-                            <h6 style={{ fontSize: "18px" }}>
-                              รวมทั้งหมด {item.amount} บาท
-                            </h6>
-                            <h6 style={{ fontSize: "18px" }}>
-                              วิธีการรับอาหาร -{" "}
+                            <h6>รวมทั้งหมด {item.amount} บาท</h6>
+                            <h6>
+                              การรับอาหาร -{" "}
                               {item.ordertype === "สั่งกลับบ้าน"
                                 ? "จัดส่งที่ " + item.address
                                 : item.ordertype}
@@ -147,7 +143,7 @@ const Myorder = () => {
                                   );
                                 })}
                               </Stepper>
-                              {item.payment_status === "ยังไม่ชำระ" ? (
+                              {/* {item.payment_status === "ยังไม่ชำระ" ? (
                                 <Col md={12} className="mt-3 mb-3">
                                   <Button
                                     variant="outline-primary"
@@ -163,8 +159,7 @@ const Myorder = () => {
                                       <QRCode value={qrCode} className="mt-3" />
                                       <h6>
                                         {account_payment} <br /> ยอดรวมทั้งหมด{" "}
-                                        {item.amount}
-                                       {" "} บาท
+                                        {item.amount} บาท
                                       </h6>
                                     </center>
                                   ) : (
@@ -181,7 +176,7 @@ const Myorder = () => {
                                     ชำระเงินแล้ว{" "}
                                   </Alert>
                                 </Col>
-                              )}
+                              )} */}
                             </Row>
                             <></>
                           </Card.Body>

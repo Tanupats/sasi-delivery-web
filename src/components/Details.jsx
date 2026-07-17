@@ -19,16 +19,16 @@ const Details = (props) => {
 
     return (<>
 
-        <ListGroup className="mt-2">
+        <ListGroup>
             <Row>
 
-                    <h5>รายละเอียดคำสั่งซื้อ</h5>
+                    <h6>รายละเอียดคำสั่งซื้อ</h6>
                 {
                     detail.map((item, index) => {
                         return (<React.Fragment key={index}>
                             <Col md={12}>
-                                <ListGroup.Item style={{ border: 'none', margin: '0px', padding: '0px', fontSize: '18px' }}>
-                                    <h5> {item.foodname} {item.note}   {item.price} X {item.quantity}  </h5></ListGroup.Item>
+                                <ListGroup.Item style={{ border: 'none', margin: '0px', padding: '0px', fontSize: '16px',fontWeight:'400' }}>
+                                     X {item.quantity} {item.foodname}  {item.price} <br /> {item.note}  </ListGroup.Item>
                             </Col>
                         </React.Fragment>)
                     })

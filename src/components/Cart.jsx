@@ -60,7 +60,6 @@ const Cart = () => {
       const name = res.data?.customerName;
       setName(name);
       localStorage.setItem("name", name);
-      setAddress(res.data?.address);
     } else {
       setName("");
     }
@@ -71,25 +70,23 @@ const Cart = () => {
     showConfirmation(
       `ยืนยันการสั่งซื้อ?`,
       async () => {
-        setLoading(true);
         await saveOrder();
-        setLoading(false);
-        router("/Myorder");
+        setLoading(true);
       },
       null,
     );
+    setLoading(false);
+    router("/Myorder");
   };
 
   useEffect(() => {
+    getProfile();
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
   }, []);
 
-  useEffect(() => {
-    getProfile();
-  }, [cart]);
 
   return (
     <>
@@ -145,7 +142,6 @@ const Cart = () => {
                             {/* จำนวน */}
                             <div className="d-flex align-items-center mt-2">
                               <Button
-                              
                                 size="sm"
                                 style={{
                                   background: "#FD720D",
@@ -190,7 +186,7 @@ const Cart = () => {
                           </Col>
 
                           <Row>
-                            <Col md={6} xs={6}   className="mt-2">
+                            <Col md={6} xs={6} className="mt-2">
                               {item.option_menu === "Y" && (
                                 <>
                                   <div className="d-flex gap-2">
@@ -302,8 +298,8 @@ const Cart = () => {
                               setDeliveryFee(0);
                             }}
                           >
-                            {" "} 
-                            <ShoppingBagIcon />  <br />  รับเอง
+                            {" "}
+                            <ShoppingBagIcon /> <br /> รับเอง
                           </Button>
                         </Col>
                       </Row>

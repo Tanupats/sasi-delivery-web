@@ -141,7 +141,7 @@ ${account_payment}`;
         step: 1,
         delivery_fee: deliveryFee,
       };
-      sendMessageToPage(messengerId);
+     
       const res = await axios.post(`${api_url}/bills/order`, body);
       if (res.status === 200) {
         const id = res.data.bill_ID;
@@ -158,6 +158,7 @@ ${account_payment}`;
 
         await axios.post(`${api_url}/billsdetails`, bodyDetails);
         console.log("ส่ง billsdetail =", bodyDetails);
+         sendMessageToPage(messengerId);
         showNotification.success(
           "คำสั่งซื้อของคุณส่งไปยังร้านค้าแล้ว แจ้งชำระเงินและรอรับอาหารได้เลย",
           "สั่งออเดอร์สำเร็จ",
@@ -238,17 +239,17 @@ ${account_payment}`;
     sumAmount();
   }, [cart]);
 
-  useEffect(() => {
-    getCounterOrder();
-  }, []);
+  // useEffect(() => {
+  //   getCounterOrder();
+  // }, []);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      getCounterOrder();
-    }, 7000);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     getCounterOrder();
+  //   }, 7000);
 
-    return () => clearInterval(interval);
-  }, []);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   useEffect(() => {
     setCart([]);
