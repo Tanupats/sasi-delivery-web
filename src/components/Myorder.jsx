@@ -46,17 +46,7 @@ const Myorder = () => {
     setQrCode(generatePayload(promptPay, { amount: Number(amount) }));
   }
 
-  useEffect(() => {
-    getMyOrder();
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      getMyOrder();
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
+ 
 
   const getBillDetails = async (bill_ID) => {
     const res = await axios.get(`${api_url}/billsdetails/${bill_ID}`);
@@ -73,7 +63,9 @@ const Myorder = () => {
         }
       });
   };
-
+ useEffect(() => {
+    getMyOrder();
+  }, []);
   return (
     <>
       <Card>
