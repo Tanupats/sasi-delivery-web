@@ -157,12 +157,12 @@ ${account_payment}`;
         });
 
         await axios.post(`${api_url}/billsdetails`, bodyDetails);
-        console.log("ส่ง billsdetail =", bodyDetails);
          sendMessageToPage(messengerId);
         showNotification.success(
-          "คำสั่งซื้อของคุณส่งไปยังร้านค้าแล้ว แจ้งชำระเงินและรอรับอาหารได้เลย",
+          "คำสั่งซื้อของคุณส่งไปยังร้านค้าแล้ว",
           "สั่งออเดอร์สำเร็จ",
         );
+        setCart([]);
       } else {
         showNotification.error(
           "ไม่สามารถสั่งอาหารได้ กรุณาลองใหม่ หรือสอบถามร้านค้า",

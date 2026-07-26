@@ -70,13 +70,13 @@ const Cart = () => {
     showConfirmation(
       `ยืนยันการสั่งซื้อ?`,
       async () => {
-        await saveOrder();
         setLoading(true);
+        await saveOrder();
       },
       null,
     );
     setLoading(false);
-    router("/Myorder");
+    //router("/Myorder");
   };
 
   useEffect(() => {
@@ -87,14 +87,11 @@ const Cart = () => {
     });
   }, []);
 
-
   return (
     <>
       <Card style={{ height: "100%", marginBottom: "120px" }}>
         <Card.Body style={{ height: "100%" }}>
-          <Card.Title as={"h6"} className="mb-2 text-left">
-            รายการสั่งซื้อ
-          </Card.Title>
+          {" "}
           <Button
             className="mb-2"
             variant="outline-secondary"
@@ -103,7 +100,9 @@ const Cart = () => {
           >
             <ArrowLeft size={20} /> ย้อนกลับ
           </Button>
-
+          <Card.Title as={"h6"} className="mb-2 text-left">
+            รายการสั่งซื้อ
+          </Card.Title>
           <Row>
             {cart.length !== 0 &&
               cart?.map((item) => {
@@ -250,13 +249,13 @@ const Cart = () => {
                             style={{
                               backgroundColor:
                                 orderType === "สั่งกลับบ้าน"
-                                  ? "#FD720D"
+                                  ? "#dbd8d8"
                                   : "white",
                               color:
                                 orderType === "สั่งกลับบ้าน"
-                                  ? "white"
-                                  : "#FD720D",
-                              border: "1px solid #FD720D",
+                                  ? "#303030"
+                                  : "#303030",
+                              border: "1px solid #a3a2a2",
                             }}
                             onClick={() => {
                               setOrderType("สั่งกลับบ้าน");
@@ -270,11 +269,18 @@ const Cart = () => {
                         </Col>
                         <Col md={4} xs={4} className="mb-2">
                           <Button
-                            variant={
-                              orderType === "เสิร์ฟในร้าน"
-                                ? "danger w-100"
-                                : "outline-danger w-100"
-                            }
+                            className="w-100"
+                            style={{
+                              backgroundColor:
+                                orderType === "เสิร์ฟในร้าน"
+                                  ? "#dbd8d8"
+                                  : "white",
+                              color:
+                                orderType === "เสิร์ฟในร้าน"
+                                  ? "#303030"
+                                  : "#303030",
+                              border: "1px solid #a3a2a2",
+                            }}
                             onClick={() => {
                               setOrderType("เสิร์ฟในร้าน");
                               setAddress("");
@@ -287,11 +293,14 @@ const Cart = () => {
                         </Col>
                         <Col md={4} xs={4} className="mb-2 d-flex">
                           <Button
-                            variant={
-                              orderType === "รับเอง"
-                                ? "primary w-100"
-                                : "outline-primary w-100"
-                            }
+                            className="w-100"
+                            style={{
+                              backgroundColor:
+                                orderType === "รับเอง" ? "#dbd8d8" : "white",
+                              color:
+                                orderType === "รับเอง" ? "#303030" : "#303030",
+                              border: "1px solid #a3a2a2",
+                            }}
                             onClick={() => {
                               setOrderType("รับเอง");
                               setAddress("");
@@ -421,7 +430,7 @@ const Cart = () => {
                   variant="danger"
                   className="pd-3 text-center text-bold mt-3"
                 >
-                  <b>ไม่มีรายการอาหาร</b>
+                  <b>ยังไม่มีรายการอาหารในตะกร้า หากสั่งออเดอร์แล้วดูได้ที่เมนูคำสั่งซื้อ</b>
                 </Alert>
               </Col>
             )}

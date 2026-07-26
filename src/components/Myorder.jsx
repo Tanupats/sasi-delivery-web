@@ -14,7 +14,6 @@ import { AuthData } from "../ContextData";
 import QRCode from "qrcode.react";
 import generatePayload from "promptpay-qr";
 
-
 const Myorder = () => {
   const steps = [
     "รับออเดอร์แล้ว",
@@ -46,8 +45,6 @@ const Myorder = () => {
     setQrCode(generatePayload(promptPay, { amount: Number(amount) }));
   }
 
- 
-
   const getBillDetails = async (bill_ID) => {
     const res = await axios.get(`${api_url}/billsdetails/${bill_ID}`);
   };
@@ -63,7 +60,7 @@ const Myorder = () => {
         }
       });
   };
- useEffect(() => {
+  useEffect(() => {
     getMyOrder();
   }, []);
   return (
@@ -79,12 +76,9 @@ const Myorder = () => {
             className="mb-3"
           >
             <Tab
+              onClick={() => getMyOrder()}
               eventKey="home"
-              title={
-                <b className="custom-tab-title">
-                  คำสั่งซื้อใหม่ {counterOrder}
-                </b>
-              }
+              title={<b className="custom-tab-title">คำสั่งซื้อใหม่</b>}
             >
               {Array.isArray(myOrder) &&
                 myOrder?.map((item, index) => {
