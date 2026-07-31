@@ -10,6 +10,7 @@ import {
   Alert,
   ButtonGroup,
 } from "react-bootstrap";
+import Swal from "sweetalert2";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { useNavigate } from "react-router-dom";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -65,19 +66,49 @@ const Cart = () => {
     }
   };
 
-  const onSave = async (e) => {
-    e.preventDefault();
-    showConfirmation(
-      `ยืนยันการสั่งซื้อ?`,
-      async () => {
-        setLoading(true);
-        await saveOrder();
-      },
-      null,
-    );
+ const onSave = async (e) => {
+  e.preventDefault();
+
+  const result = await Swal.fire({
+    title: "ยืนยันการสั่งซื้อ?",
+    text: "เมื่อยืนยันแล้ว ระบบจะบันทึกคำสั่งซื้อ",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "ยืนยัน",
+    cancelButtonText: "ยกเลิก",
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    reverseButtons: true,
+  });
+
+  if (!result.isConfirmed) return;
+
+  try {
+    setLoading(true);
+
+    await saveOrder();
+
+    await Swal.fire({
+      title: "สำเร็จ!",
+      text: "บันทึกคำสั่งซื้อเรียบร้อยแล้ว",
+      icon: "success",
+      confirmButtonText: "ตกลง",
+      timer: 1500,
+      showConfirmButton: false,
+    });
+
+    router("/Myorder");
+  } catch (error) {
+    Swal.fire({
+      title: "เกิดข้อผิดพลาด",
+      text: "ไม่สามารถบันทึกคำสั่งซื้อได้",
+      icon: "error",
+      confirmButtonText: "ตกลง",
+    });
+  } finally {
     setLoading(false);
-    //router("/Myorder");
-  };
+  }
+};
 
   useEffect(() => {
     getProfile();
@@ -367,8 +398,8 @@ const Cart = () => {
                           <Button
                             variant={
                               paymentType === "bank_transfer"
-                                ? "primary"
-                                : "outline-primary"
+                                ? "dark"
+                                : "outline-dark"
                             }
                             className="w-100"
                             onClick={() => setPaymentType("bank_transfer")}
@@ -430,7 +461,7 @@ const Cart = () => {
                   variant="danger"
                   className="pd-3 text-center text-bold mt-3"
                 >
-                  <b>ยังไม่มีรายการอาหารในตะกร้า หากสั่งออเดอร์แล้วดูได้ที่เมนูคำสั่งซื้อ</b>
+                  <b>ยังไม่มีรายการอาหารในตะกร้า </b>
                 </Alert>
               </Col>
             )}

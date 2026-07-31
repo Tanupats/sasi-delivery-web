@@ -35,7 +35,7 @@ const Myorder = () => {
     await axios
       .get(`${api_url}/bills/myorder?messengerId=${messengerId}`)
       .then((res) => {
-        if (res.status === 200) {
+        if (res) {
           setMyOrder(res.data);
         }
       });
@@ -60,9 +60,11 @@ const Myorder = () => {
         }
       });
   };
+  
   useEffect(() => {
     getMyOrder();
   }, []);
+
   return (
     <>
       <Card>
