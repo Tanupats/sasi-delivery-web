@@ -89,8 +89,8 @@ const Myorder = () => {
                       <React.Fragment key={index}>
                         <Card className="mb-4">
                           <Card.Body>
-                            <div className="d-flex align-items-center justify-content-between mb-2">
-                              <h6 className="mb-0">
+                            <div className="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between mb-2">
+                              <h6 className="mb-2 mb-md-0">
                                 หมายเลขออเดอร์{" "}
                                 {item.bill_ID.slice(-5).toUpperCase()} <br />{" "}
                                 วันที่สั่งออเดอร์ {}
@@ -100,8 +100,8 @@ const Myorder = () => {
                               </h6>
                               {item.delivery_date && (
                                 <Alert
-                                  variant="danger"
-                                  className="py-1 px-2 mb-0"
+                                  variant="warning"
+                                  className="py-1 px-2 mb-2 mb-md-0"
                                 >
                                   พรีออเดอร์
                                 </Alert>
@@ -199,8 +199,8 @@ const Myorder = () => {
                     <React.Fragment key={index}>
                       <Card className="mb-4">
                         <Card.Body>
-                          <div className="d-flex align-items-center justify-content-between mb-2">
-                            <h6 className="mb-0">
+                          <div className="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between mb-2">
+                            <h6 className="mb-2 mb-md-0">
                               {" "}
                               หมายเลขออเดอร์{" "}
                               {item.bill_ID.slice(-5).toUpperCase()} <br />{" "}
@@ -212,7 +212,7 @@ const Myorder = () => {
                             {item.delivery_date && (
                               <Alert
                                 variant="warning"
-                                className="py-1 px-2 mb-0"
+                                className="py-1 px-2 mb-2 mb-md-0"
                               >
                                 พรีออเดอร์{item.delivery_slot ? ` ${item.delivery_slot}` : ""}
                               </Alert>
