@@ -3,6 +3,26 @@ export const AuthData = createContext();
 import axios from "axios";
 import { showNotification } from "./utils/notification";
 
+const getTomorrowDate = () => {
+  const date = new Date();
+  date.setDate(date.getDate() + 1);
+  return date.toISOString().slice(0, 10);
+};
+
+const getDeliveryDateTime = (dateString, slot) => {
+  if (!dateString) return null;
+
+  const timeMap = {
+    "รอบเช้า": "10:00:00",
+    "รอบบ่าย": "13:00:00",
+  };
+  const time = timeMap[slot] || "10:00:00";
+
+  const dateTimeString = `${dateString}T${time}`;
+  const dateObj = new Date(dateTimeString);
+  return Number.isNaN(dateObj.getTime()) ? null : dateObj.toISOString();
+};
+
 function Context({ children }) {
   const messengerId = localStorage.getItem("messangerId");
   const username = localStorage.getItem("name");
@@ -20,11 +40,14 @@ function Context({ children }) {
   const [deliveryFee, setDeliveryFee] = useState(
     0 || localStorage.getItem("delivery_fee"),
   );
+  const [deliveryDate, setDeliveryDate] = useState(getTomorrowDate());
+  const [deliverySlot, setDeliverySlot] = useState("รอบเช้า");
+  const [isPreorder, setIsPreorder] = useState(false);
   const [account_payment, setAccount_payment] = useState(0);
   const [promptPay, setPromptPay] = useState("");
   const [oldData, setOldData] = useState([]);
   const api_url = import.meta.env.VITE_API_URL;
-
+console.log("API URL:", deliveryDate);
   const getCounterOrder = async () => {
     await axios
       .get(`${api_url}/bills/counter-myorder?messengerId=${messengerId}`)
@@ -140,6 +163,8 @@ ${account_payment}`;
         address: Address,
         step: 1,
         delivery_fee: deliveryFee,
+        delivery_date: isPreorder ? getDeliveryDateTime(deliveryDate, deliverySlot) : null,
+        delivery_slot: orderType === "สั่งกลับบ้าน" ? deliverySlot : null,
       };
      
       const res = await axios.post(`${api_url}/bills/order`, body);
@@ -291,10 +316,16 @@ ${account_payment}`;
           PageAccessToken,
           deliveryFee,
           setDeliveryFee,
+          deliverySlot,
+          setDeliverySlot,
           account_payment,
           setAccount_payment,
           setPromptPay,
           promptPay,
+          deliveryDate,
+          setDeliveryDate,
+          isPreorder,
+          setIsPreorder,
         }}
       >
         {children}

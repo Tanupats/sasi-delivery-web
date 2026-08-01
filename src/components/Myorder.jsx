@@ -89,14 +89,25 @@ const Myorder = () => {
                       <React.Fragment key={index}>
                         <Card className="mb-4">
                           <Card.Body>
-                            <h6>
-                              หมายเลขออเดอร์{" "}
-                              {item.bill_ID.slice(-5).toUpperCase()} <br />{" "}
-                              วันที่สั่งออเดอร์ {}
-                              {moment(item.Date_times).format("DD-MM-YYYY")}
-                              &nbsp; เวลา{" "}
-                              {moment(item.Date_times).format("HH:mm")} น.
-                            </h6>
+                            <div className="d-flex align-items-center justify-content-between mb-2">
+                              <h6 className="mb-0">
+                                หมายเลขออเดอร์{" "}
+                                {item.bill_ID.slice(-5).toUpperCase()} <br />{" "}
+                                วันที่สั่งออเดอร์ {}
+                                {moment(item.Date_times).format("DD-MM-YYYY")}
+                                &nbsp; เวลา{" "}
+                                {moment(item.Date_times).format("HH:mm")} น.
+                              </h6>
+                              {item.delivery_date && (
+                                <Alert
+                                  variant="danger"
+                                  className="py-1 px-2 mb-0"
+                                >
+                                  พรีออเดอร์
+                                </Alert>
+                              )}
+                            </div>
+
                             <hr />
                             <br />
                             <Details
@@ -188,15 +199,25 @@ const Myorder = () => {
                     <React.Fragment key={index}>
                       <Card className="mb-4">
                         <Card.Body>
-                          <h6>
-                            {" "}
-                            หมายเลขออเดอร์{" "}
-                            {item.bill_ID.slice(-5).toUpperCase()} <br />{" "}
-                            วันที่สั่งออเดอร์ {}
-                            {moment(item.Date_times).format("YYYY-MM-DD")}
-                            &nbsp; เวลา{" "}
-                            {moment(item.Date_times).format("HH:mm")} น.
-                          </h6>
+                          <div className="d-flex align-items-center justify-content-between mb-2">
+                            <h6 className="mb-0">
+                              {" "}
+                              หมายเลขออเดอร์{" "}
+                              {item.bill_ID.slice(-5).toUpperCase()} <br />{" "}
+                              วันที่สั่งออเดอร์ {}
+                              {moment(item.Date_times).format("YYYY-MM-DD")}
+                              &nbsp; เวลา{" "}
+                              {moment(item.Date_times).format("HH:mm")} น.
+                            </h6>
+                            {item.delivery_date && (
+                              <Alert
+                                variant="warning"
+                                className="py-1 px-2 mb-0"
+                              >
+                                พรีออเดอร์{item.delivery_slot ? ` ${item.delivery_slot}` : ""}
+                              </Alert>
+                            )}
+                          </div>
                           <hr />
                           <br />
                           <b>รายการสั่งซื้อ</b>

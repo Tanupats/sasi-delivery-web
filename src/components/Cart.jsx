@@ -49,9 +49,18 @@ const Cart = () => {
     name,
     deliveryFee,
     setDeliveryFee,
+    deliveryDate,
+    setDeliveryDate,
+    deliverySlot,
+    setDeliverySlot,
+    isPreorder,
+    setIsPreorder,
   } = useContext(AuthData);
 
   const [loading, setLoading] = useState(false);
+  const tomorrowDate = new Date();
+  tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+  const minDate = tomorrowDate.toISOString().slice(0, 10);
 
   const getProfile = async () => {
     const res = await axios
@@ -66,49 +75,49 @@ const Cart = () => {
     }
   };
 
- const onSave = async (e) => {
-  e.preventDefault();
+  const onSave = async (e) => {
+    e.preventDefault();
 
-  const result = await Swal.fire({
-    title: "ยืนยันการสั่งซื้อ?",
-    text: "เมื่อยืนยันแล้ว ระบบจะบันทึกคำสั่งซื้อ",
-    icon: "question",
-    showCancelButton: true,
-    confirmButtonText: "ยืนยัน",
-    cancelButtonText: "ยกเลิก",
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    reverseButtons: true,
-  });
-
-  if (!result.isConfirmed) return;
-
-  try {
-    setLoading(true);
-
-    await saveOrder();
-
-    await Swal.fire({
-      title: "สำเร็จ!",
-      text: "บันทึกคำสั่งซื้อเรียบร้อยแล้ว",
-      icon: "success",
-      confirmButtonText: "ตกลง",
-      timer: 1500,
-      showConfirmButton: false,
+    const result = await Swal.fire({
+      title: "ยืนยันการสั่งซื้อ?",
+      text: "เมื่อยืนยันแล้ว ระบบจะบันทึกคำสั่งซื้อ",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "ยืนยัน",
+      cancelButtonText: "ยกเลิก",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      reverseButtons: true,
     });
 
-    router("/Myorder");
-  } catch (error) {
-    Swal.fire({
-      title: "เกิดข้อผิดพลาด",
-      text: "ไม่สามารถบันทึกคำสั่งซื้อได้",
-      icon: "error",
-      confirmButtonText: "ตกลง",
-    });
-  } finally {
-    setLoading(false);
-  }
-};
+    if (!result.isConfirmed) return;
+
+    try {
+      setLoading(true);
+
+      await saveOrder();
+
+      await Swal.fire({
+        title: "สำเร็จ!",
+        text: "บันทึกคำสั่งซื้อเรียบร้อยแล้ว",
+        icon: "success",
+        confirmButtonText: "ตกลง",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
+      router("/Myorder");
+    } catch (error) {
+      Swal.fire({
+        title: "เกิดข้อผิดพลาด",
+        text: "ไม่สามารถบันทึกคำสั่งซื้อได้",
+        icon: "error",
+        confirmButtonText: "ตกลง",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     getProfile();
@@ -273,7 +282,89 @@ const Cart = () => {
                         {" "}
                         เลือกวิธีรับอาหาร
                       </Form.Label>
-                      <Row className="mb-2">
+                      <Row>
+                        <Col md={6} xs={12} className="mb-2">
+                          <Button
+                            className="w-100"
+                            variant={isPreorder ? "outline-secondary" : "secondary"}
+                            onClick={() => {
+                              setIsPreorder(false);
+                              setDeliveryDate(minDate);
+                            }}
+                          >
+                            รับวันนี้
+                          </Button>
+                        </Col>
+                        <Col md={6} xs={12} className="mb-2">
+                          <Button
+                            className="w-100"
+                            variant={isPreorder ? "secondary" : "outline-secondary"}
+                            onClick={() => {
+                              setIsPreorder(true);
+                              setOrderType("สั่งกลับบ้าน");
+                              setDeliveryFee(5);
+                              setDeliveryDate(minDate);
+                            }}
+                          >
+                            พรีออเดอร์
+                          </Button>
+                        </Col>
+                      </Row>
+                      {isPreorder && (
+                        <>
+                          <Row className="mb-3">
+                            <Col xs={12}>
+                              <Form.Group>
+                                <Form.Label style={{ fontWeight: 500 }}>
+                                  วันที่จัดส่ง
+                                </Form.Label>
+                                <Form.Control
+                                  readOnly
+                                  type="date"
+                                  min={minDate}
+                                  max={minDate}
+                                  value={deliveryDate}
+                                  onChange={(e) => setDeliveryDate(e.target.value)}
+                                  required
+                                />
+                              </Form.Group>
+                            </Col>
+                          </Row>
+                          <Row className="mb-3">
+                            <Col xs={12}>
+                              <Form.Group>
+                                <Form.Label style={{ fontWeight: 500 }}>
+                                  เลือกรอบจัดส่ง
+                                </Form.Label>
+                                <ButtonGroup className="d-flex">
+                                  <Button
+                                    variant={
+                                      deliverySlot === "รอบเช้า"
+                                        ? "success"
+                                        : "outline-success"
+                                    }
+                                    onClick={() => setDeliverySlot("รอบเช้า")}
+                                  >
+                                    รอบเช้า 10.00 - 12.00
+                                  </Button>
+                                  <Button
+                                    variant={
+                                      deliverySlot === "รอบบ่าย"
+                                        ? "primary"
+                                        : "outline-primary"
+                                    }
+                                    onClick={() => setDeliverySlot("รอบบ่าย")}
+                                  >
+                                    รอบบ่าย 13.00 - 15.00
+                                  </Button>
+                                </ButtonGroup>
+                              </Form.Group>
+                            </Col>
+                          </Row>
+                        </>
+                      )}
+                      {!isPreorder && (
+                        <Row className="mb-2">
                         <Col md={4} xs={4} className="mb-2">
                           <Button
                             className="w-100"
@@ -343,6 +434,7 @@ const Cart = () => {
                           </Button>
                         </Col>
                       </Row>
+                      )}
                       {orderType === "สั่งกลับบ้าน" && (
                         <Form.Group className="mt-2">
                           <Form.Label style={{ fontWeight: 500 }}>
@@ -362,14 +454,14 @@ const Cart = () => {
                           />
                           <Form.Label style={{ fontWeight: 500 }}>
                             {" "}
-                            ที่อยู่จัดส่ง / ข้อมูลติดต่อ{" "}
+                            ข้อมูลติดต่อ{" "}
                           </Form.Label>{" "}
                           <Form.Control
                             value={Address}
                             type="text"
                             required
                             onChange={(e) => setAddress(e.target.value)}
-                            placeholder="ระบุที่อยู่จัดส่ง และ เบอร์โทรติดต่อถ้ามี"
+                            placeholder="ระบุที่อยู่จัดส่ง และเบอร์โทรติดต่อ"
                             className="mt-1"
                           />
                         </Form.Group>
@@ -382,7 +474,7 @@ const Cart = () => {
                         {orderType === "สั่งกลับบ้าน" && (
                           <>
                             <h6>ค่าจัดส่ง : {deliveryFee} บาท </h6>
-                            <p>* ค่าจัดส่งนี้เฉพาะพื้นที่หนองเดิ่น มข.</p>
+                            <b style={{color:'red',marginBottom: '10px'}}>* ค่าจัดส่งนี้เฉพาะพื้นที่หนองเดิ่น มข. ส่งนอกพื้นที่รอแก้ไขภายหลัง</b>
                           </>
                         )}
                         <h6>จำนวน {toTal} รายการ</h6>
