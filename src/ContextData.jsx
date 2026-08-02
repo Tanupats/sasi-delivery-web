@@ -164,7 +164,7 @@ ${account_payment}`;
         step: 1,
         delivery_fee: deliveryFee,
         delivery_date: isPreorder ? getDeliveryDateTime(deliveryDate, deliverySlot) : null,
-        delivery_slot: orderType === "สั่งกลับบ้าน" ? deliverySlot : null,
+        delivery_slot: isPreorder ? deliverySlot : null,
       };
      
       const res = await axios.post(`${api_url}/bills/order`, body);
