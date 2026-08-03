@@ -14,6 +14,25 @@ const ShopData = () => {
   const router = useNavigate();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const getTodayDateKey = () => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
+    const dd = String(today.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  };
+
+  const shouldSendTestMessage = (recipientId) => {
+    const todayKey = getTodayDateKey();
+    const lastCheckedDate = localStorage.getItem(`sendTestMessage:${recipientId}`);
+    return lastCheckedDate !== todayKey;
+  };
+
+  const markTestMessageChecked = (recipientId) => {
+    localStorage.setItem(`sendTestMessage:${recipientId}`, getTodayDateKey());
+  };
+
   const sendTestMessage = async (recipientId, token) => {
     try {
       const url = `https://graph.facebook.com/v19.0/me/messages?access_token=${token}`;
@@ -41,8 +60,17 @@ const ShopData = () => {
     localStorage.setItem("shop_token", shop.facebook_token);
     const token = shop.facebook_token;
     setLoading(true);
+
+    if (!shouldSendTestMessage(userid)) {
+      setLoading(false);
+      router("/foodmenu/" + shop.shop_id);
+      return;
+    }
+
     const res = await sendTestMessage(userid, token);
-    if (res.status === 200) {
+    markTestMessageChecked(userid);
+
+    if (res?.status === 200) {
       setLoading(false);
       router("/foodmenu/" + shop.shop_id);
     } else {
