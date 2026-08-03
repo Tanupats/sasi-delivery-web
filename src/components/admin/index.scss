@@ -1,14 +1,46 @@
- .dash-board {
- .nav-link {
-    
-      background-color: rgba(248, 248, 248, 0.945)
+.dash-board {
+  .nav-link {
+    background-color: rgba(248, 248, 248, 0.945);
+  }
+}
 
-      
-   
-   }
-  
-   
- }
- a.nav-link{
-  color: "#fff";
- }
+.admin-tabs {
+  .nav-item {
+    min-width: 160px;
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.25rem;
+    border-radius: 0.75rem 0.75rem 0 0;
+    color: #6c757d;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-bottom: none;
+    transition: all 0.2s ease;
+  }
+
+  .nav-link.active {
+    color: #0d6efd;
+    background: #ffffff;
+    border-color: #dee2e6;
+    border-bottom: 1px solid #ffffff;
+    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+  }
+
+  .tab-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+}
+
+a.nav-link {
+  color: #fff;
+}

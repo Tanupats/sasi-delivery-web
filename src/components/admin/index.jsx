@@ -87,12 +87,13 @@ const Admin = () => {
       <Tabs
         activeKey={openMenu}
         onSelect={(k) => setOpenMenu(k)}
-        className="mb-3 mt-3"
+        className="mb-3 mt-3 admin-tabs"
+        fill
       >
         <Tab
           eventKey="เมนูอาหาร"
           title={
-            <span style={{ color: "#6c757d" }}>
+            <span className="tab-title">
               <MenuBookIcon /> สินค้า
             </span>
           }
@@ -103,7 +104,7 @@ const Admin = () => {
         <Tab
           eventKey="ประเภทสินค้า"
           title={
-            <span style={{ color: "#6c757d" }}>
+            <span className="tab-title">
               <PollIcon /> ประเภทสินค้า
             </span>
           }
@@ -114,7 +115,7 @@ const Admin = () => {
         <Tab
           eventKey="บัญชี"
           title={
-            <span style={{ color: "#6c757d" }}>
+            <span className="tab-title">
               <AccountCircleIcon /> พนักงาน
             </span>
           }
@@ -125,7 +126,7 @@ const Admin = () => {
         <Tab
           eventKey="สรุปรายการสั่งซื้อ"
           title={
-            <span style={{ color: "#6c757d" }}>
+            <span className="tab-title">
               <CreditCardIcon /> สรุปการสั่งซื้อ
             </span>
           }
@@ -136,7 +137,7 @@ const Admin = () => {
         <Tab
           eventKey="สรุปยอดขาย"
           title={
-            <span style={{ color: "#6c757d" }}>
+            <span className="tab-title">
               <DataThresholdingIcon /> รายงานยอดขาย
             </span>
           }
@@ -204,7 +205,7 @@ const Admin = () => {
         <Tab
           eventKey="ตั้งค่าแชทบอท"
           title={
-            <span style={{ color: "#6c757d" }}>
+            <span className="tab-title">
               <MessageIcon /> แชทบอท
             </span>
           }
