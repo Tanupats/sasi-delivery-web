@@ -32,7 +32,6 @@ import Accounting from "./accounting";
 import Stock from "./stock";
 const Admin = () => {
   const [openMenu, setOpenMenu] = useState("เมนูอาหาร");
-
   const [inComeNow, setIncomeNow] = useState(0);
   const [outComeNow, setOutCome] = useState(0);
   const [totalOrder, setTotalOrder] = useState(85);
