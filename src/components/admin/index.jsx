@@ -29,6 +29,7 @@ import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import SendIcon from "@mui/icons-material/Send";
 import SalesChart from "./chart-report";
 import Accounting from "./accounting";
+import Stock from "./stock";
 const Admin = () => {
   const [openMenu, setOpenMenu] = useState("เมนูอาหาร");
 
@@ -127,11 +128,11 @@ const Admin = () => {
           eventKey="สรุปรายการสั่งซื้อ"
           title={
             <span className="tab-title">
-              <CreditCardIcon /> สรุปการสั่งซื้อ
+              <CreditCardIcon /> สต็อกสินค้า
             </span>
           }
         >
-          <ReportProduct />
+          <Stock />
         </Tab>
 
         <Tab
@@ -225,7 +226,7 @@ const Admin = () => {
                     variant="outline-secondary"
                     onClick={() => getWebHook()}
                   >
-                    <LinkIcon /> get webhook
+                    <LinkIcon /> get webhook url
                   </Button>
                 </Col>
               </Row>
