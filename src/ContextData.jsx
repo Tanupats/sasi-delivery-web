@@ -19,7 +19,7 @@ function Context({ children }) {
     const [statusPrint, setStatusPrint] = useState("");
     const token = localStorage.getItem("token");
     const [Id,setId] = useState(null);
-
+    const [orderState, setOrderState] = useState(0);
     const getUser = async () => {
         if (token) {
             try {
@@ -301,7 +301,9 @@ function Context({ children }) {
                 statusPrint,
                 getUser,
                 sendMessageToPage,
-                printSlip
+                printSlip,
+                setOrderState,
+                orderState
             }}>
             {children}
         </AuthData.Provider>

@@ -1,102 +1,93 @@
-import { Bar } from "react-chartjs-2";
-import { useState, useEffect } from "react";
-import { http } from "../../http";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
-import { Row, Col, Button, Card } from "react-bootstrap";
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-);
+import { Card, Table, Badge } from "react-bootstrap";
+
 const SalesChart = () => {
-  const [year, setYear] = useState(new Date().getFullYear());
-  const [data, setData] = useState([
-    12000, 9000, 15000, 60000, 5000, 8000, 7000, 6000, 4000, 3000, 2000, 1000,
-  ]);
-  const [total, setTotal] = useState(0);
-  const token = localStorage.getItem("token");
-  const shopId = localStorage.getItem("shopId");
-  const fetchData = async () => {
-    const body = { shop_id: shopId, year: year };
-    const res = await http.post("/bills/sales-by-year", body, {
-      header: { apikey: token },
-    });
-    setData(res.data.data);
-    setTotal(res.data.total);
-  };
+  const dayRows = [
+    { date: "11/08/2026", income: 145000, expense: 38000 },
+    { date: "10/08/2026", income: 132000, expense: 29000 },
+    { date: "09/08/2026", income: 118000, expense: 24000 },
+    { date: "08/08/2026", income: 156000, expense: 41000 },
+    { date: "07/08/2026", income: 128000, expense: 22000 },
+    { date: "06/08/2026", income: 139000, expense: 36000 },
+  ];
 
-  useEffect(() => {
-    fetchData();
-  }, [year]);
+  const formatMoney = (value) =>
+    new Intl.NumberFormat("th-TH", {
+      style: "currency",
+      currency: "THB",
+      maximumFractionDigits: 0,
+    }).format(value || 0);
 
-  const chartData = {
-    labels: [
-      "ม.ค.",
-      "ก.พ.",
-      "มี.ค.",
-      "เม.ย.",
-      "พ.ค.",
-      "มิ.ย.",
-      "ก.ค.",
-      "ส.ค.",
-      "ก.ย.",
-      "ต.ค.",
-      "พ.ย.",
-      "ธ.ค.",
-    ],
-    datasets: [
-      {
-        label: "ยอดขาย (บาท)",
-        data: data,
-        backgroundColor: "rgba(255, 159, 64, 0.6)", // สีแท่ง
-        borderColor: "rgba(255, 159, 64, 1)", // สีขอบ
-        borderWidth: 2,
-      },
-    ],
-  };
+  const totals = dayRows.reduce(
+    (acc, row) => ({
+      income: acc.income + row.income,
+      expense: acc.expense + row.expense,
+    }),
+    { income: 0, expense: 0 },
+  );
 
   return (
-    <Card className="mt-2">
-      <Row className="mt-4 text-center">
-        <Col md={4}>
-          <Button variant="secondary" onClick={() => setYear(year - 1)}>
-            ย้อนกลับ
-          </Button>
-        </Col>
+    <Card className="mt-3 shadow-sm border-0" style={{ overflow: "hidden" }}>
+      <Card.Body>
+        <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+          <div>
+            <h5 className="mb-1">สรุปรายวัน</h5>
+            <p className="text-muted mb-0">แสดงรายได้ รายจ่าย และเงินสดคงเหลือในแต่ละวัน</p>
+          </div>
+          <Badge bg="success" pill>
+            อัปเดตล่าสุดวันนี้
+          </Badge>
+        </div>
 
-        <Col md={4}>
-          {" "}
-          <h5>
-          ยอดขาย {total.toLocaleString('th-TH')} บาท ปี {year}
-          </h5>
-        </Col>
-
-        <Col md={4}>
-          {" "}
-          <Button variant="secondary" onClick={() => setYear(year + 1)}>
-            ถัดไป
-          </Button>
-        </Col>
-      </Row>
-
-      <Row>
-        <Col md={3}></Col>
-        <Col md={6}>
-          <Bar data={chartData} />
-        </Col>
-        <Col md={3}></Col>
-      </Row>
+        <div className="table-responsive">
+          <Table bordered hover className="align-middle mb-0">
+            <thead style={{ backgroundColor: "#0d6efd", color: "#fff" }}>
+              <tr>
+                <th>วันที่</th>
+                <th className="text-end">รายได้</th>
+                <th className="text-end">รายจ่าย</th>
+                <th className="text-end">เงินสดคงเหลือ</th>
+                <th className="text-center">สถานะ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {dayRows.map((row, index) => {
+                const balance = row.income - row.expense;
+                return (
+                  <tr key={`${row.date}-${index}`}>
+                    <td>
+                      <div className="fw-semibold">{row.date}</div>
+                      <small className="text-muted">สรุปรายวัน</small>
+                    </td>
+                    <td className="text-end text-success fw-semibold">
+                      {formatMoney(row.income)}
+                    </td>
+                    <td className="text-end text-danger fw-semibold">
+                      {formatMoney(row.expense)}
+                    </td>
+                    <td className={`text-end fw-bold ${balance >= 0 ? "text-primary" : "text-danger"}`}>
+                      {formatMoney(balance)}
+                    </td>
+                    <td className="text-center">
+                      <Badge bg={balance >= 0 ? "success" : "danger"} pill>
+                        {balance >= 0 ? "ดี" : "ติดลบ"}
+                      </Badge>
+                    </td>
+                  </tr>
+                );
+              })}
+              <tr className="table-light fw-bold">
+                <td>รวม</td>
+                <td className="text-end text-success">{formatMoney(totals.income)}</td>
+                <td className="text-end text-danger">{formatMoney(totals.expense)}</td>
+                <td className="text-end text-primary">
+                  {formatMoney(totals.income - totals.expense)}
+                </td>
+                <td className="text-center">-</td>
+              </tr>
+            </tbody>
+          </Table>
+        </div>
+      </Card.Body>
     </Card>
   );
 };

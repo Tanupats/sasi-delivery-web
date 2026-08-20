@@ -11,7 +11,7 @@ import LocalPrintshopIcon from "@mui/icons-material/LocalPrintshop";
 import SendIcon from "@mui/icons-material/Send";
 
 const Orders = () => {
-  const { shop, sendMessageToPage } = useContext(AuthData);
+  const { shop, sendMessageToPage,orderState } = useContext(AuthData);
   const token = localStorage.getItem("token");
   const [report, setReport] = useState([]);
   const [printBillId, setPrintBillId] = useState(null);
@@ -139,7 +139,7 @@ const Orders = () => {
   useEffect(() => {
     getMenuReport("รับออเดอร์แล้ว");
     getOrderStatus();
-  }, [shop]);
+  }, [shop, orderState]);
 
   return (
     <>
@@ -266,15 +266,37 @@ const Orders = () => {
                                       {item?.printStatus}
                                     </span>
                                   ) : (
-                                    <span className="bg-success text-white px-2 py-1 rounded-pill when-print mt-4">
-                                      ออเดอร์ใหม่
+                                    <span
+                                      className={
+                                        item.delivery_date
+                                          ? "bg-danger text-white px-2 py-1 rounded-pill when-print mt-4"
+                                          : "bg-success text-white px-2 py-1 rounded-pill when-print mt-4"
+                                      }
+                                    >
+                                      {item.delivery_date ? "พรีออเดอร์" : "จัดส่งวันนี้"}
                                     </span>
                                   )}
                                 </p>
-                              </Col>
+                              </Col>  
                             </Row>
 
                             <Row className="mt-2">
+                                {item.statusOrder === "รับออเดอร์แล้ว" && (
+                                <>
+                                  <Col md={6} xs={6} className="mb-2">
+                                    <Button
+                                      className="when-print"
+                                      onClick={() =>
+                                        handlePrint(item.bill_ID, item.id)
+                                      }
+                                      variant="primary w-100"
+                                    >
+                                      <LocalPrintshopIcon /> พิมพ์
+                                    </Button>
+                                  </Col>
+                                  
+                                </>
+                              )}
                               <Col md={6} xs={6}>
                                 <div className="when-print mb-2">
                                   {item.messengerId !== "pos" &&
@@ -305,22 +327,7 @@ const Orders = () => {
                                     )}
                                 </div>
                               </Col>
-                              {item.statusOrder === "รับออเดอร์แล้ว" && (
-                                <>
-                                  <Col md={6} xs={6} className="mb-2">
-                                    <Button
-                                      className="when-print"
-                                      onClick={() =>
-                                        handlePrint(item.bill_ID, item.id)
-                                      }
-                                      variant="primary w-100"
-                                    >
-                                      <LocalPrintshopIcon /> พิมพ์
-                                    </Button>
-                                  </Col>
-                                  <Col md={6} xs={6} className="mb-2"></Col>
-                                </>
-                              )}
+                            
                             </Row>
 
                             <Details
