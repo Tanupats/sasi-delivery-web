@@ -304,8 +304,14 @@ const Orders = () => {
                                       <Button
                                         onClick={async () => {
                                           const result = await Swal.fire({
-                                            title: "ยืนยันการส่งข้อความ",
-                                            text: "คุณต้องการส่งข้อความถึงลูกค้าหรือไม่?",
+                                            title: "ส่งข้อความไปยังลูกค้า",
+                                            input: "textarea",
+                                            inputValue:
+                                              "",
+                                            inputPlaceholder: "กรอกข้อความที่ต้องการส่ง",
+                                            inputAttributes: {
+                                              "aria-label": "กรอกข้อความที่ต้องการส่ง",
+                                            },
                                             icon: "question",
                                             showCancelButton: true,
                                             confirmButtonText: "ส่งข้อความ",
@@ -314,9 +320,7 @@ const Orders = () => {
                                           if (result.isConfirmed) {
                                             sendMessageToPage(
                                               item.messengerId,
-                                              "ร้านรับออเดอร์แล้วครับ  ยอดรวม" +
-                                                item.amount +
-                                                "บาทครับ",
+                                              result.value,
                                             );
                                           }
                                         }}
