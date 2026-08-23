@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { Row, Col, Card, Button, Form, Modal } from "react-bootstrap";
+import { Row, Col, Card, Button, Form, Modal,Badge } from "react-bootstrap";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -174,9 +174,7 @@ const Stock = () => {
                         <Row>
 
                             <Col md={4}>
-                                <Form.Label>
-                                    รายการ
-                                </Form.Label>
+                              
                                 <Form.Control
                                     required
                                     onChange={(e) => setName(e.target.value)}
@@ -186,9 +184,7 @@ const Stock = () => {
 
                             </Col>
                             <Col md={4}>
-                                <Form.Label>
-                                    จำนวน
-                                </Form.Label>
+                               
                                 <Form.Control
                                     required
                                     onChange={(e) => setIem(e.target.value)}
@@ -196,16 +192,11 @@ const Stock = () => {
                                     placeholder="จำนวน" />
 
                             </Col>
-
-                        </Row>
-                        <Row>
-
-
-                            <Col md={4} className="mt-3">
+ <Col md={4} >
                                 <Button className="w-50" onClick={() => postData()}> บันทึก </Button>
                             </Col>
-
                         </Row>
+                     
                     </Form>
 
                     <TableContainer component={Paper} className="mt-3">
@@ -214,7 +205,7 @@ const Stock = () => {
                                 <TableRow>
                                     <TableCell>ลำดับ</TableCell>
                                     <TableCell align="left">รายการ</TableCell>
-                                    <TableCell align="left">วันที่บันทึก</TableCell>
+                                    
                                     <TableCell align="left">จำนวนคงเหลือ</TableCell>
                                     <TableCell align="left">จัดการ</TableCell>
                                 </TableRow>
@@ -227,11 +218,12 @@ const Stock = () => {
                                     >
                                         <TableCell component="th" scope="row">
                                             {index + 1}
-                                        </TableCell>   <TableCell align="left">{row.name}</TableCell>
-                                        <TableCell align="left">{moment(row.created).format('YYYY-MM-DD')}</TableCell>
+                                        </TableCell> 
+                                          <TableCell align="left">{row.name}</TableCell>
+                                        
                                         <TableCell align="left">
 
-                                            {row.stock_quantity}
+                                           <Badge bg={row.stock_quantity > 0 ? "primary" : "danger"}> {row.stock_quantity} </Badge>
                                         </TableCell>
                                         <TableCell align="left">
                                             <Button variant="primary" onClick={() => onClickRow(row)}> <RemoveIcon /> เบิกใช้ </Button> {' '}
