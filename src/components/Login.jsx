@@ -50,76 +50,87 @@ const Login = () => {
   }, []);
 
   return (
-    <>
-      <Row className="mt-4">
-        <Col md={4}></Col>
-        <Col md={4}>
-          <Card className="mt-4 rounded-card">
-            <Card.Body>
-              <Card.Title
-                className="text-center"
-                style={{ color: "#FD720D", border: "0px" }}
-              >
-                SASI POS <br />
-                <br />
-                เข้าสู่ระบบ{" "}
-              </Card.Title>
+    <div className="login-page">
+      <Row className="login-row w-100">
+        <Col lg={8} md={10} sm={12} className="mx-auto">
+          <Card className="login-card">
+            <Card.Body className="login-card-body p-0">
+              <Row className="g-0 login-grid">
+                <Col lg={5} className="login-hero">
+                  <div className="login-brand">
+                    <span className="register-badge">SASI POS</span>
+                    <h2>ยินดีต้อนรับ</h2>
+                    <p>เริ่มต้นใช้งานระบบจัดการร้านค้าของคุณได้ทันที</p>
 
-              <Form onSubmit={login}>
-                <Form.Group>
-                  <Form.Label>username</Form.Label>
-                  <Form.Control
-                    required
-                    placeholder="username"
-                    type="text"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </Form.Group>
-                <Form.Group className="mt-2">
-                  <Form.Label>password</Form.Label>
+                    <ul className="login-feature-list">
+                      <li>จัดการคำสั่งซื้อได้สะดวก</li>
+                      <li>ติดตามสต็อกสินค้าแบบเรียลไทม์</li>
+                      <li>รายงานยอดขายแบบเข้าใจง่าย</li>
+                    </ul>
+                  </div>
+                </Col>
 
-                  <Form.Control
-                    required
-                    placeholder="password"
-                    onChange={(e) => setPassword(e.target.value)}
-                    type="password"
-                  />
-                </Form.Group>
-                {messageError ? (
-                  <p style={{ color: "red", marginTop: "12px" }}>
-                    {" "}
-                    รหัสผ่าน หรือ ชื่อผู้ใช้ไม่ถูกต้อง{" "}
-                  </p>
-                ) : (
-                  <> </>
-                )}
+                <Col lg={7} className="login-form-col">
+                  <div className="login-panel">
+                    <div className="login-header">
+                      <h4>เข้าสู่ระบบ</h4>
+                      <p>กรอกอีเมลและรหัสผ่านเพื่อเข้าระบบ</p>
+                    </div>
 
-                <Button
-                  type="submit"
-                  style={{ backgroundColor: "#FD720D", border: "0px" }}
-                  className="w-100 mt-4"
-                >
-                  เข้าสู่ระบบ
-                </Button>
-                <div className="text-center mt-4">
-                  <p>  ยังไม่มีบัญชีผู้ใช้ ? คลิกปุ่มลงทะเบียน </p>
-                </div>
+                    <Form onSubmit={login} className="login-form">
+                      <Form.Group className="mb-3">
+                        <Form.Label>อีเมล</Form.Label>
+                        <Form.Control
+                          className="modern-input"
+                          required
+                          placeholder="example@email.com"
+                          type="text"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                        />
+                      </Form.Group>
 
-                <Button
-                  onClick={() => router("/register")}
-                  variant="primary"
-                  className="w-100 mt-2"
-                >
-                  ลงทะเบียน
-                </Button>
-              </Form>
+                      <Form.Group className="mb-3">
+                        <Form.Label>รหัสผ่าน</Form.Label>
+                        <Form.Control
+                          className="modern-input"
+                          required
+                          placeholder="กรอกรหัสผ่าน"
+                          onChange={(e) => setPassword(e.target.value)}
+                          type="password"
+                        />
+                      </Form.Group>
+
+                      {messageError ? (
+                        <div className="login-error">
+                          รหัสผ่าน หรือ อีเมลไม่ถูกต้อง
+                        </div>
+                      ) : null}
+
+                      <Button type="submit" className="w-100 modern-submit-btn">
+                        เข้าสู่ระบบ
+                      </Button>
+
+                      <div className="login-divider">
+                        <span>หรือ</span>
+                      </div>
+
+                      <Button
+                        onClick={() => router("/register")}
+                        type="button"
+                        className="w-100 modern-secondary-btn"
+                      >
+                        ลงทะเบียนบัญชีใหม่
+                      </Button>
+                    </Form>
+                  </div>
+                </Col>
+              </Row>
             </Card.Body>
           </Card>
         </Col>
-        <Col md={4}></Col>
       </Row>
-    </>
+    </div>
   );
 };
 

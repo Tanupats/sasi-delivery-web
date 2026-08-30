@@ -17,6 +17,30 @@ const Register = () => {
   const [file, setFile] = useState("");
   const [phone, setPhone] = useState("");
 
+  const packagePlans = [
+    {
+      value: "trial",
+      name: "ทดลองใช้ฟรี 7 วัน",
+      price: "ฟรี",
+      tagClass: "tag-trial",
+      description: "ทดลองใช้งานฟีเจอร์เต็มรูปแบบ ฟรี 7 วัน",
+    },
+    {
+      value: "pro",
+      name: "แพ็กเกจ Pro",
+      price: "600฿",
+      tagClass: "tag-pro",
+      description: "ใช้งานต่อเนื่อง 1 เดือน",
+    },
+    {
+      value: "premium",
+      name: "แพ็กเกจ Premium",
+      price: "5900฿",
+      tagClass: "tag-premium",
+      description: "ใช้งานยาว 1 ปี คุ้มค่าที่สุด",
+    },
+  ];
+
   let filename = "";
   const uploadFile = async () => {
     const formData = new FormData();
@@ -90,146 +114,148 @@ const Register = () => {
   };
 
   return (
-    <Row className="mt-4">
-      <Col md={3}></Col>
-      <Col md={6}>
-        <Card>
-          <Card.Title className="text-center mt-4  title-heading">
-            ลงทะเบียนผู้ใช้
-          </Card.Title>
-          <Card.Body>
-            <Form onSubmit={saveRegister}>
-              <Form.Group>
-                <Form.Label> ชื่อ-นามสกุล</Form.Label>
-                <Form.Control
-                  onChange={(e) => setName(e.target.value)}
-                  type="text"
-                  required
-                  placeholder="ชื่อ-นามสกุล"
-                />
-              </Form.Group>
-              <Form.Group className="mt-2">
-                <Form.Label>อีเมล</Form.Label>
-                <Form.Control
-                  type="email"
-                  required
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="email"
-                />
-              </Form.Group>
-              <Form.Group className="mt-2">
-                <Form.Label>รหัสผ่าน</Form.Label>
-                <Form.Control
-                  required
-                  onChange={(e) => setPassword(e.target.value)}
-                  type="password"
-                  placeholder="password"
-                />
-              </Form.Group>
-              <Form.Group className="mt-2">
-                <Form.Label>เบอร์โทร</Form.Label>
-                <Form.Control
-                  required
-                  onChange={(e) => setPhone(e.target.value)}
-                  type="text"
-                  placeholder="08xxxxxxxx"
-                />
-              </Form.Group>
+    <div className="register-page">
+      <Row className="register-row w-100">
+        <Col lg={7} md={9} sm={12} className="mx-auto">
+          <Card className="register-card">
+            <Card.Body className="register-card-body">
+              <div className="register-header">
+                <span className="register-badge">SASI POS</span>
+                <h4>สร้างบัญชีร้านค้า</h4>
+                <p>เริ่มต้นใช้งานระบบจัดการร้านค้าของคุณได้ทันที</p>
+              </div>
 
-              <Form.Group className="mt-2">
-                <Form.Label>ชื่อร้านค้า</Form.Label>
-                <Form.Control
-                  required
-                  onChange={(e) => setshopName(e.target.value)}
-                  type="text"
-                  placeholder="ตั้งชื่อร้านค้าของคุณ"
-                />
-              </Form.Group>
-              <Form.Group className="mt-2">
-                <Form.Label>รูปภาพ (หน้าปกร้าน)</Form.Label>
-                <Form.Control
-                  type="file"
-                  placeholder="โลโก้"
-                  onChange={(e) => setFile(e.target.files[0])}
-                />
-              </Form.Group>
+              <Form onSubmit={saveRegister} className="register-form">
+                <div className="register-section">
+                  <div className="section-title">ข้อมูลผู้ใช้</div>
+                  <Row>
+                    <Col md={6}>
+                      <Form.Group className="mb-3">
+                        <Form.Label>ชื่อ-นามสกุล</Form.Label>
+                        <Form.Control
+                          className="modern-input"
+                          onChange={(e) => setName(e.target.value)}
+                          type="text"
+                          required
+                          placeholder="ชื่อ-นามสกุล"
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col md={6}>
+                      <Form.Group className="mb-3">
+                        <Form.Label>อีเมล</Form.Label>
+                        <Form.Control
+                          className="modern-input"
+                          type="email"
+                          required
+                          onChange={(e) => setEmail(e.target.value)}
+                          placeholder="example@email.com"
+                        />
+                      </Form.Group>
+                    </Col>
+                  </Row>
 
-              <Form.Group className="mt-4">
-                <Form.Label className="fw-bold">เลือกแพ็กเกจ</Form.Label>
-                <div className="d-flex flex-column gap-2 mt-2">
-                  <Form.Check
-                    type="radio"
-                    name="package"
-                    id="package-trial"
-                    label={
-                      <span>
-                        <strong>ทดลองใช้ฟรี 7 วัน</strong>
-                        <br />
-                        <small className="text-muted">
-                          ทดลองใช้งานฟีเจอร์เต็มรูปแบบ ฟรี 7 วัน
-                        </small>
-                      </span>
-                    }
-                    value="trial"
-                    checked={selectedPackage === "trial"}
-                    onChange={(e) => setSelectedPackage(e.target.value)}
-                  />
-
-                  <Form.Check
-                    type="radio"
-                    name="package"
-                    id="package-pro"
-                    label={
-                      <span>
-                        <strong>แพ็กเกจ Pro</strong>
-                        <br />
-                        <small className="text-muted">600฿ / เดือน </small>
-                      </span>
-                    }
-                    value="pro"
-                    checked={selectedPackage === "pro"}
-                    onChange={(e) => setSelectedPackage(e.target.value)}
-                  />
-                  <Form.Check
-                    type="radio"
-                    name="package"
-                    id="package-Premium"
-                    label={
-                      <span>
-                        <strong>แพ็กเกจ Premium</strong>
-                        <br />
-                        <small className="text-muted"> 5900฿ / ปี </small>
-                      </span>
-                    }
-                    value="premium"
-                    checked={selectedPackage === "premium"}
-                    onChange={(e) => setSelectedPackage(e.target.value)}
-                  />
+                  <Row>
+                    <Col md={6}>
+                      <Form.Group className="mb-3">
+                        <Form.Label>รหัสผ่าน</Form.Label>
+                        <Form.Control
+                          className="modern-input"
+                          required
+                          onChange={(e) => setPassword(e.target.value)}
+                          type="password"
+                          placeholder="รหัสผ่าน"
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col md={6}>
+                      <Form.Group className="mb-3">
+                        <Form.Label>เบอร์โทร</Form.Label>
+                        <Form.Control
+                          className="modern-input"
+                          required
+                          onChange={(e) => setPhone(e.target.value)}
+                          type="text"
+                          placeholder="08xxxxxxxx"
+                        />
+                      </Form.Group>
+                    </Col>
+                  </Row>
                 </div>
-              </Form.Group>
 
-              <Row className="mt-4">
-                <Col md={6} xs={6}>
-                  <Button className="w-100" type="submit" variant="primary">
-                    ลงทะเบียน
-                  </Button>
-                </Col>
-                <Col md={6} xs={6}>
-                  <Button
-                    onClick={() => router("/")}
-                    className="w-100"
-                    variant="danger"
-                  >
-                    ยกเลิก
-                  </Button>
-                </Col>
-              </Row>
-            </Form>
-          </Card.Body>
-        </Card>
-      </Col>
-      <Col md={3}></Col>
-    </Row>
+                <div className="register-section">
+                  <div className="section-title">ข้อมูลร้านค้า</div>
+                  <Row>
+                    <Col md={8}>
+                      <Form.Group className="mb-3">
+                        <Form.Label>ชื่อร้านค้า</Form.Label>
+                        <Form.Control
+                          className="modern-input"
+                          required
+                          onChange={(e) => setshopName(e.target.value)}
+                          type="text"
+                          placeholder="ตั้งชื่อร้านค้าของคุณ"
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col md={4}>
+                      <Form.Group className="mb-3">
+                        <Form.Label>รูปภาพร้าน</Form.Label>
+                        <Form.Control
+                          className="modern-input file-input"
+                          type="file"
+                          onChange={(e) => setFile(e.target.files[0])}
+                        />
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                </div>
+
+                <div className="register-section">
+                  <div className="section-title">เลือกแพ็กเกจ</div>
+                  <div className="package-list">
+                    {packagePlans.map((plan) => (
+                      <button
+                        key={plan.value}
+                        type="button"
+                        className={`package-card ${selectedPackage === plan.value ? "selected" : ""}`}
+                        onClick={() => setSelectedPackage(plan.value)}
+                        aria-pressed={selectedPackage === plan.value}
+                      >
+                        <div className="package-card-content">
+                          <div className="package-header-row">
+                            <strong>{plan.name}</strong>
+                            <span className={`package-tag ${plan.tagClass}`}>{plan.price}</span>
+                          </div>
+                          <small>{plan.description}</small>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <Row className="mt-4 action-row">
+                  <Col md={6} xs={12} className="mb-2 mb-md-0">
+                    <Button className="w-100 register-submit-btn" type="submit">
+                      ลงทะเบียน
+                    </Button>
+                  </Col>
+                  <Col md={6} xs={12}>
+                    <Button
+                      onClick={() => router("/")}
+                      className="w-100 register-cancel-btn"
+                      type="button"
+                    >
+                      ยกเลิก
+                    </Button>
+                  </Col>
+                </Row>
+              </Form>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </div>
   );
 };
 

@@ -163,14 +163,14 @@ const Pos = () => {
 
   return (
     <>
-      <Container fluid>
-        <Row>
-          <Col md={8} className="when-print">
+      <Container fluid className="pos-page">
+        <Row className="pos-layout g-3">
+          <Col md={8} className="when-print pos-menu-panel">
             <div className="menu-type mt-4">
-              <div className="title">
-                <h5>ประเภท </h5>
+              <div className="menu-header title">
+                <h5>ประเภทสินค้า</h5>
               </div>
-              <Row>
+              <Row className="g-2">
                 {loading ? (
                   <center>
                     {" "}
@@ -182,16 +182,8 @@ const Pos = () => {
                       <React.Fragment key={index}>
                         <Col md={3} xs={6}>
                           <Card
-                            className="category mb-2"
+                            className="category-card"
                             onClick={() => getMenuByTypeId(item.id)}
-                            style={{
-                              cursor: "pointer",
-                              textAlign: "center",
-                              padding: 8,
-                              backgroundColor: "#ffffff",
-                              border: "1px solid rgb(143, 143, 143)",
-                              fontSize: 16,
-                            }}
                           >
                             {item.name}
                           </Card>
@@ -209,11 +201,11 @@ const Pos = () => {
               </Row>
             </div>
 
-            <div className="menu mt-2">
-              <div className="title">
-                <h5>รายการ </h5>
+            <div className="menu mt-3">
+              <div className="menu-header title">
+                <h5>รายการสินค้า</h5>
               </div>
-              <Row>
+              <Row className="g-3">
                 {loadingMenu ? (
                   <center>
                     {" "}
@@ -253,11 +245,11 @@ const Pos = () => {
             </div>
           </Col>
 
-          <Col md={4} className="border-start shadow-sm bg-white">
+          <Col md={4} className="pos-sidebar">
             {cart.length > 0 && (
               <>
                 {queueNumber > 0 && (
-                  <div className="text-center mt-2">
+                  <div className="receipt-header text-center mt-2">
                     <h6> คิวที่ {queueNumber} </h6>
                     <h6> {shop?.name}</h6>
                     <h6> ใบเสร็จรับเงิน</h6>
@@ -267,7 +259,7 @@ const Pos = () => {
 
                 <Row className="mt-4">
                   <Col md={12}>
-                    <Table className="table-sm">
+                    <Table className="order-table table-sm">
                       <thead>
                         <tr>
                           <th style={{ padding: "4px" }}>รายการ</th>
@@ -338,11 +330,11 @@ const Pos = () => {
                     </Table>
                     <Form>
                       <Row className="order-type when-print">
-                        
-                        <ButtonGroup className="w-100 mb-3">
+                        <ButtonGroup className="w-100 mb-3 pos-order-type">
                           <Button
-                        style={{color: activeTypeRecipe === "เสิร์ฟในร้าน" ? "#fff" : "#000000", border: `2px solid ${activeTypeRecipe === "เสิร์ฟในร้าน" ? "#ff7a00" : "#bebebe"}`, backgroundColor: activeTypeRecipe === "เสิร์ฟในร้าน" ? "#ff7a00" : "#fff"}}
-                           
+                            className={`order-type-button ${
+                              activeTypeRecipe === "เสิร์ฟในร้าน" ? "active" : ""
+                            }`}
                             onClick={() => {
                               setOrderType("เสิร์ฟในร้าน");
                               setName("ทานที่ร้าน");
@@ -353,8 +345,9 @@ const Pos = () => {
                           </Button>
 
                           <Button
-                           style={{color: activeTypeRecipe === "รับเอง" ? "#fff" : "#000000", border: `2px solid ${activeTypeRecipe === "รับเอง" ? "#ff7a00" : "#bebebe"}`, backgroundColor: activeTypeRecipe === "รับเอง" ? "#ff7a00" : "#fff"}}
-                          
+                            className={`order-type-button ${
+                              activeTypeRecipe === "รับเอง" ? "active" : ""
+                            }`}
                             onClick={() => {
                               setOrderType("รับเอง");
                               setName("รับหน้าร้าน");
@@ -363,8 +356,6 @@ const Pos = () => {
                           >
                             รับหน้าร้าน
                           </Button>
-
-                        
                         </ButtonGroup>
 
                         {/* <Col
@@ -384,10 +375,9 @@ const Pos = () => {
                     {cart?.length > 0 && (
                       <Row className="mb-2">
                         <Col>
-                          <div className="total when-print mb-1 text-center">
+                          <div className="order-total-card when-print mb-1 text-center">
+                            <span>รวมทั้งหมด</span>
                             <h5>
-                              {" "}
-                              รวมทั้งหมด{" "}
                               {sumPrice.toLocaleString("th-TH", {
                                 style: "currency",
                                 currency: "THB",
@@ -397,31 +387,27 @@ const Pos = () => {
                         </Col>
                       </Row>
                     )}
-                    <Row className="when-print sticky-bottom-mobile">
+                    <Row className="when-print sticky-bottom-mobile action-row">
                       <Col md={6} xs={6}>
                         <Button
-                          style={{ height: "46px" }}
+                          className="modern-action-btn success"
                           onClick={() => {
                             saveOrder();
                           }}
-                          variant="success w-100"
                         >
                           <SaveIcon /> บันทึก
                         </Button>
                       </Col>
 
                       <Col md={6} xs={6}>
-                     
-                          <Button
-                            style={{ height: "46px", marginBottom: "20px" }}
-                            onClick={() => {
-                              resetCart();
-                            }}
-                            variant="danger w-100"
-                          >
-                            <CancelOutlinedIcon /> ยกเลิก
-                          </Button>
-                        
+                        <Button
+                          className="modern-action-btn danger"
+                          onClick={() => {
+                            resetCart();
+                          }}
+                        >
+                          <CancelOutlinedIcon /> ยกเลิก
+                        </Button>
                       </Col>
                     </Row>
                   </Col>
