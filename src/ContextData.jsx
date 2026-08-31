@@ -99,7 +99,7 @@ ${account_payment}`;
       option_menu: data.option_menu,
     };
     setCart((prevCart) => [...prevCart, itemCart]);
-    showNotification.success("เพิ่มรายการลงตะกร้าแล้ว", "เพิ่มรายการสำเร็จ");
+    showNotification.success("เพิ่มรายการสำเร็จ");
   };
 
   const removeCart = (id) => {

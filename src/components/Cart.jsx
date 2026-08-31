@@ -283,7 +283,7 @@ const Cart = () => {
                         เลือกวิธีรับอาหาร
                       </Form.Label>
                       <Row>
-                        <Col md={6} xs={12} className="mb-2">
+                        <Col md={4} xs={4} className="mb-2">
                           <Button
                             className="w-100"
                             variant={isPreorder ? "outline-secondary" : "secondary"}
@@ -292,10 +292,10 @@ const Cart = () => {
                               setDeliveryDate(minDate);
                             }}
                           >
-                            รับวันนี้
+                           จัดส่งวันนี้
                           </Button>
                         </Col>
-                        <Col md={6} xs={12} className="mb-2">
+                        <Col md={4} xs={4} className="mb-2">
                           <Button
                             className="w-100"
                             variant={isPreorder ? "secondary" : "outline-secondary"}
@@ -306,7 +306,7 @@ const Cart = () => {
                               setDeliveryDate(minDate);
                             }}
                           >
-                            พรีออเดอร์
+                            เลือกวันที่จัดส่ง
                           </Button>
                         </Col>
                       </Row>
@@ -314,20 +314,19 @@ const Cart = () => {
                         <>
                           <Row className="mb-3">
                             <Col xs={12}>
-                              <Form.Group>
-                                <Form.Label style={{ fontWeight: 500 }}>
-                                  วันที่จัดส่ง
-                                </Form.Label>
-                                <Form.Control
-                                  readOnly
-                                  type="date"
-                                  min={minDate}
-                                  max={minDate}
-                                  value={deliveryDate}
-                                  onChange={(e) => setDeliveryDate(e.target.value)}
-                                  required
-                                />
-                              </Form.Group>
+                             <Form.Group>
+  <Form.Label style={{ fontWeight: 500 }}>
+    วันที่จัดส่ง
+  </Form.Label>
+
+  <Form.Control
+    type="date"
+    min={minDate}
+    value={deliveryDate}
+    onChange={(e) => setDeliveryDate(e.target.value)}
+    required
+  />
+</Form.Group>
                             </Col>
                           </Row>
                           <Row className="mb-3">
@@ -468,54 +467,54 @@ const Cart = () => {
                       )}
                     </div>
 
-                    <Form.Group>
-                      <div className="p-3">
-                        <h6>ยอดรวม {sumPrice} บาท</h6>
+                    <div className="summary-section">
+                      <div className="summary-card">
+                        <div className="summary-row">
+                          <span className="summary-label">ยอดรวมอาหาร</span>
+                          <span className="summary-value">{sumPrice} ฿</span>
+                        </div>
                         {orderType === "สั่งกลับบ้าน" && (
                           <>
-                            <h6>ค่าจัดส่ง : {deliveryFee} บาท </h6>
-                            <b style={{color:'red',marginBottom: '10px'}}>* ค่าจัดส่งนี้เฉพาะพื้นที่หนองเดิ่น มข. ส่งนอกพื้นที่รอแก้ไขภายหลัง</b>
+                            <div className="summary-row">
+                              <span className="summary-label">ค่าจัดส่ง</span>
+                              <span className="summary-value">{deliveryFee} ฿</span>
+                            </div>
+                           
                           </>
                         )}
-                        <h6>จำนวน {toTal} รายการ</h6>
-                        <h6>รวมทั้งหมด : {sumPrice + deliveryFee} บาท</h6>
-
-                        <Form.Label style={{ fontWeight: 500 }}>
-                          {" "}
-                          เลือกวิธีชำระเงิน{" "}
-                        </Form.Label>
+                        <div className="summary-row">
+                          <span className="summary-label">จำนวนรายการ</span>
+                          <span className="summary-value">{toTal} รายการ</span>
+                        </div>
+                        <div className="summary-divider"></div>
+                        <div className="summary-row total">
+                          <span className="summary-label">รวมทั้งหมด</span>
+                          <span className="summary-value">{sumPrice + deliveryFee} ฿</span>
+                        </div>
                       </div>
-                      <Row>
-                        <Col md={2} xs={6}>
+
+                      <Form.Group className="mt-4">
+                        <Form.Label className="payment-title">
+                          วิธีชำระเงิน
+                        </Form.Label>
+                        <div className="payment-buttons">
                           <Button
-                            variant={
-                              paymentType === "bank_transfer"
-                                ? "dark"
-                                : "outline-dark"
-                            }
-                            className="w-100"
+                            className={`payment-btn ${paymentType === "bank_transfer" ? "active" : ""}`}
                             onClick={() => setPaymentType("bank_transfer")}
                           >
-                            {" "}
-                            <AccountBalanceIcon /> เงินโอน{" "}
+                            <AccountBalanceIcon className="payment-icon" />
+                            <span>เงินโอน</span>
                           </Button>
-                        </Col>
-                        <Col md={2} xs={6}>
                           <Button
-                            variant={
-                              paymentType === "cash"
-                                ? "success"
-                                : "outline-success"
-                            }
+                            className={`payment-btn ${paymentType === "cash" ? "active" : ""}`}
                             onClick={() => setPaymentType("cash")}
-                            className="w-100"
                           >
-                            {" "}
-                            <PaymentsIcon /> ชำระเงินสด{" "}
+                            <PaymentsIcon className="payment-icon" />
+                            <span>จ่ายสด</span>
                           </Button>
-                        </Col>
-                      </Row>
-                    </Form.Group>
+                        </div>
+                      </Form.Group>
+                    </div>
                   </Form>
                 </Col>
 
@@ -543,7 +542,7 @@ const Cart = () => {
                     onClick={() => resetCart()}
                     variant="danger"
                   >
-                    <CancelIcon /> ยกเลิกทั้งหมด
+                    <CancelIcon /> ยกเลิก
                   </Button>
                 </Col>
               </>
