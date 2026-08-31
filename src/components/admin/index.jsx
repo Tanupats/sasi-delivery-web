@@ -12,7 +12,6 @@ import {
 import "./index.scss";
 import LinkIcon from "@mui/icons-material/Link";
 import Products from "./products";
-import ReportProduct from "./ReportProduct";
 import MenuType from "./MenuType";
 import User from "./user";
 import MessageIcon from "@mui/icons-material/Message";
@@ -21,6 +20,7 @@ import CreditCardIcon from "@mui/icons-material/CreditCard";
 import DataThresholdingIcon from "@mui/icons-material/DataThresholding";
 import PollIcon from "@mui/icons-material/Poll";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import SmartToyIcon from "@mui/icons-material/SmartToy";
 import { http } from "../../http";
 import { AuthData } from "../../ContextData";
 import Swal from "sweetalert2";
@@ -35,10 +35,39 @@ const Admin = () => {
   const [inComeNow, setIncomeNow] = useState(0);
   const [outComeNow, setOutCome] = useState(0);
   const [totalOrder, setTotalOrder] = useState(85);
+  const [keywordInput, setKeywordInput] = useState("");
+  const [keywordReply, setKeywordReply] = useState("");
+  const [chatInput, setChatInput] = useState("");
+  const [chatMessages, setChatMessages] = useState([
+    {
+      sender: "bot",
+      text: "สวัสดีค่ะ ยินดีต้อนรับสู่ร้าน Sasi Delivery 😊 ต้องการสั่งอาหารหรือสอบถามเมนูไหมครับ",
+      time: "09:00",
+    },
+    {
+      sender: "user",
+      text: "สวัสดี",
+      time: "09:01",
+    },
+    {
+      sender: "bot",
+      text: "สวัสดีค่ะ ยินดีต้อนรับ 😊 เรามีเมนูยอดนิยมและโปรโมชั่นดี ๆ รออยู่ครับ",
+      time: "09:01",
+    },
+  ]);
 
   const token = localStorage.getItem("token");
   const { shop } = useContext(AuthData);
-  const randomKeywords = ["สวัสดี", "ขอบคุณ"];
+  const defaultReplies = {
+    สวัสดี: "สวัสดีค่ะ ยินดีต้อนรับสู่ร้าน Sasi Delivery 😊 วันนี้ต้องการสั่งอาหารหรือสอบถามเมนูไหมครับ",
+    เมนู: "ร้านเราแนะนำเมนูยอดนิยมได้แก่ ข้าวมันไก่, ก๋วยเตี๋ยว, กะเพราไก่, ข้าวเหนียวหมู, และเครื่องดื่มร้อน/เย็นค่ะ",
+    ราคา: "ราคาอาหารเริ่มต้นที่ 39 บาท และเมนูพรีเมียมเริ่มที่ 149 บาท ขึ้นอยู่กับประเภทเมนูที่เลือกค่ะ",
+    โปรโมชั่น: "ตอนนี้มีโปรโมชั่นลด 10% สำหรับเมนูยอดนิยมและจัดส่งฟรีเมื่อสั่งครบ 299 บาทขึ้นไปครับ",
+    ขอบคุณ: "ขอบคุณมากครับ ยินดีให้บริการเสมอ 😊",
+  };
+
+  const [botReplies, setBotReplies] = useState(defaultReplies);
+  const randomKeywords = Object.keys(botReplies);
   const geIncomeNow = async () => {
     if (shop) {
       const res = await http.get(`/bills/reportByMounth/${shop?.shop_id}`, {
@@ -73,6 +102,110 @@ const Admin = () => {
 
   const formatMoney = (val) => {
     return new Intl.NumberFormat().format(val || 0);
+  };
+
+  const getBotReply = (message) => {
+    const text = message.trim().toLowerCase();
+
+    const matchedKeyword = Object.keys(botReplies).find((keyword) =>
+      text.includes(keyword.toLowerCase())
+    );
+
+    if (matchedKeyword) {
+      return botReplies[matchedKeyword];
+    }
+
+    return "ขอบคุณสำหรับข้อความค่ะ หากต้องการสอบถามเมนู/ราคา/โปรโมชั่น สามารถพิมพ์คำว่า เมนู, ราคา, โปรโมชั่น หรือ สวัสดี ได้เลยครับ";
+  };
+
+  const handleAddKeyword = () => {
+    const trimmedKeyword = keywordInput.trim();
+    const trimmedReply = keywordReply.trim();
+
+    if (!trimmedKeyword || !trimmedReply) {
+      Swal.fire({
+        icon: "warning",
+        title: "กรุณากรอกคีย์เวิร์ดและข้อความตอบกลับ",
+        confirmButtonText: "ตกลง",
+      });
+      return;
+    }
+
+    setBotReplies((prev) => ({
+      ...prev,
+      [trimmedKeyword]: trimmedReply,
+    }));
+
+    setKeywordInput("");
+    setKeywordReply("");
+  };
+
+  const handleDeleteKeyword = (keywordToDelete) => {
+    Swal.fire({
+      title: `ลบคีย์เวิร์ด "${keywordToDelete}" หรือไม่?`,
+      text: "การลบนี้จะเอาข้อความตอบกลับที่เกี่ยวข้องออกด้วย",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "ลบ",
+      cancelButtonText: "ยกเลิก",
+    }).then((result) => {
+      if (!result.isConfirmed) return;
+
+      setBotReplies((prev) => {
+        const updated = { ...prev };
+        delete updated[keywordToDelete];
+        return updated;
+      });
+
+      if (keywordInput === keywordToDelete) {
+        setKeywordInput("");
+        setKeywordReply("");
+      }
+
+      if (chatInput === keywordToDelete) {
+        setChatInput("");
+      }
+    });
+  };
+
+  const handleSendChat = () => {
+    const message = chatInput.trim();
+
+    if (!message) return;
+
+    const time = new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    const userMessage = {
+      sender: "user",
+      text: message,
+      time,
+    };
+
+    const botMessage = {
+      sender: "bot",
+      text: getBotReply(message),
+      time,
+    };
+
+    setChatMessages((prev) => [...prev, userMessage, botMessage]);
+    setChatInput("");
+  };
+
+  const handleKeywordClick = (keyword) => {
+    setKeywordInput(keyword);
+    setKeywordReply(botReplies[keyword] || "");
+    setChatInput(keyword);
+  };
+
+  const handleTestInputKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSendChat();
+    }
   };
 
   useEffect(() => {
@@ -206,7 +339,7 @@ const Admin = () => {
           eventKey="ตั้งค่าแชทบอท"
           title={
             <span className="tab-title">
-              <MessageIcon /> แชทบอท
+              <MessageIcon /> SASI BOT
             </span>
           }
         >
@@ -240,83 +373,152 @@ const Admin = () => {
                   border: "1px solid #ccc",
                 }}
               >
-                <span className="mb-2" style={{ color: 'red', fontWeight: 'bold' }}>กำลังพัฒนาในส่วนของการตอบกลับอัตโนมัติ</span>
+            
 
                 <Col md={4}>
-                  <div className="block">
-                    <h5>คีย์เวิร์ด </h5> <hr />
-                    <Row>
-                      <Col md={8}>
-                        <Form.Control type="text" placeholder="Enter keyword" />
+                  <div className="block bot-config-card">
+                    <h5>คีย์เวิร์ด</h5>
+                    <hr />
+                    <Row className="g-2 align-items-center">
+                      <Col md={6}>
+                        <Form.Control
+                          type="text"
+                          value={keywordInput}
+                          onChange={(e) => setKeywordInput(e.target.value)}
+                          placeholder="คีย์เวิร์ด"
+                        />
                       </Col>
-                      <Col md={4}>
-                        <Button variant="outline-primary">
-                          <AddIcon /> คีย์เวิร์ด
+                      <Col md={6}>
+                        <Button variant="outline-primary" onClick={handleAddKeyword} className="w-100">
+                          <AddIcon /> เพิ่มคีย์เวิร์ด
                         </Button>
                       </Col>
                     </Row>
+                    <div className="mt-3">
+                      <Form.Control
+                        as="textarea"
+                        rows={3}
+                        value={keywordReply}
+                        onChange={(e) => setKeywordReply(e.target.value)}
+                        placeholder="ข้อความตอบกลับที่บอทจะแสดงเมื่อเจอคีย์เวิร์ดนี้"
+                      />
+                    </div>
+                    <div className="mt-2 text-end">
+                      <Button
+                        variant="success"
+                        size="sm"
+                        onClick={() => {
+                          const trimmedKeyword = keywordInput.trim();
+                          const trimmedReply = keywordReply.trim();
+
+                          if (!trimmedKeyword || !trimmedReply) {
+                            Swal.fire({
+                              icon: "warning",
+                              title: "กรุณากรอกคีย์เวิร์ดและข้อความตอบกลับ",
+                              confirmButtonText: "ตกลง",
+                            });
+                            return;
+                          }
+
+                          setBotReplies((prev) => ({
+                            ...prev,
+                            [trimmedKeyword]: trimmedReply,
+                          }));
+
+                          setKeywordInput(trimmedKeyword);
+                          setKeywordReply(trimmedReply);
+                        }}
+                      >
+                        บันทึกข้อความ
+                      </Button>
+                    </div>
                     <br />
-                    <Row className="g-2 bg-light p-2">
-                      {randomKeywords.map((item, index) => (
-                        <Col
-                          key={index}
-                          xs="auto"
-                          className="border rounded p-1"
-                        >
-                          <span
-                            className="keyword-tag"
-                            onClick={() => navigator.clipboard.writeText(item)}
-                          >
-                            {item}
-                          </span>
+                    <Row className="g-2 bg-light p-2 rounded-3">
+                      {randomKeywords.length === 0 ? (
+                        <Col xs={12}>
+                          <div className="empty-state-box">ยังไม่มีการเพิ่มแชท</div>
                         </Col>
-                      ))}
+                      ) : (
+                        randomKeywords.map((item, index) => (
+                          <Col key={index} xs="auto">
+                            <button
+                              type="button"
+                              className="keyword-tag"
+                              onClick={() => handleKeywordClick(item)}
+                            >
+                              {item}
+                            </button>
+                          </Col>
+                        ))
+                      )}
                     </Row>
                   </div>
                 </Col>
                 <Col md={4}>
-                  <div className="block">
+                  <div className="block bot-config-card">
                     <h5>ตั้งค่าข้อความตอบกลับอัตโนมัติ</h5>
                     <hr />
-                    <p>สนในเมนูไหน ดูก่อนได้</p>
+                    <div className="auto-reply-list">
+                      {Object.keys(botReplies).length === 0 ? (
+                        <div className="empty-state-box">ยังไม่มีการเพิ่มแชท</div>
+                      ) : (
+                        Object.entries(botReplies).map(([key, value]) => (
+                          <div key={key} className="reply-item">
+                            <div className="reply-header">
+                              <span className="reply-key">{key}</span>
+                              <Button
+                                variant="outline-danger"
+                                size="sm"
+                                onClick={() => handleDeleteKeyword(key)}
+                              >
+                                ลบ
+                              </Button>
+                            </div>
+                            <span className="reply-value">{value}</span>
+                          </div>
+                        ))
+                      )}
+                    </div>
                   </div>
                 </Col>
                 <Col md={4}>
                   <h5>ตัวอย่างแชทบอท</h5>
                   <hr />
-                  <div className="chat-card bg-light p-4">
+                  <div className="chat-card">
                     <div className="chat-header">
-                      <div className="avatar"></div>
+                      <div className="avatar">
+                        <SmartToyIcon fontSize="small" />
+                      </div>
                       <div>
+                        <div className="chat-title">Sasi Bot</div>
                         <div className="chat-status">ออนไลน์</div>
                       </div>
                     </div>
 
                     <div className="chat-body">
-                      {/* ข้อความฝั่งลูกค้า */}
-                      <div className="chat-row left">
-                        <div className="bubble left">
-                          สวัสดีครับ มีเมนูอะไรแนะนำบ้าง?
+                      {chatMessages.map((message, index) => (
+                        <div
+                          key={`${message.sender}-${index}`}
+                          className={`chat-row ${message.sender === "user" ? "right" : "left"}`}
+                        >
+                          <div className={`bubble ${message.sender === "user" ? "right" : "left"}`}>
+                            {message.text}
+                            <span className="bubble-time">{message.time}</span>
+                          </div>
                         </div>
-                      </div>
-
-                      {/* ข้อความบอท */}
-                      <div className="chat-row right">
-                        <div className="bubble right">
-                          แนะนำเป็นเมนูยอดนิยมของร้านได้เลยครับ 😊
-                        </div>
-                      </div>
-
-                      <div className="chat-row right">
-                        <div className="bubble right">
-                          👉 กดเลือกคีย์เวิร์ดด้านซ้ายได้เลย
-                        </div>
-                      </div>
+                      ))}
                     </div>
 
-                    <div className="chat-footer mt-3">
-                      <Button variant="outline-primary" size="md">
-                        <SendIcon /> ทดสอบ chatbot ด้วย Messenger
+                    <div className="chat-compose">
+                      <Form.Control
+                        type="text"
+                        value={chatInput}
+                        onChange={(e) => setChatInput(e.target.value)}
+                        placeholder="พิมพ์ข้อความเพื่อทดสอบบอท"
+                        onKeyDown={handleTestInputKeyDown}
+                      />
+                      <Button variant="primary" onClick={handleSendChat}>
+                        <SendIcon fontSize="small" />
                       </Button>
                     </div>
                   </div>
