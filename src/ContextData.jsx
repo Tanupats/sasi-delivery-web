@@ -47,14 +47,6 @@ function Context({ children }) {
   const [promptPay, setPromptPay] = useState("");
   const [oldData, setOldData] = useState([]);
   const api_url = import.meta.env.VITE_API_URL;
-console.log("API URL:", deliveryDate);
-  const getCounterOrder = async () => {
-    await axios
-      .get(`${api_url}/bills/counter-myorder?messengerId=${messengerId}`)
-      .then((res) => {
-        setCounterOrder(res.data.count);
-      });
-  };
 
   const PageAccessToken = localStorage.getItem("shop_token");
   const sendMessageToPage = async () => {
@@ -165,6 +157,8 @@ ${account_payment}`;
         delivery_fee: deliveryFee,
         delivery_date: isPreorder ? getDeliveryDateTime(deliveryDate, deliverySlot) : null,
         delivery_slot: isPreorder ? deliverySlot : null,
+        lat: localStorage.getItem("lat"),
+        lng: localStorage.getItem("lng"),
       };
      
       const res = await axios.post(`${api_url}/bills/order`, body);

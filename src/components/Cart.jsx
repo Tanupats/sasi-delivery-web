@@ -17,13 +17,12 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import PaymentsIcon from "@mui/icons-material/Payments";
-import { showConfirmation } from "../utils/notification";
 import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
 import LocalDiningIcon from "@mui/icons-material/LocalDining";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import axios from "axios";
 import { ArrowLeft } from "lucide-react";
-
+import LocationPicker from "./LocationPicker";
 const Cart = () => {
   const router = useNavigate();
   const {
@@ -466,6 +465,8 @@ const Cart = () => {
                         </Form.Group>
                       )}
                     </div>
+
+                    <LocationPicker />
 
                     <div className="summary-section">
                       <div className="summary-card">
