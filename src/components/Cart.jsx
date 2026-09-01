@@ -74,6 +74,23 @@ const Cart = () => {
     }
   };
 
+  async function getAddress() {
+    const lat = localStorage.getItem("lat");
+    const lng = localStorage.getItem("lng");
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=th`,
+      );
+
+      const data = await response.json();
+
+      setAddress(data.display_name || "");
+    } catch (error) {
+      console.error("ไม่สามารถดึงที่อยู่ได้:", error);
+      return "";
+    }
+  }
+
   const onSave = async (e) => {
     e.preventDefault();
 
@@ -131,15 +148,8 @@ const Cart = () => {
       <Card style={{ height: "100%", marginBottom: "120px" }}>
         <Card.Body style={{ height: "100%" }}>
           {" "}
-          <Button
-            className="mb-2"
-            variant="outline-secondary"
-            size="sm"
-            onClick={() => router(-1)}
-          >
-            <ArrowLeft size={20} /> ย้อนกลับ
-          </Button>
-          <Card.Title as={"h6"} className="mb-2 text-left">
+         
+          <Card.Title as={"h6"} className="mb-2  mt-2 text-left">
             รายการสั่งซื้อ
           </Card.Title>
           <Row>
@@ -267,9 +277,18 @@ const Cart = () => {
                   </Col>
                 );
               })}
+             
             {cart.length > 0 ? (
               <>
                 <Col md={12} xs={12}>
+                  <Button
+            className="mb-2 w-100"
+            variant="outline-secondary"
+            size="sm"
+            onClick={() => router(-1)}
+          >
+            <ArrowLeft size={20} /> เลือกเพิ่มเติม
+          </Button>
                   <Form
                     id="save"
                     onSubmit={(e) => {
@@ -285,19 +304,23 @@ const Cart = () => {
                         <Col md={4} xs={4} className="mb-2">
                           <Button
                             className="w-100"
-                            variant={isPreorder ? "outline-secondary" : "secondary"}
+                            variant={
+                              isPreorder ? "outline-secondary" : "secondary"
+                            }
                             onClick={() => {
                               setIsPreorder(false);
                               setDeliveryDate(minDate);
                             }}
                           >
-                           จัดส่งวันนี้
+                            จัดส่งวันนี้
                           </Button>
                         </Col>
                         <Col md={4} xs={4} className="mb-2">
                           <Button
                             className="w-100"
-                            variant={isPreorder ? "secondary" : "outline-secondary"}
+                            variant={
+                              isPreorder ? "secondary" : "outline-secondary"
+                            }
                             onClick={() => {
                               setIsPreorder(true);
                               setOrderType("สั่งกลับบ้าน");
@@ -313,19 +336,21 @@ const Cart = () => {
                         <>
                           <Row className="mb-3">
                             <Col xs={12}>
-                             <Form.Group>
-  <Form.Label style={{ fontWeight: 500 }}>
-    วันที่จัดส่ง
-  </Form.Label>
+                              <Form.Group>
+                                <Form.Label style={{ fontWeight: 500 }}>
+                                  วันที่จัดส่ง
+                                </Form.Label>
 
-  <Form.Control
-    type="date"
-    min={minDate}
-    value={deliveryDate}
-    onChange={(e) => setDeliveryDate(e.target.value)}
-    required
-  />
-</Form.Group>
+                                <Form.Control
+                                  type="date"
+                                  min={minDate}
+                                  value={deliveryDate}
+                                  onChange={(e) =>
+                                    setDeliveryDate(e.target.value)
+                                  }
+                                  required
+                                />
+                              </Form.Group>
                             </Col>
                           </Row>
                           <Row className="mb-3">
@@ -363,75 +388,77 @@ const Cart = () => {
                       )}
                       {!isPreorder && (
                         <Row className="mb-2">
-                        <Col md={4} xs={4} className="mb-2">
-                          <Button
-                            className="w-100"
-                            style={{
-                              backgroundColor:
-                                orderType === "สั่งกลับบ้าน"
-                                  ? "#dbd8d8"
-                                  : "white",
-                              color:
-                                orderType === "สั่งกลับบ้าน"
-                                  ? "#303030"
-                                  : "#303030",
-                              border: "1px solid #a3a2a2",
-                            }}
-                            onClick={() => {
-                              setOrderType("สั่งกลับบ้าน");
-                              getProfile();
-                              setDeliveryFee(5);
-                            }}
-                          >
-                            {" "}
-                            <DeliveryDiningIcon /> <br /> จัดส่ง
-                          </Button>
-                        </Col>
-                        <Col md={4} xs={4} className="mb-2">
-                          <Button
-                            className="w-100"
-                            style={{
-                              backgroundColor:
-                                orderType === "เสิร์ฟในร้าน"
-                                  ? "#dbd8d8"
-                                  : "white",
-                              color:
-                                orderType === "เสิร์ฟในร้าน"
-                                  ? "#303030"
-                                  : "#303030",
-                              border: "1px solid #a3a2a2",
-                            }}
-                            onClick={() => {
-                              setOrderType("เสิร์ฟในร้าน");
-                              setAddress("");
-                              setDeliveryFee(0);
-                            }}
-                          >
-                            {" "}
-                            <LocalDiningIcon /> <br /> ทานร้าน
-                          </Button>
-                        </Col>
-                        <Col md={4} xs={4} className="mb-2 d-flex">
-                          <Button
-                            className="w-100"
-                            style={{
-                              backgroundColor:
-                                orderType === "รับเอง" ? "#dbd8d8" : "white",
-                              color:
-                                orderType === "รับเอง" ? "#303030" : "#303030",
-                              border: "1px solid #a3a2a2",
-                            }}
-                            onClick={() => {
-                              setOrderType("รับเอง");
-                              setAddress("");
-                              setDeliveryFee(0);
-                            }}
-                          >
-                            {" "}
-                            <ShoppingBagIcon /> <br /> รับเอง
-                          </Button>
-                        </Col>
-                      </Row>
+                          <Col md={4} xs={4} className="mb-2">
+                            <Button
+                              className="w-100"
+                              style={{
+                                backgroundColor:
+                                  orderType === "สั่งกลับบ้าน"
+                                    ? "#dbd8d8"
+                                    : "white",
+                                color:
+                                  orderType === "สั่งกลับบ้าน"
+                                    ? "#303030"
+                                    : "#303030",
+                                border: "1px solid #a3a2a2",
+                              }}
+                              onClick={() => {
+                                setOrderType("สั่งกลับบ้าน");
+                                getProfile();
+                                setDeliveryFee(5);
+                              }}
+                            >
+                              {" "}
+                              <DeliveryDiningIcon /> <br /> จัดส่ง
+                            </Button>
+                          </Col>
+                          <Col md={4} xs={4} className="mb-2">
+                            <Button
+                              className="w-100"
+                              style={{
+                                backgroundColor:
+                                  orderType === "เสิร์ฟในร้าน"
+                                    ? "#dbd8d8"
+                                    : "white",
+                                color:
+                                  orderType === "เสิร์ฟในร้าน"
+                                    ? "#303030"
+                                    : "#303030",
+                                border: "1px solid #a3a2a2",
+                              }}
+                              onClick={() => {
+                                setOrderType("เสิร์ฟในร้าน");
+                                setAddress("");
+                                setDeliveryFee(0);
+                              }}
+                            >
+                              {" "}
+                              <LocalDiningIcon /> <br /> ทานร้าน
+                            </Button>
+                          </Col>
+                          <Col md={4} xs={4} className="mb-2 d-flex">
+                            <Button
+                              className="w-100"
+                              style={{
+                                backgroundColor:
+                                  orderType === "รับเอง" ? "#dbd8d8" : "white",
+                                color:
+                                  orderType === "รับเอง"
+                                    ? "#303030"
+                                    : "#303030",
+                                border: "1px solid #a3a2a2",
+                              }}
+                              onClick={() => {
+                                setOrderType("รับเอง");
+                                setAddress("");
+                                setDeliveryFee(0);
+                              }}
+                            >
+                              {" "}
+                              <ShoppingBagIcon /> <br /> รับเอง
+                            </Button>
+                          </Col>
+                        </Row>
                       )}
                       {orderType === "สั่งกลับบ้าน" && (
                         <Form.Group className="mt-2">
@@ -466,7 +493,7 @@ const Cart = () => {
                       )}
                     </div>
 
-                    <LocationPicker />
+                    <LocationPicker getAddress={getAddress} />
 
                     <div className="summary-section">
                       <div className="summary-card">
@@ -478,9 +505,10 @@ const Cart = () => {
                           <>
                             <div className="summary-row">
                               <span className="summary-label">ค่าจัดส่ง</span>
-                              <span className="summary-value">{deliveryFee} ฿</span>
+                              <span className="summary-value">
+                                {deliveryFee} ฿
+                              </span>
                             </div>
-                           
                           </>
                         )}
                         <div className="summary-row">
@@ -490,7 +518,9 @@ const Cart = () => {
                         <div className="summary-divider"></div>
                         <div className="summary-row total">
                           <span className="summary-label">รวมทั้งหมด</span>
-                          <span className="summary-value">{sumPrice + deliveryFee} ฿</span>
+                          <span className="summary-value">
+                            {sumPrice + deliveryFee} ฿
+                          </span>
                         </div>
                       </div>
 
@@ -517,35 +547,38 @@ const Cart = () => {
                       </Form.Group>
                     </div>
                   </Form>
-                </Col>
 
-                <Col className="mt-3">
-                  <Button
-                    className="w-100"
-                    form="save"
-                    type="submit"
-                    variant="success"
-                    disabled={loading}
-                  >
-                    {loading ? (
-                      "กำลังบันทึก..."
-                    ) : (
-                      <>
-                        {" "}
-                        <CheckCircleIcon /> ยืนยัน
-                      </>
-                    )}
-                  </Button>
+                   <Row>
+                  <Col md={4} xs={4} className="mt-2">
+                    <Button
+                      className="w-75"
+                      form="save"
+                      type="submit"
+                      variant="success"
+                      disabled={loading}
+                    >
+                      {loading ? (
+                        "กำลังบันทึก..."
+                      ) : (
+                        <>
+                          {" "}
+                          <CheckCircleIcon /> ยืนยัน
+                        </>
+                      )}
+                    </Button>
+                  </Col>
+                  <Col md={4} xs={4} className="mt-2">
+                    <Button
+                      className="w-75"
+                      onClick={() => resetCart()}
+                      variant="danger"
+                    >
+                      <CancelIcon /> ยกเลิก
+                    </Button>
+                  </Col>
+                </Row>
                 </Col>
-                <Col className="mt-3">
-                  <Button
-                    className="w-100"
-                    onClick={() => resetCart()}
-                    variant="danger"
-                  >
-                    <CancelIcon /> ยกเลิก
-                  </Button>
-                </Col>
+               
               </>
             ) : (
               <Col>

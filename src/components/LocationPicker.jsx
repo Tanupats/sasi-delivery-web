@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import {
   MapContainer,
@@ -9,6 +8,7 @@ import {
 } from "react-leaflet";
 
 import "leaflet/dist/leaflet.css";
+import { Row ,Col} from "react-bootstrap";
 
 // 📍 ค่าเริ่มต้นกรณีไม่สามารถหาตำแหน่งปัจจุบันได้
 const DEFAULT_POSITION = [13.7563, 100.5018];
@@ -16,7 +16,7 @@ const DEFAULT_POSITION = [13.7563, 100.5018];
 // ------------------------------
 // Component สำหรับเลือกตำแหน่ง
 // ------------------------------
-function LocationPicker({ setLocation }) {
+function LocationPicker({ setLocation, getAddress }) {
   const [position, setPosition] = useState(null);
 
   // 📍 ขอ Location จาก Browser
@@ -28,10 +28,7 @@ function LocationPicker({ setLocation }) {
 
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        const newPosition = [
-          pos.coords.latitude,
-          pos.coords.longitude,
-        ];
+        const newPosition = [pos.coords.latitude, pos.coords.longitude];
 
         setPosition(newPosition);
 
@@ -47,17 +44,14 @@ function LocationPicker({ setLocation }) {
         enableHighAccuracy: true,
         timeout: 10000,
         maximumAge: 0,
-      }
+      },
     );
   }, [setLocation]);
 
   // 🖱️ คลิกแผนที่เพื่อเลือกตำแหน่งเอง
   useMapEvents({
     click(e) {
-      const newPosition = [
-        e.latlng.lat,
-        e.latlng.lng,
-      ];
+      const newPosition = [e.latlng.lat, e.latlng.lng];
 
       setPosition(newPosition);
 
@@ -80,63 +74,55 @@ function RecenterMap({ position }) {
 
   useEffect(() => {
     if (position) {
-      map.setView(position, 16);
+      map.setView(position, 18);
     }
   }, [position, map]);
 
   return null;
 }
 
-export default function DeliveryLocationMap() {
+export default function DeliveryLocationMap({ getAddress }) {
   const [location, setLocation] = useState(null);
 
   useEffect(() => {
     if (location) {
-      console.log("ตำแหน่งที่เลือก:", location);
+      //console.log("ตำแหน่งที่เลือก:", location);
       localStorage.setItem("lat", location.lat);
       localStorage.setItem("lng", location.lng);
-    } }, [location]);
+      getAddress();
+    }
+  }, [location]);
 
   return (
     <div>
-      <h2>📍 ปักหมุดตำแหน่งของคุณ</h2>
+      <Row>
+        <Col md={12} className="text-center">
+          <h5 className="mb-3"> ปักหมุดตำแหน่งของคุณ</h5>
 
-      <MapContainer
-        center={DEFAULT_POSITION}
-        zoom={13}
-        style={{
-          height: "500px",
-          width: "100%",
-        }}
-      >
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution="&copy; OpenStreetMap contributors"
-        />
+          <MapContainer
+            center={DEFAULT_POSITION}
+            zoom={16}
+            style={{
+              height: "300px",
+              width: "100%",
+            }}
+          >
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution="&copy; OpenStreetMap contributors"
+            />
 
-        <LocationPicker setLocation={setLocation} />
+            <LocationPicker setLocation={setLocation} />
 
-        {location && (
-          <RecenterMap
-            position={[location.lat, location.lng]}
-          />
-        )}
-      </MapContainer>
+            {location && (
+              <RecenterMap position={[location.lat, location.lng]} />
+            )}
+          </MapContainer>
 
-      {location && (
-        <div>
-          <p>Latitude: {location.lat}</p>
-          <p>Longitude: {location.lng}</p>
-        </div>
-      )}
-      {location && (
-  <div>
-    
-
-
-  </div>
-)}
+       
+         
+        </Col>
+      </Row>
     </div>
   );
 }
-
