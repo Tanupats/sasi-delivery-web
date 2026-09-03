@@ -9,7 +9,9 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Swal from "sweetalert2";
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
 const User = () => {
   const token = localStorage.getItem("token");
   const shopId = localStorage.getItem("shopId");
@@ -100,9 +102,9 @@ const User = () => {
   }, []);
 
   return (
-    <Card>
+    <Card className="user-management-card">
       <Card.Body>
-      <Modal show={show} onHide={handleClose} size="lg" centered>
+      <Modal show={show} onHide={handleClose} size="lg" centered className="user-modal">
         <Modal.Header closeButton>
           <Modal.Title>เพิ่มข้อมูลผู้ใช้</Modal.Title>
         </Modal.Header>
@@ -173,8 +175,8 @@ const User = () => {
               </Col>
 
               <Col md={12}>
-                <Button type="submit" variant="primary mt-3 w-100">
-                  บันทึก
+                  <Button type="submit" variant="primary" className="mt-3 w-100">
+                  บันทึกข้อมูลพนักงาน
                 </Button>
               </Col>
             </Row>
@@ -182,56 +184,76 @@ const User = () => {
         </Modal.Body>
       </Modal>
 
-<Row>
+        <div className="user-page-header">
+          <div className="user-page-heading">
+            <div className="user-page-icon"><GroupOutlinedIcon /></div>
+            <div>
+              <h2>จัดการพนักงาน</h2>
+              <p>เพิ่มและดูแลข้อมูลสมาชิกในทีมของร้าน</p>
+            </div>
+          </div>
+          <Button variant="success" className="add-user-button" onClick={handleShow}>
+            <AddCircleIcon /> เพิ่มพนักงาน
+          </Button>
+        </div>
 
-  <Col>
-    <Button variant="success"   onClick={handleShow}>
-     <AddCircleIcon /> เพิ่มข้อมูลพนักงาน
-      </Button>
-  </Col>
-</Row>
+      <TableContainer component={Paper} className="user-table-container">
+        <Table sx={{ minWidth: 650 }} aria-label="ตารางข้อมูลพนักงาน">
+          <TableHead>
+            <TableRow className="user-table-head">
+              <TableCell>ลำดับ</TableCell>
 
-
-      <TableContainer component={Paper} className="mt-3">
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead >
-            <TableRow sx={{ backgroundColor: "#1976d2" }}>
-              <TableCell sx={{ color: "white", fontWeight: 900 }}>ลำดับ</TableCell>
-
-              <TableCell sx={{ color: "white", fontWeight: 900 }} align="left">ชื่อ-นามสกุล</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: 900 }} align="left">ชื่อผู้ใช้</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: 900 }} align="left">แผนก</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: 900 }} align="left">เบอร์โทร</TableCell>
-              <TableCell sx={{ color: "white", fontWeight: 900 }} align="left">จัดการ</TableCell>
+              <TableCell align="left">ชื่อ-นามสกุล</TableCell>
+              <TableCell align="left">ชื่อผู้ใช้</TableCell>
+              <TableCell align="left">แผนก</TableCell>
+              <TableCell align="left">เบอร์โทร</TableCell>
+              <TableCell align="left">จัดการ</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {data?.length > 0 &&
+            {data?.length > 0 ?
               data?.map((row, index) => (
                 <TableRow
                   key={index}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  className="user-table-row"
                 >
                   <TableCell component="th" scope="row">
-                    {index + 1}
+                    <span className="user-index">{String(index + 1).padStart(2, "0")}</span>
                   </TableCell>
 
-                  <TableCell align="left">{row.name} </TableCell>
-                  <TableCell align="left">{row.email}</TableCell>
+                  <TableCell align="left" className="user-name-cell">{row.name}</TableCell>
+                  <TableCell align="left" className="user-email-cell">{row.email}</TableCell>
 
-                  <TableCell align="left">{row.department}</TableCell>
-                  <TableCell align="left">{row.phone}</TableCell>
+                  <TableCell align="left">
+                    <span className={`department-badge department-${row.department}`}>
+                      {row.department || "ไม่ระบุ"}
+                    </span>
+                  </TableCell>
+                  <TableCell align="left" className="user-phone-cell">{row.phone || "-"}</TableCell>
                   <TableCell align="left">
                     <Button
-                      variant="danger"
+                      variant="outline-danger"
+                      size="sm"
+                      className="delete-user-button"
                       onClick={() => deleteData(row.id)}
+                      aria-label={`ลบผู้ใช้ ${row.name}`}
+                      title={`ลบผู้ใช้ ${row.name}`}
                     >
-                      {" "}
-                      ลบ{" "}
+                      <DeleteOutlineIcon fontSize="small" />
                     </Button>
                   </TableCell>
                 </TableRow>
-              ))}
+              )) : (
+                <TableRow>
+                  <TableCell colSpan={6}>
+                    <div className="user-empty-state">
+                      <GroupOutlinedIcon />
+                      <strong>ยังไม่มีข้อมูลพนักงาน</strong>
+                      <span>เริ่มต้นด้วยการเพิ่มสมาชิกคนแรกของร้าน</span>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )}
           </TableBody>
         </Table>
       </TableContainer>

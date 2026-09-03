@@ -10,7 +10,7 @@ import {
   Form,
 } from "react-bootstrap";
 import "./index.scss";
-import LinkIcon from "@mui/icons-material/Link";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import Products from "./products";
 import MenuType from "./MenuType";
 import User from "./user";
@@ -93,10 +93,30 @@ const Admin = () => {
 
     try {
       await navigator.clipboard.writeText(url);
-      Swal.fire("คัดลอก webhook ลิงก์เรียบร้อยแล้ว");
+      Swal.fire({
+        toast: true,
+        position: "top-end",
+        icon: "success",
+        title: "คัดลอกลิงก์แล้ว",
+        text: "Webhook พร้อมนำไปใช้งาน",
+        showConfirmButton: false,
+        timer: 2400,
+        timerProgressBar: true,
+        customClass: { popup: "copy-toast" },
+      });
     } catch (err) {
       console.error("Copy failed", err);
-      Swal.fire("คัดลอกไม่สำเร็จ");
+      Swal.fire({
+        toast: true,
+        position: "top-end",
+        icon: "error",
+        title: "คัดลอกไม่สำเร็จ",
+        text: "กรุณาลองใหม่อีกครั้ง",
+        showConfirmButton: false,
+        timer: 2400,
+        timerProgressBar: true,
+        customClass: { popup: "copy-toast" },
+      });
     }
   };
 
@@ -347,24 +367,22 @@ const Admin = () => {
             <Card.Body>
             
               <Row>
-                <Col md={2}>
-                  <Button variant="outline-primary" className="w-100">
-                    <PlaylistAddIcon /> block
-                  </Button>
-                </Col>
+               
                 <Col md={2}>
                   <Button
                     className="w-100"
                     variant="outline-secondary"
                     onClick={() => getWebHook()}
+                    aria-label="คัดลอก webhook link"
+                    title="คัดลอก webhook link"
                   >
-                    <LinkIcon /> get webhook url
+                    <ContentCopyIcon /> คัดลอก webhook
                   </Button>
                 </Col>
               </Row>
 
               <Row
-                className="mt-4 border-top g-3"
+                className="mt-3 border-top g-3"
                 style={{
                   backgroundColor: "#ececec",
                   height: "auto",
@@ -456,7 +474,7 @@ const Admin = () => {
                 </Col>
                 <Col md={4}>
                   <div className="block bot-config-card">
-                    <h5>ตั้งค่าข้อความตอบกลับอัตโนมัติ</h5>
+                    <h5>ข้อความตอบกลับอัตโนมัติ</h5>
                     <hr />
                     <div className="auto-reply-list">
                       {Object.keys(botReplies).length === 0 ? (

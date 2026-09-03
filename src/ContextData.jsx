@@ -194,7 +194,7 @@ function Context({ children }) {
             })
             http.post(`/billsdetails`, bodyDetails, { headers: { 'apikey': token } })
             setQueueNumber(queueId);
-            setCart([]);
+            //setCart([]);
         } else {
             Swal.fire({
                 title: 'ไม่มีรายการอาหาร',

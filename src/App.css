@@ -933,6 +933,32 @@ table tbody tr td {
   z-index: 1030;
 }
 
+.sasi-navbar {
+  background: linear-gradient(105deg, #d94f00 0%, #fd720d 48%, #ff9f43 100%);
+  box-shadow: 0 4px 18px rgba(151, 61, 0, 0.2);
+  min-height: 56px;
+}
+
+.sasi-navbar .navbar-brand {
+  letter-spacing: 0.04em;
+}
+
+.sasi-navbar-links .nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  border-radius: 8px;
+  margin: 0 0.1rem;
+  padding: 0.45rem 0.65rem !important;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.sasi-navbar-links .nav-link:hover,
+.sasi-navbar-links .nav-link:focus {
+  background: rgba(255, 255, 255, 0.18);
+  transform: translateY(-1px);
+}
+
 body {
   padding-top: 56px;
 }

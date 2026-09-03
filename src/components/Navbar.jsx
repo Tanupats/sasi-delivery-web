@@ -50,7 +50,7 @@ const NavbarMenu = () => {
   return (
     <Router>
       {staffName && (
-        <Navbar style={{ background: "#FD720D" }} sticky="top">
+        <Navbar className="sasi-navbar" sticky="top">
           {/* 🔥 แก้ตรงนี้ */}
           <Container fluid className="px-0">
             {/* MOBILE MENU */}
@@ -65,7 +65,7 @@ const NavbarMenu = () => {
             <Navbar.Brand className="ms-2 text-white fw-bold when-print">
               SASI POS
             </Navbar.Brand>
-            <Nav className="d-none d-lg-flex ms-2">        
+            <Nav className="d-none d-lg-flex ms-2 sasi-navbar-links">
                 <>
                   <Nav.Link as={Link} to="/pos" className="text-white">
                     <ListAltIcon style={{ marginRight: 4 }} /> ขายสินค้า

@@ -58,13 +58,14 @@ const Login = () => {
               <Row className="g-0 login-grid">
                 <Col lg={5} className="login-hero">
                   <div className="login-brand">
-                    <span className="register-badge">SASI POS</span>
+                    <h5 className="register-badge">SASI POS</h5>
                     <h2>ยินดีต้อนรับ</h2>
                     <p>เริ่มต้นใช้งานระบบจัดการร้านค้าของคุณได้ทันที</p>
 
                     <ul className="login-feature-list">
                       <li>จัดการคำสั่งซื้อได้สะดวก</li>
-                      <li>ติดตามสต็อกสินค้าแบบเรียลไทม์</li>
+                
+                      <li>ระบบจัดส่งและ แชทบอทช่วยขาย</li>
                       <li>รายงานยอดขายแบบเข้าใจง่าย</li>
                     </ul>
                   </div>
@@ -74,7 +75,7 @@ const Login = () => {
                   <div className="login-panel">
                     <div className="login-header">
                       <h4>เข้าสู่ระบบ</h4>
-                      <p>กรอกอีเมลและรหัสผ่านเพื่อเข้าระบบ</p>
+                      <p>กรอกอีเมล และรหัสผ่านเพื่อเข้าระบบ</p>
                     </div>
 
                     <Form onSubmit={login} className="login-form">
