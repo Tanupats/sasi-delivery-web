@@ -215,7 +215,7 @@ const Report = () => {
 
                   <div className="report-total-box text-center">
                     <span className="report-date-text">วันที่ {startDate}</span>
-                    <div className="report-sales-label">ยอดขาย</div>
+                   
                     <h3>
                       {totalToday &&
                         counter &&
@@ -224,7 +224,7 @@ const Report = () => {
                     </h3>
                   </div>
 
-                  <Row className="g-3 mt-1">
+                  {/* <Row className="g-3 mt-1">
                     <Col md={6} xs={6}>
                       <Alert variant="primary" className="report-summary-box transfer-box d-flex p-4">
                         <PaymentIcon className="me-2" />
@@ -244,7 +244,7 @@ const Report = () => {
                         </div>
                       </Alert>
                     </Col>
-                  </Row>
+                  </Row> */}
 
                   <Card className="mt-3 report-stat-card">
                     <Card.Body>
@@ -252,53 +252,53 @@ const Report = () => {
                         <Col md={4}>
                           <div className="text-center report-stat-item card-report-1 mb-2">
                             <DeliveryDiningIcon style={{ fontSize: 30 }} />
-                            <br />
+                            
                             <strong>เดลิเวอรี่</strong>
-                            <br />
-                            <span>จำนวน {counter.takeawayCount} บิล</span>
-                            <p>
+                           
+                            <span>จำนวน {counter.takeawayCount} </span>
+                            {/* <p>
                               ยอดขาย{" "}
                               {formatMoney(
                                 counter.takeawayTotalAmount -
                                   counter.takeawayCount * 5,
                               )}{" "}
                               บาท
-                            </p>
+                            </p> */}
                           </div>
                         </Col>
 
                         <Col md={4}>
                           <div className="text-center report-stat-item card-report-2 mb-2">
                             <DiningIcon style={{ fontSize: 30 }} />
-                            <br />
+                           
                             <strong>ทานที่ร้าน</strong>
-                            <br />
-                            <span>จำนวน {counter.dineInCount} บิล</span>
-                            <p>
+                            
+                            <span>จำนวน {counter.dineInCount} </span>
+                            {/* <p>
                               ยอดขาย{" "}
                               {formatMoney(counter.dineInTotalAmount || 0)} บาท
-                            </p>
+                            </p> */}
                           </div>
                         </Col>
 
                         <Col md={4}>
                           <div className="text-center report-stat-item card-report-3 mb-2">
                             <StorefrontIcon style={{ fontSize: 30 }} />
-                            <br />
-                            <strong>รับเองหน้าร้าน</strong>
-                            <br />
-                            <span>จำนวน {counter.pickupCount} บิล</span>
-                            <p>
+                          
+                            <strong>รับหน้าร้าน</strong>
+                          
+                            <span>จำนวน {counter.pickupCount} </span>
+                            {/* <p>
                               ยอดขาย{" "}
                               {formatMoney(counter.pickupTotalAmount || 0)} บาท
-                            </p>
+                            </p> */}
                           </div>
                         </Col>
                       </Row>
 
-                      <div className="text-center mt-4 total-bill-chip">
+                      {/* <div className="text-center mt-4 total-bill-chip">
                         <b>รวมทั้งหมด {counter.totalCount} บิล</b>
-                      </div>
+                      </div> */}
                     </Card.Body>
                   </Card>
                 </Card.Body>
