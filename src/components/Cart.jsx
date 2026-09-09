@@ -111,7 +111,8 @@ const Cart = () => {
     try {
       setLoading(true);
 
-      await saveOrder();
+      const isSaved = await saveOrder();
+      if (!isSaved) return;
 
       await Swal.fire({
         title: "สำเร็จ!",
@@ -463,7 +464,7 @@ const Cart = () => {
                       {orderType === "สั่งกลับบ้าน" && (
                         <Form.Group className="mt-2">
                           <Form.Label style={{ fontWeight: 500 }}>
-                            ผู้รับ (สามารถแก้ไขได้){" "}
+                            ผู้รับ 
                           </Form.Label>
                           <Form.Control
                             title="กรอกชื่อ facebook"
@@ -526,7 +527,7 @@ const Cart = () => {
 
                       <Form.Group className="mt-4">
                         <Form.Label className="payment-title">
-                          วิธีชำระเงิน
+                          วิธีการชำระเงิน
                         </Form.Label>
                         <div className="payment-buttons">
                           <Button
@@ -549,7 +550,7 @@ const Cart = () => {
                   </Form>
 
                    <Row>
-                  <Col md={4} xs={4} className="mt-2">
+                  <Col md={6} xs={6} className="mt-2">
                     <Button
                       className="w-75"
                       form="save"
@@ -567,7 +568,7 @@ const Cart = () => {
                       )}
                     </Button>
                   </Col>
-                  <Col md={4} xs={4} className="mt-2">
+                  <Col md={6} xs={6} className="mt-2">
                     <Button
                       className="w-75"
                       onClick={() => resetCart()}

@@ -143,13 +143,23 @@ ${account_payment}`;
   const resetCart = () => setCart([]);
 
   const saveOrder = async () => {
-    if (username !== null && messengerId !== null) {
+    const customerName = username?.trim();
+
+    if (!customerName && customerName === "ชื่อผู้ใช้") {
+      showNotification.error(
+        "กรุณาระบุชื่อก่อนสั่งอาหาร",
+        "ไม่สามารถสั่งอาหารได้",
+      );
+      return false;
+    }
+
+    if (messengerId !== null) {
       const body = {
         amount: sumPrice + deliveryFee,
         ordertype: orderType,
         payment_type: paymentType,
         statusOrder: "รับออเดอร์แล้ว",
-        customerName: username,
+        customerName,
         shop_id: shopId,
         messengerId: messengerId,
         address: Address,
@@ -182,17 +192,20 @@ ${account_payment}`;
           "สั่งออเดอร์สำเร็จ",
         );
         setCart([]);
+        return true;
       } else {
         showNotification.error(
           "ไม่สามารถสั่งอาหารได้ กรุณาลองใหม่ หรือสอบถามร้านค้า",
           "เกิดข้อผิดพลาด",
         );
+        return false;
       }
     } else {
       showNotification.error(
         "กรุณาใช้งานแอพที่กล่องข้อความเพจเพื่อสั่งอาหารเท่านั้น",
         "ไม่สามารถสั่งอาหารได้",
       );
+      return false;
     }
   };
 
