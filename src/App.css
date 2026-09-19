@@ -2,6 +2,74 @@
    margin-top: 40px;
   display: none;
 }
+
+.orders-card-col {
+  display: flex;
+}
+
+.orders-card {
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid #e6e8eb;
+  border-radius: 16px;
+  box-shadow: 0 5px 18px rgba(34, 40, 49, 0.08);
+}
+
+.orders-card .card-body {
+  padding: 16px;
+}
+
+.orders-delivery-info {
+  padding: 12px;
+  border: 1px solid #e8edf2;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.orders-address {
+  margin: 0 0 10px;
+  color: #4b5563;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.orders-address strong {
+  color: #263238;
+  font-size: 15px;
+}
+
+.orders-location-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.orders-coordinates {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.orders-map-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 10px;
+  border: 1px solid #a8c9e8;
+  border-radius: 8px;
+  color: #1f5f91;
+  background: #eaf4ff;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.orders-map-button:hover,
+.orders-map-button:focus {
+  border-color: #4b9bd0;
+  color: #ffffff;
+  background: #4b9bd0;
+}
 .show-header{
   display: none;
 }

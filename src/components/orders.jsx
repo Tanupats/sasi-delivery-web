@@ -18,6 +18,7 @@ import Swal from "sweetalert2";
 import { AuthData } from "../ContextData";
 import axios from "axios";
 import Spinner from "react-bootstrap/Spinner";
+import { MapPinned } from "lucide-react";
 const Orders = () => {
   const { shop, user } = useContext(AuthData);
   const token = localStorage.getItem("token");
@@ -35,6 +36,18 @@ const Orders = () => {
   const [preview, setPreview] = useState("");
   const [id, setId] = useState("");
   const [userid, setUserId] = useState("");
+  const getOrderCoordinates = (order) => ({
+    lat: order.lat ?? order.latitude,
+    lng: order.lng ?? order.longitude,
+  });
+
+  const getGoogleMapsUrl = (order) => {
+    const { lat, lng } = getOrderCoordinates(order);
+    if (lat === undefined || lat === null || lng === undefined || lng === null) {
+      return "";
+    }
+    return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${lat},${lng}`)}`;
+  };
   console.log("report", facebook_token);
   const getMenuReport = async (status) => {
     setReport([]);
@@ -370,8 +383,8 @@ const Orders = () => {
                 {report.map((item, index) => (
                   <React.Fragment key={index}>
                     {item.ordertype === "สั่งกลับบ้าน" && (
-                      <Col md={4}>
-                        <Card className="mb-4 mt-4" id={item.id}>
+                      <Col md={4} className="orders-card-col">
+                        <Card className="orders-card mb-4 mt-4" id={item.id}>
                           <Card.Body style={{ padding: "12px" }}>
                             <div className="text-center show-header">
                               <h5> {shop?.name} </h5>
@@ -414,13 +427,36 @@ const Orders = () => {
                               bill_ID={item.bill_ID}
                               status={item.statusOrder}
                             />
-                            <Row className="mt-2">
-                              <Col md={8}>
-                                {item.address ? (
-                                  <h5>ที่อยู่จัดส่ง-{item.address}</h5>
-                                ) : (
-                                  " "
+                            <Row className="orders-delivery-info mt-2">
+                              <Col xs={12}>
+                                {item.address && (
+                                  <p className="orders-address">
+                                    <strong>ที่อยู่จัดส่ง</strong>
+                                    <br />
+                                    {item.address}
+                                  </p>
                                 )}
+                                {(() => {
+                                  const { lat, lng } = getOrderCoordinates(item);
+                                  const mapsUrl = getGoogleMapsUrl(item);
+                                  return lat !== undefined && lng !== undefined ? (
+                                    <div className="orders-location-row">
+                                      <span className="orders-coordinates">
+                                        พิกัด: {lat}, {lng}
+                                      </span>
+                                      <Button
+                                        as="a"
+                                        href={mapsUrl}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="orders-map-button"
+                                      >
+                                        <MapPinned size={17} />
+                                        นำทาง
+                                      </Button>
+                                    </div>
+                                  ) : null;
+                                })()}
                               </Col>
                             </Row>
 
