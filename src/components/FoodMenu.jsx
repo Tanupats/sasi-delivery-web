@@ -170,36 +170,34 @@ const FoodMenu = () => {
                       </Row>
                     </>
                   ) : (
-                    <Col className="mb-4" md={6} xs={12}>
+                    <Col className="food-menu-col mb-3" lg={4} md={6} xs={12}>
                       <Card
+                        className="food-menu-card"
                         style={{
-                          height: "173px",
-                          marginBottom: "12px",
                           margin: 0,
                           padding: 0,
-                          borderRadius: "12px",
                           cursor: item.status === 0 ? "not-allowed" : "pointer",
                         }}
                       >
                         <Card.Body style={{ margin: 0, padding: 0 }}>
                           <Row>
-                            <Col md={3} xs={5}>
+                            <Col md={4} xs={5}>
                               <Image
                                 onClick={() => {
                                   item.status && onSelectMenu(item);
                                 }}
                                 style={{
                                   width: "100%",
-                                  height: "170px",
+                                  height: "142px",
                                   objectFit: "cover",
                                   borderRadius: "12px",
                                 }}
                                 src={`${api_url}/images/${item.img}`}
                               />
                             </Col>
-                            <Col md={6} xs={4} className="p-2">
-                              <h6>{item.foodname}</h6>
-                              <h6>{item.Price} ฿</h6>
+                            <Col md={5} xs={4} className="food-menu-card__details p-2">
+                              <h6 className="food-menu-card__name">{item.foodname}</h6>
+                              <h6 className="food-menu-card__price">{item.Price} ฿</h6>
                               {item.notes ? (
                                 <b style={{ color: "red" }}>
                                   {" "}
@@ -217,7 +215,7 @@ const FoodMenu = () => {
                                 </h6>
                               )}
                             </Col>
-                            <Col md={3} xs={3}>
+                            <Col md={3} xs={3} className="food-menu-card__action">
                               <Button
                                 disabled={item.status === 0 ? true : false}
                                 onClick={() => onSelectMenu(item)}

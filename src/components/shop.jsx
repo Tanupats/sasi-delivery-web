@@ -37,7 +37,7 @@ const ShopData = () => {
 
   const handleShopClick = async (shop) => {
     localStorage.setItem("delivery_fee", shop.delivery_fee);
-    setDeliveryFee(shop.delivery_fee || localStorage.getItem("delivery_fee"));
+    setDeliveryFee(shop.delivery_fee);
     setAccount_payment(shop.account_payment);
     setPromptPay(shop.promtpay);
     localStorage.setItem("shop_token", shop.facebook_token);
@@ -46,7 +46,7 @@ const ShopData = () => {
     const res = await sendTestMessage(userid, token);
     if (res?.status === 200) {
       setLoading(false);
-      router("/foodmenu/" + shop.shop_id);
+      router(`/foodmenu/${shop.shop_id}`);
     } else {
       setLoading(false);
       showNotification.error(
@@ -65,9 +65,9 @@ const ShopData = () => {
 
   useEffect(() => {
     if (userid && name) {
-      localStorage.setItem("messangerId", userid);
-      localStorage.setItem("name", name);
-      localStorage.setItem("shop_id", shop_id);
+      localStorage.setItem("messangerId",userid);
+      localStorage.setItem("name",name);
+      localStorage.setItem("shop_id",shop_id);
       getShopData();
     }
   }, []);
@@ -82,7 +82,17 @@ const ShopData = () => {
                 <React.Fragment key={index}>
                   <Col md={4} xs={12} className="mt-2">
                     {loading ? (
-                      <h3>กำลังโหลด....</h3>
+                      <div className="shop-loading" role="status" aria-live="polite">
+                        <h3 className="shop-loading__title">กำลังโหลด....</h3>
+                        <div
+                          className="shop-loading__track"
+                          role="progressbar"
+                          aria-label="กำลังโหลด"
+                          aria-valuetext="กำลังดำเนินการ"
+                        >
+                          <span className="shop-loading__bar" />
+                        </div>
+                      </div>
                     ) : (
                       <>
                         <Card

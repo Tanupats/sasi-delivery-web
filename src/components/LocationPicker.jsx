@@ -8,7 +8,7 @@ import {
 } from "react-leaflet";
 
 import "leaflet/dist/leaflet.css";
-import { Row ,Col} from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 
 // 📍 ค่าเริ่มต้นกรณีไม่สามารถหาตำแหน่งปัจจุบันได้
 const DEFAULT_POSITION = [13.7563, 100.5018];
@@ -97,7 +97,7 @@ export default function DeliveryLocationMap({ getAddress }) {
     <div>
       <Row>
         <Col md={12} className="text-center">
-          <h5 className="mb-3"> ปักหมุดตำแหน่งของคุณ</h5>
+          <h6 className="mb-3"> ตำแหน่งของคุณ</h6>
 
           <MapContainer
             center={DEFAULT_POSITION}
@@ -118,9 +118,6 @@ export default function DeliveryLocationMap({ getAddress }) {
               <RecenterMap position={[location.lat, location.lng]} />
             )}
           </MapContainer>
-
-       
-         
         </Col>
       </Row>
     </div>

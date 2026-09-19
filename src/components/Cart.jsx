@@ -53,7 +53,6 @@ const Cart = () => {
     deliverySlot,
     setDeliverySlot,
     isPreorder,
-    setIsPreorder,
   } = useContext(AuthData);
 
   const [loading, setLoading] = useState(false);
@@ -84,7 +83,8 @@ const Cart = () => {
 
       const data = await response.json();
 
-      setAddress(data.display_name || "");
+      const addressText = data.display_name || "";
+      setAddress(addressText.split(",")[0].trim());
     } catch (error) {
       console.error("ไม่สามารถดึงที่อยู่ได้:", error);
       return "";
@@ -149,7 +149,6 @@ const Cart = () => {
       <Card style={{ height: "100%", marginBottom: "120px" }}>
         <Card.Body style={{ height: "100%" }}>
           {" "}
-         
           <Card.Title as={"h6"} className="mb-2  mt-2 text-left">
             รายการสั่งซื้อ
           </Card.Title>
@@ -157,41 +156,36 @@ const Cart = () => {
             {cart.length !== 0 &&
               cart?.map((item) => {
                 return (
-                  <Col
-                    md={4}
-                    xs={12}
-                    key={item.id}
-                    style={{ marginBottom: "10px" }}
-                  >
-                    <Card style={{ borderRadius: "12px", padding: "8px" }}>
+                  <Col md={4} xs={12} key={item.id} className="cart-item-col">
+                    <Card className="cart-item-card">
                       <Card.Body className="p-0">
-                        <Row className="align-items-center">
+                        <Row className="cart-item-main align-items-center">
                           {/* รูป */}
-                          <Col xs={4}>
+                          <Col xs={4} className="cart-item-image-col">
                             <Image
                               title={item.name}
+                              className="cart-item-image"
                               style={{
                                 width: "100%",
-                                height: "90px",
+                                height: "92px",
                                 objectFit: "cover",
-                                borderRadius: "10px",
                               }}
                               src={`${api_url}/images/${item.photo}`}
                             />
                           </Col>
 
                           {/* รายการ */}
-                          <Col xs={6} md={6}>
-                            <h6 style={{ marginBottom: "4px" }}>
-                              {item.name}{" "}
-                            </h6>
-
-                            <b>{item.price} ฿</b>
-
+                          <Col xs={6} md={6} className="cart-item-details">
+                            <h6 className="cart-item-name">{item.name}</h6>
+                            <b className="cart-item-price">
+                              {item.price} ฿
+                            </b>{" "}
+                            <br />
                             {/* จำนวน */}
-                            <div className="d-flex align-items-center mt-2">
+                            <div className="cart-quantity-control">
                               <Button
                                 size="sm"
+                                className="cart-quantity-button"
                                 style={{
                                   background: "#FD720D",
                                   border: "none",
@@ -205,12 +199,13 @@ const Cart = () => {
                                 -
                               </Button>
 
-                              <span style={{ margin: "0 10px" }}>
+                              <span className="cart-quantity-value">
                                 {item.quantity}
                               </span>
 
                               <Button
                                 size="sm"
+                                className="cart-quantity-button"
                                 style={{
                                   background: "#FD720D",
                                   border: "none",
@@ -225,8 +220,9 @@ const Cart = () => {
                           </Col>
 
                           {/* ลบ */}
-                          <Col xs={2} className="text-end">
+                          <Col xs={2} className="cart-remove-col text-end">
                             <Button
+                              className="cart-remove-button"
                               onClick={() => removeCart(item.id)}
                               variant="gray"
                             >
@@ -234,13 +230,14 @@ const Cart = () => {
                             </Button>
                           </Col>
 
-                          <Row>
-                            <Col md={6} xs={6} className="mt-2">
+                          <Row className="cart-item-options">
+                            <Col md={6} xs={6}>
                               {item.option_menu === "Y" && (
                                 <>
-                                  <div className="d-flex gap-2">
+                                  <div className="cart-option-buttons">
                                     <Button
-                                      size="md"
+                                      size="sm"
+                                      className="cart-option-button"
                                       variant="outline-primary"
                                       onClick={() => setMenuNormal(item.id)}
                                     >
@@ -248,7 +245,8 @@ const Cart = () => {
                                     </Button>
 
                                     <Button
-                                      size="md"
+                                      size="sm"
+                                      className="cart-option-button"
                                       variant="outline-success"
                                       onClick={() =>
                                         setMenuPichet(item.id, item)
@@ -262,7 +260,7 @@ const Cart = () => {
                             </Col>
                             <Col md={6} xs={6}>
                               <Form.Control
-                                className="mt-2 w-100"
+                                className="cart-note-input w-100"
                                 type="text"
                                 placeholder="*หมายเหตุเพิ่มเติม"
                                 onChange={(e) =>
@@ -278,18 +276,18 @@ const Cart = () => {
                   </Col>
                 );
               })}
-             
+
             {cart.length > 0 ? (
               <>
                 <Col md={12} xs={12}>
                   <Button
-            className="mb-2 w-100"
-            variant="outline-secondary"
-            size="sm"
-            onClick={() => router(-1)}
-          >
-            <ArrowLeft size={20} /> เลือกเพิ่มเติม
-          </Button>
+                    className="mb-2 w-100"
+                    variant="outline-secondary"
+                    size="sm"
+                    onClick={() => router(-1)}
+                  >
+                    <ArrowLeft size={20} /> เลือกเพิ่มเติม
+                  </Button>
                   <Form
                     id="save"
                     onSubmit={(e) => {
@@ -302,7 +300,7 @@ const Cart = () => {
                         เลือกวิธีรับอาหาร
                       </Form.Label>
                       <Row>
-                        <Col md={4} xs={4} className="mb-2">
+                        {/* <Col md={4} xs={4} className="mb-2">
                           <Button
                             className="w-100"
                             variant={
@@ -315,8 +313,8 @@ const Cart = () => {
                           >
                             จัดส่งวันนี้
                           </Button>
-                        </Col>
-                        <Col md={4} xs={4} className="mb-2">
+                        </Col> */}
+                        {/* <Col md={4} xs={4} className="mb-2">
                           <Button
                             className="w-100"
                             variant={
@@ -331,7 +329,7 @@ const Cart = () => {
                           >
                             เลือกวันที่จัดส่ง
                           </Button>
-                        </Col>
+                        </Col> */}
                       </Row>
                       {isPreorder && (
                         <>
@@ -391,18 +389,7 @@ const Cart = () => {
                         <Row className="mb-2">
                           <Col md={4} xs={4} className="mb-2">
                             <Button
-                              className="w-100"
-                              style={{
-                                backgroundColor:
-                                  orderType === "สั่งกลับบ้าน"
-                                    ? "#dbd8d8"
-                                    : "white",
-                                color:
-                                  orderType === "สั่งกลับบ้าน"
-                                    ? "#303030"
-                                    : "#303030",
-                                border: "1px solid #a3a2a2",
-                              }}
+                              className={`order-type-button order-type-delivery ${orderType === "สั่งกลับบ้าน" ? "active" : ""}`}
                               onClick={() => {
                                 setOrderType("สั่งกลับบ้าน");
                                 getProfile();
@@ -415,18 +402,7 @@ const Cart = () => {
                           </Col>
                           <Col md={4} xs={4} className="mb-2">
                             <Button
-                              className="w-100"
-                              style={{
-                                backgroundColor:
-                                  orderType === "เสิร์ฟในร้าน"
-                                    ? "#dbd8d8"
-                                    : "white",
-                                color:
-                                  orderType === "เสิร์ฟในร้าน"
-                                    ? "#303030"
-                                    : "#303030",
-                                border: "1px solid #a3a2a2",
-                              }}
+                              className={`order-type-button order-type-dine-in ${orderType === "เสิร์ฟในร้าน" ? "active" : ""}`}
                               onClick={() => {
                                 setOrderType("เสิร์ฟในร้าน");
                                 setAddress("");
@@ -439,16 +415,7 @@ const Cart = () => {
                           </Col>
                           <Col md={4} xs={4} className="mb-2 d-flex">
                             <Button
-                              className="w-100"
-                              style={{
-                                backgroundColor:
-                                  orderType === "รับเอง" ? "#dbd8d8" : "white",
-                                color:
-                                  orderType === "รับเอง"
-                                    ? "#303030"
-                                    : "#303030",
-                                border: "1px solid #a3a2a2",
-                              }}
+                              className={`order-type-button order-type-pickup ${orderType === "รับเอง" ? "active" : ""}`}
                               onClick={() => {
                                 setOrderType("รับเอง");
                                 setAddress("");
@@ -464,7 +431,7 @@ const Cart = () => {
                       {orderType === "สั่งกลับบ้าน" && (
                         <Form.Group className="mt-2">
                           <Form.Label style={{ fontWeight: 500 }}>
-                            ผู้รับ 
+                            ลูกค้า
                           </Form.Label>
                           <Form.Control
                             title="กรอกชื่อ facebook"
@@ -480,7 +447,7 @@ const Cart = () => {
                           />
                           <Form.Label style={{ fontWeight: 500 }}>
                             {" "}
-                            ข้อมูลติดต่อ{" "}
+                            ที่อยู่จัดส่ง และติดต่อ (แก้ไขเพิ่มเติมได้){" "}
                           </Form.Label>{" "}
                           <Form.Control
                             value={Address}
@@ -549,37 +516,36 @@ const Cart = () => {
                     </div>
                   </Form>
 
-                   <Row>
-                  <Col md={6} xs={6} className="mt-2">
-                    <Button
-                      className="w-75"
-                      form="save"
-                      type="submit"
-                      variant="success"
-                      disabled={loading}
-                    >
-                      {loading ? (
-                        "กำลังบันทึก..."
-                      ) : (
-                        <>
-                          {" "}
-                          <CheckCircleIcon /> ยืนยัน
-                        </>
-                      )}
-                    </Button>
-                  </Col>
-                  <Col md={6} xs={6} className="mt-2">
-                    <Button
-                      className="w-75"
-                      onClick={() => resetCart()}
-                      variant="danger"
-                    >
-                      <CancelIcon /> ยกเลิก
-                    </Button>
-                  </Col>
-                </Row>
+                  <Row>
+                    <Col md={6} xs={6} className="mt-2">
+                      <Button
+                        className="cart-action-button cart-confirm-button"
+                        form="save"
+                        type="submit"
+                        variant="success"
+                        disabled={loading}
+                      >
+                        {loading ? (
+                          "กำลังบันทึก..."
+                        ) : (
+                          <>
+                            {" "}
+                            <CheckCircleIcon /> ยืนยัน
+                          </>
+                        )}
+                      </Button>
+                    </Col>
+                    <Col md={6} xs={6} className="mt-2">
+                      <Button
+                        className="cart-action-button cart-cancel-button"
+                        onClick={() => resetCart()}
+                        variant="danger"
+                      >
+                        <CancelIcon /> ยกเลิก
+                      </Button>
+                    </Col>
+                  </Row>
                 </Col>
-               
               </>
             ) : (
               <Col>
