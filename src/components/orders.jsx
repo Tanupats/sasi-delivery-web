@@ -36,6 +36,7 @@ const Orders = () => {
   const [preview, setPreview] = useState("");
   const [id, setId] = useState("");
   const [userid, setUserId] = useState("");
+  const [paymentType, setPaymentType] = useState("");
   const getOrderCoordinates = (order) => ({
     lat: order.lat ?? order.latitude,
     lng: order.lng ?? order.longitude,
@@ -48,7 +49,7 @@ const Orders = () => {
     }
     return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${lat},${lng}`)}`;
   };
-  console.log("report", facebook_token);
+
   const getMenuReport = async (status) => {
     setReport([]);
     if (shopId) {
@@ -111,15 +112,14 @@ const Orders = () => {
   const uploadFile = async (messageid) => {
     const formData = new FormData();
     formData.append("file", file);
-    await httpPost(`/upload`, formData).then((res) => {
-      if (res.status === 200) {
-        const filename = dev + "/images/" + res.data.filename;
-        if (filename) {
-          sendImageToPage(messageid, filename, facebook_token);
-        }
-        setFile("");
+    const res = await httpPost(`/upload`, formData);
+    if (res.status === 200) {
+      const filename = dev + "/images/" + res.data.filename;
+      if (filename) {
+        await sendImageToPage(messageid, filename, facebook_token);
       }
-    });
+      setFile("");
+    }
   };
 
   function compressImage(file, maxWidth = 800, quality = 0.7) {
@@ -157,9 +157,9 @@ const Orders = () => {
     });
   }
 
-  const sendMessageToPage = (userid, messageText) => {
-    axios
-      .post(
+  const sendMessageToPage = async (userid, messageText) => {
+    try {
+      const response = await axios.post(
         `https://graph.facebook.com/v18.0/me/messages?access_token=${facebook_token}`,
         {
           recipient: {
@@ -169,30 +169,27 @@ const Orders = () => {
             text: messageText,
           },
         },
-      )
-      .then((response) => {
-        if (response) {
-          Swal.fire({
-            title: "ดำเนินการสำเร็จ",
-            icon: "success",
-            timer: 500,
-          });
-        }
-      })
-      .catch((error) => {
-        if (error) {
-          Swal.fire({
-            title: "ส่งข้อความไปยังลูกไม่สำเร็จ",
-            icon: "error",
-          });
-        }
+      );
+      if (response) {
+        Swal.fire({
+          title: "ดำเนินการสำเร็จ",
+          icon: "success",
+          timer: 500,
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        title: "ส่งข้อความไปยังลูกไม่สำเร็จ",
+        icon: "error",
       });
+    }
   };
 
-  const handleFileChange = async (e, bill, userid) => {
+  const handleFileChange = async (e, bill, userid, paymentType) => {
     setOpen(true);
     setUserId(userid);
     setId(bill);
+    setPaymentType(paymentType);
     const selectedFile = e.target.files[0];
     if (selectedFile) {
       const compressedBlob = await compressImage(selectedFile, 800, 0.6); // ย่อกว้างสุด 800px, คุณภาพ 60%
@@ -212,7 +209,7 @@ const Orders = () => {
     }
   };
 
-  const UpdateStatus = async (id, status, messageid, step) => {
+  const UpdateStatus = async (id, status, messageid, step, paymentType) => {
     const body = {
       statusOrder: status,
       step: step,
@@ -237,14 +234,18 @@ const Orders = () => {
         if (status === "ส่งสำเร็จ") {
           if (messageid !== "pos") {
             if (file) {
-              uploadFile(messageid);
+              await uploadFile(messageid);
             }
-            sendMessageToPage(messageid, "มาส่งแล้วนะครับ");
+            await sendMessageToPage(messageid, "มาส่งแล้วนะครับ");
+            if (paymentType !== "bank_transfer") {
+              await sendMessageToPage(messageid, "ได้รับเงินสดแล้วนะครับ");
+            }
           }
           getMenuReport("กำลังส่ง");
           setStatusOrder("กำลังส่ง");
           setFile("");
           setOpen(false);
+          setPaymentType("");
         }
         getOrderNew();
         getOrderDelivery();
@@ -280,7 +281,7 @@ const Orders = () => {
                 style={{ fontSize: 18 }}
                 className="mb-2"
                 onClick={() => {
-                  UpdateStatus(id, "ส่งสำเร็จ", userid, 4);
+                  UpdateStatus(id, "ส่งสำเร็จ", userid, 4, paymentType);
                 }}
                 variant="success w-100"
               >
@@ -522,6 +523,7 @@ const Orders = () => {
                                               e,
                                               item.id,
                                               item.messengerId,
+                                              item.payment_type,
                                             )
                                           }
                                         />
@@ -547,6 +549,7 @@ const Orders = () => {
                                               "ส่งสำเร็จ",
                                               item.messengerId,
                                               4,
+                                                item.payment_type,
                                             );
                                           }
                                         });

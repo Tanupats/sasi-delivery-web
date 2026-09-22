@@ -73,8 +73,8 @@ export const sendDeliverySuccess = async (userid) => {
 };
 
 
-export const sendImageToPage = (userid, url,token) => {
-  axios
+export const sendImageToPage = (userid, url, token) => {
+  return axios
     .post(
       `https://graph.facebook.com/v18.0/me/messages?access_token=${token}`,
       {
@@ -93,13 +93,7 @@ export const sendImageToPage = (userid, url,token) => {
       },
     )
     .then((response) => {
-      // axios.delete(url);
       console.log("Image sent:", response.data);
-    })
-    .catch((error) => {
-      console.error(
-        "Error sending image:",
-        error.response?.data || error.message,
-      );
+      return response;
     });
 };
