@@ -18,7 +18,7 @@ import Swal from "sweetalert2";
 import { AuthData } from "../ContextData";
 import axios from "axios";
 import Spinner from "react-bootstrap/Spinner";
-import { MapPinned } from "lucide-react";
+import { MapPinned, Camera } from "lucide-react";
 const Orders = () => {
   const { shop, user } = useContext(AuthData);
   const token = localStorage.getItem("token");
@@ -506,16 +506,15 @@ const Orders = () => {
                                 )}
                               {item.statusOrder === "กำลังส่ง" && (
                                 <>
-                                  <Col md={6} xs={6}>
-                                    <>
-                                      <Form.Group>
-                                        <Form.Label>
-                                          * ถ่ายรูปหลักฐานการส่ง
-                                        </Form.Label>
-                                        <Form.Control
-                                          className="mt-2 mb-4"
+                                  <Col md={6} xs={12}>
+                                    <div className="delivery-proof-upload-wrap mb-4">
+                                      <label
+                                        htmlFor={`proof-upload-${item.id}`}
+                                        className="delivery-proof-upload"
+                                      >
+                                        <input
+                                          id={`proof-upload-${item.id}`}
                                           type="file"
-                                          id="file"
                                           accept="image/*"
                                           capture="environment"
                                           onChange={(e) =>
@@ -527,8 +526,15 @@ const Orders = () => {
                                             )
                                           }
                                         />
-                                      </Form.Group>
-                                    </>
+                                        <span className="delivery-proof-icon">
+                                          <Camera size={20} strokeWidth={2.2} />
+                                        </span>
+                                        <span className="delivery-proof-text">
+                                          <strong>ถ่ายรูปหลักฐาน</strong>
+                                          <small>การจัดส่ง</small>
+                                        </span>
+                                      </label>
+                                    </div>
                                   </Col>
                                   <Col md={6} xs={12}>
                                     <Button
@@ -549,14 +555,14 @@ const Orders = () => {
                                               "ส่งสำเร็จ",
                                               item.messengerId,
                                               4,
-                                                item.payment_type,
+                                              item.payment_type,
                                             );
                                           }
                                         });
                                       }}
                                       variant="success w-100"
                                     >
-                                      จัดส่งสำเร็จ
+                                      ยืนยันการจัดส่ง
                                     </Button>
                                   </Col>
                                 </>
