@@ -44,7 +44,12 @@ const Orders = () => {
 
   const getGoogleMapsUrl = (order) => {
     const { lat, lng } = getOrderCoordinates(order);
-    if (lat === undefined || lat === null || lng === undefined || lng === null) {
+    if (
+      lat === undefined ||
+      lat === null ||
+      lng === undefined ||
+      lng === null
+    ) {
       return "";
     }
     return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${lat},${lng}`)}`;
@@ -226,19 +231,18 @@ const Orders = () => {
         }
         if (status === "กำลังส่ง") {
           if (messageid !== "pos") {
-            sendMessageToPage(messageid, "กำลังไปส่งนะครับ");
+            sendMessageToPage(messageid, "ไรเดอร์กำลังไปส่งออเดอร์ให้นะครับ");
           }
           getMenuReport("ทำเสร็จแล้ว");
           setStatusOrder("ทำเสร็จแล้ว");
         }
         if (status === "ส่งสำเร็จ") {
           if (messageid !== "pos") {
-            if (file) {
-              await uploadFile(messageid);
-            }
-            await sendMessageToPage(messageid, "มาส่งแล้วนะครับ");
+            uploadFile(messageid);
+
+            sendMessageToPage(messageid, "จัดส่งแล้วนะครับ");
             if (paymentType !== "bank_transfer") {
-              await sendMessageToPage(messageid, "ได้รับเงินสดแล้วนะครับ");
+              sendMessageToPage(messageid, "ได้รับเงินสดแล้วนะครับ");
             }
           }
           getMenuReport("กำลังส่ง");
@@ -281,6 +285,7 @@ const Orders = () => {
                 style={{ fontSize: 18 }}
                 className="mb-2"
                 onClick={() => {
+                  setOpen(false);
                   UpdateStatus(id, "ส่งสำเร็จ", userid, 4, paymentType);
                 }}
                 variant="success w-100"
@@ -305,7 +310,15 @@ const Orders = () => {
         <Col md={12}>
           <Card style={{ border: "none", marginTop: "12px" }}>
             <Form>
-              <Row className="when-print sticky-top" style={{ top: "56px", backgroundColor: "#fff", zIndex: 100, padding: "12px 0" }}>
+              <Row
+                className="when-print sticky-top"
+                style={{
+                  top: "56px",
+                  backgroundColor: "#fff",
+                  zIndex: 100,
+                  padding: "12px 0",
+                }}
+              >
                 <ButtonGroup aria-label="Basic example" style={{ height: 60 }}>
                   <Button
                     variant={
@@ -438,9 +451,11 @@ const Orders = () => {
                                   </p>
                                 )}
                                 {(() => {
-                                  const { lat, lng } = getOrderCoordinates(item);
+                                  const { lat, lng } =
+                                    getOrderCoordinates(item);
                                   const mapsUrl = getGoogleMapsUrl(item);
-                                  return lat !== undefined && lng !== undefined ? (
+                                  return lat !== undefined &&
+                                    lng !== undefined ? (
                                     <div className="orders-location-row">
                                       <span className="orders-coordinates">
                                         พิกัด: {lat}, {lng}
