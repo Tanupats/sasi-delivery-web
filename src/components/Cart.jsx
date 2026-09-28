@@ -59,6 +59,8 @@ const Cart = () => {
   const tomorrowDate = new Date();
   tomorrowDate.setDate(tomorrowDate.getDate() + 1);
   const minDate = tomorrowDate.toISOString().slice(0, 10);
+  const chargedDeliveryFee =
+    orderType === "สั่งกลับบ้าน" ? Number(deliveryFee) || 0 : 0;
 
   const getProfile = async () => {
     const res = await axios
@@ -93,6 +95,16 @@ const Cart = () => {
 
   const onSave = async (e) => {
     e.preventDefault();
+
+    if (!orderType) {
+      await Swal.fire({
+        title: "กรุณาเลือกวิธีรับอาหาร",
+        text: "เลือกจัดส่ง ทานร้าน หรือรับเองก่อนยืนยันคำสั่งซื้อ",
+        icon: "warning",
+        confirmButtonText: "ตกลง",
+      });
+      return;
+    }
 
     const result = await Swal.fire({
       title: "ยืนยันการสั่งซื้อ?",
@@ -389,6 +401,7 @@ const Cart = () => {
                         <Row className="mb-2">
                           <Col md={4} xs={4} className="mb-2">
                             <Button
+                              type="button"
                               className={`order-type-button order-type-delivery ${orderType === "สั่งกลับบ้าน" ? "active" : ""}`}
                               onClick={() => {
                                 setOrderType("สั่งกลับบ้าน");
@@ -402,11 +415,14 @@ const Cart = () => {
                           </Col>
                           <Col md={4} xs={4} className="mb-2">
                             <Button
+                              type="button"
                               className={`order-type-button order-type-dine-in ${orderType === "เสิร์ฟในร้าน" ? "active" : ""}`}
                               onClick={() => {
                                 setOrderType("เสิร์ฟในร้าน");
                                 setAddress("");
                                 setDeliveryFee(0);
+                                localStorage.removeItem("lat");
+                                localStorage.removeItem("lng");
                               }}
                             >
                               {" "}
@@ -415,11 +431,14 @@ const Cart = () => {
                           </Col>
                           <Col md={4} xs={4} className="mb-2 d-flex">
                             <Button
+                              type="button"
                               className={`order-type-button order-type-pickup ${orderType === "รับเอง" ? "active" : ""}`}
                               onClick={() => {
                                 setOrderType("รับเอง");
                                 setAddress("");
                                 setDeliveryFee(0);
+                                localStorage.removeItem("lat");
+                                localStorage.removeItem("lng");
                               }}
                             >
                               {" "}
@@ -461,7 +480,9 @@ const Cart = () => {
                       )}
                     </div>
 
-                    <LocationPicker getAddress={getAddress} />
+                    {orderType === "สั่งกลับบ้าน" && (
+                      <LocationPicker getAddress={getAddress} />
+                    )}
 
                     <div className="summary-section">
                       <div className="summary-card">
@@ -474,7 +495,7 @@ const Cart = () => {
                             <div className="summary-row">
                               <span className="summary-label">ค่าจัดส่ง</span>
                               <span className="summary-value">
-                                {deliveryFee} ฿
+                                {chargedDeliveryFee} ฿
                               </span>
                             </div>
                           </>
@@ -487,7 +508,7 @@ const Cart = () => {
                         <div className="summary-row total">
                           <span className="summary-label">รวมทั้งหมด</span>
                           <span className="summary-value">
-                            {sumPrice + deliveryFee} ฿
+                            {sumPrice + chargedDeliveryFee} ฿
                           </span>
                         </div>
                       </div>
@@ -498,18 +519,20 @@ const Cart = () => {
                         </Form.Label>
                         <div className="payment-buttons">
                           <Button
-                            className={`payment-btn ${paymentType === "bank_transfer" ? "active" : ""}`}
+                            type="button"
+                            className={`payment-btn payment-btn-transfer ${paymentType === "bank_transfer" ? "active" : ""}`}
                             onClick={() => setPaymentType("bank_transfer")}
                           >
                             <AccountBalanceIcon className="payment-icon" />
                             <span>เงินโอน</span>
                           </Button>
                           <Button
-                            className={`payment-btn ${paymentType === "cash" ? "active" : ""}`}
+                            type="button"
+                            className={`payment-btn payment-btn-cash ${paymentType === "cash" ? "active" : ""}`}
                             onClick={() => setPaymentType("cash")}
                           >
                             <PaymentsIcon className="payment-icon" />
-                            <span>จ่ายสด</span>
+                            <span>ชำระเงินสด</span>
                           </Button>
                         </div>
                       </Form.Group>

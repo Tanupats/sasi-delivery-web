@@ -32,7 +32,7 @@ function Context({ children }) {
   const [counterOrder, setCounterOrder] = useState(0);
   const [sumPrice, setSumPrice] = useState(0);
   const [name, setName] = useState("");
-  const [orderType, setOrderType] = useState("สั่งกลับบ้าน");
+  const [orderType, setOrderType] = useState("");
   const [queue, setQueue] = useState(0);
   const [Address, setAddress] = useState("");
   const [paymentType, setPaymentType] = useState("bank_transfer");
@@ -47,6 +47,7 @@ function Context({ children }) {
   const [promptPay, setPromptPay] = useState("");
   const [oldData, setOldData] = useState([]);
   const api_url = import.meta.env.VITE_API_URL;
+  const chargedDeliveryFee = orderType === "สั่งกลับบ้าน" ? Number(deliveryFee) || 0 : 0;
 
   const PageAccessToken = localStorage.getItem("shop_token");
   const sendMessageToPage = async () => {
@@ -60,9 +61,9 @@ function Context({ children }) {
     const message =
       paymentType === "cash"
         ? `${reportMenu}
-${orderType === "สั่งกลับบ้าน" ? `ค่าจัดส่ง : ${deliveryFee} บาท\n` : ""}รวมทั้งหมด ${sumPrice + deliveryFee} บาท`
+${orderType === "สั่งกลับบ้าน" ? `ค่าจัดส่ง : ${chargedDeliveryFee} บาท\n` : ""}รวมทั้งหมด ${sumPrice + chargedDeliveryFee} บาท`
         : `${reportMenu}
-${orderType === "สั่งกลับบ้าน" ? `ค่าจัดส่ง : ${deliveryFee} บาท\n` : ""}รวมทั้งหมด ${sumPrice + deliveryFee} บาท
+${orderType === "สั่งกลับบ้าน" ? `ค่าจัดส่ง : ${chargedDeliveryFee} บาท\n` : ""}รวมทั้งหมด ${sumPrice + chargedDeliveryFee} บาท
 
 ${account_payment}`;
     await fetch(
@@ -153,9 +154,9 @@ ${account_payment}`;
       return false;
     }
 
-    if (messengerId !== null) {
+    if (messengerId) {
       const body = {
-        amount: sumPrice + deliveryFee,
+        amount: sumPrice + chargedDeliveryFee,
         ordertype: orderType,
         payment_type: paymentType,
         statusOrder: "รับออเดอร์แล้ว",
@@ -164,7 +165,7 @@ ${account_payment}`;
         messengerId: messengerId,
         address: Address,
         step: 1,
-        delivery_fee: deliveryFee,
+        delivery_fee: chargedDeliveryFee,
         delivery_date: isPreorder ? getDeliveryDateTime(deliveryDate, deliverySlot) : null,
         delivery_slot: isPreorder ? deliverySlot : null,
         lat: localStorage.getItem("lat"),

@@ -6,9 +6,21 @@ import {
   useMap,
   useMapEvents,
 } from "react-leaflet";
+import L from "leaflet";
+import markerIconUrl from "leaflet/dist/images/marker-icon.png";
+import markerIcon2xUrl from "leaflet/dist/images/marker-icon-2x.png";
+import markerShadowUrl from "leaflet/dist/images/marker-shadow.png";
 
 import "leaflet/dist/leaflet.css";
 import { Row, Col } from "react-bootstrap";
+
+const locationIcon = L.icon({
+  iconUrl: markerIconUrl,
+  iconRetinaUrl: markerIcon2xUrl,
+  shadowUrl: markerShadowUrl,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+});
 
 // 📍 ค่าเริ่มต้นกรณีไม่สามารถหาตำแหน่งปัจจุบันได้
 const DEFAULT_POSITION = [13.7563, 100.5018];
@@ -62,7 +74,7 @@ function LocationPicker({ setLocation, getAddress }) {
     },
   });
 
-  return position ? <Marker position={position} /> : null;
+  return position ? <Marker position={position} icon={locationIcon} /> : null;
 }
 
 // ------------------------------

@@ -648,6 +648,29 @@
   box-shadow: 0 6px 16px rgba(253, 114, 13, 0.25);
 }
 
+.payment-btn-transfer:hover {
+  border-color: #2878a8 !important;
+  box-shadow: 0 4px 12px rgba(40, 120, 168, 0.18);
+}
+
+.payment-btn-transfer.active {
+  background: #2878a8 !important;
+  border-color: #2878a8 !important;
+  box-shadow: 0 6px 16px rgba(40, 120, 168, 0.25);
+}
+
+.payment-btn-cash:hover {
+  border-color: #27864b !important;
+  box-shadow: 0 4px 12px rgba(39, 134, 75, 0.18);
+}
+
+.payment-btn-cash.active {
+  background: #27864b !important;
+  border-color: #27864b !important;
+  color: white !important;
+  box-shadow: 0 6px 16px rgba(39, 134, 75, 0.25);
+}
+
 .payment-icon {
   font-size: 24px;
 }
