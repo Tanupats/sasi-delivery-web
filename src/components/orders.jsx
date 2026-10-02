@@ -5,7 +5,6 @@ import {
   Card,
   Button,
   Form,
-  Alert,
   Modal,
   ModalHeader,
   Badge,
@@ -18,17 +17,26 @@ import Swal from "sweetalert2";
 import { AuthData } from "../ContextData";
 import axios from "axios";
 import Spinner from "react-bootstrap/Spinner";
-import { MapPinned, Camera } from "lucide-react";
+import {
+  MapPinned,
+  Camera,
+  Clock3,
+  UserRound,
+  ReceiptText,
+  PackageOpen,
+} from "lucide-react";
 const Orders = () => {
   const { shop, user } = useContext(AuthData);
   const token = localStorage.getItem("token");
   const facebook_token = localStorage.getItem("facebook_token");
   const [report, setReport] = useState([]);
   const [file, setFile] = useState("");
-  const [Delivered, setDelivered] = useState(0);
-  const [OrderNew, setOrderNew] = useState(0);
-  const [OrderCooking, setOrderCooking] = useState(0);
-  const [OrderCookingFinish, setOrderCookingFinish] = useState(0);
+  const [orderCounts, setOrderCounts] = useState({
+    รับออเดอร์แล้ว: 0,
+    ทำเสร็จแล้ว: 0,
+    กำลังส่ง: 0,
+    ส่งสำเร็จ: 0,
+  });
   const [statusOrder, setStatusOrder] = useState("รับออเดอร์แล้ว");
   const shopId = localStorage.getItem("shopId");
   const [loading, setLoading] = useState(false);
@@ -37,6 +45,8 @@ const Orders = () => {
   const [id, setId] = useState("");
   const [userid, setUserId] = useState("");
   const [paymentType, setPaymentType] = useState("");
+  const [riderLocation, setRiderLocation] = useState(null);
+  const [routeDistances, setRouteDistances] = useState({});
   const getOrderCoordinates = (order) => ({
     lat: order.lat ?? order.latitude,
     lng: order.lng ?? order.longitude,
@@ -52,8 +62,58 @@ const Orders = () => {
     ) {
       return "";
     }
-    return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${lat},${lng}`)}`;
+    const origin = riderLocation
+      ? `&origin=${encodeURIComponent(`${riderLocation.lat},${riderLocation.lng}`)}`
+      : "";
+    return `https://www.google.com/maps/dir/?api=1${origin}&destination=${encodeURIComponent(`${lat},${lng}`)}&travelmode=driving`;
   };
+
+  useEffect(() => {
+    if (!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) =>
+        setRiderLocation({ lat: coords.latitude, lng: coords.longitude }),
+      () => setRiderLocation(null),
+      { enableHighAccuracy: true, maximumAge: 120000, timeout: 10000 },
+    );
+  }, []);
+
+  useEffect(() => {
+    if (!riderLocation) return;
+    let active = true;
+    const destinations = report.filter((order) => {
+      const { lat, lng } = getOrderCoordinates(order);
+      return (
+        lat !== undefined && lat !== null && lng !== undefined && lng !== null
+      );
+    });
+
+    Promise.all(
+      destinations.map(async (order) => {
+        const { lat, lng } = getOrderCoordinates(order);
+        try {
+          const response = await fetch(
+            `https://router.project-osrm.org/route/v1/driving/${riderLocation.lng},${riderLocation.lat};${lng},${lat}?overview=false`,
+          );
+          const result = await response.json();
+          return [order.id, result.routes?.[0]?.distance ?? null];
+        } catch {
+          return [order.id, null];
+        }
+      }),
+    ).then((distances) => {
+      if (active) {
+        setRouteDistances((current) => ({
+          ...current,
+          ...Object.fromEntries(distances),
+        }));
+      }
+    });
+
+    return () => {
+      active = false;
+    };
+  }, [report, riderLocation]);
 
   const getMenuReport = async (status) => {
     setReport([]);
@@ -68,48 +128,24 @@ const Orders = () => {
     setLoading(false);
   };
 
-  const getOrderDelivery = async () => {
-    if (shopId) {
-      await httpGet(
-        `/bills/counter-order-status/${shopId}?statusOrder=ส่งสำเร็จ`,
-        { headers: { apikey: token } },
-      ).then((res) => {
-        setDelivered(res.data.count);
-      });
-    }
-  };
+  const getOrderCounts = async () => {
+    if (!shopId) return;
 
-  const getOrderNew = async () => {
-    if (shopId) {
-      await httpGet(
-        `/bills/counter-order-status/${shopId}?statusOrder=รับออเดอร์แล้ว`,
-        { headers: { apikey: token } },
-      ).then((res) => {
-        setOrderNew(res.data.count);
-      });
-    }
-  };
+    const res = await httpGet(`/bills/counter-order-status/${shopId}`, {
+      headers: { apikey: token },
+    });
+    const counts = Array.isArray(res.data)
+      ? res.data
+      : Array.isArray(res.data?.data)
+        ? res.data.data
+        : [];
 
-  const getOrderCooking = async () => {
-    if (shopId) {
-      await httpGet(
-        `/bills/counter-order-status/${shopId}?statusOrder=กำลังส่ง`,
-        { headers: { apikey: token } },
-      ).then((res) => {
-        setOrderCooking(res.data.count);
-      });
-    }
-  };
-
-  const getOrderCookingFinish = async () => {
-    if (shopId) {
-      await httpGet(
-        `/bills/counter-order-status/${shopId}?statusOrder=ทำเสร็จแล้ว`,
-        { headers: { apikey: token } },
-      ).then((res) => {
-        setOrderCookingFinish(res.data.count);
-      });
-    }
+    setOrderCounts((current) => ({
+      ...current,
+      ...Object.fromEntries(
+        counts.map(({ statusname, total }) => [statusname, Number(total) || 0]),
+      ),
+    }));
   };
 
   const dev = import.meta.env.VITE_API_URL;
@@ -251,20 +287,14 @@ const Orders = () => {
           setOpen(false);
           setPaymentType("");
         }
-        getOrderNew();
-        getOrderDelivery();
-        getOrderCookingFinish();
-        getOrderCooking();
+        getOrderCounts();
       }
     });
   };
 
   useEffect(() => {
     getMenuReport("รับออเดอร์แล้ว");
-    getOrderNew();
-    getOrderDelivery();
-    getOrderCookingFinish();
-    getOrderCooking();
+    getOrderCounts();
   }, [shopId]);
 
   return (
@@ -310,69 +340,70 @@ const Orders = () => {
         <Col md={12}>
           <Card style={{ border: "none", marginTop: "12px" }}>
             <Form>
-              <Row
-                className="when-print sticky-top"
-                style={{
-                  top: "56px",
-                  backgroundColor: "#fff",
-                  zIndex: 100,
-                  padding: "12px 0",
-                }}
-              >
-                <ButtonGroup aria-label="Basic example" style={{ height: 60 }}>
+              <Row className="when-print orders-toolbar sticky-top">
+                
+                <ButtonGroup
+                  aria-label="สถานะออเดอร์"
+                  className="orders-status-tabs"
+                >
                   <Button
-                    variant={
+                    style={{ color: 'white' }}
+                    variant="light"
+                    className={
                       statusOrder === "รับออเดอร์แล้ว"
-                        ? "btn btn-primary"
-                        : "btn btn-outline-primary"
+                        ? "orders-status-tab active"
+                        : "orders-status-tab"
                     }
-                    style={{ fontSize: "18px" }}
                     onClick={() => {
                       (getMenuReport("รับออเดอร์แล้ว"),
                         setStatusOrder("รับออเดอร์แล้ว"));
                     }}
                   >
-                    ใหม่ {OrderNew}
+                    <span>ใหม่</span>
+                    <b>{orderCounts["รับออเดอร์แล้ว"]}</b>
                   </Button>
                   <Button
-                    variant={
+                    variant="light"
+                    className={
                       statusOrder === "ทำเสร็จแล้ว"
-                        ? "btn btn-primary"
-                        : "btn btn-outline-primary"
+                        ? "orders-status-tab active"
+                        : "orders-status-tab"
                     }
-                    style={{ fontSize: "18px" }}
                     onClick={() => {
                       (getMenuReport("ทำเสร็จแล้ว"),
                         setStatusOrder("ทำเสร็จแล้ว"));
                     }}
                   >
-                    พร้อมส่ง {OrderCookingFinish}
+                    <span>พร้อมส่ง</span>
+                    <b>{orderCounts["ทำเสร็จแล้ว"]}</b>
                   </Button>
                   <Button
-                    variant={
+                    variant="light"
+                    className={
                       statusOrder === "กำลังส่ง"
-                        ? "btn btn-primary"
-                        : "btn btn-outline-primary"
+                        ? "orders-status-tab active"
+                        : "orders-status-tab"
                     }
-                    style={{ fontSize: "18px" }}
                     onClick={() => {
                       (getMenuReport("กำลังส่ง"), setStatusOrder("กำลังส่ง"));
                     }}
                   >
-                    กำลังส่ง {OrderCooking}
+                    <span>กำลังส่ง</span>
+                    <b>{orderCounts["กำลังส่ง"]}</b>
                   </Button>
                   <Button
-                    variant={
+                    variant="light"
+                    className={
                       statusOrder === "ส่งสำเร็จ"
-                        ? "btn btn-primary"
-                        : "btn btn-outline-primary"
+                        ? "orders-status-tab active"
+                        : "orders-status-tab"
                     }
-                    style={{ fontSize: "18px" }}
                     onClick={() => {
                       (getMenuReport("ส่งสำเร็จ"), setStatusOrder("ส่งสำเร็จ"));
                     }}
                   >
-                    ส่งสำเร็จ {Delivered}{" "}
+                    <span>ส่งสำเร็จ</span>
+                    <b>{orderCounts["ส่งสำเร็จ"]}</b>
                   </Button>
                 </ButtonGroup>
               </Row>
@@ -394,87 +425,140 @@ const Orders = () => {
                   )}
                 </div>
 
+                {!loading &&
+                  !report.some((item) => item.ordertype === "สั่งกลับบ้าน") && (
+                    <Col xs={12}>
+                      <div className="orders-empty-state" role="status">
+                        <span className="orders-empty-icon">
+                          <PackageOpen size={30} strokeWidth={1.7} />
+                        </span>
+                        <h3>ไม่มีข้อมูล</h3>
+                        <p>ยังไม่มีออเดอร์ในสถานะ {statusOrder}</p>
+                      </div>
+                    </Col>
+                  )}
+
                 {report.map((item, index) => (
                   <React.Fragment key={index}>
                     {item.ordertype === "สั่งกลับบ้าน" && (
-                      <Col md={4} className="orders-card-col">
+                      <Col md={6} xl={4} className="orders-card-col">
                         <Card className="orders-card mb-4 mt-4" id={item.id}>
-                          <Card.Body style={{ padding: "12px" }}>
+                          <Card.Body>
                             <div className="text-center show-header">
-                              <h5> {shop?.name} </h5>
+                              <h5>{shop?.name}</h5>
                               <h5>ใบเสร็จรับเงิน</h5>
                             </div>
-                            {/*  คิวที่ {item.queueNumber} <br /> */}
-                            <b>
-                              {" "}
-                              เลขออเดอร์ {item.bill_ID.slice(-5).toUpperCase()}
-                            </b>
-                            <p>
-                              เวลาสั่งซื้อ{" "}
-                              {moment(item.timeOrder).format("HH:mm")} น. &nbsp;
-                              วันที่สั่ง{" "}
-                              {moment(item.timeOrder).format("YYYY-MM-DD")}
-                            </p>
-                            <Row>
-                              <Col md={12} xs={12}>
-                                <h5>{item.customerName}</h5>
-                              </Col>
-                            </Row>
-                            <Alert className="bg-white p-2 text-center">
-                              <Row>
-                                <Col md={6} xs={6}>
-                                  <h5>{item.statusOrder}</h5>
-                                </Col>
-                                <Col md={6} xs={6}>
-                                  <h5> {item.amount} บาท</h5>
-
-                                  {item.payment_type === "bank_transfer" ? (
-                                    <Badge bg="danger">เงินโอน</Badge>
-                                  ) : (
-                                    <Badge bg="secondary">จ่ายเงินสด</Badge>
-                                  )}
-                                </Col>
-                              </Row>
-                            </Alert>
+                            <div className="orders-card-header">
+                              <div>
+                                <span className="orders-order-number">
+                                  <ReceiptText size={15} /> #
+                                  {item.bill_ID.slice(-5).toUpperCase()}
+                                </span>
+                                <span className="orders-order-time">
+                                  <Clock3 size={14} />{" "}
+                                  {moment(item.timeOrder).format(
+                                    "DD MMM YYYY, HH:mm",
+                                  )}{" "}
+                                  น.
+                                </span>
+                              </div>
+                              <Badge className="orders-status-badge">
+                                {item.statusOrder}
+                              </Badge>
+                            </div>
+                            <div className="orders-customer">
+                              <span className="orders-customer-icon">
+                                <UserRound size={18} />
+                              </span>
+                              <strong>{item.customerName || "ลูกค้า"}</strong>
+                            </div>
                             <Details
                               id={item.id}
                               bill_ID={item.bill_ID}
                               status={item.statusOrder}
                             />
-                            <Row className="orders-delivery-info mt-2">
-                              <Col xs={12}>
-                                {item.address && (
-                                  <p className="orders-address">
-                                    <strong>ที่อยู่จัดส่ง</strong>
-                                    <br />
-                                    {item.address}
-                                  </p>
-                                )}
-                                {(() => {
-                                  const { lat, lng } =
-                                    getOrderCoordinates(item);
-                                  const mapsUrl = getGoogleMapsUrl(item);
-                                  return lat !== undefined &&
-                                    lng !== undefined ? (
-                                    <div className="orders-location-row">
-                                      <span className="orders-coordinates">
-                                        พิกัด: {lat}, {lng}
-                                      </span>
-                                      <Button
-                                        as="a"
-                                        href={mapsUrl}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        className="orders-map-button"
-                                      >
-                                        <MapPinned size={17} />
-                                        นำทาง
-                                      </Button>
+                            {(() => {
+                              const { lat, lng } = getOrderCoordinates(item);
+                              const hasDestination =
+                                lat !== undefined &&
+                                lat !== null &&
+                                lng !== undefined &&
+                                lng !== null;
+                              const mapUrl =
+                                riderLocation && hasDestination
+                                  ? `https://maps.google.com/maps?saddr=${riderLocation.lat},${riderLocation.lng}&daddr=${lat},${lng}&output=embed`
+                                  : hasDestination
+                                    ? `https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed`
+                                    : "";
+                              const distance = routeDistances[item.id];
+
+                              return (
+                                <section className="orders-delivery-info">
+                                  <div className="orders-delivery-heading">
+                                    <span className="orders-pin-icon">
+                                      <MapPinned size={18} />
+                                    </span>
+                                    <div>
+                                      <strong>ที่อยู่จัดส่ง</strong>
                                     </div>
-                                  ) : null;
-                                })()}
-                              </Col>
-                            </Row>
+                                  </div>
+                                  <p className="orders-address">
+                                    {item.address || "ไม่มีรายละเอียดที่อยู่"}
+                                  </p>
+                                  {hasDestination && (
+                                    <>
+                                      {riderLocation && (
+                                        <div className="orders-route-summary">
+                                          <span>
+                                            <b>A</b> ตำแหน่งไรเดอร์
+                                          </span>
+                                          <span
+                                            className="orders-route-line"
+                                            aria-hidden="true"
+                                          />
+                                          <span>
+                                            <b>B</b> จุดส่ง
+                                          </span>
+                                          <strong>
+                                            {distance
+                                              ? `${(distance / 1000).toFixed(1)} กม.`
+                                              : "กำลังคำนวณ"}
+                                          </strong>
+                                        </div>
+                                      )}
+                                      <iframe
+                                        className="orders-map-preview"
+                                        title={`แผนที่ไปยังออเดอร์ ${item.bill_ID.slice(-5)}`}
+                                        src={mapUrl}
+                                        loading="lazy"
+                                        referrerPolicy="no-referrer-when-downgrade"
+                                      />
+                                      <div className="orders-location-row">
+                                        <Button
+                                          as="a"
+                                          href={getGoogleMapsUrl(item)}
+                                          target="_blank"
+                                          rel="noreferrer"
+                                          className="orders-map-button"
+                                        >
+                                          <MapPinned size={17} /> นำทาง
+                                        </Button>
+                                      </div>
+                                    </>
+                                  )}
+                                </section>
+                              );
+                            })()}
+                            <div className="orders-total-row">
+                              <span>
+                                {item.payment_type === "bank_transfer"
+                                  ? "เงินโอน"
+                                  : "จ่ายเงินสด"}
+                              </span>
+                              <strong>
+                                {item.amount} <small>บาท</small>
+                              </strong>
+                            </div>
 
                             <Row className="mt-2">
                               {item.statusOrder === "รับออเดอร์แล้ว" && (
@@ -492,7 +576,7 @@ const Orders = () => {
                                     }}
                                     variant="success w-100"
                                   >
-                                    ทำอาหารเสร็จแล้ว
+                                    ดำเนินการต่อ
                                   </Button>
                                 </Col>
                               )}
