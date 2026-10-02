@@ -440,12 +440,27 @@
   }
 
   .orders-status-tab {
-    flex: 0 0 auto;
-    min-height: 42px;
-    min-width: 92px;
-    padding: 7px 9px;
-    gap: 6px;
-    font-size: 13px;
+    flex: none;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 54px;
+    width: 100%;
+    padding: 5px 2px;
+    gap: 3px;
+    font-size: 11px;
+  }
+
+  .orders-status-tabs {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 5px;
+    overflow: visible;
+  }
+
+  .orders-status-tab b {
+    min-width: 20px;
+    height: 20px;
+    font-size: 11px;
   }
 
   .orders-card .card-body {
