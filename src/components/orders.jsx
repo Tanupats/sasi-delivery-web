@@ -499,7 +499,7 @@ const Orders = () => {
                                       <MapPinned size={18} />
                                     </span>
                                     <div>
-                                      <strong>ที่อยู่จัดส่ง</strong>
+                                      <strong>รายละเอียดการจัดส่ง</strong>
                                     </div>
                                   </div>
                                   <p className="orders-address">
@@ -510,7 +510,7 @@ const Orders = () => {
                                       {riderLocation && (
                                         <div className="orders-route-summary">
                                           <span>
-                                            <b>A</b> ตำแหน่งไรเดอร์
+                                            <b>A</b> จุดรับ
                                           </span>
                                           <span
                                             className="orders-route-line"
@@ -550,11 +550,17 @@ const Orders = () => {
                               );
                             })()}
                             <div className="orders-total-row">
-                              <span>
+                              <Badge
+                                className={`orders-payment-badge ${
+                                  item.payment_type === "bank_transfer"
+                                    ? "orders-payment-badge-transfer"
+                                    : "orders-payment-badge-cash"
+                                }`}
+                              >
                                 {item.payment_type === "bank_transfer"
                                   ? "เงินโอน"
                                   : "จ่ายเงินสด"}
-                              </span>
+                              </Badge>
                               <strong>
                                 {item.amount} <small>บาท</small>
                               </strong>
@@ -629,8 +635,8 @@ const Orders = () => {
                                           <Camera size={20} strokeWidth={2.2} />
                                         </span>
                                         <span className="delivery-proof-text">
-                                          <strong>ถ่ายรูปหลักฐาน</strong>
-                                          <small>การจัดส่ง</small>
+                                          <strong>ถ่ายรูปหลักฐาน การจัดส่ง</strong>
+                                          <small></small>
                                         </span>
                                       </label>
                                     </div>

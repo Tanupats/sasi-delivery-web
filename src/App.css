@@ -330,18 +330,43 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 2px;
-  color: #69756d;
-  font-size: 13px;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 13px 14px;
+  border-top: 1px solid #e5ece6;
+  border-radius: 8px;
+  background: #f4f8f4;
+  color: #405347;
+}
+
+.orders-payment-badge {
+  padding: 7px 11px;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.orders-payment-badge-cash {
+  border: 1px solid #28583b;
+  background: #28583b;
+}
+
+.orders-payment-badge-transfer {
+  border: 1px solid #315d78;
+  background: #315d78;
 }
 
 .orders-total-row strong {
   color: #1e382b;
-  font-size: 20px;
+  font-size: 25px;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .orders-total-row small {
-  font-size: 13px;
+  color: #607267;
+  font-size: 14px;
   font-weight: 500;
 }
 
