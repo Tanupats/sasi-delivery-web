@@ -1,8 +1,8 @@
-import  { useContext } from 'react';
+import  { useContext, useEffect, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Link, Navigate } from "react-router-dom";
 import { AuthData } from "../ContextData";
 import Orders from './orders';
 import Login from './Login';
@@ -10,11 +10,32 @@ import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Swal from 'sweetalert2';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { httpGet } from "../http";
 const NavbarMenu = () => {
+  const role = localStorage.getItem("role");
+  const hasRiderSession = Boolean(localStorage.getItem("token")) && role?.trim().toLowerCase() === "rider";
+  const shopId = localStorage.getItem("shopId");
+  const [shopName, setShopName] = useState(localStorage.getItem("shopName") || "");
   const {
     staffName
   } =
     useContext(AuthData);
+
+  useEffect(() => {
+    if (!hasRiderSession || !shopId) return;
+
+    httpGet(`/shop/${shopId}`)
+      .then((res) => {
+        const shop = Array.isArray(res.data) ? res.data[0] : res.data;
+        const name = shop?.shop_name ?? shop?.shopname ?? shop?.shopName ?? shop?.name;
+        if (name) {
+          setShopName(name);
+          localStorage.setItem("shopName", name);
+        }
+      })
+      .catch(() => {});
+  }, [hasRiderSession, shopId]);
+
   const logout = () => {
     Swal.fire({
       title: 'ต้องการออกจากระบบหรือไม่ ?',
@@ -36,7 +57,7 @@ const NavbarMenu = () => {
   return (
     <Router>
       {
-        staffName !== null && (
+        hasRiderSession && staffName !== null && (
           <Navbar expand="lg" style={{ backgroundColor: '#FD720D' }} className='when-print ' sticky='top'>
             <Container fluid>
               <Navbar.Brand href="/pos" style={{ color: '#fff' }}>SASI RIDER</Navbar.Brand>
@@ -44,8 +65,12 @@ const NavbarMenu = () => {
               <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto text-center">
                   <>            
-                    <Nav.Link as={Link} to={'/orders'} style={{ textDecoration: 'none', color: '#fff' }}>
-                      <DeliveryDiningIcon />  ออเดอร์จัดส่ง
+                    <Nav.Link as={Link} to={'/orders'} className="rider-orders-link" style={{ textDecoration: 'none', color: '#fff' }}>
+                      <DeliveryDiningIcon />
+                      <span className="rider-orders-label">
+                        ออเดอร์จัดส่ง
+                      
+                      </span>
                     </Nav.Link>
                   </>
                 </Nav>
@@ -66,7 +91,7 @@ const NavbarMenu = () => {
 
       <Routes>
         <Route path="/" Component={Login}></Route>
-        <Route path="/orders" Component={Orders}></Route>
+        <Route path="/orders" element={hasRiderSession ? <Orders /> : <Navigate to="/" replace />} />
       </Routes>
     </Router>
   );

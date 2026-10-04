@@ -39,6 +39,7 @@ const Orders = () => {
   });
   const [statusOrder, setStatusOrder] = useState("รับออเดอร์แล้ว");
   const shopId = localStorage.getItem("shopId");
+  const [shopName, setShopName] = useState(localStorage.getItem("shopName") || "");
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [preview, setPreview] = useState("");
@@ -297,6 +298,21 @@ const Orders = () => {
     getOrderCounts();
   }, [shopId]);
 
+  useEffect(() => {
+    if (!shopId || shopName) return;
+
+    httpGet(`/shop/${shopId}`)
+      .then((res) => {
+        const shop = Array.isArray(res.data) ? res.data[0] : res.data;
+        const name = shop?.shop_name ?? shop?.shopname ?? shop?.shopName ?? shop?.name;
+        if (name) {
+          setShopName(name);
+          localStorage.setItem("shopName", name);
+        }
+      })
+      .catch(() => {});
+  }, [shopId, shopName]);
+
   return (
     <>
       <Modal show={open}>
@@ -341,7 +357,10 @@ const Orders = () => {
           <Card style={{ border: "none", marginTop: "12px" }}>
             <Form>
               <Row className="when-print orders-toolbar sticky-top">
-                
+                <div className="orders-shop-context">
+              
+                  <strong>{shopName || "กำลังโหลดชื่อร้าน..."}</strong>
+                </div>
                 <ButtonGroup
                   aria-label="สถานะออเดอร์"
                   className="orders-status-tabs"
