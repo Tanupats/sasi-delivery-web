@@ -293,12 +293,12 @@ const Cart = () => {
               <>
                 <Col md={12} xs={12}>
                   <Button
-                    className="mb-2 w-100"
+                    className="mb-2 d-inline-flex align-items-center gap-1"
                     variant="outline-secondary"
                     size="sm"
                     onClick={() => router(-1)}
                   >
-                    <ArrowLeft size={20} /> เลือกเพิ่มเติม
+                    <ArrowLeft size={16} /> เลือกเพิ่มเติม
                   </Button>
                   <Form
                     id="save"
@@ -487,12 +487,12 @@ const Cart = () => {
                     <div className="summary-section">
                       <div className="summary-card">
                         <div className="summary-row">
-                          <span className="summary-label">ยอดรวมอาหาร</span>
+                          <span className="summary-label">ยอดรวมสินค้า</span>
                           <span className="summary-value">{sumPrice} ฿</span>
                         </div>
                         {orderType === "สั่งกลับบ้าน" && (
                           <>
-                            <div className="summary-row">
+                            <div className="summary-row delivery-fee-row">
                               <span className="summary-label">ค่าจัดส่ง</span>
                               <span className="summary-value">
                                 {chargedDeliveryFee} ฿
@@ -501,7 +501,7 @@ const Cart = () => {
                           </>
                         )}
                         <div className="summary-row">
-                          <span className="summary-label">จำนวนรายการ</span>
+                          <span className="summary-label">จำนวน</span>
                           <span className="summary-value">{toTal} รายการ</span>
                         </div>
                         <div className="summary-divider"></div>

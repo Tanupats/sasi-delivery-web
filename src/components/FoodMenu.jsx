@@ -80,7 +80,7 @@ const FoodMenu = () => {
         {/* <Card.Title className="text-center mt-3">  รายการอาหาร</Card.Title> */}
         <Card.Body>
           <Row>
-            <Col md={12} className="mb-4">
+            <Col md={12} className="menu-type-bar mb-4">
               {menuType.length > 0 &&
                 menuType?.map((item, index) => {
                   return (

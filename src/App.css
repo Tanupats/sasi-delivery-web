@@ -2,6 +2,15 @@
   display: none;
 }
 
+.menu-type-bar {
+  position: sticky;
+  top: 56px;
+  z-index: 10;
+  align-self: flex-start;
+  padding-top: 8px;
+  background: #ffffff;
+}
+
 .order-type-button {
   width: 100%;
   min-height: 66px;
@@ -577,6 +586,11 @@
   font-weight: 700;
   color: #2c3e50;
   font-size: 16px;
+}
+
+.delivery-fee-row .summary-label,
+.delivery-fee-row .summary-value {
+  color: #5a9b70;
 }
 
 .summary-row.total .summary-value {
