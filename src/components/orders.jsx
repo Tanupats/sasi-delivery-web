@@ -29,6 +29,7 @@ const Orders = () => {
   const { shop, user } = useContext(AuthData);
   const token = localStorage.getItem("token");
   const facebook_token = localStorage.getItem("facebook_token");
+  const shopId = localStorage.getItem("shopId");
   const [report, setReport] = useState([]);
   const [file, setFile] = useState("");
   const [orderCounts, setOrderCounts] = useState({
@@ -38,8 +39,9 @@ const Orders = () => {
     ส่งสำเร็จ: 0,
   });
   const [statusOrder, setStatusOrder] = useState("รับออเดอร์แล้ว");
-  const shopId = localStorage.getItem("shopId");
-  const [shopName, setShopName] = useState(localStorage.getItem("shopName") || "");
+  const [shopName, setShopName] = useState(
+    localStorage.getItem("shopName") || "",
+  );
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [preview, setPreview] = useState("");
@@ -48,6 +50,15 @@ const Orders = () => {
   const [paymentType, setPaymentType] = useState("");
   const [riderLocation, setRiderLocation] = useState(null);
   const [routeDistances, setRouteDistances] = useState({});
+  const [arrivedOrders, setArrivedOrders] = useState(() => {
+    try {
+      return new Set(
+        JSON.parse(localStorage.getItem(`arrivedOrders:${shopId}`) || "[]"),
+      );
+    } catch {
+      return new Set();
+    }
+  });
   const getOrderCoordinates = (order) => ({
     lat: order.lat ?? order.latitude,
     lng: order.lng ?? order.longitude,
@@ -218,13 +229,60 @@ const Orders = () => {
           icon: "success",
           timer: 500,
         });
+        return true;
       }
+      return false;
     } catch (error) {
       Swal.fire({
         title: "ส่งข้อความไปยังลูกไม่สำเร็จ",
         icon: "error",
       });
+      return false;
     }
+  };
+
+  const markOrderArrived = async (order) => {
+    if (
+      order.messengerId !== "pos" &&
+      !(await sendMessageToPage(order.messengerId, "ไรเดอร์มาถึงแล้วครับ"))
+    ) {
+      return;
+    }
+    setArrivedOrders((current) => new Set(current).add(order.id));
+  };
+
+  const changePaymentType = async (order) => {
+    if (arrivedOrders.has(order.id)) return;
+
+    const result = await Swal.fire({
+      title: "เปลี่ยนวิธีชำระเงิน",
+      input: "select",
+      inputOptions: {
+        cash: "จ่ายเงินสด",
+        bank_transfer: "เงินโอน",
+      },
+      inputValue:
+        order.payment_type === "bank_transfer" ? "bank_transfer" : "cash",
+      showCancelButton: true,
+      confirmButtonText: "บันทึก",
+      cancelButtonText: "ยกเลิก",
+    });
+    if (!result.isConfirmed || result.value === order.payment_type) return;
+
+    const response = await httpPut(`/bills/${order.id}`, {
+      payment_type: result.value,
+    });
+    if (!response) {
+      Swal.fire({ title: "เปลี่ยนวิธีชำระไม่สำเร็จ", icon: "error" });
+      return;
+    }
+
+    setReport((current) =>
+      current.map((item) =>
+        item.id === order.id ? { ...item, payment_type: result.value } : item,
+      ),
+    );
+    Swal.fire({ title: "บันทึกวิธีชำระแล้ว", icon: "success", timer: 800 });
   };
 
   const handleFileChange = async (e, bill, userid, paymentType) => {
@@ -261,14 +319,14 @@ const Orders = () => {
       if (res) {
         if (status === "ทำเสร็จแล้ว") {
           if (messageid !== "pos") {
-            sendMessageToPage(messageid, "ออเดอร์ทำเสร็จแล้ว รอส่งนะครับ");
+            sendMessageToPage(messageid, "ออเดอร์พร้อมส่งแล้วนะครับ");
           }
           getMenuReport("รับออเดอร์แล้ว");
           setStatusOrder("รับออเดอร์แล้ว");
         }
         if (status === "กำลังส่ง") {
           if (messageid !== "pos") {
-            sendMessageToPage(messageid, "ไรเดอร์กำลังไปส่งออเดอร์ให้นะครับ");
+            sendMessageToPage(messageid, "กำลังไปนะครับ");
           }
           getMenuReport("ทำเสร็จแล้ว");
           setStatusOrder("ทำเสร็จแล้ว");
@@ -277,9 +335,9 @@ const Orders = () => {
           if (messageid !== "pos") {
             uploadFile(messageid);
 
-            sendMessageToPage(messageid, "จัดส่งแล้วนะครับ");
+            sendMessageToPage(messageid, "จัดส่งเรียบร้อยครับ");
             if (paymentType !== "bank_transfer") {
-              sendMessageToPage(messageid, "ได้รับเงินสดแล้วนะครับ");
+              sendMessageToPage(messageid, "ได้รับเงินสดแล้วนะครับ ขอบคุณครับ");
             }
           }
           getMenuReport("กำลังส่ง");
@@ -287,6 +345,11 @@ const Orders = () => {
           setFile("");
           setOpen(false);
           setPaymentType("");
+          setArrivedOrders((current) => {
+            const next = new Set(current);
+            next.delete(id);
+            return next;
+          });
         }
         getOrderCounts();
       }
@@ -299,12 +362,20 @@ const Orders = () => {
   }, [shopId]);
 
   useEffect(() => {
+    localStorage.setItem(
+      `arrivedOrders:${shopId}`,
+      JSON.stringify([...arrivedOrders]),
+    );
+  }, [arrivedOrders, shopId]);
+
+  useEffect(() => {
     if (!shopId || shopName) return;
 
     httpGet(`/shop/${shopId}`)
       .then((res) => {
         const shop = Array.isArray(res.data) ? res.data[0] : res.data;
-        const name = shop?.shop_name ?? shop?.shopname ?? shop?.shopName ?? shop?.name;
+        const name =
+          shop?.shop_name ?? shop?.shopname ?? shop?.shopName ?? shop?.name;
         if (name) {
           setShopName(name);
           localStorage.setItem("shopName", name);
@@ -358,7 +429,6 @@ const Orders = () => {
             <Form>
               <Row className="when-print orders-toolbar sticky-top">
                 <div className="orders-shop-context">
-              
                   <strong>{shopName || "กำลังโหลดชื่อร้าน..."}</strong>
                 </div>
                 <ButtonGroup
@@ -366,7 +436,7 @@ const Orders = () => {
                   className="orders-status-tabs"
                 >
                   <Button
-                    style={{ color: 'white' }}
+                    style={{ color: "white" }}
                     variant="light"
                     className={
                       statusOrder === "รับออเดอร์แล้ว"
@@ -584,6 +654,16 @@ const Orders = () => {
                                 {item.amount} <small>บาท</small>
                               </strong>
                             </div>
+                            {!arrivedOrders.has(item.id) && (
+                              <Button
+                                size="sm"
+                                variant="outline-secondary"
+                                className="mt-2"
+                                onClick={() => changePaymentType(item)}
+                              >
+                                เปลี่ยนวิธีชำระ
+                              </Button>
+                            )}
 
                             <Row className="mt-2">
                               {item.statusOrder === "รับออเดอร์แล้ว" && (
@@ -630,65 +710,86 @@ const Orders = () => {
                                 )}
                               {item.statusOrder === "กำลังส่ง" && (
                                 <>
-                                  <Col md={6} xs={12}>
-                                    <div className="delivery-proof-upload-wrap mb-4">
-                                      <label
-                                        htmlFor={`proof-upload-${item.id}`}
-                                        className="delivery-proof-upload"
+                                  {item.payment_type !== "bank_transfer" &&
+                                  !arrivedOrders.has(item.id) ? (
+                                    <Col md={12} xs={12}>
+                                      <Button
+                                        style={{ fontSize: 18 }}
+                                        className="mb-2 w-100"
+                                        onClick={() => markOrderArrived(item)}
+                                        variant="primary"
                                       >
-                                        <input
-                                          id={`proof-upload-${item.id}`}
-                                          type="file"
-                                          accept="image/*"
-                                          capture="environment"
-                                          onChange={(e) =>
-                                            handleFileChange(
-                                              e,
-                                              item.id,
-                                              item.messengerId,
-                                              item.payment_type,
-                                            )
-                                          }
-                                        />
-                                        <span className="delivery-proof-icon">
-                                          <Camera size={20} strokeWidth={2.2} />
-                                        </span>
-                                        <span className="delivery-proof-text">
-                                          <strong>ถ่ายรูปหลักฐาน การจัดส่ง</strong>
-                                          <small></small>
-                                        </span>
-                                      </label>
-                                    </div>
-                                  </Col>
-                                  <Col md={6} xs={12}>
-                                    <Button
-                                      style={{ fontSize: 18 }}
-                                      className="mb-2"
-                                      onClick={() => {
-                                        Swal.fire({
-                                          title: "ยืนยันการจัดส่ง?",
-                                          text: "คุณต้องการเปลี่ยนสถานะเป็น 'จัดส่งสำเร็จ' หรือไม่",
-                                          icon: "question",
-                                          showCancelButton: true,
-                                          confirmButtonText: "ยืนยัน",
-                                          cancelButtonText: "ยกเลิก",
-                                        }).then((result) => {
-                                          if (result.isConfirmed) {
-                                            UpdateStatus(
-                                              item.id,
-                                              "ส่งสำเร็จ",
-                                              item.messengerId,
-                                              4,
-                                              item.payment_type,
-                                            );
-                                          }
-                                        });
-                                      }}
-                                      variant="success w-100"
-                                    >
-                                      ยืนยันการจัดส่ง
-                                    </Button>
-                                  </Col>
+                                        แจ้งลูกค้าว่ามาถึงแล้ว
+                                      </Button>
+                                    </Col>
+                                  ) : (
+                                    <>
+                                      <Col md={6} xs={12}>
+                                        <div className="delivery-proof-upload-wrap mb-4">
+                                          <label
+                                            htmlFor={`proof-upload-${item.id}`}
+                                            className="delivery-proof-upload"
+                                          >
+                                            <input
+                                              id={`proof-upload-${item.id}`}
+                                              type="file"
+                                              accept="image/*"
+                                              capture="environment"
+                                              onChange={(e) =>
+                                                handleFileChange(
+                                                  e,
+                                                  item.id,
+                                                  item.messengerId,
+                                                  item.payment_type,
+                                                )
+                                              }
+                                            />
+                                            <span className="delivery-proof-icon">
+                                              <Camera
+                                                size={20}
+                                                strokeWidth={2.2}
+                                              />
+                                            </span>
+                                            <span className="delivery-proof-text">
+                                              <strong>
+                                                ถ่ายรูปหลักฐาน การจัดส่ง
+                                              </strong>
+                                              <small></small>
+                                            </span>
+                                          </label>
+                                        </div>
+                                      </Col>
+                                      <Col md={6} xs={12}>
+                                        <Button
+                                          style={{ fontSize: 18 }}
+                                          className="mb-2"
+                                          onClick={() => {
+                                            Swal.fire({
+                                              title: "ยืนยันการจัดส่ง?",
+                                              text: "คุณต้องการเปลี่ยนสถานะเป็น 'จัดส่งสำเร็จ' หรือไม่",
+                                              icon: "question",
+                                              showCancelButton: true,
+                                              confirmButtonText: "ยืนยัน",
+                                              cancelButtonText: "ยกเลิก",
+                                            }).then((result) => {
+                                              if (result.isConfirmed) {
+                                                UpdateStatus(
+                                                  item.id,
+                                                  "ส่งสำเร็จ",
+                                                  item.messengerId,
+                                                  4,
+                                                  item.payment_type,
+                                                );
+                                              }
+                                            });
+                                          }}
+                                          variant="success w-100"
+                                        >
+                                          ยืนยันการจัดส่ง
+                                        </Button>
+                                      </Col>
+                                    </>
+                                  )}
                                 </>
                               )}
                             </Row>
