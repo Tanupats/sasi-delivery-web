@@ -9,7 +9,6 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [selectedPackage, setSelectedPackage] = useState("trial");
-  let userId = "";
   const router = useNavigate();
 
   //shop
@@ -41,15 +40,14 @@ const Register = () => {
     },
   ];
 
-  let filename = "";
   const uploadFile = async () => {
     const formData = new FormData();
     formData.append("file", file);
-    await http.post(`/upload`, formData).then((res) => {
-      if (res.status === 200) {
-        filename = res.data.filename;
-      }
-    });
+    const res = await http.post(`/upload`, formData);
+    if (res.status !== 200 || !res.data.filename) {
+      throw new Error("อัปโหลดรูปภาพร้านค้าไม่สำเร็จ");
+    }
+    return res.data.filename;
   };
 
   const createUser = async () => {
@@ -60,19 +58,15 @@ const Register = () => {
       department: "admin",
       phone: phone,
     };
-    await http.post("/auth/sigup", bodyUser).then((res) => {
-      if (res) {
-        if (res.status === 200) {
-          userId = res.data.id;
-        }
-      }
-    });
+    const res = await http.post("/auth/sigup", bodyUser);
+    if (res.status !== 200 || !res.data.id) {
+      throw new Error("ลงทะเบียนผู้ใช้ไม่สำเร็จ");
+    }
+    return res.data.id;
   };
 
-  const createShop = async () => {
-    if (filename !== "") {
-      await uploadFile();
-    }
+  const createShop = async (userId) => {
+    const filename = file ? await uploadFile() : "";
 
     const date_start = new Date();
     let date_end = new Date();
@@ -87,30 +81,40 @@ const Register = () => {
 
     const bodyShop = {
       name: shopName,
-      user_id: String(userId),
       photo: filename,
       package_name: selectedPackage,
       date_start: date_start.toISOString(),
       end_date: date_end.toISOString(),
       payment: selectedPackage === "trial" ? "free" : "unpaid",
+      user_id: String(userId),
     };
 
-    await http.post("/shop", bodyShop).then((res) => {
-      if (res && res.status === 200) {
-        Swal.fire({
-          title: "ลงทะเบียนสำเร็จ!",
-          text: "คุณได้ลงทะเบียนร้านค้าสำเร็จแล้ว",
-        });
-
-        router("/");
-      }
-    });
+    const res = await http.post("/shop", bodyShop);
+    if (res.status !== 200 || !res.data.shop_id || !res.data.id) {
+      throw new Error("สร้างร้านค้าไม่สำเร็จ");
+    }
+    return res.data;
   };
 
   const saveRegister = async (e) => {
     e.preventDefault();
-    await createUser();
-    await createShop();
+    try {
+      const userId = await createUser();
+      await createShop(userId);
+
+      await Swal.fire({
+        title: "ลงทะเบียนสำเร็จ!",
+        text: "คุณได้ลงทะเบียนร้านค้าสำเร็จแล้ว",
+      });
+      router("/");
+    } catch (error) {
+      console.error("Registration failed:", error);
+      await Swal.fire({
+        title: "ลงทะเบียนไม่สำเร็จ",
+        text: error.message || "กรุณาลองใหม่อีกครั้ง",
+        icon: "error",
+      });
+    }
   };
 
   return (
@@ -119,7 +123,7 @@ const Register = () => {
         <Col lg={7} md={9} sm={12} className="mx-auto">
           <Card className="register-card">
             <Card.Body className="register-card-body">
-              <div className="register-header">
+              <div className="register-header mt-4">
                 <span className="register-badge">SASI POS</span>
                 <h4>สร้างบัญชีร้านค้า</h4>
                 <p>เริ่มต้นใช้งานระบบจัดการร้านค้าของคุณได้ทันที</p>

@@ -58,7 +58,7 @@ const Login = () => {
               <Row className="g-0 login-grid">
                 <Col lg={5} className="login-hero">
                   <div className="login-brand">
-                    <h5 className="register-badge">SASI POS</h5>
+                    <h1 className="register-badge">SASI POS</h1>
                     <h2>ยินดีต้อนรับ</h2>
                     <p>เริ่มต้นใช้งานระบบจัดการร้านค้าของคุณได้ทันที</p>
 
