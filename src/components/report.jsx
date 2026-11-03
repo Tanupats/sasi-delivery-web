@@ -246,7 +246,7 @@ const Report = () => {
                           <span>รวมรายได้สุทธิ</span>
                           <strong>
                             {formatMoney(
-                              Number(totalToday) + Number(deliveryFree),
+                            totalToday
                             )}{" "}
                             บาท
                           </strong>
