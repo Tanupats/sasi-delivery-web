@@ -34,6 +34,7 @@ const Report = () => {
   const shopID = shop?.shop_id;
 
   const [totalToday, setTotalToday] = useState(0);
+  const [deliveryFree, setDeliveryFree] = useState(0);
   const [data, setData] = useState([]);
   const [counter, setCounter] = useState({});
   const [page, setPage] = useState(1);
@@ -62,6 +63,7 @@ const Report = () => {
   const getOrderFood = async () => {
     if (shop?.shop_id) {
       let sumToday = 0;
+      let deliveryTotal = 0;
       let bank = 0;
       let cashIn = 0;
 
@@ -74,6 +76,7 @@ const Report = () => {
 
           res?.data?.map((item) => {
             sumToday += Number(item?.amount);
+            deliveryTotal += Number(item?.delivery_fee) || 0;
 
             if (item.payment_type === "bank_transfer") {
               bank += Number(item?.amount);
@@ -85,6 +88,7 @@ const Report = () => {
           setBank_transfer(bank);
           setCash(cashIn);
           setTotalToday(sumToday);
+          setDeliveryFree(deliveryTotal);
         });
     }
   };
@@ -118,6 +122,7 @@ const Report = () => {
     if (shopID && startDate) {
       let bank = 0;
       let cashIn = 0;
+      let deliveryTotal = 0;
       const body = {
         startDate: getApiDate(),
         shop_id: shopID,
@@ -131,6 +136,8 @@ const Report = () => {
           setTotal(res.data.data?.length || 0);
           setPage(1);
           res?.data.data?.map((item) => {
+            deliveryTotal += Number(item?.delivery_fee) || 0;
+
             if (item.payment_type === "bank_transfer") {
               bank += Number(item?.amount);
             } else {
@@ -142,6 +149,7 @@ const Report = () => {
 
           const total = res.data.total;
           setTotalToday(total);
+          setDeliveryFree(deliveryTotal);
         });
     }
     setLoading(false);
@@ -195,7 +203,9 @@ const Report = () => {
                   <Form>
                     <Row className="mb-3 align-items-end">
                       <Col md={3}>
-                        <Form.Label className="report-label">เลือกวันที่แสดงยอดขาย</Form.Label>
+                        <Form.Label className="report-label">
+                          เลือกวันที่แสดงยอดขาย
+                        </Form.Label>
 
                         <Form.Control
                           className="report-date-input"
@@ -214,47 +224,48 @@ const Report = () => {
                   </Form>
 
                   <div className="report-total-box text-center">
-                    <span className="report-date-text">วันที่ {startDate}</span>
-                   
-                    <h3>
-                      {totalToday &&
-                        counter &&
-                        formatMoney(totalToday - counter.takeawayCount * 5)}{" "}
-                      บาท
-                    </h3>
+                    <h5>ยอดขายวันที่ {startDate}</h5>
+
+                    <Row className="g-3 report-summary-grid">
+                      <Col md={4}>
+                        <div className="report-metric-card report-metric-sales">
+                          <span>ยอดขายสินค้า</span>
+                          <strong>
+                            {formatMoney(totalToday - deliveryFree)} บาท
+                          </strong>
+                        </div>
+                      </Col>
+                      <Col md={4}>
+                        <div className="report-metric-card report-metric-delivery">
+                          <span>รายได้ค่าจัดส่ง</span>
+                          <strong>{formatMoney(deliveryFree)} บาท</strong>
+                        </div>
+                      </Col>
+                      <Col md={4}>
+                        <div className="report-metric-card report-metric-net">
+                          <span>รวมรายได้สุทธิ</span>
+                          <strong>
+                            {formatMoney(
+                              Number(totalToday) + Number(deliveryFree),
+                            )}{" "}
+                            บาท
+                          </strong>
+                        </div>
+                      </Col>
+                    </Row>
                   </div>
 
-                  {/* <Row className="g-3 mt-1">
-                    <Col md={6} xs={6}>
-                      <Alert variant="primary" className="report-summary-box transfer-box d-flex p-4">
-                        <PaymentIcon className="me-2" />
-                        <div>
-                          <small>เงินโอน</small>
-                          <h5>{formatMoney(bank_transfer)} บาท</h5>
-                        </div>
-                      </Alert>
-                    </Col>
-
-                    <Col md={6} xs={6}>
-                      <Alert variant="secondary" className="report-summary-box cash-box d-flex p-4">
-                        <PaidIcon className="me-2" />
-                        <div>
-                          <small>เงินสด</small>
-                          <h5>{formatMoney(cash)} บาท</h5>
-                        </div>
-                      </Alert>
-                    </Col>
-                  </Row> */}
+                 
 
                   <Card className="mt-3 report-stat-card">
                     <Card.Body>
                       <Row className="g-3">
                         <Col md={4}>
                           <div className="text-center report-stat-item card-report-1 mb-2">
-                            <DeliveryDiningIcon style={{ fontSize: 30 }} />
-                            
+                            <DeliveryDiningIcon className="report-stat-icon" />
+
                             <strong>เดลิเวอรี่</strong>
-                           
+
                             <span>จำนวน {counter.takeawayCount} </span>
                             {/* <p>
                               ยอดขาย{" "}
@@ -269,10 +280,10 @@ const Report = () => {
 
                         <Col md={4}>
                           <div className="text-center report-stat-item card-report-2 mb-2">
-                            <DiningIcon style={{ fontSize: 30 }} />
-                           
+                            <DiningIcon className="report-stat-icon" />
+
                             <strong>ทานที่ร้าน</strong>
-                            
+
                             <span>จำนวน {counter.dineInCount} </span>
                             {/* <p>
                               ยอดขาย{" "}
@@ -283,10 +294,10 @@ const Report = () => {
 
                         <Col md={4}>
                           <div className="text-center report-stat-item card-report-3 mb-2">
-                            <StorefrontIcon style={{ fontSize: 30 }} />
-                          
+                            <StorefrontIcon className="report-stat-icon" />
+
                             <strong>รับหน้าร้าน</strong>
-                          
+
                             <span>จำนวน {counter.pickupCount} </span>
                             {/* <p>
                               ยอดขาย{" "}
@@ -296,9 +307,37 @@ const Report = () => {
                         </Col>
                       </Row>
 
-                      {/* <div className="text-center mt-4 total-bill-chip">
+                      <div className="text-center mt-4 total-bill-chip">
                         <b>รวมทั้งหมด {counter.totalCount} บิล</b>
-                      </div> */}
+                      </div>
+
+                       <Row className="g-3 mt-1">
+                    <Col md={6} xs={6}>
+                      <Alert
+                        variant="primary"
+                        className="report-summary-box transfer-box d-flex p-4"
+                      >
+                        <PaymentIcon className="me-2" />
+                        <div>
+                          <small>เงินโอน</small>
+                          <h5>{formatMoney(bank_transfer)} บาท</h5>
+                        </div>
+                      </Alert>
+                    </Col>
+
+                    <Col md={6} xs={6}>
+                      <Alert
+                        variant="secondary"
+                        className="report-summary-box cash-box d-flex p-4"
+                      >
+                        <PaidIcon className="me-2" />
+                        <div>
+                          <small>เงินสด</small>
+                          <h5>{formatMoney(cash)} บาท</h5>
+                        </div>
+                      </Alert>
+                    </Col>
+                  </Row>
                     </Card.Body>
                   </Card>
                 </Card.Body>
@@ -310,37 +349,22 @@ const Report = () => {
               </Col>
             )}
             <Col md={12}>
-              <TableContainer component={Paper} className="mt-3 report-table-wrap">
+              <TableContainer
+                component={Paper}
+                className="mt-3 report-table-wrap"
+              >
                 <Table>
-                  <TableHead sx={{ backgroundColor: "#fff2e8" }}>
-                    <TableRow sx={{ backgroundColor: "#fff2e8" }}>
-                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>
-                        ลำดับ
-                      </TableCell>
-                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>
-                        ประเภทการรับ
-                      </TableCell>
-                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>
-                        ประเภทการชำระเงิน
-                      </TableCell>
-                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>
-                        สถานะการชำระเงิน
-                      </TableCell>
-                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>
-                        ยอดรวม
-                      </TableCell>
-                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>
-                        ลูกค้า
-                      </TableCell>
-                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>
-                        เวลา
-                      </TableCell>
-                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>
-                        รายการ
-                      </TableCell>
-                      <TableCell sx={{ color: "#333", fontWeight: 900 }}>
-                        จัดการ
-                      </TableCell>
+                  <TableHead className="report-table-head">
+                    <TableRow>
+                      <TableCell>ลำดับ</TableCell>
+                      <TableCell>ประเภทการรับ</TableCell>
+                      <TableCell>ประเภทการชำระเงิน</TableCell>
+                      <TableCell>สถานะการชำระเงิน</TableCell>
+                      <TableCell>ยอดรวม</TableCell>
+                      <TableCell>ลูกค้า</TableCell>
+                      <TableCell>เวลา</TableCell>
+                      <TableCell>รายการ</TableCell>
+                      <TableCell>จัดการ</TableCell>
                     </TableRow>
                   </TableHead>
 
