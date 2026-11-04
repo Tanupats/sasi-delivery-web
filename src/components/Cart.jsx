@@ -211,9 +211,9 @@ const Cart = () => {
                                 -
                               </Button>
 
-                              <span className="cart-quantity-value">
+                              <b className="cart-quantity-value">
                                 {item.quantity}
-                              </span>
+                              </b>
 
                               <Button
                                 size="sm"
@@ -243,7 +243,7 @@ const Cart = () => {
                           </Col>
 
                           <Row className="cart-item-options">
-                            <Col md={6} xs={6}>
+                            <Col md={12} xs={12}>
                               {item.option_menu === "Y" && (
                                 <>
                                   <div className="cart-option-buttons">
@@ -270,7 +270,7 @@ const Cart = () => {
                                 </>
                               )}
                             </Col>
-                            <Col md={6} xs={6}>
+                            <Col md={12} xs={12} className="mt-2">
                               <Form.Control
                                 className="cart-note-input w-100"
                                 type="text"
