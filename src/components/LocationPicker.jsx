@@ -12,7 +12,7 @@ import markerIcon2xUrl from "leaflet/dist/images/marker-icon-2x.png";
 import markerShadowUrl from "leaflet/dist/images/marker-shadow.png";
 
 import "leaflet/dist/leaflet.css";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Button } from "react-bootstrap";
 
 const locationIcon = L.icon({
   iconUrl: markerIconUrl,
@@ -28,45 +28,10 @@ const DEFAULT_POSITION = [13.7563, 100.5018];
 // ------------------------------
 // Component สำหรับเลือกตำแหน่ง
 // ------------------------------
-function LocationPicker({ setLocation, getAddress }) {
-  const [position, setPosition] = useState(null);
-
-  // 📍 ขอ Location จาก Browser
-  useEffect(() => {
-    if (!navigator.geolocation) {
-      console.log("Browser ไม่รองรับ Geolocation");
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const newPosition = [pos.coords.latitude, pos.coords.longitude];
-
-        setPosition(newPosition);
-
-        setLocation({
-          lat: pos.coords.latitude,
-          lng: pos.coords.longitude,
-        });
-      },
-      (error) => {
-        console.log("ไม่สามารถดึงตำแหน่งปัจจุบันได้:", error);
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 0,
-      },
-    );
-  }, [setLocation]);
-
+function LocationPicker({ location, setLocation }) {
   // 🖱️ คลิกแผนที่เพื่อเลือกตำแหน่งเอง
   useMapEvents({
     click(e) {
-      const newPosition = [e.latlng.lat, e.latlng.lng];
-
-      setPosition(newPosition);
-
       setLocation({
         lat: e.latlng.lat,
         lng: e.latlng.lng,
@@ -74,7 +39,9 @@ function LocationPicker({ setLocation, getAddress }) {
     },
   });
 
-  return position ? <Marker position={position} icon={locationIcon} /> : null;
+  return location ? (
+    <Marker position={[location.lat, location.lng]} icon={locationIcon} />
+  ) : null;
 }
 
 // ------------------------------
@@ -95,6 +62,39 @@ function RecenterMap({ position }) {
 
 export default function DeliveryLocationMap({ getAddress }) {
   const [location, setLocation] = useState(null);
+  const [locationResolved, setLocationResolved] = useState(false);
+  const [isLocating, setIsLocating] = useState(false);
+
+  const requestCurrentLocation = () => {
+    setIsLocating(true);
+    if (!navigator.geolocation) {
+      console.log("Browser ไม่รองรับ Geolocation");
+      setLocationResolved(true);
+      setIsLocating(false);
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setLocation({
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+        });
+        setLocationResolved(true);
+        setIsLocating(false);
+      },
+      (error) => {
+        console.log("ไม่สามารถดึงตำแหน่งปัจจุบันได้:", error);
+        setLocationResolved(true);
+        setIsLocating(false);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
+      },
+    );
+  };
 
   useEffect(() => {
     if (location) {
@@ -111,25 +111,35 @@ export default function DeliveryLocationMap({ getAddress }) {
         <Col md={12} className="text-center">
           <h6 className="mb-3"> ตำแหน่งของคุณ</h6>
 
-          <MapContainer
-            center={DEFAULT_POSITION}
-            zoom={16}
-            style={{
-              height: "300px",
-              width: "100%",
-            }}
-          >
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution="&copy; OpenStreetMap contributors"
-            />
+          {!locationResolved ? (
+            <Button onClick={requestCurrentLocation} disabled={isLocating}>
+              {isLocating ? "กำลังค้นหาตำแหน่ง..." : "ใช้ตำแหน่งปัจจุบัน"}
+            </Button>
+          ) : (
+            <MapContainer
+              center={
+                location
+                  ? [location.lat, location.lng]
+                  : DEFAULT_POSITION
+              }
+              zoom={16}
+              style={{
+                height: "300px",
+                width: "100%",
+              }}
+            >
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution="&copy; OpenStreetMap contributors"
+              />
 
-            <LocationPicker setLocation={setLocation} />
+              <LocationPicker location={location} setLocation={setLocation} />
 
-            {location && (
-              <RecenterMap position={[location.lat, location.lng]} />
-            )}
-          </MapContainer>
+              {location && (
+                <RecenterMap position={[location.lat, location.lng]} />
+              )}
+            </MapContainer>
+          )}
         </Col>
       </Row>
     </div>

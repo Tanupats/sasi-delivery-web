@@ -466,14 +466,14 @@ const Cart = () => {
                           />
                           <Form.Label style={{ fontWeight: 500 }}>
                             {" "}
-                            ที่อยู่จัดส่ง และติดต่อ (แก้ไขเพิ่มเติมได้){" "}
+                            ที่อยู่จัดส่ง และรายละเอียด{" "}
                           </Form.Label>{" "}
                           <Form.Control
                             value={Address}
                             type="text"
                             required
                             onChange={(e) => setAddress(e.target.value)}
-                            placeholder="ระบุที่อยู่จัดส่ง และเบอร์โทรติดต่อ"
+                            placeholder="ระบุที่อยู่จัดส่ง,เบอร์โทรติดต่อ"
                             className="mt-1"
                           />
                         </Form.Group>
