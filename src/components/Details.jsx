@@ -19,7 +19,7 @@ const Details = (props) => {
 
     return (<>
 
-        <ListGroup>
+        <ListGroup className="list-group-flush" style={{ marginTop: '10px', padding: '0px',marginBottom:'10px' }} >
             <Row>
 
                     <h6>รายละเอียดคำสั่งซื้อ</h6>
@@ -27,8 +27,8 @@ const Details = (props) => {
                     detail.map((item, index) => {
                         return (<React.Fragment key={index}>
                             <Col md={12}>
-                                <ListGroup.Item style={{ border: 'none', margin: '0px', padding: '0px', fontSize: '16px',fontWeight:'400' }}>
-                                     X {item.quantity} {item.foodname}  {item.price} <br /> {item.note}  </ListGroup.Item>
+                                <ListGroup.Item style={{ border: 'none', borderBottom: '1px solid #e5e5e5', margin: '0px', padding: '0px', fontSize: '16px',fontWeight:'400' }}>
+                                     X {item.quantity} {item.foodname}  {item.price}฿ <br /> {item.note}  </ListGroup.Item>
                             </Col>
                         </React.Fragment>)
                     })
@@ -45,5 +45,4 @@ const Details = (props) => {
 }
 
 export default Details;
-
 

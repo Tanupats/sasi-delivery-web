@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Row, Card, Alert, Col, Button, Form } from "react-bootstrap";
+import { Row, Card, Alert } from "react-bootstrap";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import axios from "axios";
@@ -10,26 +10,82 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
+import RestaurantIcon from "@mui/icons-material/Restaurant";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import { AuthData } from "../ContextData";
-import QRCode from "qrcode.react";
-import generatePayload from "promptpay-qr";
+//import QRCode from "qrcode.react";
+//import generatePayload from "promptpay-qr";
+
+const orderStatusIcons = [
+  ReceiptLongIcon,
+  RestaurantIcon,
+  LocalShippingIcon,
+  TaskAltIcon,
+];
+
+const OrderStatusStepIcon = ({ icon, active, completed }) => {
+  const Icon = orderStatusIcons[Number(icon) - 1];
+
+  if (!Icon) {
+    return null;
+  }
+
+  return (
+    <span
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: 24,
+        height: 24,
+        borderRadius: "50%",
+        color: active || completed ? "#fff" : "#757575",
+        backgroundColor: active || completed ? "#0288d1" : "#e0e0e0",
+      }}
+    >
+      <Icon sx={{ fontSize: 16 }} />
+    </span>
+  );
+};
+
+const getPaymentBadge = (paymentType) => {
+  if (paymentType === "bank_transfer") {
+    return (
+      <span className="order-payment-badge order-payment-badge--transfer">
+        เงินโอน
+      </span>
+    );
+  }
+
+  if (paymentType === "cash") {
+    return (
+      <span className="order-payment-badge order-payment-badge--cash">
+        ชำระเงินสด
+      </span>
+    );
+  }
+
+  return null;
+};
 
 const Myorder = () => {
   const steps = [
     "รับออเดอร์แล้ว",
-    "กำลังทำอาหาร",
+    "กำลังเตรียมคำสั่งซื้อ",
     "กำลังจัดส่ง",
     "จัดส่งสำเร็จ",
   ];
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const { counterOrder, api_url, promptPay, account_payment } =
+  const { api_url } =
     useContext(AuthData);
   let messengerId = localStorage.getItem("messangerId");
   const [myOrder, setMyOrder] = useState([]);
-  const [orderHistory, setOrderHistory] = useState([]);
-  const [showQr, setShowQr] = useState(false);
-  const [qrCode, setQrCode] = useState("sample");
+  //const [orderHistory, setOrderHistory] = useState([]);
+  //const [showQr, setShowQr] = useState(false);
+  //const [qrCode, setQrCode] = useState("sample");
 
   const getMyOrder = async () => {
     await axios
@@ -41,36 +97,36 @@ const Myorder = () => {
       });
   };
 
-  function handleQR(amount) {
-    setQrCode(generatePayload(promptPay, { amount: Number(amount) }));
-  }
+  // function handleQR(amount) {
+  //   setQrCode(generatePayload(promptPay, { amount: Number(amount) }));
+  // }
 
-  const getBillDetails = async (bill_ID) => {
-    const res = await axios.get(`${api_url}/billsdetails/${bill_ID}`);
-  };
+  // const getBillDetails = async (bill_ID) => {
+  //   const res = await axios.get(`${api_url}/billsdetails/${bill_ID}`);
+  // };
 
-  const getOrderHistoryByDate = async (date) => {
-    await axios
-      .get(
-        `${api_url}/bills/order-history?messengerId=${messengerId}&date_input=${date}`,
-      )
-      .then((res) => {
-        if (res.status === 200) {
-          setOrderHistory(res.data);
-        }
-      });
-  };
-  
+  // const getOrderHistoryByDate = async (date) => {
+  //   await axios
+  //     .get(
+  //       `${api_url}/bills/order-history?messengerId=${messengerId}&date_input=${date}`,
+  //     )
+  //     .then((res) => {
+  //       if (res.status === 200) {
+  //         setOrderHistory(res.data);
+  //       }
+  //     });
+  // };
+
   useEffect(() => {
     getMyOrder();
   }, []);
 
   return (
     <>
-      <Card>
+      <Card className="order-list-panel">
         <Card.Body>
           <Card.Title as={"h6"} className="text-center mb-3">
-            คำสั่งซื้อของฉัน
+            คำสั่งซื้อ
           </Card.Title>
           <Tabs
             defaultActiveKey="home"
@@ -80,36 +136,37 @@ const Myorder = () => {
             <Tab
               onClick={() => getMyOrder()}
               eventKey="home"
-              title={<b className="custom-tab-title">คำสั่งซื้อใหม่</b>}
+              title={<b className="custom-tab-title">ออเดอร์</b>}
             >
               {Array.isArray(myOrder) &&
                 myOrder?.map((item, index) => {
                   if (item.statusOrder === "รับออเดอร์แล้ว") {
                     return (
                       <React.Fragment key={index}>
-                        <Card className="mb-4">
+                        <Card className="order-card mb-4">
                           <Card.Body>
-                            <div className="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between mb-2">
-                              <h6 className="mb-2 mb-md-0">
+                            <div className="order-card__header d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between mb-2">
+                              <h6 className="order-card__heading mb-2 mb-md-0">
                                 หมายเลขออเดอร์{" "}
                                 {item.bill_ID.slice(-5).toUpperCase()} <br />{" "}
-                                วันที่สั่งออเดอร์ {}
+                                วันที่สั่งออเดอร์ { }
                                 {moment(item.Date_times).format("DD-MM-YYYY")}
                                 &nbsp; เวลา{" "}
                                 {moment(item.Date_times).format("HH:mm")} น.
                               </h6>
-                              {item.delivery_date && (
-                                <Alert
-                                  variant="warning"
-                                  className="py-1 px-2 mb-2 mb-md-0"
-                                >
-                                  พรีออเดอร์
-                                </Alert>
-                              )}
+                              <div className="order-card__badges">
+                                {getPaymentBadge(item.payment_type)}
+                                {item.delivery_date && (
+                                  <Alert
+                                    variant="warning"
+                                    className="py-1 px-2 mb-0"
+                                  >
+                                    พรีออเดอร์
+                                  </Alert>
+                                )}
+                              </div>
                             </div>
 
-                            <hr />
-                            <br />
                             <Details
                               bill_ID={item.bill_ID}
                               status={item.statusOrder}
@@ -127,7 +184,7 @@ const Myorder = () => {
                               <br />
                             </h6>
 
-                            <Row>
+                            <Row className="order-card__stepper">
                               <Stepper
                                 activeStep={item.step}
                                 orientation={
@@ -137,7 +194,9 @@ const Myorder = () => {
                                 {steps.map((label) => {
                                   return (
                                     <Step key={label}>
-                                      <StepLabel>{label}</StepLabel>
+                                      <StepLabel StepIconComponent={OrderStatusStepIcon}>
+                                        {label}
+                                      </StepLabel>
                                     </Step>
                                   );
                                 })}
@@ -197,55 +256,56 @@ const Myorder = () => {
                 if (item.statusOrder !== "รับออเดอร์แล้ว") {
                   return (
                     <React.Fragment key={index}>
-                      <Card className="mb-4">
+                      <Card className="order-card mb-4">
                         <Card.Body>
-                          <div className="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between mb-2">
-                            <h6 className="mb-2 mb-md-0">
+                          <div className="order-card__header d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between mb-2">
+                            <h6 className="order-card__heading mb-2 mb-md-0">
                               {" "}
                               หมายเลขออเดอร์{" "}
                               {item.bill_ID.slice(-5).toUpperCase()} <br />{" "}
-                              วันที่สั่งออเดอร์ {}
+                              วันที่สั่งออเดอร์ { }
                               {moment(item.Date_times).format("YYYY-MM-DD")}
                               &nbsp; เวลา{" "}
                               {moment(item.Date_times).format("HH:mm")} น.
                             </h6>
-                            {item.delivery_date && (
-                              <Alert
-                                variant="warning"
-                                className="py-1 px-2 mb-2 mb-md-0"
-                              >
-                                พรีออเดอร์{item.delivery_slot ? ` ${item.delivery_slot}` : ""}
-                              </Alert>
-                            )}
+                            <div className="order-card__badges">
+                              {getPaymentBadge(item.payment_type)}
+                              {item.delivery_date && (
+                                <Alert
+                                  variant="warning"
+                                  className="py-1 px-2 mb-0"
+                                >
+                                  พรีออเดอร์{item.delivery_slot ? ` ${item.delivery_slot}` : ""}
+                                </Alert>
+                              )}
+                            </div>
                           </div>
-                          <hr />
-                          <br />
-                          <b>รายการสั่งซื้อ</b>
+                      
                           <Details
                             bill_ID={item.bill_ID}
                             status={item.statusOrder}
                           />
-                          <h6 style={{ fontSize: "18px" }}>
+                          <h6 >
                             รวมค่าอาหารทั้งหมด {item.amount} บาท
                           </h6>
                           {item.ordertype === "สั่งกลับบ้าน" && (
-                            <h6 style={{ fontSize: "18px" }}>
+                            <h6 >
                               ค่าส่ง {item.delivery_fee} บาท
                             </h6>
                           )}
-                          <h6 style={{ fontSize: "18px" }}>
+                          <h6 >
                             รวมทั้งหมด{" "}
                             {Number(item.amount) + Number(item.delivery_fee)}{" "}
                             บาท
                           </h6>
-                          <h6 style={{ fontSize: "18px" }}>
-                            การรับอาหาร -{" "}
+                          <h6 >
+                            วิธีรับสินค้า - {" "}
                             {item.ordertype === "สั่งกลับบ้าน"
                               ? "จัดส่งที่ " + item.address
                               : item.ordertype}
                           </h6>
                           {/* <GetQueueComponent rider_id={item.rider_id} /> */}
-                          <Row>
+                          <Row className="order-card__stepper">
                             <Stepper
                               activeStep={item.step}
                               orientation={isMobile ? "vertical" : "horizontal"}
@@ -253,7 +313,9 @@ const Myorder = () => {
                               {steps.map((label) => {
                                 return (
                                   <Step key={label}>
-                                    <StepLabel>{label}</StepLabel>
+                                    <StepLabel StepIconComponent={OrderStatusStepIcon}>
+                                      {label}
+                                    </StepLabel>
                                   </Step>
                                 );
                               })}
