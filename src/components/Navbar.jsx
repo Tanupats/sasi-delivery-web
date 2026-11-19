@@ -6,10 +6,13 @@ import { BrowserRouter as Router, Route, Routes, Link, Navigate } from "react-ro
 import { AuthData } from "../ContextData";
 import Orders from './orders';
 import Login from './Login';
+import Profile from './Profile';
+import Earnings from './Earnings';
 import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Swal from 'sweetalert2';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { Wallet } from 'lucide-react';
 import { httpGet } from "../http";
 const NavbarMenu = () => {
   const role = localStorage.getItem("role");
@@ -72,6 +75,10 @@ const NavbarMenu = () => {
                       
                       </span>
                     </Nav.Link>
+                    <Nav.Link as={Link} to={'/earnings'} className="rider-orders-link" style={{ textDecoration: 'none', color: '#fff' }}>
+                      <Wallet size={21} />
+                      <span className="rider-orders-label">สรุปรายได้</span>
+                    </Nav.Link>
                   </>
                 </Nav>
                 <Nav className="ml-auto" >
@@ -92,6 +99,8 @@ const NavbarMenu = () => {
       <Routes>
         <Route path="/" Component={Login}></Route>
         <Route path="/orders" element={hasRiderSession ? <Orders /> : <Navigate to="/" replace />} />
+        <Route path="/profile" element={hasRiderSession ? <Profile /> : <Navigate to="/" replace />} />
+        <Route path="/earnings" element={hasRiderSession ? <Earnings /> : <Navigate to="/" replace />} />
       </Routes>
     </Router>
   );

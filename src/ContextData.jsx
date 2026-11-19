@@ -219,6 +219,9 @@ function Context({ children }) {
     useEffect(() => {
         setStaffName(localStorage.getItem('name'));
         setRole(localStorage.getItem("role"));
+        if (token && localStorage.getItem("role")?.trim().toLowerCase() === "rider") {
+            getUser();
+        }
     }, [])
 
     

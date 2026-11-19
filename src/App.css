@@ -928,6 +928,948 @@
   background: #c85c0d;
 }
 
+.rider-profile-page {
+  width: min(100% - 32px, 920px);
+  margin: 34px auto 60px;
+  color: #20352c;
+}
+
+.rider-profile-heading {
+  margin-bottom: 22px;
+}
+
+.rider-profile-heading p,
+.rider-profile-eyebrow {
+  margin: 0 0 6px;
+  color: #e87519;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.rider-profile-heading h1 {
+  margin: 0;
+  color: #20352c;
+  font-size: 28px;
+  font-weight: 750;
+}
+
+.rider-profile-heading > span {
+  display: block;
+  margin-top: 6px;
+  color: #718077;
+  font-size: 14px;
+}
+
+.rider-profile-card {
+  overflow: hidden;
+  border: 1px solid #e6ebe6;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 8px 26px rgba(28, 49, 37, 0.07);
+}
+
+.rider-profile-cover {
+  height: 126px;
+  background:
+    radial-gradient(circle at 85% 20%, rgba(255, 255, 255, 0.22) 0 70px, transparent 71px),
+    linear-gradient(115deg, #f89131, #e6601c);
+}
+
+.rider-profile-summary {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: -44px 30px 0;
+}
+
+.rider-profile-avatar {
+  display: grid;
+  flex: 0 0 auto;
+  width: 88px;
+  height: 88px;
+  place-items: center;
+  border: 5px solid #fff;
+  border-radius: 25px;
+  background: #fff0df;
+  color: #c95719;
+  font-size: 34px;
+  font-weight: 800;
+  box-shadow: 0 5px 16px rgba(55, 39, 23, 0.12);
+}
+
+.rider-profile-identity {
+  min-width: 0;
+}
+
+.rider-profile-title {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.rider-profile-identity h2 {
+  min-width: 0;
+  overflow: hidden;
+  margin: 0;
+  color: #20352c;
+  font-size: 22px;
+  font-weight: 750;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rider-profile-role {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: #eaf5ee;
+  color: #258153;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.rider-profile-details {
+  padding: 28px 30px 30px;
+}
+
+.rider-profile-details h3 {
+  margin: 0 0 18px;
+  color: #293c30;
+  font-size: 16px;
+  font-weight: 750;
+}
+
+.rider-profile-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.rider-profile-detail {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+  border: 1px solid #edf0ed;
+  border-radius: 12px;
+  background: #fbfcfb;
+}
+
+.rider-profile-detail-icon {
+  display: grid;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border-radius: 12px;
+  background: #fff1e5;
+  color: #df681e;
+}
+
+.rider-profile-detail > div {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.rider-profile-detail small {
+  color: #78847c;
+  font-size: 12px;
+}
+
+.rider-profile-detail strong {
+  overflow: hidden;
+  color: #293c30;
+  font-size: 14px;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rider-profile-orders-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 16px;
+  padding: 17px 20px;
+  border: 1px solid #f1d8c6;
+  border-radius: 14px;
+  background: #fffaf6;
+  color: #d75f19;
+  text-decoration: none;
+  transition: background 160ms ease, border-color 160ms ease;
+}
+
+.rider-vehicle-card {
+  margin-top: 16px;
+  padding: 22px 24px 18px;
+  border: 1px solid #e6ebe6;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 5px 18px rgba(28, 49, 37, 0.045);
+}
+
+.rider-vehicle-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rider-vehicle-icon {
+  display: grid;
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border-radius: 13px;
+  background: #edf5ef;
+  color: #43825c;
+}
+
+.rider-vehicle-heading h2 {
+  margin: 0;
+  color: #293c30;
+  font-size: 16px;
+  font-weight: 750;
+}
+
+.rider-vehicle-heading p {
+  margin: 3px 0 0;
+  color: #78847c;
+  font-size: 12px;
+}
+
+.rider-vehicle-status {
+  margin-left: auto;
+  padding: 6px 9px;
+  border-radius: 999px;
+  background: #f2f4f2;
+  color: #69756d;
+  font-size: 11px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.rider-vehicle-details {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 19px;
+}
+
+.rider-vehicle-details > div {
+  display: grid;
+  min-width: 0;
+  gap: 5px;
+  padding: 12px;
+  border-radius: 10px;
+  background: #f8faf8;
+}
+
+.rider-vehicle-details small {
+  color: #78847c;
+  font-size: 11px;
+}
+
+.rider-vehicle-details strong {
+  overflow: hidden;
+  color: #49584e;
+  font-size: 13px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rider-vehicle-note {
+  margin: 12px 0 0;
+  color: #919b94;
+  font-size: 11px;
+}
+
+.rider-profile-orders-link:hover {
+  border-color: #f0b68f;
+  background: #fff3e9;
+  color: #bd4d12;
+}
+
+.rider-profile-orders-link > span {
+  display: grid;
+  gap: 3px;
+}
+
+.rider-profile-orders-link strong {
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.rider-profile-orders-link small {
+  color: #7c817d;
+  font-size: 12px;
+}
+
+@media (max-width: 576px) {
+  .rider-profile-page {
+    width: min(100% - 20px, 920px);
+    margin-top: 22px;
+  }
+
+  .rider-profile-heading h1 {
+    font-size: 24px;
+  }
+
+  .rider-profile-cover {
+    height: 106px;
+  }
+
+  .rider-profile-summary {
+    gap: 12px;
+    margin-right: 18px;
+    margin-left: 18px;
+  }
+
+  .rider-profile-avatar {
+    width: 76px;
+    height: 76px;
+    border-radius: 22px;
+    font-size: 29px;
+  }
+
+  .rider-profile-identity h2 {
+    font-size: 18px;
+  }
+
+  .rider-profile-details {
+    padding: 24px 18px;
+  }
+
+  .rider-profile-detail-grid {
+    grid-template-columns: 1fr;
+    gap: 9px;
+  }
+
+  .rider-vehicle-card {
+    padding: 18px;
+  }
+
+  .rider-vehicle-details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rider-profile-orders-link {
+    transition: none;
+  }
+}
+
+.rider-earnings-page {
+  width: min(100% - 32px, 1120px);
+  margin: 34px auto 60px;
+  color: #20352c;
+}
+
+.rider-earnings-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 22px;
+}
+
+.rider-earnings-heading p {
+  margin: 0 0 5px;
+  color: #e87519;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.rider-earnings-heading h1 {
+  margin: 0;
+  color: #20352c;
+  font-size: 28px;
+  font-weight: 750;
+}
+
+.rider-earnings-heading > div > span {
+  display: block;
+  margin-top: 6px;
+  color: #718077;
+  font-size: 14px;
+}
+
+.rider-earnings-period {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 13px;
+  border: 1px solid #e6ebe6;
+  border-radius: 10px;
+  background: #fff;
+  color: #506157;
+  font-size: 13px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.rider-earnings-hero {
+  position: relative;
+  display: flex;
+  min-height: 158px;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+  padding: 26px 30px;
+  border-radius: 18px;
+  background: linear-gradient(115deg, #f68a2b 0%, #e9601b 100%);
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(211, 91, 24, 0.18);
+}
+
+.rider-earnings-hero-copy {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.rider-earnings-hero-icon {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.rider-earnings-hero-copy p {
+  margin: 0 0 4px;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 13px;
+}
+
+.rider-earnings-hero-copy h2 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(30px, 5vw, 42px);
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.rider-earnings-hero-copy h2 small {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.rider-earnings-demo-tag {
+  position: relative;
+  z-index: 1;
+  padding: 7px 11px;
+  border: 1px solid rgba(255, 255, 255, 0.36);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.rider-earnings-hero-decoration {
+  position: absolute;
+  top: -62px;
+  right: 12%;
+  width: 210px;
+  height: 210px;
+  border: 34px solid rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+}
+
+.rider-earnings-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 16px 0 22px;
+}
+
+.rider-earnings-stat {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 18px;
+  border: 1px solid #e6ebe6;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(28, 49, 37, 0.045);
+}
+
+.rider-earnings-stat-icon {
+  display: grid;
+  flex: 0 0 auto;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 13px;
+}
+
+.rider-earnings-stat-icon.base {
+  background: #edf5ef;
+  color: #43825c;
+}
+
+.rider-earnings-stat-icon.special {
+  background: #fff1e5;
+  color: #df681e;
+}
+
+.rider-earnings-stat-icon.deliveries {
+  background: #eef3fb;
+  color: #5273a5;
+}
+
+.rider-earnings-stat > div {
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+}
+
+.rider-earnings-stat small {
+  color: #718077;
+  font-size: 12px;
+}
+
+.rider-earnings-stat strong {
+  color: #25392e;
+  font-size: 22px;
+  font-weight: 750;
+  line-height: 1.25;
+}
+
+.rider-earnings-stat strong span {
+  color: #6d7a71;
+  font-size: 12px;
+  font-weight: 550;
+}
+
+.rider-earnings-stat p {
+  margin: 0;
+  color: #929b94;
+  font-size: 11px;
+}
+
+.rider-earnings-table-card {
+  overflow: hidden;
+  border: 1px solid #e6ebe6;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 5px 18px rgba(28, 49, 37, 0.045);
+}
+
+.rider-earnings-table-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 20px 22px;
+  border-bottom: 1px solid #edf0ed;
+}
+
+.rider-earnings-table-heading > div {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.rider-earnings-table-icon {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border-radius: 12px;
+  background: #fff1e5;
+  color: #df681e;
+}
+
+.rider-earnings-table-heading h2 {
+  margin: 0;
+  color: #293c30;
+  font-size: 16px;
+  font-weight: 750;
+}
+
+.rider-earnings-table-heading p {
+  margin: 3px 0 0;
+  color: #78847c;
+  font-size: 12px;
+}
+
+.rider-earnings-table-heading > strong {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #f2f5f2;
+  color: #5c6b61;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.rider-earnings-table-wrap {
+  overflow-x: auto;
+}
+
+.rider-earnings-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.rider-earnings-table th,
+.rider-earnings-table td {
+  padding: 14px 18px;
+  border-bottom: 1px solid #edf0ed;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.rider-earnings-table th {
+  background: #f8faf8;
+  color: #78847c;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.rider-earnings-table th:first-child,
+.rider-earnings-table td:first-child {
+  padding-left: 22px;
+}
+
+.rider-earnings-table th:last-child,
+.rider-earnings-table td:last-child {
+  padding-right: 22px;
+}
+
+.rider-earnings-table .numeric {
+  text-align: right;
+}
+
+.rider-earnings-table tbody td {
+  color: #526158;
+}
+
+.rider-earnings-table tbody td:first-child {
+  display: table-cell;
+  color: #34463b;
+  font-weight: 650;
+}
+
+.rider-earnings-table tbody td:first-child small {
+  display: block;
+  margin-top: 3px;
+  color: #929b94;
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.rider-earnings-table .total {
+  color: #fff;
+  font-weight: 750;
+}
+
+.rider-earnings-table .total span {
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.rider-earnings-table tfoot td {
+  border-bottom: 0;
+  background: #fbfcfb;
+  color: #34463b;
+  font-weight: 750;
+}
+
+.rider-earnings-note {
+  margin: 0;
+  padding: 12px 22px 15px;
+  border-top: 1px solid #edf0ed;
+  color: #929b94;
+  font-size: 11px;
+}
+
+@media (max-width: 768px) {
+  .rider-earnings-stats {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .rider-earnings-stat {
+    align-items: center;
+    padding: 14px 16px;
+  }
+
+  .rider-earnings-stat > div {
+    grid-template-columns: 1fr auto;
+    flex: 1;
+    align-items: center;
+  }
+
+  .rider-earnings-stat small,
+  .rider-earnings-stat p {
+    grid-column: 1;
+  }
+
+  .rider-earnings-stat strong {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .rider-earnings-page {
+    width: min(100% - 20px, 1120px);
+    margin-top: 22px;
+  }
+
+  .rider-earnings-heading {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .rider-earnings-heading h1 {
+    font-size: 24px;
+  }
+
+  .rider-earnings-heading > div > span {
+    max-width: 240px;
+    font-size: 12px;
+  }
+
+  .rider-earnings-period {
+    gap: 5px;
+    padding: 8px 9px;
+    font-size: 11px;
+  }
+
+  .rider-earnings-hero {
+    min-height: 138px;
+    padding: 20px;
+  }
+
+  .rider-earnings-hero-copy {
+    gap: 11px;
+  }
+
+  .rider-earnings-hero-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 13px;
+  }
+
+  .rider-earnings-demo-tag {
+    position: absolute;
+    right: 14px;
+    bottom: 13px;
+    padding: 5px 8px;
+    font-size: 10px;
+  }
+
+  .rider-earnings-table-heading {
+    padding: 16px;
+  }
+
+  .rider-earnings-table-heading p {
+    max-width: 220px;
+    font-size: 11px;
+  }
+
+  .rider-earnings-table th,
+  .rider-earnings-table td {
+    padding: 12px 13px;
+    font-size: 12px;
+  }
+
+  .rider-earnings-table th:first-child,
+  .rider-earnings-table td:first-child {
+    padding-left: 16px;
+  }
+
+  .rider-earnings-table th:last-child,
+  .rider-earnings-table td:last-child {
+    padding-right: 16px;
+  }
+
+  .rider-earnings-note {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+}
+
+.rider-earnings-period input {
+  width: 132px;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #34463b;
+  font: inherit;
+}
+
+.rider-earnings-date-button {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #34463b;
+  text-align: left;
+  cursor: pointer;
+}
+
+.rider-earnings-date-button strong {
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.rider-earnings-date-button small {
+  margin-top: 3px;
+  color: #929b94;
+  font-size: 11px;
+}
+
+.rider-earnings-date-button > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-top: 4px;
+  color: #df681e;
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.rider-earnings-date-button:hover strong,
+.rider-earnings-date-button:focus-visible strong {
+  color: #df681e;
+}
+
+.rider-earnings-date-button:focus-visible {
+  outline: 2px solid #f1a36f;
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+.rider-earnings-table tbody tr.selected {
+  background: #fffaf6;
+}
+
+.rider-earnings-day-detail {
+  padding: 18px 22px;
+  border-top: 1px solid #edf0ed;
+  background: #fbfcfb;
+}
+
+.rider-earnings-day-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.rider-earnings-day-heading small {
+  color: #78847c;
+  font-size: 11px;
+}
+
+.rider-earnings-day-heading h3 {
+  margin: 3px 0 0;
+  color: #293c30;
+  font-size: 15px;
+  font-weight: 750;
+}
+
+.rider-earnings-day-heading > span {
+  padding: 6px 9px;
+  border-radius: 999px;
+  background: #edf5ef;
+  color: #43825c;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.rider-earnings-day-row,
+.rider-earnings-day-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 10px 0;
+  color: #59675e;
+  font-size: 13px;
+}
+
+.rider-earnings-day-row + .rider-earnings-day-row {
+  border-top: 1px solid #edf0ed;
+}
+
+.rider-earnings-day-row small {
+  color: #929b94;
+  font-size: 11px;
+}
+
+.rider-earnings-day-row strong {
+  color: #34463b;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.rider-earnings-day-total {
+  margin-top: 4px;
+  padding-top: 13px;
+  border-top: 1px solid #e1e9e2;
+  color: #293c30;
+  font-weight: 700;
+}
+
+.rider-earnings-day-total strong {
+  color: #24804f;
+  font-size: 17px;
+  white-space: nowrap;
+}
+
+.rider-earnings-no-day {
+  margin: 0;
+  color: #78847c;
+  font-size: 13px;
+  text-align: center;
+}
+
+@media (max-width: 576px) {
+  .rider-earnings-period input {
+    width: 130px;
+  }
+
+  .rider-earnings-day-detail {
+    padding: 16px;
+  }
+
+  .rider-earnings-day-row,
+  .rider-earnings-day-total {
+    font-size: 12px;
+  }
+}
+
 .delivery-proof-upload-wrap {
   display: flex;
   align-items: center;
