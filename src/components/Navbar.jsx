@@ -75,10 +75,10 @@ const NavbarMenu = () => {
                       
                       </span>
                     </Nav.Link>
-                    <Nav.Link as={Link} to={'/earnings'} className="rider-orders-link" style={{ textDecoration: 'none', color: '#fff' }}>
+                    {/* <Nav.Link as={Link} to={'/earnings'} className="rider-orders-link" style={{ textDecoration: 'none', color: '#fff' }}>
                       <Wallet size={21} />
                       <span className="rider-orders-label">สรุปรายได้</span>
-                    </Nav.Link>
+                    </Nav.Link> */}
                   </>
                 </Nav>
                 <Nav className="ml-auto" >

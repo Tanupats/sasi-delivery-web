@@ -539,10 +539,10 @@ const Orders = () => {
                             </div>
                             <div className="orders-card-header">
                               <div>
-                                <span className="orders-order-number">
+                                <h2 className="orders-order-number">
                                   <ReceiptText size={15} /> #
-                                  {item.bill_ID.slice(-5).toUpperCase()}
-                                </span>
+                                  {item.queueNumber}
+                                </h2>
                                 <span className="orders-order-time">
                                   <Clock3 size={14} />{" "}
                                   {moment(item.timeOrder).format(
