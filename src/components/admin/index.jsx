@@ -297,7 +297,7 @@ const Admin = () => {
         >
           <Row className="mt-3">
             {" "}
-            <Col md={4}>
+            {/* <Col md={4}>
               {" "}
               <Card className="text-center">
                 {" "}
@@ -309,8 +309,8 @@ const Admin = () => {
                   </Card.Title>{" "}
                 </Card.Body>{" "}
               </Card>{" "}
-            </Col>{" "}
-            <Col md={4}>
+            </Col>{" "} */}
+            {/* <Col md={4}>
               {" "}
               <Card className="text-center">
                 {" "}
@@ -322,8 +322,8 @@ const Admin = () => {
                   </Card.Title>{" "}
                 </Card.Body>{" "}
               </Card>{" "}
-            </Col>{" "}
-            <Col md={4}>
+            </Col>{" "} */}
+            {/* <Col md={4}>
               {" "}
               <Card className="text-center">
                 {" "}
@@ -336,7 +336,7 @@ const Admin = () => {
                   </Card.Title>{" "}
                 </Card.Body>{" "}
               </Card>{" "}
-            </Col>{" "}
+            </Col>{" "} */}
             <Col md={12} className="mt-2">
               {" "}
               <Card className="text-center">
