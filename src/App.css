@@ -558,8 +558,8 @@
 .orders-card .card-body {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 16px;
+  gap: 9px;
+  padding: 14px;
 }
 
 .orders-card-header,
@@ -628,7 +628,7 @@
 }
 
 .orders-delivery-info {
-  padding: 12px;
+  padding: 10px;
   border: 1px solid #e6ece6;
   border-radius: 12px;
   background: #f7faf7;
@@ -657,7 +657,7 @@
 }
 
 .orders-address {
-  margin: 9px 0 0;
+  margin: 6px 0 0;
   color: #46564c;
   font-size: 14px;
   line-height: 1.5;
@@ -668,7 +668,7 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  margin: 12px 0 8px;
+  margin: 8px 0 6px;
   color: #59675e;
   font-size: 11px;
 }
@@ -711,7 +711,7 @@
 .orders-map-preview {
   display: block;
   width: 100%;
-  height: 170px;
+  height: 150px;
   border: 0;
   border-radius: 9px;
   background: #e9efea;
@@ -723,7 +723,7 @@
   justify-content: flex-end;
   gap: 8px;
   flex-wrap: wrap;
-  margin-top: 10px;
+  margin-top: 6px;
 }
 
 .orders-coordinates {
@@ -736,8 +736,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-top: 14px;
-  padding: 13px 14px;
+  margin-top: 0;
+  padding: 10px 12px;
   border-top: 1px solid #e5ece6;
   border-radius: 8px;
   background: #f4f8f4;
@@ -775,6 +775,19 @@
   font-weight: 500;
 }
 
+.orders-total-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.orders-card .orders-payment-change-button {
+  padding: 5px 8px;
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
 .orders-items-disclosure {
   border-bottom: 1px solid #edf0ed;
 }
@@ -800,7 +813,7 @@
 }
 
 .orders-items-summary strong {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .orders-items-summary small {
@@ -808,7 +821,7 @@
   border-radius: 999px;
   background: #f0f3f0;
   color: #66736a;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .orders-items-chevron {
@@ -831,7 +844,7 @@
   align-items: flex-start;
   gap: 9px;
   color: #38483d;
-  font-size: 13px;
+  font-size: 15px;
 }
 
 .orders-item-quantity {

@@ -650,20 +650,22 @@ const Orders = () => {
                                   ? "เงินโอน"
                                   : "จ่ายเงินสด"}
                               </Badge>
-                              <strong>
-                                {item.amount} <small>บาท</small>
-                              </strong>
+                              <div className="orders-total-actions">
+                                <strong>
+                                  {item.amount} <small>บาท</small>
+                                </strong>
+                                {!arrivedOrders.has(item.id) && (
+                                  <Button
+                                    size="sm"
+                                    variant="outline-secondary"
+                                    className="orders-payment-change-button"
+                                    onClick={() => changePaymentType(item)}
+                                  >
+                                    เปลี่ยนวิธีชำระ
+                                  </Button>
+                                )}
+                              </div>
                             </div>
-                            {!arrivedOrders.has(item.id) && (
-                              <Button
-                                size="sm"
-                                variant="outline-secondary"
-                                className="mt-2"
-                                onClick={() => changePaymentType(item)}
-                              >
-                                เปลี่ยนวิธีชำระ
-                              </Button>
-                            )}
 
                             <Row className="mt-2">
                               {item.statusOrder === "รับออเดอร์แล้ว" && (
