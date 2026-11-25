@@ -25,6 +25,7 @@ import {
   ReceiptText,
   PackageOpen,
 } from "lucide-react";
+import NavigationMap from "./NavigationMap";
 const Orders = () => {
   const { shop, user } = useContext(AuthData);
   const token = localStorage.getItem("token");
@@ -49,7 +50,10 @@ const Orders = () => {
   const [userid, setUserId] = useState("");
   const [paymentType, setPaymentType] = useState("");
   const [riderLocation, setRiderLocation] = useState(null);
+  const [navigationOrder, setNavigationOrder] = useState(null);
+  const [navigationLocationError, setNavigationLocationError] = useState("");
   const [routeDistances, setRouteDistances] = useState({});
+  const navigationOrderId = navigationOrder?.id;
   const [arrivedOrders, setArrivedOrders] = useState(() => {
     try {
       return new Set(
@@ -64,22 +68,6 @@ const Orders = () => {
     lng: order.lng ?? order.longitude,
   });
 
-  const getGoogleMapsUrl = (order) => {
-    const { lat, lng } = getOrderCoordinates(order);
-    if (
-      lat === undefined ||
-      lat === null ||
-      lng === undefined ||
-      lng === null
-    ) {
-      return "";
-    }
-    const origin = riderLocation
-      ? `&origin=${encodeURIComponent(`${riderLocation.lat},${riderLocation.lng}`)}`
-      : "";
-    return `https://www.google.com/maps/dir/?api=1${origin}&destination=${encodeURIComponent(`${lat},${lng}`)}&travelmode=driving`;
-  };
-
   useEffect(() => {
     if (!navigator.geolocation) return;
     navigator.geolocation.getCurrentPosition(
@@ -89,6 +77,36 @@ const Orders = () => {
       { enableHighAccuracy: true, maximumAge: 120000, timeout: 10000 },
     );
   }, []);
+
+  useEffect(() => {
+    if (!navigationOrderId) {
+      setNavigationLocationError("");
+      return;
+    }
+    if (!navigator.geolocation) {
+      setNavigationLocationError("เบราว์เซอร์นี้ไม่รองรับการระบุตำแหน่ง");
+      return;
+    }
+
+    setRiderLocation(null);
+    setNavigationLocationError("");
+    const watchId = navigator.geolocation.watchPosition(
+      ({ coords }) => {
+        setRiderLocation({ lat: coords.latitude, lng: coords.longitude });
+        setNavigationLocationError("");
+      },
+      (error) => {
+        setNavigationLocationError(
+          error.code === error.PERMISSION_DENIED
+            ? "แสดงจุดส่งได้ แต่ต้องอนุญาตตำแหน่งเพื่อแสดงหมุดของคุณและคำนวณเส้นทาง"
+            : "กำลังรอสัญญาณ GPS กรุณาตรวจสอบตำแหน่งของอุปกรณ์",
+        );
+      },
+      { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 },
+    );
+
+    return () => navigator.geolocation.clearWatch(watchId);
+  }, [navigationOrderId]);
 
   useEffect(() => {
     if (!riderLocation) return;
@@ -332,6 +350,7 @@ const Orders = () => {
           setStatusOrder("ทำเสร็จแล้ว");
         }
         if (status === "ส่งสำเร็จ") {
+          setNavigationOrder(null);
           if (messageid !== "pos") {
             uploadFile(messageid);
 
@@ -421,6 +440,36 @@ const Orders = () => {
               </Button>
             </Col>
           </Row>
+        </Modal.Body>
+      </Modal>
+      <Modal
+        show={Boolean(navigationOrder)}
+        onHide={() => setNavigationOrder(null)}
+        size="xl"
+        backdrop={false}
+        enforceFocus={false}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>
+            กำลังส่ง {navigationOrder?.bill_ID?.slice(-5)}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {navigationOrder && (
+            <>
+              {navigationLocationError && (
+                <p className="orders-navigation-location-status" role="status">
+                  {navigationLocationError}
+                </p>
+              )}
+              <NavigationMap
+                destination={getOrderCoordinates(navigationOrder)}
+                address={navigationOrder.address || ""}
+                riderLocation={riderLocation}
+              />
+            </>
+          )}
         </Modal.Body>
       </Modal>
       <Row className="mt-3">
@@ -573,12 +622,6 @@ const Orders = () => {
                                 lat !== null &&
                                 lng !== undefined &&
                                 lng !== null;
-                              const mapUrl =
-                                riderLocation && hasDestination
-                                  ? `https://maps.google.com/maps?saddr=${riderLocation.lat},${riderLocation.lng}&daddr=${lat},${lng}&output=embed`
-                                  : hasDestination
-                                    ? `https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed`
-                                    : "";
                               const distance = routeDistances[item.id];
 
                               return (
@@ -615,20 +658,13 @@ const Orders = () => {
                                           </strong>
                                         </div>
                                       )}
-                                      <iframe
-                                        className="orders-map-preview"
-                                        title={`แผนที่ไปยังออเดอร์ ${item.bill_ID.slice(-5)}`}
-                                        src={mapUrl}
-                                        loading="lazy"
-                                        referrerPolicy="no-referrer-when-downgrade"
-                                      />
                                       <div className="orders-location-row">
                                         <Button
-                                          as="a"
-                                          href={getGoogleMapsUrl(item)}
-                                          target="_blank"
-                                          rel="noreferrer"
+                                          type="button"
                                           className="orders-map-button"
+                                          onClick={() =>
+                                            setNavigationOrder(item)
+                                          }
                                         >
                                           <MapPinned size={17} /> นำทาง
                                         </Button>
