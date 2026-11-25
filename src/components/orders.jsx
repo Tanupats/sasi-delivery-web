@@ -540,7 +540,7 @@ const Orders = () => {
                             <div className="orders-card-header">
                               <div>
                                 <h2 className="orders-order-number">
-                                  <ReceiptText size={15} /> #
+                                  <ReceiptText size={15} /> 
                                   {item.queueNumber}
                                 </h2>
                                 <span className="orders-order-time">
