@@ -6,7 +6,6 @@ import moment from "moment/moment";
 import { http } from "../http";
 import Swal from "sweetalert2";
 import { AuthData } from "../ContextData";
-import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import LocalPrintshopIcon from "@mui/icons-material/LocalPrintshop";
 import SendIcon from "@mui/icons-material/Send";
 
@@ -14,7 +13,6 @@ const Orders = () => {
   const { shop, sendMessageToPage,orderState } = useContext(AuthData);
   const token = localStorage.getItem("token");
   const [report, setReport] = useState([]);
-  const [printBillId, setPrintBillId] = useState(null);
   const [statusOrder, setStatusOrder] = useState([]);
   const [statusActive, setStatusActive] = useState("ใหม่");
 
@@ -45,17 +43,100 @@ const Orders = () => {
   };
 
   const handlePrint = async (billId, id) => {
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) {
+      await Swal.fire(
+        "ไม่สามารถเปิดหน้าพิมพ์ได้",
+        "กรุณาอนุญาตให้เว็บไซต์เปิดหน้าต่างใหม่",
+        "error",
+      );
+      return;
+    }
+    printWindow.document.title = "กำลังเตรียมใบเสร็จ";
+    printWindow.document.body.textContent = "กำลังเตรียมใบเสร็จสำหรับพิมพ์...";
+
     const now = new Date();
     const hours = now.getHours().toString().padStart(2, "0");
     const minutes = now.getMinutes().toString().padStart(2, "0");
     const body = {
       printStatus: `พิมพ์เวลา ${hours}:${minutes}`,
     };
-    await http.put(`/bills/${id}`, body);
-    setPrintBillId(billId);
-    setTimeout(() => {
-      window.print();
-    }, 2000);
+
+    try {
+      await http.put(`/bills/${id}`, body);
+      const orderElement = document.getElementById(id);
+      if (!orderElement) {
+        throw new Error(`Could not find order ${id} to print`);
+      }
+
+      const printDocument = printWindow.document;
+      printDocument.open();
+      printDocument.write("<!doctype html><html><head></head><body></body></html>");
+      printDocument.close();
+
+      const stylesheetLoads = [];
+      document
+        .querySelectorAll('link[rel="stylesheet"], style')
+        .forEach((styleElement) => {
+          const styleCopy = styleElement.cloneNode(true);
+          if (styleElement instanceof HTMLLinkElement) {
+            styleCopy.href = styleElement.href;
+            stylesheetLoads.push(
+              new Promise((resolve) => {
+                styleCopy.addEventListener("load", resolve, { once: true });
+                styleCopy.addEventListener("error", resolve, { once: true });
+              }),
+            );
+          }
+          printDocument.head.appendChild(styleCopy);
+        });
+
+      const printStyles = printDocument.createElement("style");
+      printStyles.textContent = `
+        .print-order {
+          width: 80mm;
+          margin: 0 auto;
+        }
+        @media print {
+          @page {
+            size: 80mm auto;
+            margin: 0;
+          }
+          body {
+            margin: 0;
+          }
+        }
+      `;
+      printDocument.head.appendChild(printStyles);
+
+      const orderCopy = orderElement.cloneNode(true);
+      orderCopy.querySelectorAll(".when-print").forEach((element) => {
+        element.remove();
+      });
+
+      const printContainer = printDocument.createElement("main");
+      printContainer.className = "print-order";
+      printContainer.appendChild(orderCopy);
+      printDocument.body.appendChild(printContainer);
+      printDocument.title = `ใบเสร็จ ${billId}`;
+
+      await Promise.all(stylesheetLoads);
+      await printDocument.fonts.ready;
+      printWindow.requestAnimationFrame(() => {
+        printWindow.requestAnimationFrame(() => {
+          printWindow.focus();
+          printWindow.print();
+        });
+      });
+    } catch (error) {
+      printWindow.close();
+      console.error("Failed to prepare order for printing", error);
+      await Swal.fire(
+        "เกิดข้อผิดพลาด",
+        "ไม่สามารถเตรียมใบเสร็จสำหรับพิมพ์ได้",
+        "error",
+      );
+    }
   };
 
   const CancelOrder = async (id, bid) => {
@@ -67,7 +148,6 @@ const Orders = () => {
   const reset = async () => {
     setStatusActive("ใหม่");
     await setReport([]);
-    setPrintBillId(null);
     getMenuReport("รับออเดอร์แล้ว");
     getOrderStatus();
   };
@@ -145,20 +225,16 @@ const Orders = () => {
     <>
       <Row className="mt-3">
         <Col md={12}>
-          <Card style={{ border: "none", marginTop: "12px" }}>
+          <Card className="order-page-card">
             <Form>
-              <Row
-                className="when-print"
-                style={{
-                  position: "sticky",
-                  top: 0,
-                  zIndex: 1000,
-                  backgroundColor: "#fff",
-                  padding: "15px 0",
-                }}
-              >
-                <ButtonGroup aria-label="Basic example">
+              <Row className="order-status-tabs-row when-print">
+                <ButtonGroup
+                  className="order-status-tabs"
+                  aria-label="กรองออเดอร์ตามสถานะ"
+                >
                   <Button
+                    className={statusActive === "ใหม่" ? "active" : ""}
+                    aria-pressed={statusActive === "ใหม่"}
                     style={{
                       fontSize: "18px",
                       borderColor: "#ff7a00",
@@ -170,10 +246,15 @@ const Orders = () => {
                       reset();
                     }}
                   >
-                    ใหม่ {statusOrder[0]?.total}
+                    <span>ใหม่</span>
+                    <Badge bg="light" text="dark">
+                      {statusOrder[0]?.total ?? 0}
+                    </Badge>
                   </Button>
 
                   <Button
+                    className={statusActive === "เสร็จแล้ว" ? "active" : ""}
+                    aria-pressed={statusActive === "เสร็จแล้ว"}
                     style={{
                       fontSize: "18px",
                       borderColor: "#ff7a00",
@@ -189,10 +270,15 @@ const Orders = () => {
                       getMenuReport("ทำเสร็จแล้ว");
                     }}
                   >
-                    เสร็จแล้ว {statusOrder[2]?.total}
+                    <span>เสร็จแล้ว</span>
+                    <Badge bg="light" text="dark">
+                      {statusOrder[2]?.total ?? 0}
+                    </Badge>
                   </Button>
 
                   <Button
+                    className={statusActive === "รอดดำเนินการ" ? "active" : ""}
+                    aria-pressed={statusActive === "รอดำเนินการ"}
                     style={{
                       fontSize: "18px",
                       borderColor: "#ff7a00",
@@ -209,10 +295,15 @@ const Orders = () => {
                       getMenuReport("กำลังส่ง");
                     }}
                   >
-                    รอดำเนินการ {statusOrder[1]?.total}
+                    <span>รอดำเนินการ</span>
+                    <Badge bg="light" text="dark">
+                      {statusOrder[1]?.total ?? 0}
+                    </Badge>
                   </Button>
 
                   <Button
+                    className={statusActive === "สำเร็จ" ? "active" : ""}
+                    aria-pressed={statusActive === "สำเร็จ"}
                     style={{
                       fontSize: "18px",
                       borderColor: "#ff7a00",
@@ -226,7 +317,10 @@ const Orders = () => {
                       getMenuReport("ส่งสำเร็จ");
                     }}
                   >
-                    สำเร็จ {statusOrder[3]?.total}
+                    <span>สำเร็จ</span>
+                    <Badge bg="light" text="dark">
+                      {statusOrder[3]?.total ?? 0}
+                    </Badge>
                   </Button>
                 </ButtonGroup>
               </Row>
@@ -234,51 +328,47 @@ const Orders = () => {
               <Row>
                 {report.map((item, index) => (
                   <React.Fragment key={index}>
-                    {(printBillId === null || printBillId === item.bill_ID) && (
-                      <Col md={4}>
-                        <Card className="mb-4 mt-4 bd-printer" id={item.id}>
-                          <Card.Body style={{ padding: "18px" }}>
-                            <Card.Header className="text-center border-0 p-0 mb-3">
-                              <div className="text-center">
-                                <h6> คิวที่ {item.queueNumber} </h6>
+                      <Col md={6} lg={4} className="order-card-column">
+                        <Card className="order-item-card mb-4 mt-4 bd-printer" id={item.id}>
+                          <Card.Body className="order-item-body">
+                            <div className="text-center show-header">
+                              <div className="receipt-brand">SASI FOOD</div>
+                              <div className="receipt-shop-name">{shop?.name}</div>
+                              <div className="receipt-title">ใบเสร็จรับเงิน</div>
+                            </div>
+
+                            <Card.Header className="order-card-header border-0 p-0 mb-3">
+                              <div className="text-start">
+                                <span className="order-queue-badge">
+                                  <strong>     NO-{item.queueNumber}</strong>
+                                </span>
                               </div>
                             </Card.Header>
 
-                            <div className="text-center show-header">
-                              <h6> {shop?.name} </h6>
-                              <h6> ใบเสร็จรับเงิน</h6>
+                            <div className="order-card-meta">
+                              <div className="order-date">
+                                <span>สั่งเวลา</span>
+                                <strong>{moment(item.timeOrder).format("HH:mm")} น.</strong>
+                                <small>{moment(item.timeOrder).format("DD-MM-YYYY")}</small>
+                              </div>
+                              <div className="order-card-tags when-print">
+                                {item?.printStatus ? (
+                                  <span className="order-tag order-tag-printed">
+                                    {item.printStatus}
+                                  </span>
+                                ) : (
+                                  <span
+                                    className={`order-tag ${
+                                      item.delivery_date
+                                        ? "order-tag-preorder"
+                                        : "order-tag-today"
+                                    }`}
+                                  >
+                                    {item.delivery_date ? "พรีออเดอร์" : "จัดส่งวันนี้"}
+                                  </span>
+                                )}
+                              </div>
                             </div>
-
-                            <Row>
-                              <Col md={6}>
-                                {" "}
-                                เลขออเดอร์{" "}
-                                {item.bill_ID.slice(-5).toUpperCase()}
-                                <br />
-                                {moment(item.timeOrder).format("HH:mm")} น.
-                                &nbsp;{" "}
-                                {moment(item.timeOrder).format("DD-MM-YYYY")}
-                              </Col>
-                              <Col md={6} className="text-end p-2">
-                                <p>
-                                  {item?.printStatus ? (
-                                    <span className="bg-danger text-white px-2 py-1 rounded-pill mt-4 when-print">
-                                      {item?.printStatus}
-                                    </span>
-                                  ) : (
-                                    <span
-                                      className={
-                                        item.delivery_date
-                                          ? "bg-danger text-white px-2 py-1 rounded-pill when-print mt-4"
-                                          : "bg-success text-white px-2 py-1 rounded-pill when-print mt-4"
-                                      }
-                                    >
-                                      {item.delivery_date ? "พรีออเดอร์" : "จัดส่งวันนี้"}
-                                    </span>
-                                  )}
-                                </p>
-                              </Col>  
-                            </Row>
 
                             <Row className="mt-2">
                                 {item.statusOrder === "รับออเดอร์แล้ว" && (
@@ -334,32 +424,33 @@ const Orders = () => {
                             
                             </Row>
 
-                            <Details
-                              reset={reset}
-                              id={item.id}
-                              bill_ID={item.bill_ID}
-                              status={item.statusOrder}
-                              userId={item.messengerId}
-                            />
-                            <Alert className="when-print bg-white text-center">
+                            <div className="order-details-list">
+                              <Details
+                                reset={reset}
+                                id={item.id}
+                                bill_ID={item.bill_ID}
+                                status={item.statusOrder}
+                                userId={item.messengerId}
+                              />
+                            </div>
+                            <Alert className="when-print order-status-alert">
                               <span>{item.statusOrder}</span>
                             </Alert>
-                            <Row>
-                              <Col md={8}>
-                                {item.delivery_fee !== 0 && (
-                                  <h6>ค่าจัดส่ง {item.delivery_fee} บาท</h6>
-                                )}
-                                <h6>รวมทั้งหมด {item.amount} บาท</h6>
-
-                                <h6>{item.customerName}</h6>
-                                {item.address ? (
-                                  <h6>จัดส่งที่-{item.address}</h6>
-                                ) : (
-                                  " "
-                                )}
-                                <h6>การรับอาหาร-{item.ordertype}</h6>
-                              </Col>
-                            </Row>
+                            <div className="order-customer-info">
+                              {item.delivery_fee !== 0 && (
+                                <p>
+                                  ค่าจัดส่ง <strong>{item.delivery_fee} บาท</strong>
+                                </p>
+                              )}
+                              <p className="order-total">
+                                รวมทั้งหมด <strong>{item.amount} บาท</strong>
+                              </p>
+                              <p><strong>{item.customerName}</strong></p>
+                              {item.address && <p>จัดส่งที่ {item.address}</p>}
+                              {item.ordertype !== "สั่งกลับบ้าน" && (
+                                <p>การรับอาหาร {item.ordertype}</p>
+                              )}
+                            </div>
 
                             <Row className="mt-2">
                               {item.statusOrder === "รับออเดอร์แล้ว" && (
@@ -456,7 +547,6 @@ const Orders = () => {
                           </Card.Body>
                         </Card>
                       </Col>
-                    )}
                   </React.Fragment>
                 ))}
               </Row>
